@@ -7,80 +7,152 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --or:#F27A1A;--or2:#FF9A3C;--or-dim:#FFF4E8;
-  --navy:#0F1420;--navy2:#1A2236;
-  --white:#fff;--bg:#F4F6FB;--bg2:#ECEEF5;
-  --border:#E2E6F0;--border2:#CDD3E2;
-  --text:#0F1420;--t2:#4A5568;--t3:#8896A9;
-  --green:#0EA372;--gbg:#EDFAF4;--gbr:#B6EDD8;
-  --red:#E53535;--rbg:#FEF1F1;--rbr:#FBBEBE;
-  --yellow:#D97706;--ybg:#FFFBEB;
-  --blue:#3B6FE8;--bbg:#EEF3FD;
-  --r:14px;--r2:10px;--r3:8px;
-  --sh:0 2px 12px rgba(15,20,32,.08);
-  --sh2:0 8px 32px rgba(15,20,32,.14);
+  --or:#F27A1A;--or2:#FF8C38;--or-dim:#FFF4E8;
+  --navy:#0B1628;--navy2:#122040;--navy3:#1A2E55;
+  --white:#fff;--bg:#F5F7FA;--bg2:#EDF0F7;
+  --border:#DDE3EF;--border2:#C8D0E4;
+  --text:#0B1628;--t2:#3D4F6B;--t3:#7A8BA8;
+  --green:#059669;--green2:#10B981;--gbg:#ECFDF5;--gbr:#A7F3D0;
+  --red:#DC2626;--rbg:#FEF2F2;--rbr:#FECACA;
+  --yellow:#B45309;--ybg:#FFFBEB;
+  --blue:#1D4ED8;--blue2:#3B82F6;--bbg:#EFF6FF;--bbr:#BFDBFE;
+  --r:14px;--r2:10px;--r3:8px;--r4:24px;
+  --sh:0 2px 16px rgba(11,22,40,.07);
+  --sh2:0 8px 40px rgba(11,22,40,.15);
 }
 *{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
 
-nav{background:var(--navy);height:62px;display:flex;align-items:center;padding:0 2rem;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(255,255,255,.06)}
+/* NAV */
+nav{background:#fff;height:68px;display:flex;align-items:center;padding:0 2rem;position:sticky;top:0;z-index:200;border-bottom:1px solid #E8EDF5;box-shadow:0 2px 20px rgba(11,22,40,.06)}
 .nav-in{max-width:1200px;width:100%;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
-.logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff}
-.logo-name{font-size:17px;font-weight:800;color:#fff;letter-spacing:-.3px}
-.logo-name em{color:var(--or);font-style:normal}
-.nav-pill{background:rgba(242,122,26,.18);border:1px solid rgba(242,122,26,.3);color:var(--or2);font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.07em}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-mark{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#F27A1A,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#fff;box-shadow:0 4px 12px rgba(242,122,26,.3)}
+.logo-name{font-size:20px;font-weight:900;color:#0B1628;letter-spacing:-.5px}
+.logo-name em{background:linear-gradient(135deg,#F27A1A,#10B981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-pill{background:var(--or-dim);border:1px solid rgba(242,122,26,.3);color:var(--or);font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.07em}
 .nav-tabs{display:flex;gap:4px}
-.nav-tab{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:rgba(255,255,255,.5);font-family:'Inter',sans-serif;transition:all .15s}
-.nav-tab:hover{color:#fff;background:rgba(255,255,255,.07)}
-.nav-tab.active{color:#fff;background:rgba(255,255,255,.12)}
+.ntab{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--t3);font-family:'Inter',sans-serif;transition:all .15s}
+.ntab:hover{color:var(--text);background:var(--bg2)}
+.ntab.active{color:var(--text);background:var(--bg);font-weight:700;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.nav-user{display:flex;align-items:center;gap:8px}
+.nav-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#1D4ED8,#3B82F6);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;cursor:pointer}
+.nav-username{font-size:13px;font-weight:600;color:var(--text)}
+.btn-logout{background:transparent;border:1px solid var(--border2);color:var(--t2);font-size:12px;font-weight:600;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.btn-logout:hover{border-color:var(--red);color:var(--red);background:var(--rbg)}
 
-.hero{background:var(--navy);padding:2.5rem 2rem 2rem;text-align:center;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-100px;right:-80px;width:450px;height:450px;background:radial-gradient(circle,rgba(242,122,26,.15) 0%,transparent 65%);pointer-events:none}
-.hero-tag{display:inline-flex;align-items:center;gap:7px;background:rgba(242,122,26,.12);border:1px solid rgba(242,122,26,.22);color:var(--or2);font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;margin-bottom:1rem;letter-spacing:.04em}
-.hdot{width:6px;height:6px;border-radius:50%;background:var(--or2);animation:blink 2s infinite}
+/* HERO */
+.hero{background:linear-gradient(160deg,#EEF4FF 0%,#F0F7FF 40%,#E8F5F0 100%);padding:4rem 2rem 3rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-100px;right:-80px;width:450px;height:450px;background:radial-gradient(circle,rgba(29,78,216,.12) 0%,transparent 65%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-80px;left:-60px;width:350px;height:350px;background:radial-gradient(circle,rgba(5,150,105,.1) 0%,transparent 65%);pointer-events:none}
+.hero-tag{display:inline-flex;align-items:center;gap:7px;background:rgba(29,78,216,.08);border:1px solid rgba(29,78,216,.2);color:#1D4ED8;font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;margin-bottom:1.25rem;letter-spacing:.04em}
+.hdot{width:6px;height:6px;border-radius:50%;background:#1D4ED8;animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.hero h1{font-size:clamp(24px,3.5vw,40px);font-weight:900;color:#fff;letter-spacing:-1.2px;line-height:1.1;margin-bottom:.75rem}
-.hero h1 .acc{background:linear-gradient(90deg,var(--or),var(--or2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero-sub{color:rgba(255,255,255,.45);font-size:14px;line-height:1.65}
+.hero h1{font-size:clamp(30px,4vw,52px);font-weight:900;color:#0B1628;letter-spacing:-2px;line-height:1.08;margin-bottom:.9rem}
+.hero h1 .acc{background:linear-gradient(90deg,#F27A1A,#10B981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:#4A5568;font-size:16px;line-height:1.65;margin-bottom:2rem;max-width:520px;margin-left:auto;margin-right:auto}
+.hero-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.btn-hero{padding:13px 28px;border-radius:var(--r2);font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;display:inline-flex;align-items:center;gap:8px;border:none;text-decoration:none}
+.btn-hero.main{background:linear-gradient(135deg,var(--or),var(--or2));color:#fff}
+.btn-hero.main:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(242,122,26,.4)}
+.btn-hero.outline{background:#fff;border:1.5px solid var(--border2);color:var(--text);box-shadow:0 2px 8px rgba(11,22,40,.08)}
+.btn-hero.outline:hover{background:var(--bg);border-color:var(--or);color:var(--or)}
 
-.wrap{max-width:1200px;margin:0 auto;padding:1.75rem 1.5rem 4rem}
+/* WRAP */
+.wrap{max-width:1200px;margin:0 auto;padding:2rem 1.5rem 4rem}
 
-/* TABS CONTENT */
-.tab-panel{display:none}
-.tab-panel.active{display:block}
+/* PAGES */
+.page{display:none}
+.page.active{display:block}
 
-/* ── BAĞLANTI KARTI ── */
+/* AUTH MODAL */
+.auth-overlay{position:fixed;inset:0;background:rgba(15,20,32,.7);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.auth-overlay.open{display:flex}
+.auth-box{background:var(--white);border-radius:var(--r4);padding:2.5rem;width:100%;max-width:440px;box-shadow:var(--sh2);position:relative}
+.auth-close{position:absolute;top:16px;right:16px;background:var(--bg2);border:none;border-radius:8px;width:32px;height:32px;font-size:16px;cursor:pointer;color:var(--t2);display:flex;align-items:center;justify-content:center}
+.auth-close:hover{background:var(--rbg);color:var(--red)}
+.auth-logo{display:flex;align-items:center;gap:8px;margin-bottom:1.5rem;justify-content:center}
+.auth-logo-mark{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#1D4ED8,#3B82F6);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff}
+.auth-logo-name{font-size:20px;font-weight:800;color:var(--text)}
+.auth-logo-name em{color:var(--or);font-style:normal}
+.auth-tabs{display:flex;background:var(--bg2);border-radius:var(--r3);padding:3px;margin-bottom:1.5rem}
+.auth-tab{flex:1;padding:8px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--t3);font-family:'Inter',sans-serif;transition:all .15s}
+.auth-tab.active{background:var(--white);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.auth-form{display:flex;flex-direction:column;gap:12px}
+.auth-field{display:flex;flex-direction:column;gap:5px}
+.auth-label{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em}
+.auth-input{padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--r2);font-size:14px;font-weight:500;color:var(--text);background:var(--bg);font-family:'Inter',sans-serif;transition:all .15s}
+.auth-input:focus{outline:none;border-color:var(--or);background:var(--white);box-shadow:0 0 0 3px rgba(242,122,26,.1)}
+.btn-auth{width:100%;padding:13px;border:none;border-radius:var(--r2);background:linear-gradient(135deg,var(--or),var(--or2));color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;margin-top:4px}
+.btn-auth:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(242,122,26,.35)}
+.auth-divider{text-align:center;font-size:12px;color:var(--t3);position:relative;margin:4px 0}
+.auth-divider::before,.auth-divider::after{content:'';position:absolute;top:50%;width:40%;height:1px;background:var(--border)}
+.auth-divider::before{left:0}
+.auth-divider::after{right:0}
+.auth-error{background:var(--rbg);border:1px solid var(--rbr);border-radius:var(--r3);padding:10px 14px;font-size:13px;color:var(--red);display:none}
+
+/* PAYMENT PAGE */
+.pay-page{max-width:680px;margin:3rem auto}
+.pay-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r4);overflow:hidden;box-shadow:var(--sh2)}
+.pay-header{background:linear-gradient(135deg,#060E1E,#122040);padding:2rem;text-align:center}
+.pay-icon{width:60px;height:60px;background:linear-gradient(135deg,#D97706,#F59E0B);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 1rem}
+.pay-title{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.3px;margin-bottom:.5rem}
+.pay-sub{font-size:14px;color:rgba(255,255,255,.5)}
+.pay-body{padding:2rem}
+.pay-price-box{background:linear-gradient(135deg,#ECFDF5,#F0FDF4);border:2px solid rgba(5,150,105,.2);border-radius:var(--r);padding:1.5rem;text-align:center;margin-bottom:1.5rem}
+.pay-price{font-size:52px;font-weight:900;color:#059669;letter-spacing:-2px;line-height:1}
+.pay-price sup{font-size:24px;vertical-align:top;margin-top:10px;font-weight:700}
+.pay-price-period{font-size:14px;color:var(--t3);margin-top:6px;font-weight:500}
+.pay-features{display:grid;gap:10px;margin-bottom:1.5rem}
+.pay-feature{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--t2);font-weight:500}
+.pay-feature-icon{width:24px;height:24px;background:var(--gbg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;border:1px solid var(--gbr);color:var(--green)}
+.pay-form{display:flex;flex-direction:column;gap:12px}
+.pay-field{display:flex;flex-direction:column;gap:5px}
+.pay-label{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em}
+.pay-input{padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--r2);font-size:14px;font-weight:500;color:var(--text);background:var(--bg);font-family:'Inter',sans-serif;transition:all .15s}
+.pay-input:focus{outline:none;border-color:var(--or);background:var(--white);box-shadow:0 0 0 3px rgba(242,122,26,.1)}
+.pay-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-pay{width:100%;padding:15px;border:none;border-radius:var(--r2);background:linear-gradient(135deg,#059669,#10B981);color:#fff;font-size:16px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-pay:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(5,150,105,.4)}
+.pay-security{text-align:center;font-size:12px;color:var(--t3);margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px}
+.pay-skip{text-align:center;margin-top:14px}
+.pay-skip a{font-size:13px;color:var(--t3);cursor:pointer;text-decoration:underline}
+.pay-skip a:hover{color:var(--or)}
+
+/* DEMO SECTION */
+.demo-section{margin-bottom:2rem}
+.section-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:.75rem;display:flex;align-items:center;gap:8px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.demo-banner{background:linear-gradient(135deg,#0B1628,#122040);border-radius:var(--r);padding:1.25rem 1.75rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap}
+.demo-banner-left h3{font-size:16px;font-weight:800;color:#fff;margin-bottom:4px}
+.demo-banner-left p{font-size:13px;color:rgba(255,255,255,.5)}
+.btn{padding:10px 18px;border-radius:var(--r2);font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:inline-flex;align-items:center;gap:6px;border:none;white-space:nowrap}
+.btn-primary{background:linear-gradient(135deg,var(--or),var(--or2));color:#fff}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(242,122,26,.35)}
+.btn-secondary{background:var(--bg);border:1.5px solid var(--border2);color:var(--t2)}
+.btn-secondary:hover{border-color:var(--or);color:var(--or)}
+.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--t2)}
+.btn-ghost:hover{background:var(--bg2);border-color:var(--border2)}
+
+/* CONNECT CARD */
 .connect-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);box-shadow:var(--sh2);margin-bottom:1.5rem;overflow:hidden}
-.card-head{background:linear-gradient(135deg,var(--navy),var(--navy2));padding:1.1rem 1.5rem;display:flex;align-items:center;gap:10px}
+.card-head{background:linear-gradient(135deg,#0B1628,#122040);padding:1.1rem 1.5rem;display:flex;align-items:center;gap:10px}
 .card-head-icon{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .card-head-title{font-size:15px;font-weight:800;color:#fff;letter-spacing:-.2px}
 .card-head-sub{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px}
 .card-body{padding:1.5rem}
-
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.25rem}
 .step{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r2);padding:14px;display:flex;gap:10px;align-items:flex-start}
-.step-num{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--or2));color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-num{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#1D4ED8,#3B82F6);color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
 .step-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
 .step-desc{font-size:11px;color:var(--t3);line-height:1.5}
-
 .field-grid{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:flex-end;margin-bottom:10px}
 .fg{display:flex;flex-direction:column;gap:5px}
 .flabel{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em}
 .finput{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--r2);font-size:13px;font-weight:600;color:var(--text);background:var(--bg);font-family:'Inter',sans-serif;transition:all .15s}
 .finput:focus{outline:none;border-color:var(--or);background:var(--white);box-shadow:0 0 0 3px rgba(242,122,26,.1)}
-.finput::placeholder{color:var(--t3);font-weight:400}
-.finput.error{border-color:var(--red)}
-
-.btn{padding:10px 18px;border-radius:var(--r2);font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:inline-flex;align-items:center;gap:6px;border:none;white-space:nowrap}
-.btn-primary{background:linear-gradient(135deg,var(--or),var(--or2));color:#fff}
-.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(242,122,26,.35)}
-.btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none}
-.btn-secondary{background:var(--bg);border:1.5px solid var(--border2);color:var(--t2)}
-.btn-secondary:hover{border-color:var(--or);color:var(--or)}
-.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--t2)}
-.btn-ghost:hover{background:var(--bg2)}
-
 .status-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r2);background:var(--bg);border:1.5px solid var(--border);font-size:13px;margin-bottom:12px}
 .sdot{width:9px;height:9px;border-radius:50%;background:var(--border2);flex-shrink:0;transition:all .3s}
 .sdot.on{background:var(--green);box-shadow:0 0 0 3px rgba(14,163,114,.18)}
@@ -89,13 +161,11 @@ nav{background:var(--navy);height:62px;display:flex;align-items:center;padding:0
 .status-text{font-weight:600;color:var(--text)}
 .status-sub{font-size:12px;color:var(--t3);margin-left:auto}
 
-.tip-box{background:var(--bbg);border:1px solid #C7D7F8;border-radius:var(--r3);padding:10px 14px;font-size:12px;color:#2C5AA0;display:flex;gap:8px;line-height:1.5}
-
-/* ── ÜRÜN LİSTESİ ── */
+/* TOOLBAR */
 .toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px}
 .toolbar-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .tb-title{font-size:16px;font-weight:800;letter-spacing:-.2px}
-.count-badge{background:var(--or-dim);color:var(--or);border:1px solid rgba(242,122,26,.2);font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px}
+.count-badge{background:var(--bbg);color:var(--blue);border:1px solid var(--bbr);font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px}
 .filter-bar{display:flex;gap:4px;background:var(--bg2);border:1px solid var(--border);padding:3px;border-radius:var(--r3)}
 .ftab{padding:5px 13px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--t3);font-family:'Inter',sans-serif;transition:all .15s}
 .ftab.active{background:var(--white);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.08)}
@@ -103,13 +173,8 @@ nav{background:var(--navy);height:62px;display:flex;align-items:center;padding:0
 .search-icon{position:absolute;left:10px;font-size:13px;color:var(--t3);pointer-events:none}
 .search-inp{padding:8px 12px 8px 32px;border:1.5px solid var(--border);border-radius:var(--r3);font-size:13px;color:var(--text);background:var(--white);font-family:'Inter',sans-serif;width:200px;transition:all .15s}
 .search-inp:focus{outline:none;border-color:var(--or)}
-
-/* PAGINATION */
-.pagination{display:flex;align-items:center;gap:8px;margin-top:1rem;justify-content:center}
-.page-btn{padding:7px 14px;border:1.5px solid var(--border);border-radius:var(--r3);font-size:13px;font-weight:600;cursor:pointer;background:var(--white);color:var(--t2);font-family:'Inter',sans-serif;transition:all .15s}
-.page-btn:hover:not(:disabled){border-color:var(--or);color:var(--or)}
-.page-btn:disabled{opacity:.4;cursor:not-allowed}
-.page-info{font-size:13px;color:var(--t3);font-weight:500}
+.btn-sm{padding:8px 14px;border:1.5px solid var(--border);border-radius:var(--r3);font-size:12px;font-weight:600;cursor:pointer;color:var(--t2);background:var(--white);font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;gap:5px}
+.btn-sm:hover{border-color:var(--or);color:var(--or);background:var(--or-dim)}
 
 /* PRODUCT TABLE */
 .prod-table-wrap{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
@@ -118,7 +183,6 @@ nav{background:var(--navy);height:62px;display:flex;align-items:center;padding:0
 .ptable td{padding:10px 14px;border-bottom:1px solid var(--bg2);vertical-align:middle}
 .ptable tr:last-child td{border-bottom:none}
 .ptable tr:hover td{background:var(--bg)}
-.ptable tr.selected td{background:var(--or-dim)}
 .prod-name{font-weight:600;color:var(--text);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .prod-cat{font-size:11px;color:var(--t3);margin-top:2px}
 .price-val{font-weight:800;color:var(--text);font-size:14px}
@@ -127,26 +191,25 @@ nav{background:var(--navy);height:62px;display:flex;align-items:center;padding:0
 .kb-good{background:var(--gbg);color:var(--green)}
 .kb-bad{background:var(--rbg);color:var(--red)}
 .kb-neutral{background:var(--bg2);color:var(--t3)}
-.calc-btn{padding:5px 12px;border:1.5px solid var(--or);border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;color:var(--or);background:var(--or-dim);font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap}
-.calc-btn:hover{background:var(--or);color:#fff}
+.detay-btn{padding:6px 14px;border:1.5px solid var(--or);border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;color:var(--white);background:linear-gradient(135deg,var(--or),var(--or2));font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap}
+.detay-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(242,122,26,.3)}
 .tinput{width:90px;padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-weight:700;color:var(--text);background:var(--bg);font-family:'Inter',sans-serif;transition:all .15s}
 .tinput:focus{outline:none;border-color:var(--or);background:var(--white)}
+.empty{text-align:center;padding:4rem 2rem;color:var(--t3)}
+.empty-emoji{font-size:48px;opacity:.3;display:block;margin-bottom:1rem}
+.empty-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:.5rem}
+.empty-sub{font-size:13px;line-height:1.6;max-width:280px;margin:0 auto}
 
-/* EMPTY */
-.empty{text-align:center;padding:5rem 2rem;color:var(--t3)}
-.empty-emoji{font-size:52px;opacity:.3;display:block;margin-bottom:1rem}
-.empty-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:.5rem;letter-spacing:-.2px}
-.empty-sub{font-size:13px;line-height:1.6;max-width:320px;margin:0 auto 1.5rem}
-
-/* ── HESAPLAMA KARTI ── */
+/* HESAP TAB */
 .calc-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);box-shadow:var(--sh2);margin-bottom:1.5rem;overflow:hidden}
 .form-row{display:grid;gap:12px;margin-bottom:12px}
 .fr2{grid-template-columns:1fr 1fr}
 .fr3{grid-template-columns:1fr 1fr 1fr}
 .finput-wrap{position:relative;display:flex;align-items:center}
 .fsuffix{position:absolute;right:11px;font-size:12px;font-weight:700;color:var(--t3);pointer-events:none}
-.finput.suf{padding-right:30px}
-select.finput{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238896A9' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px}
+.finput2{width:100%;padding:10px 30px 10px 13px;border:1.5px solid var(--border);border-radius:var(--r2);font-size:14px;font-weight:600;color:var(--text);background:var(--bg);font-family:'Inter',sans-serif;transition:all .15s}
+.finput2:focus{outline:none;border-color:var(--or);background:var(--white);box-shadow:0 0 0 3px rgba(242,122,26,.1)}
+select.finput2{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238896A9' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px}
 .kargo-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r2);margin-bottom:12px}
 .kr-label{font-size:12px;font-weight:700;color:var(--t2)}
 .kr-opt{display:flex;align-items:center;gap:5px;cursor:pointer;padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--white);font-size:12px;font-weight:600;color:var(--t2);transition:all .15s}
@@ -163,7 +226,7 @@ select.finput{cursor:pointer;appearance:none;background-image:url("data:image/sv
 /* RESULTS */
 .results{display:none}
 .result-top{display:grid;grid-template-columns:auto 1fr;gap:1.25rem;align-items:center;margin-bottom:1.25rem}
-.kar-circle{width:128px;height:128px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 8px 28px rgba(242,122,26,.32);flex-shrink:0}
+.kar-circle{width:128px;height:128px;border-radius:50%;background:linear-gradient(135deg,#059669,#10B981);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 8px 28px rgba(5,150,105,.32);flex-shrink:0}
 .kar-circle.loss{background:linear-gradient(135deg,var(--red),#FF6B6B);box-shadow:0 8px 28px rgba(229,53,53,.32)}
 .kc-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.05em;text-transform:uppercase}
 .kc-val{font-size:24px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1.1}
@@ -174,7 +237,7 @@ select.finput{cursor:pointer;appearance:none;background-image:url("data:image/sv
 .mb-bad{background:var(--rbg);color:var(--red);border:1px solid var(--rbr)}
 .res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .rc{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r2);padding:12px 14px}
-.rc.hl{background:var(--or-dim);border-color:rgba(242,122,26,.22)}
+.rc.hl{background:var(--bbg);border-color:var(--bbr)}
 .rc-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);margin-bottom:4px}
 .rc-val{font-size:17px;font-weight:900;color:var(--text);letter-spacing:-.3px}
 .rc-val.or{color:var(--or)}
@@ -186,7 +249,6 @@ select.finput{cursor:pointer;appearance:none;background-image:url("data:image/sv
 .meter-lr{display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--t3);margin-bottom:5px}
 .meter-bg{height:10px;background:var(--bg2);border-radius:5px;overflow:hidden;border:1px solid var(--border)}
 .meter-fill{height:100%;border-radius:5px;transition:width .6s cubic-bezier(.4,0,.2,1),background .4s}
-.meter-ticks{display:flex;justify-content:space-between;margin-top:3px;font-size:10px;color:var(--t3)}
 .kdv-sec{margin-top:1rem}
 .kdv-head{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:7px;display:flex;align-items:center;gap:8px}
 .kdv-head::after{content:'';flex:1;height:1px;background:var(--border)}
@@ -203,18 +265,48 @@ select.finput{cursor:pointer;appearance:none;background-image:url("data:image/sv
 .bv.m{color:var(--red)}
 .bv.p{color:var(--green)}
 
-/* KOMISYON TAB */
-.sep{margin:1.5rem 0 1rem;display:flex;align-items:center;gap:10px}
-.sep-title{font-size:16px;font-weight:800;color:var(--text);white-space:nowrap;letter-spacing:-.2px}
-.sep-line{flex:1;height:1.5px;background:var(--border)}
+/* KOMİSYON TAB */
 .ktable-wrap{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
 .ktable{width:100%;border-collapse:collapse;font-size:13px}
 .ktable th{padding:10px 14px;text-align:left;background:var(--bg);color:var(--t3);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;border-bottom:1.5px solid var(--border)}
 .ktable td{padding:9px 14px;border-bottom:1px solid var(--bg2);color:var(--text)}
 .ktable tr:last-child td{border-bottom:none}
 .ktable tr:hover td{background:var(--bg)}
-.krate{display:inline-flex;background:rgba(242,122,26,.1);color:var(--or);font-size:12px;font-weight:800;padding:3px 9px;border-radius:20px}
+.krate{display:inline-flex;background:rgba(29,78,216,.1);color:var(--blue);font-size:12px;font-weight:800;padding:3px 9px;border-radius:20px}
 .kcat{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;background:var(--bg2);color:var(--t2)}
+
+/* DETAY MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(15,20,32,.6);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
+.modal-bg.open{display:flex}
+.modal{background:var(--white);border-radius:var(--r4);padding:2rem;width:100%;max-width:640px;box-shadow:var(--sh2);position:relative;max-height:90vh;overflow-y:auto}
+.modal-close{position:absolute;top:14px;right:14px;background:var(--bg2);border:none;border-radius:6px;width:30px;height:30px;font-size:16px;cursor:pointer;color:var(--t2);display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:var(--rbg);color:var(--red)}
+.modal-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:3px;letter-spacing:-.2px}
+.modal-prod{font-size:14px;color:var(--t2);font-weight:600;margin-bottom:1.25rem;padding:10px 14px;background:var(--bg);border-radius:var(--r3);border:1px solid var(--border)}
+.modal-inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+.mi-wrap{display:flex;flex-direction:column;gap:5px}
+.mi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3)}
+.mi-field{position:relative;display:flex;align-items:center}
+.mi-sym{position:absolute;right:11px;font-size:12px;font-weight:700;color:var(--t3);pointer-events:none}
+.mi-input{width:100%;padding:10px 30px 10px 13px;border:1.5px solid var(--border);border-radius:var(--r2);font-size:14px;font-weight:700;color:var(--text);background:var(--bg);font-family:'Inter',sans-serif;transition:all .15s}
+.mi-input:focus{outline:none;border-color:var(--or);background:var(--white);box-shadow:0 0 0 3px rgba(242,122,26,.1)}
+/* NeSatılır style tables */
+.ns-table{width:100%;border-collapse:collapse;margin-bottom:10px;border:1.5px solid var(--border);border-radius:var(--r2);overflow:hidden}
+.ns-table th{padding:9px 12px;text-align:center;background:var(--bg2);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);border-bottom:1px solid var(--border);border-right:1px solid var(--border)}
+.ns-table th:last-child{border-right:none}
+.ns-table td{padding:12px;text-align:center;font-size:15px;font-weight:800;border-right:1px solid var(--border);vertical-align:middle}
+.ns-table td:last-child{border-right:none}
+.ns-table tr.kdv-row td{background:var(--ybg);font-size:13px}
+.ns-kar-ball{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(242,122,26,.35);margin:0 auto}
+.ns-kar-ball.loss{background:linear-gradient(135deg,var(--red),#FF6B6B)}
+.ns-kar-label{font-size:9px;font-weight:700;color:rgba(255,255,255,.8);letter-spacing:.04em}
+.ns-kar-val{font-size:13px;font-weight:900;color:#fff;letter-spacing:-.5px}
+.ns-kdv-table{width:100%;border-collapse:collapse;border:1.5px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:12px}
+.ns-kdv-table th{padding:8px;text-align:center;background:var(--ybg);font-size:9px;font-weight:700;text-transform:uppercase;color:var(--t3);border-bottom:1px solid var(--border);border-right:1px solid var(--border);line-height:1.3}
+.ns-kdv-table th:last-child{border-right:none;background:var(--rbg);color:var(--red)}
+.ns-kdv-table td{padding:10px;text-align:center;font-size:13px;font-weight:800;border-right:1px solid var(--border)}
+.ns-kdv-table td:last-child{border-right:none;color:var(--red)}
+.modal-empty{text-align:center;padding:1.5rem;color:var(--t3);font-size:13px}
 
 /* TOAST */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 18px;border-radius:var(--r2);font-size:13px;font-weight:600;box-shadow:var(--sh2);transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.4,0,.2,1);z-index:999;max-width:320px;display:flex;align-items:center;gap:9px}
@@ -225,20 +317,8 @@ select.finput{cursor:pointer;appearance:none;background-image:url("data:image/sv
 .spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;display:inline-block;animation:rot .6s linear infinite;vertical-align:middle}
 @keyframes rot{to{transform:rotate(360deg)}}
 
-/* MODAL */
-.modal-bg{position:fixed;inset:0;background:rgba(15,20,32,.55);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
-.modal-bg.open{display:flex}
-.modal{background:var(--white);border-radius:var(--r);padding:2rem;width:100%;max-width:560px;box-shadow:var(--sh2);position:relative;max-height:90vh;overflow-y:auto}
-.modal-close{position:absolute;top:14px;right:14px;background:var(--bg2);border:none;border-radius:6px;width:30px;height:30px;font-size:16px;cursor:pointer;color:var(--t2);display:flex;align-items:center;justify-content:center}
-.modal-close:hover{background:var(--rbg);color:var(--red)}
-.modal-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:.25rem;letter-spacing:-.2px}
-.modal-sub{font-size:12px;color:var(--t3);margin-bottom:1.25rem}
-.modal-prod-name{font-size:14px;font-weight:700;color:var(--text);padding:10px 14px;background:var(--bg);border-radius:var(--r3);margin-bottom:1rem;border:1px solid var(--border)}
-.modal-prod-info{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
-.mpi{background:var(--bg);border:1px solid var(--border);border-radius:var(--r3);padding:10px 12px}
-.mpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);margin-bottom:3px}
-.mpi-val{font-size:15px;font-weight:800;color:var(--text)}
-.mpi-val.or{color:var(--or)}
+/* PREMIUM BADGE */
+.premium-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#1D4ED8,#10B981);color:#fff;font-size:10px;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:.04em}
 
 @media(max-width:900px){
   .steps{grid-template-columns:1fr}
@@ -249,99 +329,98 @@ select.finput{cursor:pointer;appearance:none;background-image:url("data:image/sv
   nav{padding:0 1rem}
   .wrap{padding:1.25rem 1rem 3rem}
   .fr2,.fr3{grid-template-columns:1fr}
+  .ns-table,.ns-kdv-table{font-size:11px}
+  .modal-inputs{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
   <div class="nav-in">
     <a class="logo" href="#">
       <div class="logo-mark">K</div>
       <span class="logo-name">Kar<em>Panel</em></span>
     </a>
-    <div class="nav-tabs">
-      <button class="nav-tab active" onclick="showTab('urunler',this)">📦 Ürünlerim</button>
-      <button class="nav-tab" onclick="showTab('hesap',this)">🧮 Kar Hesapla</button>
-      <button class="nav-tab" onclick="showTab('komisyon',this)">📋 Komisyon Oranları</button>
+    <div class="nav-tabs" id="nav-tabs">
+      <button class="ntab active" onclick="showTab('urunler',this)">📦 Ürünlerim</button>
+      <button class="ntab" onclick="showTab('hesap',this)">🧮 Kar Hesapla</button>
+
     </div>
-    <span class="nav-pill">BETA</span>
+    <div class="nav-right">
+      <span class="nav-pill">BETA</span>
+      <div class="nav-user" id="nav-user" style="display:none">
+        <div class="nav-avatar" id="nav-avatar">U</div>
+        <span class="nav-username" id="nav-username"></span>
+        <button class="btn-logout" onclick="logout()">Çıkış</button>
+      </div>
+      <button class="btn btn-primary" id="nav-login-btn" onclick="openAuth('giris')" style="font-size:12px;padding:7px 14px">Giriş Yap</button>
+    </div>
   </div>
 </nav>
 
-<div class="hero">
-  <div class="hero-tag"><span class="hdot"></span>Trendyol Satıcıları İçin</div>
-  <h1>Ürünlerinizi çekin, <span class="acc">karınızı görün</span></h1>
-  <p class="hero-sub">Trendyol panelinden otomatik ürün çekme · Komisyon + KDV + Stopaj dahil net kar hesabı</p>
+<!-- HERO -->
+<div class="hero" id="hero-section">
+  <div class="hero-tag"><span class="hdot"></span>Trendyol Satıcıları İçin Ücretsiz Demo</div>
+  <h1>Ürünlerinizin <span class="acc">gerçek karını</span> görün</h1>
+  <p class="hero-sub">Komisyon, KDV, stopaj dahil net kar hesabı. Demo ile hemen deneyin, üye olarak tüm ürünlerinizi çekin.</p>
+  <div class="hero-actions">
+    <button class="btn-hero main" onclick="scrollToDemo()">🎯 Demo ile Dene</button>
+    <button class="btn-hero outline" onclick="openAuth('kayit')">🚀 Üye Ol — ₺1.500/yıl</button>
+  </div>
 </div>
 
+<!-- MAIN -->
 <div class="wrap">
 
-  <!-- ═══════════════════════════════════════
-       TAB 1: ÜRÜNLER
-  ═══════════════════════════════════════ -->
-  <div class="tab-panel active" id="tab-urunler">
+  <!-- TAB: ÜRÜNLER -->
+  <div class="page active" id="tab-urunler">
 
-    <!-- BAĞLANTI -->
-    <div class="connect-card">
-      <div class="card-head">
-        <div class="card-head-icon">🔗</div>
-        <div>
-          <div class="card-head-title">Trendyol Paneline Bağlan</div>
-          <div class="card-head-sub">API bilgilerinizi girin, ürünleriniz otomatik yüklensin</div>
+    <!-- DEMO BÖLÜMÜ -->
+    <div class="demo-section" id="demo-section">
+      <div class="section-label">Demo Modu</div>
+      <div class="demo-banner">
+        <div class="demo-banner-left">
+          <h3>🎯 Demo Ürünlerle Deneyin</h3>
+          <p>8 örnek ürün ile KarPanel'i keşfedin. Alış fiyatı girin, karınızı görün.</p>
         </div>
+        <button class="btn btn-primary" onclick="loadDemo()">Demo Başlat</button>
       </div>
-      <div class="card-body">
-        <!-- Adımlar -->
-        <div class="steps">
-          <div class="step">
-            <div class="step-num">1</div>
-            <div><div class="step-title">Partner Panel'e Girin</div><div class="step-desc">partner.trendyol.com adresine giriş yapın</div></div>
-          </div>
-          <div class="step">
-            <div class="step-num">2</div>
-            <div><div class="step-title">API Bilgilerini Alın</div><div class="step-desc">Hesap Ayarları → Entegrasyon Bilgileri sayfasından Satıcı ID, Key ve Secret'ı kopyalayın</div></div>
-          </div>
-          <div class="step">
-            <div class="step-num">3</div>
-            <div><div class="step-title">Ürünleri Çekin</div><div class="step-desc">Aşağıya yapıştırın ve "Ürünleri Getir" butonuna basın</div></div>
+    </div>
+
+    <!-- ÜYE API BÖLÜMÜ (giriş sonrası) -->
+    <div id="connect-section" style="display:none">
+      <div class="section-label">Trendyol Bağlantısı</div>
+      <div class="connect-card">
+        <div class="card-head">
+          <div class="card-head-icon">🔗</div>
+          <div>
+            <div class="card-head-title">Trendyol Paneline Bağlan</div>
+            <div class="card-head-sub">API bilgilerinizi girin, ürünleriniz otomatik yüklensin</div>
           </div>
         </div>
-
-        <!-- Status -->
-        <div class="status-bar">
-          <div class="sdot" id="sdot"></div>
-          <span class="status-text" id="stext">Bağlantı bekleniyor</span>
-          <span class="status-sub" id="ssub">Proxy sunucusu: <span id="proxy-status">Kontrol ediliyor...</span></span>
-        </div>
-
-        <!-- Fields -->
-        <div class="field-grid">
-          <div class="fg">
-            <div class="flabel">Satıcı ID</div>
-            <input class="finput" type="text" id="inp-sid" placeholder="ör: 123456">
+        <div class="card-body">
+          <div class="steps">
+            <div class="step"><div class="step-num">1</div><div><div class="step-title">Partner Panel'e Girin</div><div class="step-desc">partner.trendyol.com adresine giriş yapın</div></div></div>
+            <div class="step"><div class="step-num">2</div><div><div class="step-title">API Bilgilerini Alın</div><div class="step-desc">Hesap Ayarları → Entegrasyon Bilgileri'nden kopyalayın</div></div></div>
+            <div class="step"><div class="step-num">3</div><div><div class="step-title">Ürünleri Çekin</div><div class="step-desc">Aşağıya yapıştırıp "Ürünleri Getir" butonuna basın</div></div></div>
           </div>
-          <div class="fg">
-            <div class="flabel">API Key</div>
-            <input class="finput" type="text" id="inp-key" placeholder="Partner Panel'den kopyalayın">
+          <div class="status-bar">
+            <div class="sdot" id="sdot"></div>
+            <span class="status-text" id="stext">Bağlantı bekleniyor</span>
+            <span class="status-sub" id="ssub"></span>
           </div>
-          <div class="fg">
-            <div class="flabel">API Secret</div>
-            <input class="finput" type="password" id="inp-sec" placeholder="••••••••">
+          <div class="field-grid">
+            <div class="fg"><div class="flabel">Satıcı ID</div><input class="finput" type="text" id="inp-sid" placeholder="ör: 123456"></div>
+            <div class="fg"><div class="flabel">API Key</div><input class="finput" type="text" id="inp-key" placeholder="Partner Panel'den kopyalayın"></div>
+            <div class="fg"><div class="flabel">API Secret</div><input class="finput" type="password" id="inp-sec" placeholder="••••••••"></div>
+            <button class="btn btn-primary" onclick="urunleriCek()" id="btn-cek" style="height:40px;margin-top:auto">🚀 Ürünleri Getir</button>
           </div>
-          <button class="btn btn-primary" onclick="urunleriCek()" id="btn-cek" style="height:40px;margin-top:auto">
-            🚀 Ürünleri Getir
-          </button>
-        </div>
-
-        <div class="tip-box">
-          <span style="font-size:16px">💡</span>
-          <span>Bu araç bilgilerinizi <strong>yalnızca kendi bilgisayarınızda çalışan proxy sunucusu üzerinden</strong> Trendyol'a gönderir. Hiçbir sunucumuza iletilmez. Proxy'yi çalıştırmak için <strong>server.js</strong> dosyasını indirip <code style="background:rgba(59,111,232,.1);padding:1px 5px;border-radius:4px">node server.js</code> komutuyla başlatın.</span>
-        </div>
-
-        <div style="display:flex;gap:8px;margin-top:12px">
-          <button class="btn btn-ghost" onclick="loadDemo()" style="font-size:12px">🎯 Demo Ürünlerle Dene</button>
-          <button class="btn btn-ghost" onclick="checkProxy()" style="font-size:12px">🔍 Proxy Bağlantısını Test Et</button>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn btn-ghost" onclick="loadDemo()" style="font-size:12px">🎯 Demo Dene</button>
+            <button class="btn btn-ghost" onclick="checkProxy()" style="font-size:12px">🔍 Proxy Test Et</button>
+          </div>
         </div>
       </div>
     </div>
@@ -359,116 +438,52 @@ select.finput{cursor:pointer;appearance:none;background-image:url("data:image/sv
             <button class="ftab" onclick="setFilter('eksik',this)">⏳ Eksik</button>
           </div>
         </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <div class="search-wrap">
-            <span class="search-icon">🔍</span>
-            <input class="search-inp" type="text" placeholder="Ürün ara..." oninput="araUrun(this.value)">
-          </div>
-          <button class="btn btn-ghost" style="font-size:12px" onclick="topluKargo()">🚚 Toplu Kargo</button>
-          <button class="btn btn-ghost" style="font-size:12px" onclick="csvIndir()">📥 CSV İndir</button>
-          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--t3)">
-            Sayfa:
-            <button class="page-btn" id="btn-prev" onclick="changePage(-1)" disabled>‹</button>
-            <span class="page-info" id="page-info">1 / 1</span>
-            <button class="page-btn" id="btn-next" onclick="changePage(1)" disabled>›</button>
-          </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-inp" type="text" placeholder="Ürün ara..." oninput="araUrun(this.value)"></div>
+          <button class="btn-sm" onclick="topluKargo()">🚚 Toplu Kargo</button>
+          <button class="btn-sm" onclick="csvIndir()">📥 CSV İndir</button>
         </div>
       </div>
-
       <div class="prod-table-wrap">
         <table class="ptable">
-          <thead>
-            <tr>
-              <th>Ürün</th>
-              <th>Satış Fiyatı</th>
-              <th>Komisyon</th>
-              <th>Alış Fiyatı</th>
-              <th>Kargo</th>
-              <th>Net Kar</th>
-              <th>Marj</th>
-              <th>İşlem</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Ürün</th><th>Satış Fiyatı</th><th>Komisyon</th><th>Alış Fiyatı</th><th>Kargo</th><th>Net Kar</th><th>Marj</th><th>İşlem</th></tr></thead>
           <tbody id="ptbody"></tbody>
         </table>
       </div>
     </div>
 
-  </div>
-
-  <!-- ═══════════════════════════════════════
-       TAB 2: HESAPLAMA
-  ═══════════════════════════════════════ -->
-  <div class="tab-panel" id="tab-hesap">
-    <div class="calc-card">
-      <div class="card-head">
-        <div class="card-head-icon">🧮</div>
-        <div>
-          <div class="card-head-title">Tek Ürün Kar Hesaplama</div>
-          <div class="card-head-sub">Kategori seçin, fiyatları girin, net karı görün</div>
+    <!-- GİRİŞ ÇAĞRISI (giriş yapılmamışsa) -->
+    <div id="login-cta" style="display:none;margin-top:2rem">
+      <div style="background:linear-gradient(135deg,#060E1E,#122040);border-radius:var(--r4);padding:3rem;text-align:center;border:1px solid rgba(59,130,246,.2)">
+        <div style="font-size:48px;margin-bottom:1rem">🔐</div>
+        <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:.5rem">Kendi ürünlerinizi çekin</div>
+        <div style="font-size:14px;color:rgba(255,255,255,.5);margin-bottom:1.5rem;max-width:400px;margin-left:auto;margin-right:auto">Trendyol'daki tüm ürünleriniz otomatik gelsin, komisyon ve KDV dahil net karınızı görün</div>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <button class="btn-hero main" onclick="openAuth('kayit')">🚀 Üye Ol — ₺1.500/yıl</button>
+          <button class="btn-hero outline" onclick="openAuth('giris')">Giriş Yap</button>
         </div>
       </div>
+    </div>
+
+  </div>
+
+  <!-- TAB: HESAP -->
+  <div class="page" id="tab-hesap">
+    <div class="calc-card">
+      <div class="card-head"><div class="card-head-icon">🧮</div><div><div class="card-head-title">Tek Ürün Kar Hesaplama</div><div class="card-head-sub">Kategori seçin, fiyatları girin, net karı görün</div></div></div>
       <div class="card-body">
         <div class="form-row fr2">
-          <div class="fg">
-            <div class="flabel">Kategori</div>
-            <div class="finput-wrap">
-              <select class="finput" id="h-kat" onchange="onKatChange()">
-                <option value="">— Kategori Seçin —</option>
-              </select>
-            </div>
-          </div>
-          <div class="fg">
-            <div class="flabel">Komisyon Oranı</div>
-            <div class="finput-wrap">
-              <span class="fsuffix">%</span>
-              <input class="finput suf" type="number" id="h-kom" placeholder="Kategoriye göre dolar" min="0" max="100" step="0.01">
-            </div>
-          </div>
+          <div class="fg"><div class="flabel">Kategori</div><div class="finput-wrap"><select class="finput2" id="h-kat" onchange="onKatChange()"><option value="">— Kategori Seçin —</option></select></div></div>
+          <div class="fg"><div class="flabel">Komisyon Oranı</div><div class="finput-wrap"><span class="fsuffix">%</span><input class="finput2" type="number" id="h-kom" placeholder="Kategoriye göre dolar" min="0" max="100" step="0.01"></div></div>
         </div>
         <div class="form-row fr2">
-          <div class="fg">
-            <div class="flabel">Satış Fiyatı (KDV Dahil)</div>
-            <div class="finput-wrap">
-              <span class="fsuffix">₺</span>
-              <input class="finput suf" type="number" id="h-satis" placeholder="0,00" min="0" step="0.01">
-            </div>
-          </div>
-          <div class="fg">
-            <div class="flabel">Alış Fiyatı (KDV Dahil)</div>
-            <div class="finput-wrap">
-              <span class="fsuffix">₺</span>
-              <input class="finput suf" type="number" id="h-alis" placeholder="0,00" min="0" step="0.01">
-            </div>
-          </div>
+          <div class="fg"><div class="flabel">Satış Fiyatı (KDV Dahil)</div><div class="finput-wrap"><span class="fsuffix">₺</span><input class="finput2" type="number" id="h-satis" placeholder="0,00" min="0" step="0.01"></div></div>
+          <div class="fg"><div class="flabel">Alış Fiyatı (KDV Dahil)</div><div class="finput-wrap"><span class="fsuffix">₺</span><input class="finput2" type="number" id="h-alis" placeholder="0,00" min="0" step="0.01"></div></div>
         </div>
         <div class="form-row fr3">
-          <div class="fg">
-            <div class="flabel">KDV Oranı</div>
-            <div class="finput-wrap">
-              <span class="fsuffix">%</span>
-              <select class="finput suf" id="h-kdv">
-                <option value="20" selected>20%</option>
-                <option value="10">10%</option>
-                <option value="1">1%</option>
-                <option value="0">0%</option>
-              </select>
-            </div>
-          </div>
-          <div class="fg">
-            <div class="flabel">Kargo Ücreti</div>
-            <div class="finput-wrap">
-              <span class="fsuffix">₺</span>
-              <input class="finput suf" type="number" id="h-kargo" placeholder="0,00" min="0" step="0.01" value="0">
-            </div>
-          </div>
-          <div class="fg">
-            <div class="flabel">Diğer Masraf</div>
-            <div class="finput-wrap">
-              <span class="fsuffix">₺</span>
-              <input class="finput suf" type="number" id="h-diger" placeholder="0,00" min="0" step="0.01" value="0">
-            </div>
-          </div>
+          <div class="fg"><div class="flabel">KDV Oranı</div><div class="finput-wrap"><span class="fsuffix">%</span><select class="finput2" id="h-kdv"><option value="20" selected>20%</option><option value="10">10%</option><option value="1">1%</option><option value="0">0%</option></select></div></div>
+          <div class="fg"><div class="flabel">Kargo (₺)</div><div class="finput-wrap"><span class="fsuffix">₺</span><input class="finput2" type="number" id="h-kargo" placeholder="0,00" min="0" step="0.01" value="0"></div></div>
+          <div class="fg"><div class="flabel">Diğer Masraf (₺)</div><div class="finput-wrap"><span class="fsuffix">₺</span><input class="finput2" type="number" id="h-diger" placeholder="0,00" min="0" step="0.01" value="0"></div></div>
         </div>
         <div class="kargo-row">
           <span class="kr-label">Kargo Tipi</span>
@@ -485,31 +500,19 @@ select.finput{cursor:pointer;appearance:none;background-image:url("data:image/sv
         </div>
       </div>
     </div>
-
-    <!-- RESULTS -->
     <div class="results calc-card" id="results">
-      <div class="card-head">
-        <div class="card-head-icon">📊</div>
-        <div>
-          <div class="card-head-title">Hesaplama Sonuçları</div>
-          <div class="card-head-sub" id="res-sub">—</div>
-        </div>
-      </div>
+      <div class="card-head"><div class="card-head-icon">📊</div><div><div class="card-head-title">Hesaplama Sonuçları</div><div class="card-head-sub" id="res-sub">—</div></div></div>
       <div class="card-body">
         <div class="result-top">
           <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
-            <div class="kar-circle" id="kar-circle">
-              <div class="kc-label">Kâr</div>
-              <div class="kc-val" id="kc-val">₺0</div>
-              <div class="kc-sub" id="kc-sub"></div>
-            </div>
+            <div class="kar-circle" id="kar-circle"><div class="kc-label">Kâr</div><div class="kc-val" id="kc-val">₺0</div><div class="kc-sub" id="kc-sub"></div></div>
             <div class="marj-badge" id="marj-badge">%0 Marj</div>
           </div>
           <div class="res-grid">
-            <div class="rc"><div class="rc-label">Komisyon Tutarı</div><div class="rc-val or" id="r-kom">₺0</div><div class="rc-sub" id="r-kom-sub">—</div></div>
-            <div class="rc"><div class="rc-label">Yatırım Geri Dönüş</div><div class="rc-val b" id="r-ygd">%0</div><div class="rc-sub">Alış fiyatına göre</div></div>
+            <div class="rc"><div class="rc-label">Komisyon</div><div class="rc-val or" id="r-kom">₺0</div><div class="rc-sub" id="r-kom-sub">—</div></div>
+            <div class="rc"><div class="rc-label">Yat. Geri Dönüş</div><div class="rc-val b" id="r-ygd">%0</div><div class="rc-sub">Alış fiyatına göre</div></div>
             <div class="rc"><div class="rc-label">Hizmet Bedeli</div><div class="rc-val" id="r-hizmet">₺0</div><div class="rc-sub">Trendyol payı</div></div>
-            <div class="rc"><div class="rc-label">Stopaj Bedeli</div><div class="rc-val" id="r-stopaj">₺0</div><div class="rc-sub">%5 stopaj</div></div>
+            <div class="rc"><div class="rc-label">Stopaj</div><div class="rc-val" id="r-stopaj">₺0</div><div class="rc-sub">%5 stopaj</div></div>
             <div class="rc hl"><div class="rc-label">Kâr Oranı</div><div class="rc-val or" id="r-karor">%0</div><div class="rc-sub">Satış fiyatına göre</div></div>
             <div class="rc"><div class="rc-label">Ödenecek KDV</div><div class="rc-val" id="r-kdv">₺0</div><div class="rc-sub">Devlete ödenen</div></div>
           </div>
@@ -517,7 +520,7 @@ select.finput{cursor:pointer;appearance:none;background-image:url("data:image/sv
         <div class="meter-sec">
           <div class="meter-lr"><span>Zarar</span><span id="meter-txt">Kâr: %0</span><span>Yüksek Kâr</span></div>
           <div class="meter-bg"><div class="meter-fill" id="meter-fill" style="width:0%"></div></div>
-          <div class="meter-ticks"><span>%0</span><span>%10</span><span>%20</span><span>%30</span><span>%40+</span></div>
+          <div style="display:flex;justify-content:space-between;margin-top:3px;font-size:10px;color:var(--t3)"><span>%0</span><span>%10</span><span>%20</span><span>%30</span><span>%40+</span></div>
         </div>
         <div class="kdv-sec">
           <div class="kdv-head">KDV Detayı</div>
@@ -526,14 +529,14 @@ select.finput{cursor:pointer;appearance:none;background-image:url("data:image/sv
             <div class="kdc"><div class="kdc-label">Alıştan KDV</div><div class="kdc-val" id="kv-alis">₺0</div></div>
             <div class="kdc"><div class="kdc-label">Kargodan KDV</div><div class="kdc-val" id="kv-kargo">₺0</div></div>
             <div class="kdc"><div class="kdc-label">Komisyondan KDV</div><div class="kdc-val" id="kv-kom">₺0</div></div>
-            <div class="kdc"><div class="kdc-label">Hizmet Bed. KDV</div><div class="kdc-val" id="kv-hizmet">₺0</div></div>
+            <div class="kdc"><div class="kdc-label">Hizmet KDV</div><div class="kdc-val" id="kv-hizmet">₺0</div></div>
             <div class="kdc" style="background:var(--rbg);border-color:var(--rbr)"><div class="kdc-label" style="color:var(--red)">Ödenecek KDV</div><div class="kdc-val" style="color:var(--red)" id="kv-odeme">₺0</div></div>
           </div>
         </div>
         <div class="breakdown">
           <div class="bd-head">Detaylı Maliyet Dökümü</div>
           <div class="bd-row"><span class="bd-label">Satış Fiyatı (KDV dahil)</span><span class="bv p" id="bd-satis">₺0</span></div>
-          <div class="bd-row"><span class="bd-label">− Trendyol Komisyonu (%<span id="bd-kom-oran">0</span>)</span><span class="bv m" id="bd-kom">₺0</span></div>
+          <div class="bd-row"><span class="bd-label">− Komisyon (%<span id="bd-kom-oran">0</span>)</span><span class="bv m" id="bd-kom">₺0</span></div>
           <div class="bd-row"><span class="bd-label">− Alış Fiyatı</span><span class="bv m" id="bd-alis">₺0</span></div>
           <div class="bd-row"><span class="bd-label">− Kargo</span><span class="bv m" id="bd-kargo">₺0</span></div>
           <div class="bd-row"><span class="bd-label">− Diğer Masraf</span><span class="bv m" id="bd-diger">₺0</span></div>
@@ -546,124 +549,171 @@ select.finput{cursor:pointer;appearance:none;background-image:url("data:image/sv
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════
-       TAB 3: KOMİSYON ORANLARI
-  ═══════════════════════════════════════ -->
-  <div class="tab-panel" id="tab-komisyon">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px">
-      <div>
-        <div style="font-size:18px;font-weight:800;letter-spacing:-.3px">Trendyol Komisyon Oranları</div>
-        <div style="font-size:12px;color:var(--t3);margin-top:3px">Güncel kategori bazlı oranlar (KDV dahil)</div>
-      </div>
-      <div class="search-wrap">
-        <span class="search-icon">🔍</span>
-        <input class="search-inp" type="text" placeholder="Kategori ara..." oninput="filterKom(this.value)" style="width:230px">
-      </div>
+  
+      <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-inp" type="text" placeholder="Kategori ara..." oninput="filterKom(this.value)" style="width:230px"></div>
     </div>
     <div class="ktable-wrap" style="margin-bottom:3rem">
-      <table class="ktable">
-        <thead><tr><th>Kategori</th><th>Alt Kategori</th><th>Komisyon</th><th>Vade</th></tr></thead>
-        <tbody id="ktbody"></tbody>
-      </table>
+      <table class="ktable"><thead><tr><th>Kategori</th><th>Alt Kategori</th><th>Komisyon</th><th>Vade</th></tr></thead><tbody id="ktbody"></tbody></table>
     </div>
   </div>
 
 </div>
 
-<!-- MODAL: Tek ürün hesap -->
+<!-- AUTH MODAL -->
+<div class="auth-overlay" id="auth-overlay" onclick="closeAuthOutside(event)">
+  <div class="auth-box">
+    <button class="auth-close" onclick="closeAuth()">✕</button>
+    <div class="auth-logo"><div class="auth-logo-mark">K</div><span class="auth-logo-name">Kar<em>Panel</em></span></div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-giris" onclick="switchAuth('giris')">Giriş Yap</button>
+      <button class="auth-tab" id="tab-kayit" onclick="switchAuth('kayit')">Üye Ol</button>
+    </div>
+    <div class="auth-error" id="auth-error"></div>
+    <div class="auth-form" id="auth-form-giris">
+      <div class="auth-field"><div class="auth-label">E-posta</div><input class="auth-input" type="email" id="giris-email" placeholder="ornek@email.com"></div>
+      <div class="auth-field"><div class="auth-label">Şifre</div><input class="auth-input" type="password" id="giris-sifre" placeholder="••••••••"></div>
+      <button class="btn-auth" onclick="girisYap()">Giriş Yap</button>
+      <div class="auth-divider">veya</div>
+      <button class="btn-auth" style="background:var(--bg);color:var(--text);border:1.5px solid var(--border)" onclick="switchAuth('kayit')">Üye Ol →</button>
+    </div>
+    <div class="auth-form" id="auth-form-kayit" style="display:none">
+      <div class="auth-field"><div class="auth-label">Ad Soyad</div><input class="auth-input" type="text" id="kayit-ad" placeholder="Adınız Soyadınız"></div>
+      <div class="auth-field"><div class="auth-label">E-posta</div><input class="auth-input" type="email" id="kayit-email" placeholder="ornek@email.com"></div>
+      <div class="auth-field"><div class="auth-label">Şifre</div><input class="auth-input" type="password" id="kayit-sifre" placeholder="En az 6 karakter"></div>
+      <button class="btn-auth" onclick="kayitOl()">Üye Ol ve Devam Et →</button>
+      <div class="auth-divider">veya</div>
+      <button class="btn-auth" style="background:var(--bg);color:var(--text);border:1.5px solid var(--border)" onclick="switchAuth('giris')">← Giriş Yap</button>
+    </div>
+  </div>
+</div>
+
+<!-- ÖDEME SAYFASI -->
+<div class="auth-overlay" id="pay-overlay">
+  <div class="auth-box" style="max-width:520px;padding:0;overflow:hidden;border-radius:var(--r4)">
+    <div class="pay-header">
+      <div class="pay-icon">💎</div>
+      <div class="pay-title">KarPanel Premium</div>
+      <div class="pay-sub">Trendyol ürünlerinizi çekin, karınızı görün</div>
+    </div>
+    <div class="pay-body">
+      <div class="pay-price-box">
+        <div class="pay-price"><sup>₺</sup>1.500</div>
+        <div class="pay-price-period">yıllık üyelik · KDV dahil</div>
+      </div>
+      <div class="pay-features">
+        <div class="pay-feature"><div class="pay-feature-icon">✓</div>Trendyol'dan otomatik ürün çekme</div>
+        <div class="pay-feature"><div class="pay-feature-icon">✓</div>Komisyon + KDV + Stopaj dahil net kar</div>
+        <div class="pay-feature"><div class="pay-feature-icon">✓</div>Sınırsız ürün analizi</div>
+        <div class="pay-feature"><div class="pay-feature-icon">✓</div>CSV export ve detaylı raporlar</div>
+        <div class="pay-feature"><div class="pay-feature-icon">✓</div>1 yıl boyunca tüm güncellemeler</div>
+      </div>
+      <div class="pay-form">
+        <div class="pay-field"><div class="pay-label">Kart Üzerindeki İsim</div><input class="pay-input" type="text" id="pay-isim" placeholder="Ad Soyad"></div>
+        <div class="pay-field"><div class="pay-label">Kart Numarası</div><input class="pay-input" type="text" id="pay-kart" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatKart(this)"></div>
+        <div class="pay-row">
+          <div class="pay-field"><div class="pay-label">Son Kullanma</div><input class="pay-input" type="text" id="pay-tarih" placeholder="AA/YY" maxlength="5" oninput="formatTarih(this)"></div>
+          <div class="pay-field"><div class="pay-label">CVV</div><input class="pay-input" type="text" id="pay-cvv" placeholder="000" maxlength="3"></div>
+        </div>
+        <button class="btn-pay" onclick="odemeYap()">🔒 ₺1.500 Öde ve Başla</button>
+        <div class="pay-security">🔒 256-bit SSL ile güvenli ödeme</div>
+      </div>
+      <div class="pay-skip"><a onclick="demoyaDevam()">Şimdilik demo ile devam et →</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAY MODAL -->
 <div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <button class="modal-close" onclick="closeModal()">✕</button>
-    <div class="modal-title">Kar Hesaplama</div>
-    <div class="modal-sub">Aşağıdaki bilgileri kontrol edip alış fiyatını girin</div>
-    <div class="modal-prod-name" id="m-name">—</div>
-    <div class="modal-prod-info">
-      <div class="mpi"><div class="mpi-label">Satış Fiyatı</div><div class="mpi-val" id="m-satis">₺0</div></div>
-      <div class="mpi"><div class="mpi-label">Komisyon Oranı</div><div class="mpi-val or" id="m-kom">%0</div></div>
-      <div class="mpi"><div class="mpi-label">Komisyon Tutarı</div><div class="mpi-val or" id="m-komtl">₺0</div></div>
-      <div class="mpi"><div class="mpi-label">Kategori</div><div class="mpi-val" id="m-kat" style="font-size:12px">—</div></div>
+    <div class="modal-title">📊 Ürün Kar Detayı</div>
+    <div class="modal-prod" id="m-name">—</div>
+    <div class="modal-inputs">
+      <div class="mi-wrap"><div class="mi-label">Alış / Maliyet (₺)</div><div class="mi-field"><span class="mi-sym">₺</span><input class="mi-input" type="number" id="m-alis" placeholder="0,00" min="0" step="0.01" oninput="modalHesapla()"></div></div>
+      <div class="mi-wrap"><div class="mi-label">Kargo (₺)</div><div class="mi-field"><span class="mi-sym">₺</span><input class="mi-input" type="number" id="m-kargo" placeholder="0,00" min="0" step="0.01" value="0" oninput="modalHesapla()"></div></div>
     </div>
-    <div class="form-row fr2" style="margin-bottom:12px">
-      <div class="fg">
-        <div class="flabel">Alış Fiyatı (₺)</div>
-        <div class="finput-wrap"><span class="fsuffix">₺</span><input class="finput suf" type="number" id="m-alis" placeholder="0,00" min="0" step="0.01"></div>
+    <div id="modal-result" style="display:none">
+      <!-- NeSatılır style üst tablo -->
+      <div style="position:relative;margin-bottom:10px;padding-right:80px">
+        <table class="ns-table" style="width:100%">
+          <thead><tr><th>Komisyon</th><th>Yat. Geri Dönüş</th><th>Hizmet Bedeli</th><th>Stopaj Bedeli</th><th style="background:var(--ybg)">Kâr Oranı</th><th>KDV</th></tr></thead>
+          <tbody><tr>
+            <td id="mr-komtl" style="color:var(--text)">₺0</td>
+            <td id="mr-ygd" style="color:var(--blue)">%0</td>
+            <td id="mr-hizmet" style="color:var(--text)">₺0</td>
+            <td id="mr-stopaj" style="color:var(--text)">₺0</td>
+            <td id="mr-karor" style="color:var(--yellow);background:var(--ybg)">%0</td>
+            <td id="mr-kdv" style="color:var(--text)">₺0</td>
+          </tr></tbody>
+        </table>
+        <!-- Kâr balonu -->
+        <div id="m-circle" style="position:absolute;right:0;top:50%;transform:translateY(-50%);width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(242,122,26,.35)">
+          <div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.8)">Kâr</div>
+          <div style="font-size:13px;font-weight:900;color:#fff;letter-spacing:-.5px;line-height:1.1" id="mr-kar">₺0</div>
+        </div>
       </div>
-      <div class="fg">
-        <div class="flabel">Kargo (₺)</div>
-        <div class="finput-wrap"><span class="fsuffix">₺</span><input class="finput suf" type="number" id="m-kargo" placeholder="0,00" min="0" step="0.01" value="0"></div>
+      <!-- KDV detay tablosu -->
+      <table class="ns-kdv-table">
+        <thead><tr><th>Satıştan Oluşan KDV</th><th>Alıştan Oluşan KDV</th><th>Kargodan Oluşan KDV</th><th>Komisyondan Oluşan KDV</th><th>Hizmet Bed. KDV</th><th>Ödenecek KDV</th></tr></thead>
+        <tbody><tr>
+          <td id="mr-kdvs">₺0</td>
+          <td id="mr-kdva">₺0</td>
+          <td id="mr-kdvk">₺0</td>
+          <td id="mr-kdvkom">₺0</td>
+          <td id="mr-kdvhiz">₺0</td>
+          <td id="mr-kdvode">₺0</td>
+        </tr></tbody>
+      </table>
+      <!-- Maliyet dökümü -->
+      <div class="breakdown">
+        <div class="bd-head">Detaylı Maliyet Dökümü</div>
+        <div class="bd-row"><span class="bd-label">Satış Fiyatı</span><span class="bv p" id="mbd-satis">₺0</span></div>
+        <div class="bd-row"><span class="bd-label">− Komisyon</span><span class="bv m" id="mbd-kom">₺0</span></div>
+        <div class="bd-row"><span class="bd-label">− Alış Fiyatı</span><span class="bv m" id="mbd-alis">₺0</span></div>
+        <div class="bd-row"><span class="bd-label">− Kargo</span><span class="bv m" id="mbd-kargo">₺0</span></div>
+        <div class="bd-row"><span class="bd-label">− Hizmet Bedeli</span><span class="bv m" id="mbd-hizmet">₺0</span></div>
+        <div class="bd-row"><span class="bd-label">− Stopaj (%5)</span><span class="bv m" id="mbd-stopaj">₺0</span></div>
+        <div class="bd-row"><span class="bd-label">− Ödenecek KDV</span><span class="bv m" id="mbd-kdv">₺0</span></div>
+        <div class="bd-row"><span>Net Kâr / Zarar</span><span class="bv" id="mbd-net" style="font-size:17px">₺0</span></div>
       </div>
     </div>
-    <button class="btn btn-primary" style="width:100%;padding:12px;font-size:14px" onclick="modalHesapla()">🧮 Hesapla</button>
-    <div id="modal-result" style="margin-top:1rem;display:none">
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">
-        <div class="mpi"><div class="mpi-label">Net Kar</div><div class="mpi-val" id="mr-kar">₺0</div></div>
-        <div class="mpi"><div class="mpi-label">Kar Marjı</div><div class="mpi-val" id="mr-marj">%0</div></div>
-        <div class="mpi"><div class="mpi-label">YGD Oranı</div><div class="mpi-val" id="mr-ygd">%0</div></div>
-      </div>
-    </div>
+    <div id="modal-empty" class="modal-empty">👆 Alış fiyatını girerek detaylı hesaplamayı görün</div>
   </div>
 </div>
 
 <div class="toast" id="toast"><span id="t-icon"></span><span id="t-msg"></span></div>
 
 <script>
-const PROXY='http://localhost:3001';
+// ── VERİ ──
 const KOMISYONLAR=[
-  {k:"Aksesuar",a:"Altın (İşlenmemiş)",o:7.0,v:7},
-  {k:"Aksesuar",a:"Atkı & Bere & Eldiven",o:21.36,v:28},
-  {k:"Aksesuar",a:"Diğer Aksesuar",o:22.37,v:28},
-  {k:"Aksesuar",a:"Çanta",o:22.37,v:28},
-  {k:"Aksesuar",a:"Güneş Gözlüğü",o:21.36,v:28},
-  {k:"Aksesuar",a:"Saat",o:16.27,v:14},
-  {k:"Aksesuar",a:"Takı & Mücevher",o:21.36,v:14},
-  {k:"Moda - Kadın",a:"Elbise",o:24.41,v:28},
-  {k:"Moda - Kadın",a:"Bluz & Gömlek",o:24.41,v:28},
-  {k:"Moda - Kadın",a:"Pantolon",o:24.41,v:28},
-  {k:"Moda - Kadın",a:"Etek",o:24.41,v:28},
-  {k:"Moda - Kadın",a:"Mont & Kaban",o:21.36,v:28},
-  {k:"Moda - Kadın",a:"Pijama & İç Giyim",o:21.36,v:28},
-  {k:"Moda - Kadın",a:"Spor Giyim",o:21.36,v:28},
-  {k:"Moda - Erkek",a:"T-Shirt & Polo",o:21.36,v:28},
-  {k:"Moda - Erkek",a:"Gömlek",o:21.36,v:28},
-  {k:"Moda - Erkek",a:"Pantolon & Jean",o:21.36,v:28},
-  {k:"Moda - Erkek",a:"Mont & Ceket",o:21.36,v:28},
-  {k:"Moda - Erkek",a:"Takım Elbise",o:21.36,v:28},
-  {k:"Ayakkabı",a:"Spor Ayakkabı",o:20.35,v:28},
-  {k:"Ayakkabı",a:"Bot & Çizme",o:21.36,v:28},
-  {k:"Ayakkabı",a:"Topuklu Ayakkabı",o:21.36,v:28},
-  {k:"Ayakkabı",a:"Sandalet & Terlik",o:21.36,v:28},
-  {k:"Elektronik",a:"Cep Telefonu",o:5.09,v:7},
-  {k:"Elektronik",a:"Laptop & Bilgisayar",o:5.09,v:7},
-  {k:"Elektronik",a:"Tablet",o:5.09,v:7},
-  {k:"Elektronik",a:"Akıllı Saat & Bileklik",o:10.17,v:14},
-  {k:"Elektronik",a:"Kulaklık",o:10.17,v:14},
-  {k:"Elektronik",a:"TV & Monitör",o:5.09,v:7},
-  {k:"Elektronik",a:"Beyaz Eşya",o:7.63,v:7},
-  {k:"Elektronik",a:"Küçük Ev Aletleri",o:12.22,v:14},
-  {k:"Kozmetik",a:"Parfüm",o:18.31,v:14},
-  {k:"Kozmetik",a:"Makyaj",o:20.35,v:14},
-  {k:"Kozmetik",a:"Saç Bakım",o:20.35,v:14},
-  {k:"Kozmetik",a:"Cilt Bakım",o:20.35,v:14},
-  {k:"Ev & Yaşam",a:"Mobilya",o:14.24,v:14},
-  {k:"Ev & Yaşam",a:"Aydınlatma",o:18.31,v:14},
-  {k:"Ev & Yaşam",a:"Tekstil",o:21.36,v:28},
-  {k:"Ev & Yaşam",a:"Mutfak Gereçleri",o:18.31,v:14},
-  {k:"Ev & Yaşam",a:"Dekorasyon",o:20.35,v:14},
-  {k:"Spor & Outdoor",a:"Spor Ekipmanı",o:16.27,v:14},
-  {k:"Spor & Outdoor",a:"Kamp & Outdoor",o:16.27,v:14},
-  {k:"Spor & Outdoor",a:"Bisiklet & Scooter",o:12.22,v:14},
-  {k:"Spor & Outdoor",a:"Fitness & Yoga",o:16.27,v:14},
-  {k:"Kitap & Müzik",a:"Kitap",o:10.17,v:7},
-  {k:"Oyuncak",a:"Oyuncak & Oyun",o:18.31,v:14},
-  {k:"Bebek & Anne",a:"Bebek Giyim",o:20.35,v:14},
-  {k:"Bebek & Anne",a:"Bebek Arabası",o:14.24,v:14},
-  {k:"Otomobil",a:"Araç Aksesuar",o:14.24,v:14},
-  {k:"Bahçe & Yapı",a:"Bahçe Ürünleri",o:16.27,v:14},
-  {k:"Pet Shop",a:"Evcil Hayvan",o:16.27,v:14},
+  {k:"Aksesuar",a:"Altın (İşlenmemiş)",o:7.0,v:7},{k:"Aksesuar",a:"Atkı & Bere & Eldiven",o:21.36,v:28},
+  {k:"Aksesuar",a:"Diğer Aksesuar",o:22.37,v:28},{k:"Aksesuar",a:"Çanta",o:22.37,v:28},
+  {k:"Aksesuar",a:"Güneş Gözlüğü",o:21.36,v:28},{k:"Aksesuar",a:"Saat",o:16.27,v:14},
+  {k:"Aksesuar",a:"Takı & Mücevher",o:21.36,v:14},{k:"Moda - Kadın",a:"Elbise",o:24.41,v:28},
+  {k:"Moda - Kadın",a:"Bluz & Gömlek",o:24.41,v:28},{k:"Moda - Kadın",a:"Pantolon",o:24.41,v:28},
+  {k:"Moda - Kadın",a:"Etek",o:24.41,v:28},{k:"Moda - Kadın",a:"Mont & Kaban",o:21.36,v:28},
+  {k:"Moda - Kadın",a:"Pijama & İç Giyim",o:21.36,v:28},{k:"Moda - Kadın",a:"Spor Giyim",o:21.36,v:28},
+  {k:"Moda - Erkek",a:"T-Shirt & Polo",o:21.36,v:28},{k:"Moda - Erkek",a:"Gömlek",o:21.36,v:28},
+  {k:"Moda - Erkek",a:"Pantolon & Jean",o:21.36,v:28},{k:"Moda - Erkek",a:"Mont & Ceket",o:21.36,v:28},
+  {k:"Moda - Erkek",a:"Takım Elbise",o:21.36,v:28},{k:"Ayakkabı",a:"Spor Ayakkabı",o:20.35,v:28},
+  {k:"Ayakkabı",a:"Bot & Çizme",o:21.36,v:28},{k:"Ayakkabı",a:"Sandalet & Terlik",o:21.36,v:28},
+  {k:"Elektronik",a:"Cep Telefonu",o:5.09,v:7},{k:"Elektronik",a:"Laptop & Bilgisayar",o:5.09,v:7},
+  {k:"Elektronik",a:"Tablet",o:5.09,v:7},{k:"Elektronik",a:"Akıllı Saat & Bileklik",o:10.17,v:14},
+  {k:"Elektronik",a:"Kulaklık",o:10.17,v:14},{k:"Elektronik",a:"TV & Monitör",o:5.09,v:7},
+  {k:"Elektronik",a:"Beyaz Eşya",o:7.63,v:7},{k:"Elektronik",a:"Küçük Ev Aletleri",o:12.22,v:14},
+  {k:"Kozmetik",a:"Parfüm",o:18.31,v:14},{k:"Kozmetik",a:"Makyaj",o:20.35,v:14},
+  {k:"Kozmetik",a:"Saç Bakım",o:20.35,v:14},{k:"Kozmetik",a:"Cilt Bakım",o:20.35,v:14},
+  {k:"Ev & Yaşam",a:"Mobilya",o:14.24,v:14},{k:"Ev & Yaşam",a:"Aydınlatma",o:18.31,v:14},
+  {k:"Ev & Yaşam",a:"Tekstil",o:21.36,v:28},{k:"Ev & Yaşam",a:"Mutfak Gereçleri",o:18.31,v:14},
+  {k:"Ev & Yaşam",a:"Dekorasyon",o:20.35,v:14},{k:"Spor & Outdoor",a:"Spor Ekipmanı",o:16.27,v:14},
+  {k:"Spor & Outdoor",a:"Kamp & Outdoor",o:16.27,v:14},{k:"Spor & Outdoor",a:"Bisiklet",o:12.22,v:14},
+  {k:"Oyuncak",a:"Oyuncak & Oyun",o:18.31,v:14},{k:"Bebek & Anne",a:"Bebek Giyim",o:20.35,v:14},
+  {k:"Bebek & Anne",a:"Bebek Arabası",o:14.24,v:14},{k:"Otomobil",a:"Araç Aksesuar",o:14.24,v:14},
+  {k:"Bahçe & Yapı",a:"Bahçe Ürünleri",o:16.27,v:14},{k:"Pet Shop",a:"Evcil Hayvan",o:16.27,v:14},
   {k:"Gıda",a:"Organik & Doğal",o:12.22,v:7},
 ];
 
-const DEMO_URUNLER=[
+const DEMO=[
   {id:'D1',title:'Pamuklu Basic T-Shirt 3\'lü Set',categoryName:'Moda - Erkek',commissionRate:21.36,salePrice:399,alis:0,kargo:15},
   {id:'D2',title:'Deri Görünümlü Bayan Çantası',categoryName:'Aksesuar',commissionRate:22.37,salePrice:649,alis:0,kargo:20},
   {id:'D3',title:'Bluetooth Kablosuz Kulaklık',categoryName:'Elektronik',commissionRate:10.17,salePrice:1499,alis:0,kargo:25},
@@ -674,136 +724,246 @@ const DEMO_URUNLER=[
   {id:'D8',title:'Bambu Mutfak Gereçleri Seti',categoryName:'Ev & Yaşam',commissionRate:18.31,salePrice:289,alis:0,kargo:16},
 ];
 
-let urunler=[], filterMode='hepsi', searchQ='', currentPage=0, totalPages=1;
-let kargoTipi='satici', modalUrun=null;
+// ── DURUM ──
+let urunler=[], filterMode='hepsi', searchQ='', kargoTipi='satici', modalUrun=null;
+let currentUser=null; // {ad, email, premium}
 
-// ── HELPERS ──
+const PROXY='http://localhost:3001';
 const fmt=n=>'₺'+Math.abs(n).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+// ── KAR FORMÜLÜ ──
 function calcKar(p){
-  const s=p.salePrice||0, a=p.alis||0, k=p.kargo||0, kom=p.commissionRate||0;
-  const komisyon=s*(kom/100);
-  const komisyonKdvHaric=komisyon/1.2;
-  const hizmet=komisyonKdvHaric*0.7914;
-  const stopaj=komisyonKdvHaric*0.05;
-  const net=s-komisyon-a-k-hizmet-stopaj;
+  const s=p.salePrice||0, a=p.alis||0, k=p.kargo||0, ko=p.commissionRate||0;
+  const kf=1.2;
+  const komisyon=s*(ko/100);
+  const komH=komisyon/kf;
+  const hizmet=13.19;
+  const stopaj=komH*0.05;
+  const kdvS=s-s/kf, kdvA=a-a/kf, kdvK=k-k/kf;
+  const kdvKom=komisyon-komisyon/kf, kdvHiz=hizmet-hizmet/kf;
+  const odKdv=Math.max(0,kdvS-kdvA-kdvK-kdvKom-kdvHiz);
+  const net=s-komisyon-a-k-hizmet-stopaj-odKdv;
   const marj=s>0?(net/s*100):null;
   const ygd=a>0?(net/a*100):null;
-  return{komisyon,hizmet,stopaj,net,marj,ygd,hasAlis:a>0};
+  return{komisyon,komH,hizmet,stopaj,kdvS,kdvA,kdvK,kdvKom,kdvHiz,odKdv,net,marj,ygd,hasAlis:a>0};
 }
 
-// ── TAB ──
+// ── KULLANICI YÖNETİMİ ──
+function loadUser(){
+  const u=localStorage.getItem('kp_user');
+  if(u){currentUser=JSON.parse(u);applyUser();}
+  else{showGuestUI();}
+}
+
+function applyUser(){
+  document.getElementById('nav-login-btn').style.display='none';
+  document.getElementById('nav-user').style.display='flex';
+  document.getElementById('nav-avatar').textContent=currentUser.ad.charAt(0).toUpperCase();
+  document.getElementById('nav-username').textContent=currentUser.ad;
+  if(currentUser.premium){
+    document.getElementById('connect-section').style.display='block';
+    document.getElementById('login-cta').style.display='none';
+  } else {
+    document.getElementById('login-cta').style.display='block';
+  }
+}
+
+function showGuestUI(){
+  document.getElementById('nav-login-btn').style.display='flex';
+  document.getElementById('nav-user').style.display='none';
+  document.getElementById('connect-section').style.display='none';
+  document.getElementById('login-cta').style.display='block';
+}
+
+function logout(){
+  localStorage.removeItem('kp_user');
+  currentUser=null;
+  urunler=[];
+  document.getElementById('urun-section').style.display='none';
+  showGuestUI();
+  toast('Çıkış yapıldı.','info','👋');
+}
+
+// ── AUTH ──
+function openAuth(tab){
+  document.getElementById('auth-overlay').classList.add('open');
+  switchAuth(tab);
+  document.getElementById('auth-error').style.display='none';
+}
+function closeAuth(){document.getElementById('auth-overlay').classList.remove('open');}
+function closeAuthOutside(e){if(e.target===document.getElementById('auth-overlay'))closeAuth();}
+function switchAuth(tab){
+  document.getElementById('auth-form-giris').style.display=tab==='giris'?'flex':'none';
+  document.getElementById('auth-form-kayit').style.display=tab==='kayit'?'flex':'none';
+  document.getElementById('tab-giris').className='auth-tab'+(tab==='giris'?' active':'');
+  document.getElementById('tab-kayit').className='auth-tab'+(tab==='kayit'?' active':'');
+  document.getElementById('auth-error').style.display='none';
+}
+
+function showAuthError(msg){
+  const el=document.getElementById('auth-error');
+  el.textContent=msg;el.style.display='block';
+}
+
+// Premium e-postalar (otomatik ücretsiz erişim)
+const PREMIUM_EMAILS=['info@ecuyy.com'];
+
+function girisYap(){
+  const email=document.getElementById('giris-email').value.trim();
+  const sifre=document.getElementById('giris-sifre').value;
+  if(!email||!sifre){showAuthError('E-posta ve şifre gerekli');return;}
+  const users=JSON.parse(localStorage.getItem('kp_users')||'[]');
+  const user=users.find(u=>u.email===email&&u.sifre===sifre);
+  if(!user){showAuthError('E-posta veya şifre hatalı');return;}
+  const isPremium=user.premium||PREMIUM_EMAILS.includes(email);
+  currentUser={ad:user.ad,email:user.email,premium:isPremium};
+  localStorage.setItem('kp_user',JSON.stringify(currentUser));
+  closeAuth();
+  applyUser();
+  if(!currentUser.premium){
+    setTimeout(()=>document.getElementById('pay-overlay').classList.add('open'),400);
+  } else {
+    toast('Hoş geldiniz, '+currentUser.ad+'! 🎉','success','👋');
+  }
+}
+
+function kayitOl(){
+  const ad=document.getElementById('kayit-ad').value.trim();
+  const email=document.getElementById('kayit-email').value.trim();
+  const sifre=document.getElementById('kayit-sifre').value;
+  if(!ad||!email||!sifre){showAuthError('Tüm alanları doldurun');return;}
+  if(sifre.length<6){showAuthError('Şifre en az 6 karakter olmalı');return;}
+  const users=JSON.parse(localStorage.getItem('kp_users')||'[]');
+  if(users.find(u=>u.email===email)){showAuthError('Bu e-posta zaten kayıtlı');return;}
+  users.push({ad,email,sifre,premium:false});
+  localStorage.setItem('kp_users',JSON.stringify(users));
+  const isPremium=PREMIUM_EMAILS.includes(email);
+  currentUser={ad,email,premium:isPremium};
+  localStorage.setItem('kp_user',JSON.stringify(currentUser));
+  closeAuth();
+  applyUser();
+  if(!isPremium){
+    setTimeout(()=>document.getElementById('pay-overlay').classList.add('open'),400);
+  } else {
+    toast('Hoş geldiniz, '+ad+'! Premium erişiminiz aktif 🎉','success','👋');
+  }
+}
+
+// ── ÖDEME ──
+function formatKart(el){
+  let v=el.value.replace(/\D/g,'').substring(0,16);
+  el.value=v.replace(/(\d{4})/g,'$1 ').trim();
+}
+function formatTarih(el){
+  let v=el.value.replace(/\D/g,'');
+  if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2,4);
+  el.value=v;
+}
+
+function odemeYap(){
+  const isim=document.getElementById('pay-isim').value.trim();
+  const kart=document.getElementById('pay-kart').value.replace(/\s/g,'');
+  const tarih=document.getElementById('pay-tarih').value;
+  const cvv=document.getElementById('pay-cvv').value;
+  if(!isim||kart.length<16||tarih.length<5||cvv.length<3){
+    toast('Lütfen tüm kart bilgilerini doldurun','error','❌');return;
+  }
+  // Demo ödeme - gerçek iyzico entegrasyonu sonra eklenecek
+  const users=JSON.parse(localStorage.getItem('kp_users')||'[]');
+  const idx=users.findIndex(u=>u.email===currentUser.email);
+  if(idx>=0){users[idx].premium=true;localStorage.setItem('kp_users',JSON.stringify(users));}
+  currentUser.premium=true;
+  localStorage.setItem('kp_user',JSON.stringify(currentUser));
+  document.getElementById('pay-overlay').classList.remove('open');
+  applyUser();
+  toast('Ödeme başarılı! Premium üyeliğiniz aktif.','success','🎉');
+}
+
+function demoyaDevam(){
+  document.getElementById('pay-overlay').classList.remove('open');
+  toast('Demo modu aktif. İstediğinizde premium\'a geçebilirsiniz.','info','🎯');
+}
+
+// ── TABS ──
 function showTab(name,el){
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
-  if(el) el.classList.add('active');
-}
-
-// ── PROXY CHECK ──
-async function checkProxy(){
-  document.getElementById('proxy-status').textContent='Test ediliyor...';
-  try{
-    const r=await fetch(PROXY+'/health',{signal:AbortSignal.timeout(3000)});
-    if(r.ok){
-      document.getElementById('proxy-status').innerHTML='<span style="color:var(--green)">✅ Çalışıyor</span>';
-      toast('Proxy sunucusu çalışıyor!','success','✅');
-    } else throw new Error();
-  }catch{
-    document.getElementById('proxy-status').innerHTML='<span style="color:var(--red)">❌ Ulaşılamıyor</span>';
-    toast('Proxy sunucusuna ulaşılamıyor. node server.js çalıştırın.','error','❌');
-  }
-}
-
-// ── ÜRÜN ÇEK ──
-async function urunleriCek(){
-  const sid=document.getElementById('inp-sid').value.trim();
-  const key=document.getElementById('inp-key').value.trim();
-  const sec=document.getElementById('inp-sec').value.trim();
-  if(!sid||!key||!sec){toast('Lütfen tüm alanları doldurun.','error','⚠️');return}
-
-  const btn=document.getElementById('btn-cek');
-  btn.innerHTML='<span class="spin"></span> Yükleniyor...';
-  btn.disabled=true;
-  setStatus('loading','Trendyol\'a bağlanılıyor...','Ürünler çekiliyor');
-
-  try{
-    // Önce proxy kontrol
-    await fetch(PROXY+'/health',{signal:AbortSignal.timeout(3000)});
-
-    const r=await fetch(`${PROXY}/api/urunler?sellerId=${encodeURIComponent(sid)}&apiKey=${encodeURIComponent(key)}&apiSecret=${encodeURIComponent(sec)}&page=0&size=50`);
-    const data=await r.json();
-    if(!r.ok) throw new Error(data.error||'API hatası');
-
-    urunler=data.urunler.map(p=>({...p,alis:0,kargo:0}));
-    totalPages=data.totalPages||1;
-    currentPage=0;
-
-    setStatus('on',urunler.length+' ürün başarıyla çekildi','Alış fiyatlarını girerek kar hesaplaması yapın');
-    document.getElementById('urun-section').style.display='block';
-    renderUrunler();
-    toast(urunler.length+' ürün yüklendi!','success','✅');
-    document.getElementById('urun-section').scrollIntoView({behavior:'smooth'});
-  }catch(e){
-    const msg=e.message||'';
-    if(msg.includes('fetch')||msg.includes('Failed')||msg.includes('network')){
-      setStatus('err','Proxy sunucusuna ulaşılamıyor','Terminalde: node server.js komutunu çalıştırın');
-      toast('Proxy çalışmıyor! Terminal\'de node server.js çalıştırın.','error','❌');
-    } else {
-      setStatus('err','Hata: '+msg,'API bilgilerinizi kontrol edin');
-      toast('Hata: '+msg,'error','❌');
-    }
-  }finally{
-    btn.innerHTML='🚀 Ürünleri Getir';
-    btn.disabled=false;
-  }
-}
-
-function setStatus(state,text,sub){
-  const dot=document.getElementById('sdot');
-  dot.className='sdot'+(state?' '+state:'');
-  document.getElementById('stext').textContent=text;
-  document.getElementById('ssub').textContent=sub||'';
+  if(el)el.classList.add('active');
 }
 
 // ── DEMO ──
+function scrollToDemo(){
+  document.getElementById('demo-section').scrollIntoView({behavior:'smooth'});
+}
+
 function loadDemo(){
-  urunler=DEMO_URUNLER.map(p=>({...p}));
-  totalPages=1; currentPage=0;
-  setStatus('on','Demo modu aktif','8 örnek ürün yüklendi');
+  urunler=DEMO.map(p=>({...p}));
   document.getElementById('urun-section').style.display='block';
   renderUrunler();
   toast('Demo ürünler yüklendi! Alış fiyatı girin.','info','🎯');
   document.getElementById('urun-section').scrollIntoView({behavior:'smooth'});
 }
 
-// ── RENDER ──
+// ── API ──
+async function checkProxy(){
+  try{
+    const r=await fetch(PROXY+'/health',{signal:AbortSignal.timeout(3000)});
+    if(r.ok){toast('Proxy çalışıyor!','success','✅');}
+    else throw new Error();
+  }catch{toast('Proxy çalışmıyor! node server.js çalıştırın.','error','❌');}
+}
+
+async function urunleriCek(){
+  const sid=document.getElementById('inp-sid').value.trim();
+  const key=document.getElementById('inp-key').value.trim();
+  const sec=document.getElementById('inp-sec').value.trim();
+  if(!sid||!key||!sec){toast('Tüm alanları doldurun.','error','⚠️');return;}
+  const btn=document.getElementById('btn-cek');
+  btn.innerHTML='<span class="spin"></span> Yükleniyor...';btn.disabled=true;
+  setStatus('loading','Trendyol\'a bağlanılıyor...','');
+  try{
+    await fetch(PROXY+'/health',{signal:AbortSignal.timeout(3000)});
+    const r=await fetch(`${PROXY}/api/urunler?sellerId=${encodeURIComponent(sid)}&apiKey=${encodeURIComponent(key)}&apiSecret=${encodeURIComponent(sec)}&page=0&size=50`);
+    const data=await r.json();
+    if(!r.ok)throw new Error(data.error||'API hatası');
+    urunler=data.urunler.map(p=>({...p,alis:0,kargo:0}));
+    setStatus('on',urunler.length+' ürün çekildi','');
+    document.getElementById('urun-section').style.display='block';
+    renderUrunler();
+    toast(urunler.length+' ürün yüklendi!','success','✅');
+  }catch(e){
+    setStatus('err','Bağlantı hatası','node server.js çalıştırın');
+    toast('Proxy çalışmıyor veya API bilgileri hatalı.','error','❌');
+  }finally{btn.innerHTML='🚀 Ürünleri Getir';btn.disabled=false;}
+}
+
+function setStatus(s,t,sub){
+  const dot=document.getElementById('sdot');
+  dot.className='sdot'+(s?' '+s:'');
+  document.getElementById('stext').textContent=t;
+  document.getElementById('ssub').textContent=sub;
+}
+
+// ── ÜRÜN RENDER ──
 function renderUrunler(){
   let list=urunler.filter(p=>{
     const{net,hasAlis}=calcKar(p);
-    if(filterMode==='karli') return hasAlis&&net>=0;
-    if(filterMode==='zarari') return hasAlis&&net<0;
-    if(filterMode==='eksik') return !hasAlis;
+    if(filterMode==='karli')return hasAlis&&net>=0;
+    if(filterMode==='zarari')return hasAlis&&net<0;
+    if(filterMode==='eksik')return !hasAlis;
     return true;
   });
-  if(searchQ) list=list.filter(p=>p.title.toLowerCase().includes(searchQ)||(p.categoryName||'').toLowerCase().includes(searchQ));
-
+  if(searchQ)list=list.filter(p=>p.title.toLowerCase().includes(searchQ)||(p.categoryName||'').toLowerCase().includes(searchQ));
   document.getElementById('urun-count').textContent=list.length+' ürün';
-  document.getElementById('page-info').textContent=(currentPage+1)+' / '+totalPages;
-  document.getElementById('btn-prev').disabled=currentPage===0;
-  document.getElementById('btn-next').disabled=currentPage>=totalPages-1;
-
   const tbody=document.getElementById('ptbody');
   if(!list.length){
-    tbody.innerHTML=`<tr><td colspan="8"><div class="empty"><span class="empty-emoji">🔍</span><div class="empty-title">Ürün bulunamadı</div><div class="empty-sub">Filtreyi veya arama terimini değiştirin.</div></div></td></tr>`;
+    tbody.innerHTML=`<tr><td colspan="8"><div class="empty"><span class="empty-emoji">🔍</span><div class="empty-title">Ürün bulunamadı</div><div class="empty-sub">Filtreyi değiştirin.</div></div></td></tr>`;
     return;
   }
-
   tbody.innerHTML=list.map(p=>{
     const{komisyon,net,marj,hasAlis}=calcKar(p);
-    let karBadge;
-    if(!hasAlis) karBadge='<span class="kar-badge kb-neutral">Girin</span>';
-    else if(net>=0) karBadge=`<span class="kar-badge kb-good">+${fmt(net)}</span>`;
-    else karBadge=`<span class="kar-badge kb-bad">-${fmt(Math.abs(net))}</span>`;
+    let karBadge=!hasAlis?'<span class="kar-badge kb-neutral">Girin</span>':net>=0?`<span class="kar-badge kb-good">+${fmt(net)}</span>`:`<span class="kar-badge kb-bad">-${fmt(Math.abs(net))}</span>`;
     const marjStr=hasAlis&&marj!==null?'%'+marj.toFixed(1):'—';
     const marjColor=!hasAlis?'var(--t3)':marj>=15?'var(--green)':marj>=0?'var(--yellow)':'var(--red)';
     return`<tr>
@@ -814,7 +974,7 @@ function renderUrunler(){
       <td><input class="tinput" type="number" placeholder="Kargo" min="0" step="0.01" value="${p.kargo||''}" onchange="updUrun('${p.id}','kargo',this.value)"></td>
       <td>${karBadge}</td>
       <td style="font-weight:700;color:${marjColor}">${marjStr}</td>
-      <td><button class="calc-btn" onclick="openModal('${p.id}')">🧮 Hesapla</button></td>
+      <td><button class="detay-btn" onclick="openModal('${p.id}')">📊 Detay</button></td>
     </tr>`;
   }).join('');
 }
@@ -831,77 +991,102 @@ function setFilter(f,el){
   renderUrunler();
 }
 function araUrun(q){searchQ=q.toLowerCase();renderUrunler();}
-function changePage(d){currentPage=Math.max(0,Math.min(totalPages-1,currentPage+d));renderUrunler();}
 
 function topluKargo(){
   const v=prompt('Tüm ürünlere uygulanacak kargo ücreti (₺):');
-  if(v===null) return;
-  const n=parseFloat(v)||0;
-  urunler.forEach(p=>p.kargo=n);
+  if(v===null)return;
+  urunler.forEach(p=>p.kargo=parseFloat(v)||0);
   renderUrunler();
-  toast('₺'+n+' kargo uygulandı.','info','🚚');
+  toast('Kargo uygulandı.','info','🚚');
 }
 
 function csvIndir(){
-  if(!urunler.length) return;
-  const rows=[['Ürün','Kategori','Satış (₺)','Komisyon %','Komisyon ₺','Alış (₺)','Kargo (₺)','Hizmet Bed.','Stopaj','Net Kar (₺)','Marj %']];
+  if(!urunler.length)return;
+  const rows=[['Ürün','Kategori','Satış','Komisyon%','Komisyon₺','Alış','Kargo','Hizmet','Stopaj','Net Kar','Marj%']];
   urunler.forEach(p=>{
     const{komisyon,hizmet,stopaj,net,marj,hasAlis}=calcKar(p);
     rows.push([`"${p.title}"`,p.categoryName,p.salePrice,(p.commissionRate||0).toFixed(2),komisyon.toFixed(2),p.alis||'',p.kargo||'',hizmet.toFixed(2),stopaj.toFixed(2),hasAlis?net.toFixed(2):'',hasAlis&&marj!==null?marj.toFixed(1):'']);
   });
   const a=document.createElement('a');
   a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(rows.map(r=>r.join(',')).join('\n'));
-  a.download='karpanel-analiz.csv';a.click();
+  a.download='karpanel.csv';a.click();
   toast('CSV indirildi.','success','📥');
 }
 
-// ── MODAL ──
+// ── DETAY MODAL ──
 function openModal(id){
   const p=urunler.find(x=>String(x.id)===String(id));
-  if(!p) return;
+  if(!p)return;
   modalUrun=p;
   const kom=(p.commissionRate||0);
   const komisyon=(p.salePrice||0)*(kom/100);
-  document.getElementById('m-name').textContent=p.title;
-  document.getElementById('m-satis').textContent=fmt(p.salePrice||0);
-  document.getElementById('m-kom').textContent='%'+kom.toFixed(2);
-  document.getElementById('m-komtl').textContent=fmt(komisyon);
-  document.getElementById('m-kat').textContent=p.categoryName||'—';
+  document.getElementById('m-name').textContent=p.title+' — '+p.categoryName+' · %'+kom.toFixed(2)+' komisyon';
   document.getElementById('m-alis').value=p.alis||'';
   document.getElementById('m-kargo').value=p.kargo||'';
   document.getElementById('modal-result').style.display='none';
+  document.getElementById('modal-empty').style.display='block';
   document.getElementById('modal-bg').classList.add('open');
+  if(p.alis>0)modalHesapla();
 }
 function closeModal(e){
   if(!e||e.target===document.getElementById('modal-bg'))
     document.getElementById('modal-bg').classList.remove('open');
 }
+
 function modalHesapla(){
-  if(!modalUrun) return;
+  if(!modalUrun)return;
   const alis=parseFloat(document.getElementById('m-alis').value)||0;
   const kargo=parseFloat(document.getElementById('m-kargo').value)||0;
-  modalUrun.alis=alis; modalUrun.kargo=kargo;
-  const{net,marj,ygd}=calcKar(modalUrun);
-  document.getElementById('mr-kar').textContent=(net<0?'-':'')+fmt(net);
-  document.getElementById('mr-kar').style.color=net>=0?'var(--green)':'var(--red)';
-  document.getElementById('mr-marj').textContent=marj!==null?'%'+marj.toFixed(2):'—';
-  document.getElementById('mr-marj').style.color=marj>=15?'var(--green)':marj>=0?'var(--yellow)':'var(--red)';
-  document.getElementById('mr-ygd').textContent=ygd!==null?'%'+ygd.toFixed(2):'—';
+  modalUrun.alis=alis;modalUrun.kargo=kargo;
+  if(alis<=0){document.getElementById('modal-result').style.display='none';document.getElementById('modal-empty').style.display='block';return;}
+  const p={...modalUrun,alis,kargo};
+  const{komisyon,hizmet,stopaj,kdvS,kdvA,kdvK,kdvKom,kdvHiz,odKdv,net,marj,ygd}=calcKar(p);
   document.getElementById('modal-result').style.display='block';
+  document.getElementById('modal-empty').style.display='none';
+  // Kâr balonu
+  const circ=document.getElementById('m-circle');
+  circ.style.background=net>=0?'linear-gradient(135deg,var(--or),var(--or2))':'linear-gradient(135deg,var(--red),#FF6B6B)';
+  document.getElementById('mr-kar').textContent=(net<0?'-':'')+fmt(net);
+  // Üst tablo
+  document.getElementById('mr-komtl').textContent=fmt(komisyon);
+  document.getElementById('mr-ygd').textContent=ygd!==null?'%'+ygd.toFixed(2):'—';
+  document.getElementById('mr-hizmet').textContent=fmt(hizmet);
+  document.getElementById('mr-stopaj').textContent=fmt(stopaj);
+  const karorEl=document.getElementById('mr-karor');
+  karorEl.textContent=marj!==null?'%'+marj.toFixed(2):'—';
+  karorEl.style.color=marj>=15?'var(--green)':marj>=0?'var(--yellow)':'var(--red)';
+  document.getElementById('mr-kdv').textContent=fmt(odKdv);
+  // KDV tablo
+  document.getElementById('mr-kdvs').textContent=fmt(kdvS);
+  document.getElementById('mr-kdva').textContent=fmt(kdvA);
+  document.getElementById('mr-kdvk').textContent=fmt(kdvK);
+  document.getElementById('mr-kdvkom').textContent=fmt(kdvKom);
+  document.getElementById('mr-kdvhiz').textContent=fmt(kdvHiz);
+  document.getElementById('mr-kdvode').textContent=fmt(odKdv);
+  // Döküm
+  document.getElementById('mbd-satis').textContent=fmt(p.salePrice||0);
+  document.getElementById('mbd-kom').textContent='-'+fmt(komisyon);
+  document.getElementById('mbd-alis').textContent='-'+fmt(alis);
+  document.getElementById('mbd-kargo').textContent='-'+fmt(kargo);
+  document.getElementById('mbd-hizmet').textContent='-'+fmt(hizmet);
+  document.getElementById('mbd-stopaj').textContent='-'+fmt(stopaj);
+  document.getElementById('mbd-kdv').textContent='-'+fmt(odKdv);
+  const ne=document.getElementById('mbd-net');
+  ne.textContent=(net<0?'-':'')+fmt(net);
+  ne.style.color=net>=0?'var(--green)':'var(--red)';
   renderUrunler();
 }
 
-// ── HESAP TAB ──
+// ── KAR HESAP TAB ──
 function onKatChange(){
   const v=document.getElementById('h-kat').value;
-  if(v) document.getElementById('h-kom').value=parseFloat(v).toFixed(2);
+  if(v)document.getElementById('h-kom').value=parseFloat(v).toFixed(2);
 }
 function setKargoTipi(t){
   kargoTipi=t;
-  ['satici','ihracat','aynigun'].forEach(x=>{
-    document.getElementById('kr-'+x).className='kr-opt'+(x===t?' sel':'');
-  });
+  ['satici','ihracat','aynigun'].forEach(x=>{document.getElementById('kr-'+x).className='kr-opt'+(x===t?' sel':'');});
 }
+
 function hesapla(){
   const satis=parseFloat(document.getElementById('h-satis').value)||0;
   const alis=parseFloat(document.getElementById('h-alis').value)||0;
@@ -909,23 +1094,20 @@ function hesapla(){
   const kdvOran=parseFloat(document.getElementById('h-kdv').value)||20;
   const kargo=parseFloat(document.getElementById('h-kargo').value)||0;
   const diger=parseFloat(document.getElementById('h-diger').value)||0;
-  if(satis<=0){alert('Satış fiyatını girin.');return}
-  if(alis<=0){alert('Alış fiyatını girin.');return}
-  const kf=kdvOran/100;
-  const kdvSatis=satis*kf/(1+kf);
-  const kdvAlis=alis*kf/(1+kf);
-  const kdvKargo=kargo*kf/(1+kf);
+  if(satis<=0){alert('Satış fiyatını girin.');return;}
+  if(alis<=0){alert('Alış fiyatını girin.');return;}
+  const kf=1+kdvOran/100;
+  const kdvSatis=satis-satis/kf, kdvAlis=alis-alis/kf, kdvKargo=kargo-kargo/kf;
   const komisyon=satis*(komOran/100);
-  const kdvKom=komisyon*kf/(1+kf);
-  const komisyonKdvHaric2=komisyon/kdvFaktor;
-  const hizmet=komisyonKdvHaric2*0.7914;
-  const kdvHizmet=hizmet-(hizmet/kdvFaktor);
-  const stopaj=komisyonKdvHaric2*0.05;
+  const kdvKom=komisyon-komisyon/kf;
+  const komH=komisyon/kf;
+  const hizmet=13.19;
+  const kdvHizmet=hizmet-hizmet/kf;
+  const stopaj=komH*0.05;
   const odKdv=Math.max(0,kdvSatis-kdvAlis-kdvKargo-kdvKom-kdvHizmet);
   const net=satis-komisyon-alis-kargo-diger-hizmet-stopaj-odKdv;
   const marj=satis>0?(net/satis*100):0;
   const ygd=alis>0?(net/alis*100):0;
-
   document.getElementById('results').style.display='block';
   document.getElementById('res-sub').textContent='Satış: '+fmt(satis)+' · Komisyon: %'+komOran+' · KDV: %'+kdvOran;
   const circ=document.getElementById('kar-circle');
@@ -974,17 +1156,20 @@ function temizle(){
   document.getElementById('results').style.display='none';
 }
 
-// ── KOMİSYON TAB ──
-function filterKom(q){
-  document.querySelectorAll('#ktbody tr').forEach(r=>{
-    r.style.display=r.textContent.toLowerCase().includes(q.toLowerCase())?'':'none';
-  });
-}
-document.getElementById('ktbody').innerHTML=KOMISYONLAR.map(k=>
-  `<tr><td><span class="kcat">${k.k}</span></td><td>${k.a}</td><td><span class="krate">%${k.o}</span></td><td>${k.v} iş günü</td></tr>`
-).join('');
 
-// Kategori dropdown for hesap tab
+
+// ── TOAST ──
+function toast(msg,type,icon){
+  const t=document.getElementById('toast');
+  document.getElementById('t-msg').textContent=msg;
+  document.getElementById('t-icon').textContent=icon||'';
+  t.className='toast '+type+' show';
+  setTimeout(()=>t.className='toast',4000);
+}
+
+// ── INIT ──
+
+
 function populateKatDropdown(){
   const sel=document.getElementById('h-kat');
   const g={};
@@ -996,18 +1181,7 @@ function populateKatDropdown(){
   });
 }
 populateKatDropdown();
-
-// ── TOAST ──
-function toast(msg,type,icon){
-  const t=document.getElementById('toast');
-  document.getElementById('t-msg').textContent=msg;
-  document.getElementById('t-icon').textContent=icon||'';
-  t.className='toast '+type+' show';
-  setTimeout(()=>t.className='toast',4000);
-}
-
-// Proxy'yi sayfa açılınca kontrol et
-checkProxy();
+loadUser();
 </script>
 </body>
 </html>

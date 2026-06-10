@@ -67,6 +67,10 @@ const server = http.createServer((req, res) => {
         'Authorization': `Basic ${credentials}`,
         'User-Agent': `${sellerId} - SelfIntegration`,
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'tr-TR,tr;q=0.9',
+        'Connection': 'keep-alive',
       },
     };
 
@@ -95,7 +99,11 @@ const server = http.createServer((req, res) => {
           }));
         } catch (e) {
           res.writeHead(500, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: 'Trendyol yaniti islenemedi' }));
+          res.end(JSON.stringify({ 
+            error: 'Trendyol yaniti islenemedi', 
+            httpStatus: tyRes.statusCode,
+            raw: data.substring(0, 500)
+          }));
         }
       });
     });
