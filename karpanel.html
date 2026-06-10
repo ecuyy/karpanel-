@@ -4,306 +4,566 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KarPanel – Trendyol Kar Hesaplama</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root{
   --or:#F27A1A;--or2:#FF8C38;--or-dim:#FFF4E8;
-  --navy:#0B1628;--navy2:#122040;--navy3:#1A2E55;
-  --white:#fff;--bg:#F5F7FA;--bg2:#EDF0F7;
-  --border:#DDE3EF;--border2:#C8D0E4;
-  --text:#0B1628;--t2:#3D4F6B;--t3:#7A8BA8;
-  --green:#059669;--green2:#10B981;--gbg:#ECFDF5;--gbr:#A7F3D0;
+  --dark:#1A1A1A;--dark2:#2D2D2D;
+  --white:#fff;--bg:#FAFAFA;--bg2:#F4F4F6;
+  --border:#E8E8EC;--border2:#D4D4DC;
+  --text:#1A1A1A;--t2:#555560;--t3:#9898A8;
+  --green:#16A34A;--gbg:#F0FDF4;--gbr:#BBF7D0;
   --red:#DC2626;--rbg:#FEF2F2;--rbr:#FECACA;
-  --yellow:#B45309;--ybg:#FFFBEB;
-  --blue:#1D4ED8;--blue2:#3B82F6;--bbg:#EFF6FF;--bbr:#BFDBFE;
-  --r:14px;--r2:10px;--r3:8px;--r4:24px;
-  --sh:0 2px 16px rgba(11,22,40,.07);
-  --sh2:0 8px 40px rgba(11,22,40,.15);
+  --yellow:#D97706;--ybg:#FFFBEB;
+  --blue:#2563EB;--bbg:#EFF6FF;
+  --r:16px;--r2:12px;--r3:8px;--r4:999px;
+  --sh:0 2px 20px rgba(0,0,0,.06);
+  --sh2:0 8px 40px rgba(0,0,0,.12);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+body{font-family:'Inter',sans-serif;background:var(--white);color:var(--text);-webkit-font-smoothing:antialiased}
 
-/* NAV */
-nav{background:#fff;height:68px;display:flex;align-items:center;padding:0 2rem;position:sticky;top:0;z-index:200;border-bottom:1px solid #E8EDF5;box-shadow:0 2px 20px rgba(11,22,40,.06)}
-.nav-in{max-width:1200px;width:100%;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+/* ── NAV ── */
+nav{
+  position:sticky;top:16px;z-index:200;
+  padding:0 2rem;
+  pointer-events:none;
+}
+.nav-inner{
+  max-width:1160px;margin:0 auto;
+  background:rgba(255,255,255,.95);
+  backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  border-radius:var(--r4);
+  height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 1.5rem;
+  box-shadow:0 4px 24px rgba(0,0,0,.08);
+  pointer-events:all;
+}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.logo-mark{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#F27A1A,#F59E0B);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#fff;box-shadow:0 4px 12px rgba(242,122,26,.3)}
-.logo-name{font-size:20px;font-weight:900;color:#0B1628;letter-spacing:-.5px}
-.logo-name em{background:linear-gradient(135deg,#F27A1A,#10B981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal}
-.nav-right{display:flex;align-items:center;gap:10px}
-.nav-pill{background:var(--or-dim);border:1px solid rgba(242,122,26,.3);color:var(--or);font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.07em}
-.nav-tabs{display:flex;gap:4px}
-.ntab{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--t3);font-family:'Inter',sans-serif;transition:all .15s}
-.ntab:hover{color:var(--text);background:var(--bg2)}
-.ntab.active{color:var(--text);background:var(--bg);font-weight:700;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.nav-user{display:flex;align-items:center;gap:8px}
-.nav-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#1D4ED8,#3B82F6);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;cursor:pointer}
-.nav-username{font-size:13px;font-weight:600;color:var(--text)}
-.btn-logout{background:transparent;border:1px solid var(--border2);color:var(--t2);font-size:12px;font-weight:600;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
-.btn-logout:hover{border-color:var(--red);color:var(--red);background:var(--rbg)}
+.logo-icon{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--or);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:900;color:#fff;
+}
+.logo-text{font-size:17px;font-weight:800;color:var(--dark);letter-spacing:-.4px}
+.logo-text em{color:var(--or);font-style:normal}
+.nav-center{display:flex;gap:2px}
+.nav-link{
+  padding:7px 14px;border-radius:var(--r4);
+  font-size:13px;font-weight:500;color:var(--t2);
+  cursor:pointer;border:none;background:transparent;
+  font-family:'Inter',sans-serif;transition:all .15s;text-decoration:none;
+}
+.nav-link:hover{color:var(--text);background:var(--bg2)}
+.nav-right{display:flex;align-items:center;gap:8px}
+.btn-dark{
+  background:var(--dark);color:#fff;border:none;
+  padding:9px 20px;border-radius:var(--r4);
+  font-size:13px;font-weight:700;cursor:pointer;
+  font-family:'Inter',sans-serif;transition:all .15s;
+  display:flex;align-items:center;gap:6px;
+}
+.btn-dark:hover{background:var(--dark2);transform:translateY(-1px)}
+.btn-outline-nav{
+  background:transparent;border:1.5px solid var(--border2);color:var(--text);
+  padding:8px 16px;border-radius:var(--r4);
+  font-size:13px;font-weight:600;cursor:pointer;
+  font-family:'Inter',sans-serif;transition:all .15s;
+}
+.btn-outline-nav:hover{border-color:var(--or);color:var(--or)}
+.user-pill{
+  display:flex;align-items:center;gap:8px;
+  padding:5px 14px 5px 6px;
+  background:var(--bg2);border-radius:var(--r4);border:1px solid var(--border);
+}
+.user-avatar{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--or);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;color:#fff;
+}
+.user-name{font-size:13px;font-weight:600;color:var(--text)}
+.btn-logout-sm{
+  background:transparent;border:none;color:var(--t3);
+  font-size:12px;cursor:pointer;padding:0;font-family:'Inter',sans-serif;
+  transition:color .15s;
+}
+.btn-logout-sm:hover{color:var(--red)}
 
-/* HERO */
-.hero{background:linear-gradient(160deg,#EEF4FF 0%,#F0F7FF 40%,#E8F5F0 100%);padding:4rem 2rem 3rem;text-align:center;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-100px;right:-80px;width:450px;height:450px;background:radial-gradient(circle,rgba(29,78,216,.12) 0%,transparent 65%);pointer-events:none}
-.hero::after{content:'';position:absolute;bottom:-80px;left:-60px;width:350px;height:350px;background:radial-gradient(circle,rgba(5,150,105,.1) 0%,transparent 65%);pointer-events:none}
-.hero-tag{display:inline-flex;align-items:center;gap:7px;background:rgba(29,78,216,.08);border:1px solid rgba(29,78,216,.2);color:#1D4ED8;font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;margin-bottom:1.25rem;letter-spacing:.04em}
-.hdot{width:6px;height:6px;border-radius:50%;background:#1D4ED8;animation:blink 2s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.hero h1{font-size:clamp(30px,4vw,52px);font-weight:900;color:#0B1628;letter-spacing:-2px;line-height:1.08;margin-bottom:.9rem}
-.hero h1 .acc{background:linear-gradient(90deg,#F27A1A,#10B981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero-sub{color:#4A5568;font-size:16px;line-height:1.65;margin-bottom:2rem;max-width:520px;margin-left:auto;margin-right:auto}
-.hero-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
-.btn-hero{padding:13px 28px;border-radius:var(--r2);font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;display:inline-flex;align-items:center;gap:8px;border:none;text-decoration:none}
-.btn-hero.main{background:linear-gradient(135deg,var(--or),var(--or2));color:#fff}
-.btn-hero.main:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(242,122,26,.4)}
-.btn-hero.outline{background:#fff;border:1.5px solid var(--border2);color:var(--text);box-shadow:0 2px 8px rgba(11,22,40,.08)}
-.btn-hero.outline:hover{background:var(--bg);border-color:var(--or);color:var(--or)}
+/* ── HERO ── */
+.hero{
+  min-height:calc(100vh - 80px);
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;
+  padding:6rem 2rem 4rem;
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#FFF0EB 0%,#FFF8F5 30%,#F8F4FF 60%,#EEF4FF 100%);
+}
+.hero-blob1{
+  position:absolute;top:-100px;left:-100px;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(242,122,26,.12) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-blob2{
+  position:absolute;bottom:-80px;right:-80px;
+  width:400px;height:400px;border-radius:50%;
+  background:radial-gradient(circle,rgba(99,102,241,.1) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--dark);color:#fff;
+  font-size:11px;font-weight:700;
+  padding:5px 14px;border-radius:var(--r4);
+  margin-bottom:1.75rem;letter-spacing:.04em;
+}
+.hero-tag span{background:var(--or);color:#fff;padding:2px 8px;border-radius:20px;font-size:10px}
+.hero h1{
+  font-size:clamp(36px,5.5vw,72px);
+  font-weight:900;color:var(--dark);
+  letter-spacing:-2.5px;line-height:1.05;
+  margin-bottom:1.25rem;max-width:800px;
+}
+.hero-sub{
+  font-size:17px;color:var(--t2);line-height:1.65;
+  max-width:480px;margin:0 auto 2.5rem;
+}
+.hero-btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.btn-hero-dark{
+  background:var(--dark);color:#fff;border:none;
+  padding:15px 28px;border-radius:var(--r4);
+  font-size:15px;font-weight:700;cursor:pointer;
+  font-family:'Inter',sans-serif;transition:all .2s;
+  display:flex;align-items:center;gap:8px;
+}
+.btn-hero-dark:hover{background:var(--dark2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.btn-hero-outline{
+  background:#fff;color:var(--dark);border:2px solid var(--border2);
+  padding:14px 28px;border-radius:var(--r4);
+  font-size:15px;font-weight:700;cursor:pointer;
+  font-family:'Inter',sans-serif;transition:all .2s;
+}
+.btn-hero-outline:hover{border-color:var(--dark);transform:translateY(-2px)}
+.hero-stats{
+  display:flex;justify-content:center;gap:3rem;margin-top:4rem;
+  flex-wrap:wrap;
+}
+.hero-stat-val{font-size:28px;font-weight:900;color:var(--dark);letter-spacing:-1px}
+.hero-stat-label{font-size:12px;color:var(--t3);margin-top:2px;font-weight:500}
 
-/* WRAP */
-.wrap{max-width:1200px;margin:0 auto;padding:2rem 1.5rem 4rem}
+/* ── HOW IT WORKS ── */
+.how-section{
+  padding:5rem 2rem;
+  background:var(--white);
+}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-tag{
+  font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--or);margin-bottom:.75rem;
+}
+.section-title{
+  font-size:clamp(28px,3.5vw,42px);font-weight:900;
+  color:var(--dark);letter-spacing:-1.5px;line-height:1.1;
+  margin-bottom:.75rem;
+}
+.section-sub{font-size:16px;color:var(--t2);line-height:1.6;max-width:480px}
+.how-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-top:3rem}
+.how-steps{display:flex;flex-direction:column;gap:2.5rem}
+.how-step{display:flex;gap:1.25rem;align-items:flex-start}
+.how-num{
+  font-size:13px;font-weight:800;color:var(--or);
+  width:36px;flex-shrink:0;padding-top:2px;
+}
+.how-step-title{font-size:17px;font-weight:800;color:var(--dark);margin-bottom:.4rem;letter-spacing:-.3px}
+.how-step-desc{font-size:14px;color:var(--t2);line-height:1.6}
+.how-visual{
+  background:linear-gradient(135deg,#FFF0EB,#FFF8F5);
+  border:1px solid var(--border);border-radius:24px;
+  padding:2rem;min-height:320px;
+  display:flex;flex-direction:column;gap:12px;justify-content:center;
+}
+.hv-card{
+  background:#fff;border-radius:var(--r);padding:16px 20px;
+  box-shadow:var(--sh);border:1px solid var(--border);
+  display:flex;align-items:center;gap:14px;
+}
+.hv-icon{width:40px;height:40px;border-radius:10px;background:var(--or-dim);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.hv-label{font-size:12px;color:var(--t3);margin-bottom:3px}
+.hv-val{font-size:17px;font-weight:800;color:var(--dark)}
+.hv-val.green{color:var(--green)}
+.hv-val.red{color:var(--red)}
 
-/* PAGES */
+/* ── PRICING ── */
+.pricing-section{
+  padding:5rem 2rem;
+  background:linear-gradient(180deg,#FAFAFA 0%,#fff 100%);
+}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:3rem}
+.price-card{
+  background:#fff;border:1.5px solid var(--border);
+  border-radius:20px;padding:2rem;
+  transition:all .2s;
+}
+.price-card:hover{transform:translateY(-4px);box-shadow:var(--sh2)}
+.price-card.featured{
+  background:var(--dark);border-color:var(--dark);
+  transform:scale(1.03);
+}
+.price-card.featured:hover{transform:scale(1.03) translateY(-4px)}
+.price-badge{
+  display:inline-block;background:var(--or);color:#fff;
+  font-size:10px;font-weight:800;padding:3px 10px;
+  border-radius:20px;margin-bottom:1rem;letter-spacing:.05em;
+}
+.price-name{font-size:14px;font-weight:700;color:var(--t2);margin-bottom:.5rem}
+.price-card.featured .price-name{color:rgba(255,255,255,.6)}
+.price-amount{font-size:42px;font-weight:900;color:var(--dark);letter-spacing:-2px;margin-bottom:.25rem}
+.price-card.featured .price-amount{color:#fff}
+.price-period{font-size:13px;color:var(--t3);margin-bottom:1.5rem}
+.price-card.featured .price-period{color:rgba(255,255,255,.5)}
+.price-divider{height:1px;background:var(--border);margin-bottom:1.5rem}
+.price-card.featured .price-divider{background:rgba(255,255,255,.15)}
+.price-features{display:flex;flex-direction:column;gap:10px;margin-bottom:1.75rem}
+.price-feature{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)}
+.price-card.featured .price-feature{color:rgba(255,255,255,.75)}
+.pf-icon{width:18px;height:18px;border-radius:50%;background:var(--gbg);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;border:1px solid var(--gbr)}
+.price-card.featured .pf-icon{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3)}
+.btn-price{
+  width:100%;padding:13px;border-radius:var(--r4);
+  font-size:14px;font-weight:700;cursor:pointer;
+  font-family:'Inter',sans-serif;transition:all .2s;border:none;
+  background:var(--dark);color:#fff;
+}
+.btn-price:hover{opacity:.85}
+.price-card.featured .btn-price{background:#fff;color:var(--dark)}
+.price-card.featured .btn-price:hover{background:var(--bg2)}
+
+/* ── APP SECTION ── */
+.app-wrap{max-width:1160px;margin:0 auto;padding:0 1.5rem 3rem}
+
+/* PAGE TABS */
 .page{display:none}
 .page.active{display:block}
 
-/* AUTH MODAL */
-.auth-overlay{position:fixed;inset:0;background:rgba(15,20,32,.7);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
-.auth-overlay.open{display:flex}
-.auth-box{background:var(--white);border-radius:var(--r4);padding:2.5rem;width:100%;max-width:440px;box-shadow:var(--sh2);position:relative}
-.auth-close{position:absolute;top:16px;right:16px;background:var(--bg2);border:none;border-radius:8px;width:32px;height:32px;font-size:16px;cursor:pointer;color:var(--t2);display:flex;align-items:center;justify-content:center}
-.auth-close:hover{background:var(--rbg);color:var(--red)}
-.auth-logo{display:flex;align-items:center;gap:8px;margin-bottom:1.5rem;justify-content:center}
-.auth-logo-mark{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#1D4ED8,#3B82F6);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;color:#fff}
-.auth-logo-name{font-size:20px;font-weight:800;color:var(--text)}
-.auth-logo-name em{color:var(--or);font-style:normal}
-.auth-tabs{display:flex;background:var(--bg2);border-radius:var(--r3);padding:3px;margin-bottom:1.5rem}
-.auth-tab{flex:1;padding:8px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--t3);font-family:'Inter',sans-serif;transition:all .15s}
-.auth-tab.active{background:var(--white);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.auth-form{display:flex;flex-direction:column;gap:12px}
-.auth-field{display:flex;flex-direction:column;gap:5px}
-.auth-label{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em}
-.auth-input{padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--r2);font-size:14px;font-weight:500;color:var(--text);background:var(--bg);font-family:'Inter',sans-serif;transition:all .15s}
-.auth-input:focus{outline:none;border-color:var(--or);background:var(--white);box-shadow:0 0 0 3px rgba(242,122,26,.1)}
-.btn-auth{width:100%;padding:13px;border:none;border-radius:var(--r2);background:linear-gradient(135deg,var(--or),var(--or2));color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;margin-top:4px}
-.btn-auth:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(242,122,26,.35)}
-.auth-divider{text-align:center;font-size:12px;color:var(--t3);position:relative;margin:4px 0}
-.auth-divider::before,.auth-divider::after{content:'';position:absolute;top:50%;width:40%;height:1px;background:var(--border)}
-.auth-divider::before{left:0}
-.auth-divider::after{right:0}
-.auth-error{background:var(--rbg);border:1px solid var(--rbr);border-radius:var(--r3);padding:10px 14px;font-size:13px;color:var(--red);display:none}
+/* DEMO BANNER */
+.demo-banner{
+  background:linear-gradient(135deg,var(--dark),var(--dark2));
+  border-radius:20px;padding:1.5rem 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap;
+}
+.demo-banner h3{font-size:16px;font-weight:800;color:#fff;margin-bottom:4px}
+.demo-banner p{font-size:13px;color:rgba(255,255,255,.5)}
+.demo-actions{display:flex;gap:8px;flex-wrap:wrap}
 
-/* PAYMENT PAGE */
-.pay-page{max-width:680px;margin:3rem auto}
-.pay-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r4);overflow:hidden;box-shadow:var(--sh2)}
-.pay-header{background:linear-gradient(135deg,#060E1E,#122040);padding:2rem;text-align:center}
-.pay-icon{width:60px;height:60px;background:linear-gradient(135deg,#D97706,#F59E0B);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 1rem}
-.pay-title{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.3px;margin-bottom:.5rem}
-.pay-sub{font-size:14px;color:rgba(255,255,255,.5)}
-.pay-body{padding:2rem}
-.pay-price-box{background:linear-gradient(135deg,#ECFDF5,#F0FDF4);border:2px solid rgba(5,150,105,.2);border-radius:var(--r);padding:1.5rem;text-align:center;margin-bottom:1.5rem}
-.pay-price{font-size:52px;font-weight:900;color:#059669;letter-spacing:-2px;line-height:1}
-.pay-price sup{font-size:24px;vertical-align:top;margin-top:10px;font-weight:700}
-.pay-price-period{font-size:14px;color:var(--t3);margin-top:6px;font-weight:500}
-.pay-features{display:grid;gap:10px;margin-bottom:1.5rem}
-.pay-feature{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--t2);font-weight:500}
-.pay-feature-icon{width:24px;height:24px;background:var(--gbg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;border:1px solid var(--gbr);color:var(--green)}
-.pay-form{display:flex;flex-direction:column;gap:12px}
-.pay-field{display:flex;flex-direction:column;gap:5px}
-.pay-label{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em}
-.pay-input{padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--r2);font-size:14px;font-weight:500;color:var(--text);background:var(--bg);font-family:'Inter',sans-serif;transition:all .15s}
-.pay-input:focus{outline:none;border-color:var(--or);background:var(--white);box-shadow:0 0 0 3px rgba(242,122,26,.1)}
-.pay-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.btn-pay{width:100%;padding:15px;border:none;border-radius:var(--r2);background:linear-gradient(135deg,#059669,#10B981);color:#fff;font-size:16px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:8px}
-.btn-pay:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(5,150,105,.4)}
-.pay-security{text-align:center;font-size:12px;color:var(--t3);margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px}
-.pay-skip{text-align:center;margin-top:14px}
-.pay-skip a{font-size:13px;color:var(--t3);cursor:pointer;text-decoration:underline}
-.pay-skip a:hover{color:var(--or)}
-
-/* DEMO SECTION */
-.demo-section{margin-bottom:2rem}
-.section-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:.75rem;display:flex;align-items:center;gap:8px}
-.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
-.demo-banner{background:linear-gradient(135deg,#0B1628,#122040);border-radius:var(--r);padding:1.25rem 1.75rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap}
-.demo-banner-left h3{font-size:16px;font-weight:800;color:#fff;margin-bottom:4px}
-.demo-banner-left p{font-size:13px;color:rgba(255,255,255,.5)}
-.btn{padding:10px 18px;border-radius:var(--r2);font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:inline-flex;align-items:center;gap:6px;border:none;white-space:nowrap}
-.btn-primary{background:linear-gradient(135deg,var(--or),var(--or2));color:#fff}
-.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(242,122,26,.35)}
-.btn-secondary{background:var(--bg);border:1.5px solid var(--border2);color:var(--t2)}
-.btn-secondary:hover{border-color:var(--or);color:var(--or)}
-.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--t2)}
-.btn-ghost:hover{background:var(--bg2);border-color:var(--border2)}
+/* BUTTONS */
+.btn{
+  padding:10px 18px;border-radius:var(--r4);font-size:13px;font-weight:700;
+  cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;
+  display:inline-flex;align-items:center;gap:6px;border:none;white-space:nowrap;
+}
+.btn-primary{background:var(--or);color:#fff}
+.btn-primary:hover{background:var(--or2);transform:translateY(-1px)}
+.btn-secondary{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff}
+.btn-secondary:hover{background:rgba(255,255,255,.18)}
+.btn-ghost{background:var(--bg2);border:1.5px solid var(--border);color:var(--t2)}
+.btn-ghost:hover{border-color:var(--or);color:var(--or);background:var(--or-dim)}
 
 /* CONNECT CARD */
-.connect-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);box-shadow:var(--sh2);margin-bottom:1.5rem;overflow:hidden}
-.card-head{background:linear-gradient(135deg,#0B1628,#122040);padding:1.1rem 1.5rem;display:flex;align-items:center;gap:10px}
-.card-head-icon{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.card-head-title{font-size:15px;font-weight:800;color:#fff;letter-spacing:-.2px}
-.card-head-sub{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px}
+.connect-card{
+  background:#fff;border:1.5px solid var(--border);
+  border-radius:20px;overflow:hidden;
+  box-shadow:var(--sh);margin-bottom:1.25rem;
+}
+.card-head{
+  background:linear-gradient(135deg,var(--dark),var(--dark2));
+  padding:1rem 1.5rem;display:flex;align-items:center;gap:10px;
+}
+.card-head-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:var(--or);display:flex;align-items:center;
+  justify-content:center;font-size:16px;flex-shrink:0;
+}
+.card-head-title{font-size:15px;font-weight:800;color:#fff}
+.card-head-sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px}
 .card-body{padding:1.5rem}
+
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.25rem}
-.step{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r2);padding:14px;display:flex;gap:10px;align-items:flex-start}
-.step-num{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#1D4ED8,#3B82F6);color:#fff;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r2);padding:14px}
+.step-num{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--dark);color:#fff;
+  font-size:12px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:8px;
+}
 .step-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
 .step-desc{font-size:11px;color:var(--t3);line-height:1.5}
+
 .field-grid{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:flex-end;margin-bottom:10px}
 .fg{display:flex;flex-direction:column;gap:5px}
 .flabel{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em}
-.finput{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--r2);font-size:13px;font-weight:600;color:var(--text);background:var(--bg);font-family:'Inter',sans-serif;transition:all .15s}
-.finput:focus{outline:none;border-color:var(--or);background:var(--white);box-shadow:0 0 0 3px rgba(242,122,26,.1)}
-.status-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r2);background:var(--bg);border:1.5px solid var(--border);font-size:13px;margin-bottom:12px}
+.finput{
+  width:100%;padding:10px 13px;border:1.5px solid var(--border);
+  border-radius:var(--r2);font-size:13px;font-weight:600;
+  color:var(--text);background:var(--bg);
+  font-family:'Inter',sans-serif;transition:all .15s;
+}
+.finput:focus{outline:none;border-color:var(--or);background:#fff;box-shadow:0 0 0 3px rgba(242,122,26,.1)}
+
+.status-bar{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;border-radius:var(--r2);
+  background:var(--bg);border:1.5px solid var(--border);
+  font-size:13px;margin-bottom:12px;
+}
 .sdot{width:9px;height:9px;border-radius:50%;background:var(--border2);flex-shrink:0;transition:all .3s}
-.sdot.on{background:var(--green);box-shadow:0 0 0 3px rgba(14,163,114,.18)}
+.sdot.on{background:var(--green);box-shadow:0 0 0 3px rgba(22,163,74,.15)}
 .sdot.loading{background:var(--or);animation:blink .8s infinite}
 .sdot.err{background:var(--red)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 .status-text{font-weight:600;color:var(--text)}
 .status-sub{font-size:12px;color:var(--t3);margin-left:auto}
 
 /* TOOLBAR */
 .toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:10px}
 .toolbar-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.tb-title{font-size:16px;font-weight:800;letter-spacing:-.2px}
-.count-badge{background:var(--bbg);color:var(--blue);border:1px solid var(--bbr);font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px}
-.filter-bar{display:flex;gap:4px;background:var(--bg2);border:1px solid var(--border);padding:3px;border-radius:var(--r3)}
-.ftab{padding:5px 13px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--t3);font-family:'Inter',sans-serif;transition:all .15s}
-.ftab.active{background:var(--white);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.tb-title{font-size:17px;font-weight:800;letter-spacing:-.3px}
+.count-badge{
+  background:var(--or-dim);color:var(--or);
+  border:1px solid rgba(242,122,26,.2);
+  font-size:11px;font-weight:800;padding:3px 10px;border-radius:var(--r4);
+}
+.filter-bar{display:flex;gap:3px;background:var(--bg2);border:1px solid var(--border);padding:3px;border-radius:var(--r4)}
+.ftab{
+  padding:5px 14px;border-radius:var(--r4);font-size:12px;font-weight:600;
+  cursor:pointer;border:none;background:transparent;color:var(--t3);
+  font-family:'Inter',sans-serif;transition:all .15s;
+}
+.ftab.active{background:#fff;color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .search-wrap{position:relative;display:flex;align-items:center}
-.search-icon{position:absolute;left:10px;font-size:13px;color:var(--t3);pointer-events:none}
-.search-inp{padding:8px 12px 8px 32px;border:1.5px solid var(--border);border-radius:var(--r3);font-size:13px;color:var(--text);background:var(--white);font-family:'Inter',sans-serif;width:200px;transition:all .15s}
+.search-icon{position:absolute;left:11px;font-size:13px;color:var(--t3);pointer-events:none}
+.search-inp{
+  padding:8px 12px 8px 34px;border:1.5px solid var(--border);
+  border-radius:var(--r4);font-size:13px;color:var(--text);
+  background:#fff;font-family:'Inter',sans-serif;width:200px;transition:all .15s;
+}
 .search-inp:focus{outline:none;border-color:var(--or)}
-.btn-sm{padding:8px 14px;border:1.5px solid var(--border);border-radius:var(--r3);font-size:12px;font-weight:600;cursor:pointer;color:var(--t2);background:var(--white);font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;gap:5px}
+.btn-sm{
+  padding:8px 14px;border:1.5px solid var(--border);border-radius:var(--r4);
+  font-size:12px;font-weight:600;cursor:pointer;color:var(--t2);
+  background:#fff;font-family:'Inter',sans-serif;transition:all .15s;
+  display:flex;align-items:center;gap:5px;
+}
 .btn-sm:hover{border-color:var(--or);color:var(--or);background:var(--or-dim)}
 
 /* PRODUCT TABLE */
-.prod-table-wrap{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
+.prod-table-wrap{background:#fff;border:1.5px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:var(--sh)}
 .ptable{width:100%;border-collapse:collapse;font-size:13px}
-.ptable th{padding:10px 14px;text-align:left;background:var(--bg);color:var(--t3);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;border-bottom:1.5px solid var(--border);white-space:nowrap}
+.ptable th{
+  padding:10px 14px;text-align:left;background:var(--bg);
+  color:var(--t3);font-size:10px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.07em;
+  border-bottom:1.5px solid var(--border);white-space:nowrap;
+}
 .ptable td{padding:10px 14px;border-bottom:1px solid var(--bg2);vertical-align:middle}
 .ptable tr:last-child td{border-bottom:none}
-.ptable tr:hover td{background:var(--bg)}
-.prod-name{font-weight:600;color:var(--text);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ptable tr:hover td{background:#FAFAFA}
+.prod-img{width:44px;height:44px;border-radius:10px;object-fit:cover;border:1px solid var(--border)}
+.prod-img-ph{
+  width:44px;height:44px;border-radius:10px;
+  background:var(--dark);display:flex;align-items:center;
+  justify-content:center;font-size:15px;font-weight:800;color:#fff;flex-shrink:0;
+}
+.prod-name{font-weight:600;color:var(--text);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .prod-cat{font-size:11px;color:var(--t3);margin-top:2px}
 .price-val{font-weight:800;color:var(--text);font-size:14px}
-.kom-pill{display:inline-flex;background:rgba(242,122,26,.1);color:var(--or);font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px}
-.kar-badge{display:inline-flex;font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px}
+.kom-pill{display:inline-flex;background:rgba(242,122,26,.08);color:var(--or);font-size:11px;font-weight:800;padding:3px 9px;border-radius:var(--r4)}
+.kar-badge{display:inline-flex;font-size:11px;font-weight:800;padding:4px 10px;border-radius:var(--r4)}
 .kb-good{background:var(--gbg);color:var(--green)}
 .kb-bad{background:var(--rbg);color:var(--red)}
 .kb-neutral{background:var(--bg2);color:var(--t3)}
-.detay-btn{padding:6px 14px;border:1.5px solid var(--or);border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;color:var(--white);background:linear-gradient(135deg,var(--or),var(--or2));font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap}
-.detay-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(242,122,26,.3)}
-.tinput{width:90px;padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-weight:700;color:var(--text);background:var(--bg);font-family:'Inter',sans-serif;transition:all .15s}
-.tinput:focus{outline:none;border-color:var(--or);background:var(--white)}
-.empty{text-align:center;padding:4rem 2rem;color:var(--t3)}
-.empty-emoji{font-size:48px;opacity:.3;display:block;margin-bottom:1rem}
-.empty-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:.5rem}
-.empty-sub{font-size:13px;line-height:1.6;max-width:280px;margin:0 auto}
-.prod-img{width:46px;height:46px;border-radius:8px;object-fit:cover;border:1px solid var(--border);background:var(--bg2)}
-.prod-img-placeholder{width:46px;height:46px;border-radius:8px;background:linear-gradient(135deg,var(--navy),var(--navy2));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;flex-shrink:0}
+.detay-btn{
+  padding:7px 16px;border:none;border-radius:var(--r4);
+  font-size:12px;font-weight:700;cursor:pointer;
+  color:#fff;background:var(--dark);
+  font-family:'Inter',sans-serif;transition:all .15s;
+  display:flex;align-items:center;gap:5px;
+}
+.detay-btn:hover{background:var(--dark2);transform:translateY(-1px)}
+.tinput{
+  width:90px;padding:6px 10px;
+  border:1.5px solid var(--border);border-radius:var(--r2);
+  font-size:12px;font-weight:700;color:var(--text);
+  background:var(--bg);font-family:'Inter',sans-serif;transition:all .15s;
+}
+.tinput:focus{outline:none;border-color:var(--or);background:#fff}
+.empty{text-align:center;padding:5rem 2rem;color:var(--t3)}
+.empty-emoji{font-size:48px;opacity:.25;display:block;margin-bottom:1rem}
+.empty-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:.5rem}
+.empty-sub{font-size:13px;line-height:1.6;max-width:280px;margin:0 auto 1.5rem}
+.empty-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--dark);color:#fff;padding:12px 24px;
+  border-radius:var(--r4);font-size:14px;font-weight:700;
+  cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .2s;
+}
+.empty-cta:hover{background:var(--dark2);transform:translateY(-2px)}
 
 /* HESAP TAB */
-.calc-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);box-shadow:var(--sh2);margin-bottom:1.5rem;overflow:hidden}
+.calc-card{background:#fff;border:1.5px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:var(--sh);margin-bottom:1.25rem}
 .form-row{display:grid;gap:12px;margin-bottom:12px}
 .fr2{grid-template-columns:1fr 1fr}
 .fr3{grid-template-columns:1fr 1fr 1fr}
-.finput-wrap{position:relative;display:flex;align-items:center}
-.fsuffix{position:absolute;right:11px;font-size:12px;font-weight:700;color:var(--t3);pointer-events:none}
-.finput2{width:100%;padding:10px 30px 10px 13px;border:1.5px solid var(--border);border-radius:var(--r2);font-size:14px;font-weight:600;color:var(--text);background:var(--bg);font-family:'Inter',sans-serif;transition:all .15s}
-.finput2:focus{outline:none;border-color:var(--or);background:var(--white);box-shadow:0 0 0 3px rgba(242,122,26,.1)}
-select.finput2{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238896A9' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px}
+.fw{position:relative;display:flex;align-items:center}
+.fsuf{position:absolute;right:11px;font-size:12px;font-weight:700;color:var(--t3);pointer-events:none}
+.finput2{
+  width:100%;padding:10px 30px 10px 13px;
+  border:1.5px solid var(--border);border-radius:var(--r2);
+  font-size:14px;font-weight:600;color:var(--text);
+  background:var(--bg);font-family:'Inter',sans-serif;transition:all .15s;
+}
+.finput2:focus{outline:none;border-color:var(--or);background:#fff;box-shadow:0 0 0 3px rgba(242,122,26,.1)}
+select.finput2{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239898A8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px}
 .kargo-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r2);margin-bottom:12px}
-.kr-label{font-size:12px;font-weight:700;color:var(--t2)}
-.kr-opt{display:flex;align-items:center;gap:5px;cursor:pointer;padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--white);font-size:12px;font-weight:600;color:var(--t2);transition:all .15s}
-.kr-opt.sel{background:var(--or-dim);border-color:var(--or);color:var(--or)}
-.kr-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--border2);transition:all .15s;flex-shrink:0}
-.kr-opt.sel .kr-dot{background:var(--or);border-color:var(--or)}
-.kr-note{font-size:10px;color:var(--t3);margin-left:auto;font-style:italic}
-.btn-hesapla{width:100%;padding:13px;border:none;border-radius:var(--r2);background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;font-size:15px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
-.btn-hesapla:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(15,20,32,.22)}
+.kr-opt{display:flex;align-items:center;gap:5px;cursor:pointer;padding:5px 12px;border-radius:var(--r4);border:1.5px solid var(--border);background:#fff;font-size:12px;font-weight:600;color:var(--t2);transition:all .15s}
+.kr-opt.sel{background:var(--dark);border-color:var(--dark);color:#fff}
+.btn-hesapla{
+  width:100%;padding:14px;border:none;border-radius:var(--r4);
+  background:var(--dark);color:#fff;
+  font-size:15px;font-weight:800;cursor:pointer;
+  font-family:'Inter',sans-serif;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-hesapla:hover{background:var(--dark2);transform:translateY(-1px)}
 .btn-row{display:flex;gap:8px}
-.btn-temizle{width:48px;border:1.5px solid var(--border2);border-radius:var(--r2);background:var(--white);color:var(--t3);font-size:17px;cursor:pointer;transition:all .15s}
+.btn-temizle{
+  width:48px;border:1.5px solid var(--border2);border-radius:var(--r2);
+  background:#fff;color:var(--t3);font-size:17px;cursor:pointer;transition:all .15s;
+}
 .btn-temizle:hover{border-color:var(--red);color:var(--red);background:var(--rbg)}
 
 /* RESULTS */
 .results{display:none}
-.result-top{display:grid;grid-template-columns:auto 1fr;gap:1.25rem;align-items:center;margin-bottom:1.25rem}
-.kar-circle{width:128px;height:128px;border-radius:50%;background:linear-gradient(135deg,#059669,#10B981);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 8px 28px rgba(5,150,105,.32);flex-shrink:0}
-.kar-circle.loss{background:linear-gradient(135deg,var(--red),#FF6B6B);box-shadow:0 8px 28px rgba(229,53,53,.32)}
-.kc-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.05em;text-transform:uppercase}
-.kc-val{font-size:24px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1.1}
-.kc-sub{font-size:10px;color:rgba(255,255,255,.65);font-weight:600}
-.marj-badge{padding:5px 14px;border-radius:20px;font-size:13px;font-weight:800;display:inline-flex;align-items:center;gap:5px;margin-top:8px}
+.kar-circle{
+  width:120px;height:120px;border-radius:50%;
+  background:var(--dark);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  box-shadow:0 8px 28px rgba(0,0,0,.2);flex-shrink:0;
+}
+.kar-circle.loss{background:linear-gradient(135deg,var(--red),#FF6B6B)}
+.kc-label{font-size:9px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.05em;text-transform:uppercase}
+.kc-val{font-size:22px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1.1}
+.kc-sub{font-size:10px;color:rgba(255,255,255,.6);font-weight:600}
+.marj-badge{padding:5px 14px;border-radius:var(--r4);font-size:12px;font-weight:800;display:inline-flex;align-items:center;gap:5px;margin-top:8px}
 .mb-good{background:var(--gbg);color:var(--green);border:1px solid var(--gbr)}
 .mb-mid{background:var(--ybg);color:var(--yellow);border:1px solid #FCD34D}
 .mb-bad{background:var(--rbg);color:var(--red);border:1px solid var(--rbr)}
 .res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .rc{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r2);padding:12px 14px}
-.rc.hl{background:var(--bbg);border-color:var(--bbr)}
+.rc.hl{background:#F0FDF4;border-color:var(--gbr)}
 .rc-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);margin-bottom:4px}
 .rc-val{font-size:17px;font-weight:900;color:var(--text);letter-spacing:-.3px}
 .rc-val.or{color:var(--or)}
 .rc-val.g{color:var(--green)}
-.rc-val.r{color:var(--red)}
 .rc-val.b{color:var(--blue)}
 .rc-sub{font-size:11px;color:var(--t3);margin-top:3px}
-.meter-sec{margin:1rem 0}
-.meter-lr{display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--t3);margin-bottom:5px}
-.meter-bg{height:10px;background:var(--bg2);border-radius:5px;overflow:hidden;border:1px solid var(--border)}
-.meter-fill{height:100%;border-radius:5px;transition:width .6s cubic-bezier(.4,0,.2,1),background .4s}
-.kdv-sec{margin-top:1rem}
-.kdv-head{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:7px;display:flex;align-items:center;gap:8px}
-.kdv-head::after{content:'';flex:1;height:1px;background:var(--border)}
-.kdv-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
-.kdc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:9px 11px;text-align:center}
-.kdc-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--t3);margin-bottom:3px;line-height:1.3}
+.meter-bg{height:8px;background:var(--bg2);border-radius:4px;overflow:hidden;border:1px solid var(--border);margin:1rem 0}
+.meter-fill{height:100%;border-radius:4px;transition:width .6s cubic-bezier(.4,0,.2,1),background .4s}
+.kdv-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-top:.75rem}
+.kdc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:9px;text-align:center}
+.kdc-label{font-size:9px;font-weight:700;text-transform:uppercase;color:var(--t3);margin-bottom:3px;line-height:1.3}
 .kdc-val{font-size:13px;font-weight:800;color:var(--text)}
 .breakdown{margin-top:1rem;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r2);overflow:hidden}
 .bd-head{padding:9px 14px;background:var(--bg2);border-bottom:1px solid var(--border);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--t3)}
 .bd-row{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid var(--border);font-size:13px}
-.bd-row:last-child{border-bottom:none;background:var(--white);font-weight:800;font-size:15px;padding:13px 14px}
+.bd-row:last-child{border-bottom:none;background:#fff;font-weight:800;font-size:15px;padding:12px 14px}
 .bd-label{color:var(--t2)}
 .bv{font-weight:700}
 .bv.m{color:var(--red)}
 .bv.p{color:var(--green)}
 
-/* KOMİSYON TAB */
-.ktable-wrap{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
-.ktable{width:100%;border-collapse:collapse;font-size:13px}
-.ktable th{padding:10px 14px;text-align:left;background:var(--bg);color:var(--t3);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;border-bottom:1.5px solid var(--border)}
-.ktable td{padding:9px 14px;border-bottom:1px solid var(--bg2);color:var(--text)}
-.ktable tr:last-child td{border-bottom:none}
-.ktable tr:hover td{background:var(--bg)}
-.krate{display:inline-flex;background:rgba(29,78,216,.1);color:var(--blue);font-size:12px;font-weight:800;padding:3px 9px;border-radius:20px}
-.kcat{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;background:var(--bg2);color:var(--t2)}
+/* AUTH MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.overlay.open{display:flex}
+.auth-box{background:#fff;border-radius:24px;padding:2.5rem;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.2);position:relative}
+.auth-close{position:absolute;top:16px;right:16px;background:var(--bg2);border:none;border-radius:8px;width:30px;height:30px;font-size:15px;cursor:pointer;color:var(--t2);display:flex;align-items:center;justify-content:center}
+.auth-close:hover{background:var(--rbg);color:var(--red)}
+.auth-logo{display:flex;align-items:center;gap:8px;margin-bottom:1.5rem;justify-content:center}
+.auth-logo-icon{width:38px;height:38px;border-radius:50%;background:var(--or);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;color:#fff}
+.auth-logo-text{font-size:19px;font-weight:800;color:var(--dark)}
+.auth-logo-text em{color:var(--or);font-style:normal}
+.auth-tabs{display:flex;background:var(--bg2);border-radius:var(--r4);padding:3px;margin-bottom:1.5rem}
+.auth-tab{flex:1;padding:8px;border-radius:var(--r4);font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--t3);font-family:'Inter',sans-serif;transition:all .15s}
+.auth-tab.active{background:#fff;color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.auth-form{display:flex;flex-direction:column;gap:12px}
+.auth-field{display:flex;flex-direction:column;gap:5px}
+.auth-label{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em}
+.auth-input{padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--r2);font-size:14px;font-weight:500;color:var(--text);background:var(--bg);font-family:'Inter',sans-serif;transition:all .15s}
+.auth-input:focus{outline:none;border-color:var(--or);background:#fff}
+.btn-auth{width:100%;padding:13px;border:none;border-radius:var(--r4);background:var(--dark);color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;margin-top:4px}
+.btn-auth:hover{background:var(--dark2)}
+.auth-error{background:var(--rbg);border:1px solid var(--rbr);border-radius:var(--r3);padding:10px 14px;font-size:13px;color:var(--red);display:none;margin-bottom:4px}
+.auth-switch{text-align:center;font-size:13px;color:var(--t3);margin-top:8px}
+.auth-switch a{color:var(--or);cursor:pointer;font-weight:600}
+
+/* PAYMENT */
+.pay-box{background:#fff;border-radius:24px;width:100%;max-width:500px;box-shadow:0 20px 60px rgba(0,0,0,.2);overflow:hidden}
+.pay-header{background:var(--dark);padding:2rem;text-align:center}
+.pay-header-icon{width:56px;height:56px;background:var(--or);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 1rem}
+.pay-header-title{font-size:20px;font-weight:800;color:#fff;margin-bottom:.25rem}
+.pay-header-sub{font-size:13px;color:rgba(255,255,255,.45)}
+.pay-body{padding:2rem}
+.pay-price-box{
+  background:var(--gbg);border:2px solid var(--gbr);
+  border-radius:var(--r);padding:1.25rem;text-align:center;margin-bottom:1.5rem;
+}
+.pay-price{font-size:48px;font-weight:900;color:var(--green);letter-spacing:-2px;line-height:1}
+.pay-price sup{font-size:22px;vertical-align:top;margin-top:8px;font-weight:700}
+.pay-price-per{font-size:13px;color:var(--t3);margin-top:4px}
+.pay-features{display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem}
+.pay-feature{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)}
+.pf-icon2{width:18px;height:18px;border-radius:50%;background:var(--gbg);border:1px solid var(--gbr);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+.pay-form{display:flex;flex-direction:column;gap:10px}
+.pay-field{display:flex;flex-direction:column;gap:4px}
+.pay-label{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em}
+.pay-input{padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--r2);font-size:14px;font-weight:500;color:var(--text);background:var(--bg);font-family:'Inter',sans-serif;transition:all .15s}
+.pay-input:focus{outline:none;border-color:var(--or)}
+.pay-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn-pay{width:100%;padding:14px;border:none;border-radius:var(--r4);background:var(--green);color:#fff;font-size:15px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-pay:hover{background:#15803D;transform:translateY(-1px)}
+.pay-security{text-align:center;font-size:11px;color:var(--t3);margin-top:10px;display:flex;align-items:center;justify-content:center;gap:5px}
+.pay-skip{text-align:center;margin-top:10px}
+.pay-skip a{font-size:12px;color:var(--t3);cursor:pointer;text-decoration:underline}
 
 /* DETAY MODAL */
-.modal-bg{position:fixed;inset:0;background:rgba(15,20,32,.6);z-index:500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
-.modal-bg.open{display:flex}
-.modal{background:var(--white);border-radius:var(--r4);padding:2rem;width:100%;max-width:640px;box-shadow:var(--sh2);position:relative;max-height:90vh;overflow-y:auto}
-.modal-close{position:absolute;top:14px;right:14px;background:var(--bg2);border:none;border-radius:6px;width:30px;height:30px;font-size:16px;cursor:pointer;color:var(--t2);display:flex;align-items:center;justify-content:center}
+.modal{background:#fff;border-radius:24px;padding:2rem;width:100%;max-width:620px;box-shadow:0 20px 60px rgba(0,0,0,.2);position:relative;max-height:90vh;overflow-y:auto}
+.modal-close{position:absolute;top:14px;right:14px;background:var(--bg2);border:none;border-radius:8px;width:30px;height:30px;font-size:15px;cursor:pointer;color:var(--t2);display:flex;align-items:center;justify-content:center}
 .modal-close:hover{background:var(--rbg);color:var(--red)}
 .modal-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:3px;letter-spacing:-.2px}
-.modal-prod{font-size:14px;color:var(--t2);font-weight:600;margin-bottom:1.25rem;padding:10px 14px;background:var(--bg);border-radius:var(--r3);border:1px solid var(--border)}
+.modal-prod{font-size:13px;color:var(--t2);font-weight:600;margin-bottom:1.25rem;padding:10px 14px;background:var(--bg);border-radius:var(--r3);border:1px solid var(--border)}
 .modal-inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
 .mi-wrap{display:flex;flex-direction:column;gap:5px}
 .mi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3)}
 .mi-field{position:relative;display:flex;align-items:center}
 .mi-sym{position:absolute;right:11px;font-size:12px;font-weight:700;color:var(--t3);pointer-events:none}
 .mi-input{width:100%;padding:10px 30px 10px 13px;border:1.5px solid var(--border);border-radius:var(--r2);font-size:14px;font-weight:700;color:var(--text);background:var(--bg);font-family:'Inter',sans-serif;transition:all .15s}
-.mi-input:focus{outline:none;border-color:var(--or);background:var(--white);box-shadow:0 0 0 3px rgba(242,122,26,.1)}
-/* NeSatılır style tables */
+.mi-input:focus{outline:none;border-color:var(--or);background:#fff}
 .ns-table{width:100%;border-collapse:collapse;margin-bottom:10px;border:1.5px solid var(--border);border-radius:var(--r2);overflow:hidden}
-.ns-table th{padding:9px 12px;text-align:center;background:var(--bg2);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);border-bottom:1px solid var(--border);border-right:1px solid var(--border)}
+.ns-table th{padding:9px 10px;text-align:center;background:var(--bg2);font-size:10px;font-weight:700;text-transform:uppercase;color:var(--t3);border-bottom:1px solid var(--border);border-right:1px solid var(--border)}
 .ns-table th:last-child{border-right:none}
-.ns-table td{padding:12px;text-align:center;font-size:15px;font-weight:800;border-right:1px solid var(--border);vertical-align:middle}
+.ns-table td{padding:12px 10px;text-align:center;font-size:14px;font-weight:800;border-right:1px solid var(--border)}
 .ns-table td:last-child{border-right:none}
-.ns-table tr.kdv-row td{background:var(--ybg);font-size:13px}
-.ns-kar-ball{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(242,122,26,.35);margin:0 auto}
+.ns-kar-ball{width:68px;height:68px;border-radius:50%;background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.2);margin:0 auto}
 .ns-kar-ball.loss{background:linear-gradient(135deg,var(--red),#FF6B6B)}
-.ns-kar-label{font-size:9px;font-weight:700;color:rgba(255,255,255,.8);letter-spacing:.04em}
-.ns-kar-val{font-size:13px;font-weight:900;color:#fff;letter-spacing:-.5px}
+.ns-kar-label{font-size:8px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.04em}
+.ns-kar-val{font-size:12px;font-weight:900;color:#fff;letter-spacing:-.5px}
 .ns-kdv-table{width:100%;border-collapse:collapse;border:1.5px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:12px}
 .ns-kdv-table th{padding:8px;text-align:center;background:var(--ybg);font-size:9px;font-weight:700;text-transform:uppercase;color:var(--t3);border-bottom:1px solid var(--border);border-right:1px solid var(--border);line-height:1.3}
 .ns-kdv-table th:last-child{border-right:none;background:var(--rbg);color:var(--red)}
@@ -311,29 +571,45 @@ select.finput2{cursor:pointer;appearance:none;background-image:url("data:image/s
 .ns-kdv-table td:last-child{border-right:none;color:var(--red)}
 .modal-empty{text-align:center;padding:1.5rem;color:var(--t3);font-size:13px}
 
+/* KARGO MODAL */
+.kargo-box{background:#fff;border-radius:20px;padding:2rem;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,.2);position:relative}
+
 /* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 18px;border-radius:var(--r2);font-size:13px;font-weight:600;box-shadow:var(--sh2);transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.4,0,.2,1);z-index:999;max-width:320px;display:flex;align-items:center;gap:9px}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--dark);color:#fff;padding:12px 18px;border-radius:var(--r4);font-size:13px;font-weight:600;box-shadow:var(--sh2);transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.4,0,.2,1);z-index:999;max-width:320px;display:flex;align-items:center;gap:9px}
 .toast.show{transform:translateY(0);opacity:1}
 .toast.success{border-left:3px solid var(--green)}
 .toast.error{border-left:3px solid var(--red)}
 .toast.info{border-left:3px solid var(--or)}
+
+/* FOOTER */
+footer{background:var(--dark);padding:3rem 2rem;text-align:center;margin-top:4rem}
+.footer-logo-text{font-size:18px;font-weight:800;color:#fff;margin-bottom:.5rem}
+.footer-logo-text em{color:var(--or);font-style:normal}
+.footer-sub{font-size:13px;color:rgba(255,255,255,.3);line-height:1.6}
+
 .spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;display:inline-block;animation:rot .6s linear infinite;vertical-align:middle}
 @keyframes rot{to{transform:rotate(360deg)}}
 
-/* PREMIUM BADGE */
-.premium-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#1D4ED8,#10B981);color:#fff;font-size:10px;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:.04em}
+/* LOGIN CTA */
+.login-cta{
+  background:linear-gradient(135deg,#FFF0EB,#FFF8F5);
+  border:1.5px solid var(--border);border-radius:20px;
+  padding:3rem;text-align:center;margin-top:2rem;
+}
 
 @media(max-width:900px){
+  .hero{padding:5rem 1rem 3rem}
+  .how-grid{grid-template-columns:1fr}
+  .pricing-grid{grid-template-columns:1fr}
+  .price-card.featured{transform:none}
   .steps{grid-template-columns:1fr}
   .field-grid{grid-template-columns:1fr 1fr}
   .res-grid{grid-template-columns:1fr 1fr}
   .kdv-grid{grid-template-columns:repeat(3,1fr)}
-  .result-top{grid-template-columns:1fr;justify-items:center}
-  nav{padding:0 1rem}
-  .wrap{padding:1.25rem 1rem 3rem}
-  .fr2,.fr3{grid-template-columns:1fr}
-  .ns-table,.ns-kdv-table{font-size:11px}
+  nav{top:8px;padding:0 1rem}
+  .nav-center{display:none}
   .modal-inputs{grid-template-columns:1fr}
+  .fr2,.fr3{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -341,97 +617,206 @@ select.finput2{cursor:pointer;appearance:none;background-image:url("data:image/s
 
 <!-- NAV -->
 <nav>
-  <div class="nav-in">
+  <div class="nav-inner">
     <a class="logo" href="#">
-      <div class="logo-mark">K</div>
-      <span class="logo-name">Kar<em>Panel</em></span>
+      <div class="logo-icon">K</div>
+      <span class="logo-text">Kar<em>Panel</em></span>
     </a>
-    <div class="nav-tabs" id="nav-tabs">
-      <button class="ntab active" onclick="showTab('urunler',this)">📦 Ürünlerim</button>
-      <button class="ntab" onclick="showTab('hesap',this)">🧮 Kar Hesapla</button>
-
+    <div class="nav-center">
+      <a class="nav-link" href="#nasil">Nasıl Çalışır?</a>
+      <a class="nav-link" href="#fiyat">Fiyatlandırma</a>
     </div>
-    <div class="nav-right">
-      <span class="nav-pill">BETA</span>
-      <div class="nav-user" id="nav-user" style="display:none">
-        <div class="nav-avatar" id="nav-avatar">U</div>
-        <span class="nav-username" id="nav-username"></span>
-        <button class="btn-logout" onclick="logout()">Çıkış</button>
+    <div class="nav-right" id="nav-right">
+      <div class="user-pill" id="user-pill" style="display:none">
+        <div class="user-avatar" id="user-av">U</div>
+        <span class="user-name" id="user-name"></span>
+        <button class="btn-logout-sm" onclick="logout()">Çıkış</button>
       </div>
-      <button class="btn btn-primary" id="nav-login-btn" onclick="openAuth('giris')" style="font-size:12px;padding:7px 14px">Giriş Yap</button>
+      <button class="btn-outline-nav" id="nav-login-btn" onclick="openAuth('giris')">Giriş Yap</button>
+      <button class="btn-dark" id="nav-dashboard-btn" onclick="goApp()" style="display:none">Dashboard ↗</button>
     </div>
   </div>
 </nav>
 
 <!-- HERO -->
-<div class="hero" id="hero-section">
-  <div class="hero-tag"><span class="hdot"></span>Trendyol Satıcıları İçin Ücretsiz Demo</div>
-  <h1>Ürünlerinizin <span class="acc">gerçek karını</span> görün</h1>
-  <p class="hero-sub">Komisyon, KDV, stopaj dahil net kar hesabı. Demo ile hemen deneyin, üye olarak tüm ürünlerinizi çekin.</p>
-  <div class="hero-actions">
-    <button class="btn-hero main" onclick="scrollToDemo()">🎯 Demo ile Dene</button>
-    <button class="btn-hero outline" onclick="openAuth('kayit')">🚀 Üye Ol — ₺1.500/yıl</button>
+<div class="hero" id="hero">
+  <div class="hero-blob1"></div>
+  <div class="hero-blob2"></div>
+  <div>
+    <div class="hero-tag"><span>YENİ</span> Trendyol Satıcıları İçin</div>
+    <h1>Kar mı ediyorsun,<br>zarar mı?</h1>
+    <p class="hero-sub">Komisyon, KDV, stopaj dahil gerçek karını saniyeler içinde gör. Excel yükle, alış fiyatı gir, karını öğren.</p>
+    <div class="hero-btns">
+      <button class="btn-hero-dark" onclick="goApp()">Hemen Başla ↗</button>
+      <button class="btn-hero-outline" onclick="demoVeGo()">Demo Hesabı Gör</button>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hero-stat-val">%100</div><div class="hero-stat-label">Ücretsiz Demo</div></div>
+      <div><div class="hero-stat-val">NeSatılır</div><div class="hero-stat-label">ile aynı formül</div></div>
+      <div><div class="hero-stat-val">1 dk</div><div class="hero-stat-label">Kurulum süresi</div></div>
+    </div>
   </div>
 </div>
 
-<!-- MAIN -->
-<div class="wrap">
-
-  <!-- TAB: ÜRÜNLER -->
-  <div class="page active" id="tab-urunler">
-
-    <!-- DEMO BÖLÜMÜ -->
-    <div class="demo-section" id="demo-section">
-      <div class="section-label">Demo Modu</div>
-      <div class="demo-banner">
-        <div class="demo-banner-left">
-          <h3>🎯 Demo Ürünlerle Deneyin</h3>
-          <p>8 örnek ürün ile KarPanel'i keşfedin. Alış fiyatı girin, karınızı görün.</p>
+<!-- HOW IT WORKS -->
+<div class="how-section" id="nasil">
+  <div class="section-inner">
+    <div class="section-tag">Nasıl Çalışır?</div>
+    <div class="section-title">3 adımda karını gör</div>
+    <p class="section-sub">Teknik bilgiye gerek yok. Dakikalar içinde ürünlerinizin gerçek karını görün.</p>
+    <div class="how-grid">
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="how-num">01</div>
+          <div>
+            <div class="how-step-title">Excel'ini Yükle</div>
+            <div class="how-step-desc">Trendyol Partner Panel'den ürün listeni Excel olarak indir, KarPanel'e yükle. Satış fiyatı ve komisyon otomatik gelir.</div>
+          </div>
         </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn btn-primary" onclick="loadDemo()">Demo Başlat</button>
-          <button class="btn btn-secondary" onclick="document.getElementById('csv-upload').click()">📂 Excel / CSV Yükle</button>
-          <input type="file" id="csv-upload" accept=".csv,.xlsx,.xls" style="display:none" onchange="csvYukle(this)">
+        <div class="how-step">
+          <div class="how-num">02</div>
+          <div>
+            <div class="how-step-title">Alış Fiyatını Gir</div>
+            <div class="how-step-desc">Her ürün için tedarikçiden aldığın maliyeti yaz. Kargo ücretini de ekle. Toplu kargo özelliğiyle hepsini aynı anda güncelle.</div>
+          </div>
+        </div>
+        <div class="how-step" style="border-bottom:3px solid var(--or);padding-bottom:1.5rem">
+          <div class="how-num">03</div>
+          <div>
+            <div class="how-step-title">Gerçek Karını Gör</div>
+            <div class="how-step-desc">Komisyon, KDV, stopaj, hizmet bedeli hepsi otomatik hesaplanır. Zararlı ürünleri anında tespit et.</div>
+          </div>
         </div>
       </div>
-      <!-- CSV Bilgi kutusu -->
-      <div id="csv-info" style="display:none;background:var(--bbg);border:1px solid var(--bbr);border-radius:var(--r2);padding:12px 16px;margin-top:10px;font-size:13px;color:var(--blue)">
-        <strong>📋 Trendyol'dan nasıl indirilir?</strong><br>
-        Partner Panel → Ürünler → Ürün Listesi → <strong>Dışa Aktar</strong> butonuna basın → Excel veya CSV formatında indirin → buraya yükleyin.
+      <div class="how-visual">
+        <div class="hv-card">
+          <div class="hv-icon">📦</div>
+          <div>
+            <div class="hv-label">Bluetooth Kulaklık</div>
+            <div style="display:flex;gap:12px;align-items:center">
+              <div class="hv-val">₺1.499</div>
+              <div style="font-size:11px;background:rgba(242,122,26,.1);color:var(--or);padding:2px 8px;border-radius:20px;font-weight:700">%10.17</div>
+            </div>
+          </div>
+        </div>
+        <div class="hv-card">
+          <div class="hv-icon">💰</div>
+          <div>
+            <div class="hv-label">Net Kâr</div>
+            <div class="hv-val green">+₺312,45</div>
+          </div>
+          <div style="margin-left:auto;font-size:13px;background:var(--gbg);color:var(--green);padding:4px 12px;border-radius:20px;font-weight:700;border:1px solid var(--gbr)">%20.8 Marj</div>
+        </div>
+        <div class="hv-card" style="opacity:.6">
+          <div class="hv-icon">⚠️</div>
+          <div>
+            <div class="hv-label">Deri Çanta</div>
+            <div class="hv-val red">-₺23,10</div>
+          </div>
+          <div style="margin-left:auto;font-size:12px;background:var(--rbg);color:var(--red);padding:3px 10px;border-radius:20px;font-weight:700;border:1px solid var(--rbr)">Zararlı!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FİYATLANDIRMA -->
+<div class="pricing-section" id="fiyat">
+  <div class="section-inner" style="text-align:center">
+    <div class="section-tag">Fiyatlandırma</div>
+    <div class="section-title">Sade ve şeffaf fiyat</div>
+    <p class="section-sub" style="margin:0 auto">Gizli ücret yok. İstediğinizde iptal edebilirsiniz.</p>
+    <div class="pricing-grid" style="margin-top:2.5rem">
+      <div class="price-card">
+        <div class="price-name">Demo</div>
+        <div class="price-amount">₺0</div>
+        <div class="price-period">Ücretsiz, sınırsız</div>
+        <div class="price-divider"></div>
+        <div class="price-features">
+          <div class="price-feature"><div class="pf-icon">✓</div>8 örnek ürün ile demo</div>
+          <div class="price-feature"><div class="pf-icon">✓</div>Kar hesaplama aracı</div>
+          <div class="price-feature"><div class="pf-icon">✓</div>KDV + Stopaj analizi</div>
+        </div>
+        <button class="btn-price" style="background:var(--bg2);color:var(--text)" onclick="demoVeGo()">Demo Başlat</button>
+      </div>
+      <div class="price-card featured">
+        <div class="price-badge">EN POPÜLER</div>
+        <div class="price-name">Premium</div>
+        <div class="price-amount">₺1.500</div>
+        <div class="price-period">yıllık · KDV dahil</div>
+        <div class="price-divider"></div>
+        <div class="price-features">
+          <div class="price-feature"><div class="pf-icon">✓</div>Trendyol Excel entegrasyonu</div>
+          <div class="price-feature"><div class="pf-icon">✓</div>Sınırsız ürün analizi</div>
+          <div class="price-feature"><div class="pf-icon">✓</div>Ürün görselleri</div>
+          <div class="price-feature"><div class="pf-icon">✓</div>CSV dışa aktarma</div>
+          <div class="price-feature"><div class="pf-icon">✓</div>Toplu kargo güncelleme</div>
+          <div class="price-feature"><div class="pf-icon">✓</div>NeSatılır ile aynı formül</div>
+          <div class="price-feature"><div class="pf-icon">✓</div>1 yıl boyunca güncellemeler</div>
+        </div>
+        <button class="btn-price" onclick="openAuth('kayit')">Hemen Başla ↗</button>
+      </div>
+      <div class="price-card">
+        <div class="price-name">Kurumsal</div>
+        <div class="price-amount">₺?</div>
+        <div class="price-period">Özel fiyat</div>
+        <div class="price-divider"></div>
+        <div class="price-features">
+          <div class="price-feature"><div class="pf-icon">✓</div>Premium'un her şeyi</div>
+          <div class="price-feature"><div class="pf-icon">✓</div>Birden fazla mağaza</div>
+          <div class="price-feature"><div class="pf-icon">✓</div>Özel entegrasyon</div>
+          <div class="price-feature"><div class="pf-icon">✓</div>Öncelikli destek</div>
+        </div>
+        <button class="btn-price" style="background:var(--bg2);color:var(--text)" onclick="window.open('mailto:info@karpanel.com')">İletişime Geç</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP BÖLÜMÜ -->
+<div class="app-wrap" id="app-section" style="display:none">
+
+  <!-- TABS -->
+  <div style="display:flex;gap:6px;padding:1.5rem 0 1rem;border-bottom:1.5px solid var(--border);margin-bottom:1.5rem">
+    <button class="ftab active" id="app-tab-u" onclick="showAppTab('urunler',this)">📦 Ürünlerim</button>
+    <button class="ftab" id="app-tab-h" onclick="showAppTab('hesap',this)">🧮 Kar Hesapla</button>
+  </div>
+
+  <!-- TAB: ÜRÜNLER -->
+  <div id="app-urunler" class="page active">
+
+    <!-- DEMO BANNER -->
+    <div class="demo-banner">
+      <div>
+        <h3>🎯 Demo veya Excel ile başlayın</h3>
+        <p>8 örnek ürünle deneyin ya da Trendyol Excel'inizi yükleyin</p>
+      </div>
+      <div class="demo-actions">
+        <button class="btn btn-primary" onclick="loadDemo()">Demo Başlat</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('csv-upload').click()">📂 Excel / CSV Yükle</button>
+        <input type="file" id="csv-upload" accept=".csv,.xlsx,.xls" style="display:none" onchange="csvYukle(this)">
       </div>
     </div>
 
-    <!-- ÜYE API BÖLÜMÜ (giriş sonrası) -->
+    <!-- CONNECT (premium only) -->
     <div id="connect-section" style="display:none">
-      <div class="section-label">Trendyol Bağlantısı</div>
       <div class="connect-card">
-        <div class="card-head">
-          <div class="card-head-icon">🔗</div>
-          <div>
-            <div class="card-head-title">Trendyol Paneline Bağlan</div>
-            <div class="card-head-sub">API bilgilerinizi girin, ürünleriniz otomatik yüklensin</div>
-          </div>
-        </div>
+        <div class="card-head"><div class="card-head-icon">🔗</div><div><div class="card-head-title">Trendyol API Bağlantısı</div><div class="card-head-sub">Satıcı ID ve API bilgilerinizi girin</div></div></div>
         <div class="card-body">
           <div class="steps">
-            <div class="step"><div class="step-num">1</div><div><div class="step-title">Partner Panel'e Girin</div><div class="step-desc">partner.trendyol.com adresine giriş yapın</div></div></div>
-            <div class="step"><div class="step-num">2</div><div><div class="step-title">API Bilgilerini Alın</div><div class="step-desc">Hesap Ayarları → Entegrasyon Bilgileri'nden kopyalayın</div></div></div>
-            <div class="step"><div class="step-num">3</div><div><div class="step-title">Ürünleri Çekin</div><div class="step-desc">Aşağıya yapıştırıp "Ürünleri Getir" butonuna basın</div></div></div>
+            <div class="step"><div class="step-num">1</div><div class="step-title">Partner Panel</div><div class="step-desc">partner.trendyol.com'a giriş yapın</div></div>
+            <div class="step"><div class="step-num">2</div><div class="step-title">API Bilgileri</div><div class="step-desc">Hesap Ayarları → Entegrasyon Bilgileri</div></div>
+            <div class="step"><div class="step-num">3</div><div class="step-title">Ürünleri Çekin</div><div class="step-desc">Bilgileri girin ve Getir'e basın</div></div>
           </div>
-          <div class="status-bar">
-            <div class="sdot" id="sdot"></div>
-            <span class="status-text" id="stext">Bağlantı bekleniyor</span>
-            <span class="status-sub" id="ssub"></span>
-          </div>
+          <div class="status-bar"><div class="sdot" id="sdot"></div><span class="status-text" id="stext">Bağlantı bekleniyor</span><span class="status-sub" id="ssub"></span></div>
           <div class="field-grid">
-            <div class="fg"><div class="flabel">Satıcı ID</div><input class="finput" type="text" id="inp-sid" placeholder="ör: 123456"></div>
-            <div class="fg"><div class="flabel">API Key</div><input class="finput" type="text" id="inp-key" placeholder="Partner Panel'den kopyalayın"></div>
+            <div class="fg"><div class="flabel">Satıcı ID</div><input class="finput" type="text" id="inp-sid" placeholder="265700"></div>
+            <div class="fg"><div class="flabel">API Key</div><input class="finput" type="text" id="inp-key" placeholder="Partner Panel'den"></div>
             <div class="fg"><div class="flabel">API Secret</div><input class="finput" type="password" id="inp-sec" placeholder="••••••••"></div>
-            <button class="btn btn-primary" onclick="urunleriCek()" id="btn-cek" style="height:40px;margin-top:auto">🚀 Ürünleri Getir</button>
+            <button class="btn btn-primary" onclick="urunleriCek()" id="btn-cek" style="height:40px;margin-top:auto">🚀 Getir</button>
           </div>
           <div style="display:flex;gap:8px;margin-top:8px">
-            <button class="btn btn-ghost" onclick="loadDemo()" style="font-size:12px">🎯 Demo Dene</button>
-            <button class="btn btn-ghost" onclick="checkProxy()" style="font-size:12px">🔍 Proxy Test Et</button>
+            <button class="btn btn-ghost" onclick="checkProxy()" style="font-size:12px">🔍 Proxy Test</button>
           </div>
         </div>
       </div>
@@ -450,9 +835,9 @@ select.finput2{cursor:pointer;appearance:none;background-image:url("data:image/s
             <button class="ftab" onclick="setFilter('eksik',this)">⏳ Eksik</button>
           </div>
         </div>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
           <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-inp" type="text" placeholder="Ürün ara..." oninput="araUrun(this.value)"></div>
-          <button class="btn-sm" onclick="topluKargo()">🚚 Toplu Kargo</button>
+          <button class="btn-sm" onclick="openKargoModal()">🚚 Toplu Kargo</button>
           <button class="btn-sm" onclick="csvIndir()">📥 CSV İndir</button>
         </div>
       </div>
@@ -464,47 +849,45 @@ select.finput2{cursor:pointer;appearance:none;background-image:url("data:image/s
       </div>
     </div>
 
-    <!-- GİRİŞ ÇAĞRISI (giriş yapılmamışsa) -->
-    <div id="login-cta" style="display:none;margin-top:2rem">
-      <div style="background:linear-gradient(135deg,#060E1E,#122040);border-radius:var(--r4);padding:3rem;text-align:center;border:1px solid rgba(59,130,246,.2)">
-        <div style="font-size:48px;margin-bottom:1rem">🔐</div>
-        <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:.5rem">Kendi ürünlerinizi çekin</div>
-        <div style="font-size:14px;color:rgba(255,255,255,.5);margin-bottom:1.5rem;max-width:400px;margin-left:auto;margin-right:auto">Trendyol'daki tüm ürünleriniz otomatik gelsin, komisyon ve KDV dahil net karınızı görün</div>
-        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-          <button class="btn-hero main" onclick="openAuth('kayit')">🚀 Üye Ol — ₺1.500/yıl</button>
-          <button class="btn-hero outline" onclick="openAuth('giris')">Giriş Yap</button>
-        </div>
+    <!-- LOGIN CTA -->
+    <div id="login-cta" class="login-cta" style="display:none">
+      <div style="font-size:48px;margin-bottom:1rem">🔐</div>
+      <div style="font-size:22px;font-weight:900;color:var(--dark);margin-bottom:.5rem;letter-spacing:-.5px">Kendi ürünlerinizi analiz edin</div>
+      <div style="font-size:15px;color:var(--t2);margin-bottom:2rem;max-width:400px;margin-left:auto;margin-right:auto">Trendyol'daki tüm ürünleriniz için komisyon, KDV ve stopaj dahil net karı görün</div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <button class="btn-hero-dark" onclick="openAuth('kayit')">🚀 Üye Ol — ₺1.500/yıl</button>
+        <button class="btn-hero-outline" onclick="openAuth('giris')">Giriş Yap</button>
       </div>
     </div>
 
   </div>
 
   <!-- TAB: HESAP -->
-  <div class="page" id="tab-hesap">
+  <div id="app-hesap" class="page">
     <div class="calc-card">
-      <div class="card-head"><div class="card-head-icon">🧮</div><div><div class="card-head-title">Tek Ürün Kar Hesaplama</div><div class="card-head-sub">Kategori seçin, fiyatları girin, net karı görün</div></div></div>
+      <div class="card-head"><div class="card-head-icon">🧮</div><div><div class="card-head-title">Tek Ürün Kar Hesaplama</div><div class="card-head-sub">Komisyon + KDV + Stopaj dahil net kar</div></div></div>
       <div class="card-body">
         <div class="form-row fr2">
-          <div class="fg"><div class="flabel">Kategori</div><div class="finput-wrap"><select class="finput2" id="h-kat" onchange="onKatChange()"><option value="">— Kategori Seçin —</option></select></div></div>
-          <div class="fg"><div class="flabel">Komisyon Oranı</div><div class="finput-wrap"><span class="fsuffix">%</span><input class="finput2" type="number" id="h-kom" placeholder="Kategoriye göre dolar" min="0" max="100" step="0.01"></div></div>
+          <div class="fg"><div class="flabel">Kategori</div><div class="fw"><select class="finput2" id="h-kat" onchange="onKatChange()"><option value="">— Seçin —</option></select></div></div>
+          <div class="fg"><div class="flabel">Komisyon Oranı</div><div class="fw"><span class="fsuf">%</span><input class="finput2" type="number" id="h-kom" placeholder="Kategoriye göre dolar" min="0" max="100" step="0.01"></div></div>
         </div>
         <div class="form-row fr2">
-          <div class="fg"><div class="flabel">Satış Fiyatı (KDV Dahil)</div><div class="finput-wrap"><span class="fsuffix">₺</span><input class="finput2" type="number" id="h-satis" placeholder="0,00" min="0" step="0.01"></div></div>
-          <div class="fg"><div class="flabel">Alış Fiyatı (KDV Dahil)</div><div class="finput-wrap"><span class="fsuffix">₺</span><input class="finput2" type="number" id="h-alis" placeholder="0,00" min="0" step="0.01"></div></div>
+          <div class="fg"><div class="flabel">Satış Fiyatı (KDV Dahil)</div><div class="fw"><span class="fsuf">₺</span><input class="finput2" type="number" id="h-satis" placeholder="0,00" min="0" step="0.01"></div></div>
+          <div class="fg"><div class="flabel">Alış Fiyatı (KDV Dahil)</div><div class="fw"><span class="fsuf">₺</span><input class="finput2" type="number" id="h-alis" placeholder="0,00" min="0" step="0.01"></div></div>
         </div>
         <div class="form-row fr3">
-          <div class="fg"><div class="flabel">KDV Oranı</div><div class="finput-wrap"><span class="fsuffix">%</span><select class="finput2" id="h-kdv"><option value="20" selected>20%</option><option value="10">10%</option><option value="1">1%</option><option value="0">0%</option></select></div></div>
-          <div class="fg"><div class="flabel">Kargo (₺)</div><div class="finput-wrap"><span class="fsuffix">₺</span><input class="finput2" type="number" id="h-kargo" placeholder="0,00" min="0" step="0.01" value="0"></div></div>
-          <div class="fg"><div class="flabel">Diğer Masraf (₺)</div><div class="finput-wrap"><span class="fsuffix">₺</span><input class="finput2" type="number" id="h-diger" placeholder="0,00" min="0" step="0.01" value="0"></div></div>
+          <div class="fg"><div class="flabel">KDV Oranı</div><div class="fw"><span class="fsuf">%</span><select class="finput2" id="h-kdv"><option value="20" selected>20%</option><option value="10">10%</option><option value="1">1%</option><option value="0">0%</option></select></div></div>
+          <div class="fg"><div class="flabel">Kargo (₺)</div><div class="fw"><span class="fsuf">₺</span><input class="finput2" type="number" id="h-kargo" placeholder="0,00" min="0" step="0.01" value="0"></div></div>
+          <div class="fg"><div class="flabel">Diğer (₺)</div><div class="fw"><span class="fsuf">₺</span><input class="finput2" type="number" id="h-diger" placeholder="0,00" min="0" step="0.01" value="0"></div></div>
         </div>
         <div class="kargo-row">
-          <span class="kr-label">Kargo Tipi</span>
-          <div style="display:flex;gap:6px;flex-wrap:wrap">
-            <div class="kr-opt sel" id="kr-satici" onclick="setKargoTipi('satici')"><div class="kr-dot"></div>Satıcıya Ait</div>
-            <div class="kr-opt" id="kr-ihracat" onclick="setKargoTipi('ihracat')"><div class="kr-dot"></div>İhracat</div>
-            <div class="kr-opt" id="kr-aynigun" onclick="setKargoTipi('aynigun')"><div class="kr-dot"></div>Aynı Gün</div>
+          <span style="font-size:12px;font-weight:700;color:var(--t2)">Kargo Tipi</span>
+          <div style="display:flex;gap:6px">
+            <div class="kr-opt sel" id="kr-satici" onclick="setKargoTipi('satici')">Satıcıya Ait</div>
+            <div class="kr-opt" id="kr-ihracat" onclick="setKargoTipi('ihracat')">İhracat</div>
+            <div class="kr-opt" id="kr-aynigun" onclick="setKargoTipi('aynigun')">Aynı Gün</div>
           </div>
-          <span class="kr-note">*Fiyatlara KDV dahil giriniz</span>
+          <span style="font-size:10px;color:var(--t3);margin-left:auto;font-style:italic">*KDV dahil giriniz</span>
         </div>
         <div class="btn-row">
           <button class="btn-hesapla" onclick="hesapla()">🧮 Komisyon Hesapla</button>
@@ -515,7 +898,7 @@ select.finput2{cursor:pointer;appearance:none;background-image:url("data:image/s
     <div class="results calc-card" id="results">
       <div class="card-head"><div class="card-head-icon">📊</div><div><div class="card-head-title">Hesaplama Sonuçları</div><div class="card-head-sub" id="res-sub">—</div></div></div>
       <div class="card-body">
-        <div class="result-top">
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:1.25rem;align-items:center;margin-bottom:1.25rem">
           <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
             <div class="kar-circle" id="kar-circle"><div class="kc-label">Kâr</div><div class="kc-val" id="kc-val">₺0</div><div class="kc-sub" id="kc-sub"></div></div>
             <div class="marj-badge" id="marj-badge">%0 Marj</div>
@@ -525,25 +908,23 @@ select.finput2{cursor:pointer;appearance:none;background-image:url("data:image/s
             <div class="rc"><div class="rc-label">Yat. Geri Dönüş</div><div class="rc-val b" id="r-ygd">%0</div><div class="rc-sub">Alış fiyatına göre</div></div>
             <div class="rc"><div class="rc-label">Hizmet Bedeli</div><div class="rc-val" id="r-hizmet">₺0</div><div class="rc-sub">Trendyol payı</div></div>
             <div class="rc"><div class="rc-label">Stopaj</div><div class="rc-val" id="r-stopaj">₺0</div><div class="rc-sub">%5 stopaj</div></div>
-            <div class="rc hl"><div class="rc-label">Kâr Oranı</div><div class="rc-val or" id="r-karor">%0</div><div class="rc-sub">Satış fiyatına göre</div></div>
+            <div class="rc hl"><div class="rc-label">Kâr Oranı</div><div class="rc-val g" id="r-karor">%0</div><div class="rc-sub">Satış fiyatına göre</div></div>
             <div class="rc"><div class="rc-label">Ödenecek KDV</div><div class="rc-val" id="r-kdv">₺0</div><div class="rc-sub">Devlete ödenen</div></div>
           </div>
         </div>
-        <div class="meter-sec">
-          <div class="meter-lr"><span>Zarar</span><span id="meter-txt">Kâr: %0</span><span>Yüksek Kâr</span></div>
+        <div style="margin:1rem 0">
+          <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--t3);margin-bottom:5px"><span>Zarar</span><span id="meter-txt">Kâr: %0</span><span>Yüksek Kâr</span></div>
           <div class="meter-bg"><div class="meter-fill" id="meter-fill" style="width:0%"></div></div>
-          <div style="display:flex;justify-content:space-between;margin-top:3px;font-size:10px;color:var(--t3)"><span>%0</span><span>%10</span><span>%20</span><span>%30</span><span>%40+</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:3px"><span>%0</span><span>%10</span><span>%20</span><span>%30</span><span>%40+</span></div>
         </div>
-        <div class="kdv-sec">
-          <div class="kdv-head">KDV Detayı</div>
-          <div class="kdv-grid">
-            <div class="kdc"><div class="kdc-label">Satıştan KDV</div><div class="kdc-val" id="kv-satis">₺0</div></div>
-            <div class="kdc"><div class="kdc-label">Alıştan KDV</div><div class="kdc-val" id="kv-alis">₺0</div></div>
-            <div class="kdc"><div class="kdc-label">Kargodan KDV</div><div class="kdc-val" id="kv-kargo">₺0</div></div>
-            <div class="kdc"><div class="kdc-label">Komisyondan KDV</div><div class="kdc-val" id="kv-kom">₺0</div></div>
-            <div class="kdc"><div class="kdc-label">Hizmet KDV</div><div class="kdc-val" id="kv-hizmet">₺0</div></div>
-            <div class="kdc" style="background:var(--rbg);border-color:var(--rbr)"><div class="kdc-label" style="color:var(--red)">Ödenecek KDV</div><div class="kdc-val" style="color:var(--red)" id="kv-odeme">₺0</div></div>
-          </div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-top:1rem;margin-bottom:7px;display:flex;align-items:center;gap:8px">KDV Detayı<span style="flex:1;height:1px;background:var(--border);display:block"></span></div>
+        <div class="kdv-grid">
+          <div class="kdc"><div class="kdc-label">Satıştan KDV</div><div class="kdc-val" id="kv-satis">₺0</div></div>
+          <div class="kdc"><div class="kdc-label">Alıştan KDV</div><div class="kdc-val" id="kv-alis">₺0</div></div>
+          <div class="kdc"><div class="kdc-label">Kargodan KDV</div><div class="kdc-val" id="kv-kargo">₺0</div></div>
+          <div class="kdc"><div class="kdc-label">Komisyondan KDV</div><div class="kdc-val" id="kv-kom">₺0</div></div>
+          <div class="kdc"><div class="kdc-label">Hizmet KDV</div><div class="kdc-val" id="kv-hizmet">₺0</div></div>
+          <div class="kdc" style="background:var(--rbg);border-color:var(--rbr)"><div class="kdc-label" style="color:var(--red)">Ödenecek KDV</div><div class="kdc-val" style="color:var(--red)" id="kv-odeme">₺0</div></div>
         </div>
         <div class="breakdown">
           <div class="bd-head">Detaylı Maliyet Dökümü</div>
@@ -560,22 +941,19 @@ select.finput2{cursor:pointer;appearance:none;background-image:url("data:image/s
       </div>
     </div>
   </div>
-
-  
-      <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-inp" type="text" placeholder="Kategori ara..." oninput="filterKom(this.value)" style="width:230px"></div>
-    </div>
-    <div class="ktable-wrap" style="margin-bottom:3rem">
-      <table class="ktable"><thead><tr><th>Kategori</th><th>Alt Kategori</th><th>Komisyon</th><th>Vade</th></tr></thead><tbody id="ktbody"></tbody></table>
-    </div>
-  </div>
-
 </div>
 
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo-text">Kar<em>Panel</em></div>
+  <div class="footer-sub">Trendyol satıcıları için bağımsız kar analiz aracı.<br>Bu uygulama Trendyol ile resmi bir bağlantıya sahip değildir.</div>
+</footer>
+
 <!-- AUTH MODAL -->
-<div class="auth-overlay" id="auth-overlay" onclick="closeAuthOutside(event)">
+<div class="overlay" id="auth-overlay" onclick="closeAuthOutside(event)">
   <div class="auth-box">
     <button class="auth-close" onclick="closeAuth()">✕</button>
-    <div class="auth-logo"><div class="auth-logo-mark">K</div><span class="auth-logo-name">Kar<em>Panel</em></span></div>
+    <div class="auth-logo"><div class="auth-logo-icon">K</div><span class="auth-logo-text">Kar<em>Panel</em></span></div>
     <div class="auth-tabs">
       <button class="auth-tab active" id="tab-giris" onclick="switchAuth('giris')">Giriş Yap</button>
       <button class="auth-tab" id="tab-kayit" onclick="switchAuth('kayit')">Üye Ol</button>
@@ -585,39 +963,36 @@ select.finput2{cursor:pointer;appearance:none;background-image:url("data:image/s
       <div class="auth-field"><div class="auth-label">E-posta</div><input class="auth-input" type="email" id="giris-email" placeholder="ornek@email.com"></div>
       <div class="auth-field"><div class="auth-label">Şifre</div><input class="auth-input" type="password" id="giris-sifre" placeholder="••••••••"></div>
       <button class="btn-auth" onclick="girisYap()">Giriş Yap</button>
-      <div class="auth-divider">veya</div>
-      <button class="btn-auth" style="background:var(--bg);color:var(--text);border:1.5px solid var(--border)" onclick="switchAuth('kayit')">Üye Ol →</button>
+      <div class="auth-switch">Hesabın yok mu? <a onclick="switchAuth('kayit')">Üye ol</a></div>
     </div>
     <div class="auth-form" id="auth-form-kayit" style="display:none">
       <div class="auth-field"><div class="auth-label">Ad Soyad</div><input class="auth-input" type="text" id="kayit-ad" placeholder="Adınız Soyadınız"></div>
       <div class="auth-field"><div class="auth-label">E-posta</div><input class="auth-input" type="email" id="kayit-email" placeholder="ornek@email.com"></div>
       <div class="auth-field"><div class="auth-label">Şifre</div><input class="auth-input" type="password" id="kayit-sifre" placeholder="En az 6 karakter"></div>
       <button class="btn-auth" onclick="kayitOl()">Üye Ol ve Devam Et →</button>
-      <div class="auth-divider">veya</div>
-      <button class="btn-auth" style="background:var(--bg);color:var(--text);border:1.5px solid var(--border)" onclick="switchAuth('giris')">← Giriş Yap</button>
+      <div class="auth-switch">Hesabın var mı? <a onclick="switchAuth('giris')">Giriş yap</a></div>
     </div>
   </div>
 </div>
 
-<!-- ÖDEME SAYFASI -->
-<div class="auth-overlay" id="pay-overlay">
-  <div class="auth-box" style="max-width:520px;padding:0;overflow:hidden;border-radius:var(--r4)">
+<!-- ÖDEME MODAL -->
+<div class="overlay" id="pay-overlay">
+  <div class="pay-box">
     <div class="pay-header">
-      <div class="pay-icon">💎</div>
-      <div class="pay-title">KarPanel Premium</div>
-      <div class="pay-sub">Trendyol ürünlerinizi çekin, karınızı görün</div>
+      <div class="pay-header-icon">💎</div>
+      <div class="pay-header-title">KarPanel Premium</div>
+      <div class="pay-header-sub">Trendyol ürünlerinizi analiz edin</div>
     </div>
     <div class="pay-body">
       <div class="pay-price-box">
         <div class="pay-price"><sup>₺</sup>1.500</div>
-        <div class="pay-price-period">yıllık üyelik · KDV dahil</div>
+        <div class="pay-price-per">yıllık üyelik · KDV dahil</div>
       </div>
       <div class="pay-features">
-        <div class="pay-feature"><div class="pay-feature-icon">✓</div>Trendyol'dan otomatik ürün çekme</div>
-        <div class="pay-feature"><div class="pay-feature-icon">✓</div>Komisyon + KDV + Stopaj dahil net kar</div>
-        <div class="pay-feature"><div class="pay-feature-icon">✓</div>Sınırsız ürün analizi</div>
-        <div class="pay-feature"><div class="pay-feature-icon">✓</div>CSV export ve detaylı raporlar</div>
-        <div class="pay-feature"><div class="pay-feature-icon">✓</div>1 yıl boyunca tüm güncellemeler</div>
+        <div class="pay-feature"><div class="pf-icon2">✓</div>Excel ile otomatik ürün yükleme</div>
+        <div class="pay-feature"><div class="pf-icon2">✓</div>Komisyon + KDV + Stopaj analizi</div>
+        <div class="pay-feature"><div class="pf-icon2">✓</div>Ürün görselleri</div>
+        <div class="pay-feature"><div class="pf-icon2">✓</div>CSV export ve raporlar</div>
       </div>
       <div class="pay-form">
         <div class="pay-field"><div class="pay-label">Kart Üzerindeki İsim</div><input class="pay-input" type="text" id="pay-isim" placeholder="Ad Soyad"></div>
@@ -627,7 +1002,7 @@ select.finput2{cursor:pointer;appearance:none;background-image:url("data:image/s
           <div class="pay-field"><div class="pay-label">CVV</div><input class="pay-input" type="text" id="pay-cvv" placeholder="000" maxlength="3"></div>
         </div>
         <button class="btn-pay" onclick="odemeYap()">🔒 ₺1.500 Öde ve Başla</button>
-        <div class="pay-security">🔒 256-bit SSL ile güvenli ödeme</div>
+        <div class="pay-security">🔒 Güvenli ödeme</div>
       </div>
       <div class="pay-skip"><a onclick="demoyaDevam()">Şimdilik demo ile devam et →</a></div>
     </div>
@@ -635,7 +1010,7 @@ select.finput2{cursor:pointer;appearance:none;background-image:url("data:image/s
 </div>
 
 <!-- DETAY MODAL -->
-<div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
+<div class="overlay" id="modal-bg" onclick="closeModal(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-title">📊 Ürün Kar Detayı</div>
@@ -645,40 +1020,32 @@ select.finput2{cursor:pointer;appearance:none;background-image:url("data:image/s
       <div class="mi-wrap"><div class="mi-label">Kargo (₺)</div><div class="mi-field"><span class="mi-sym">₺</span><input class="mi-input" type="number" id="m-kargo" placeholder="0,00" min="0" step="0.01" value="0" oninput="modalHesapla()"></div></div>
     </div>
     <div id="modal-result" style="display:none">
-      <!-- NeSatılır style üst tablo -->
       <div style="position:relative;margin-bottom:10px;padding-right:80px">
         <table class="ns-table" style="width:100%">
-          <thead><tr><th>Komisyon</th><th>Yat. Geri Dönüş</th><th>Hizmet Bedeli</th><th>Stopaj Bedeli</th><th style="background:var(--ybg)">Kâr Oranı</th><th>KDV</th></tr></thead>
+          <thead><tr><th>Komisyon</th><th>Yat. Geri Dönüş</th><th>Hizmet Bedeli</th><th>Stopaj</th><th style="background:var(--ybg)">Kâr Oranı</th><th>KDV</th></tr></thead>
           <tbody><tr>
-            <td id="mr-komtl" style="color:var(--text)">₺0</td>
+            <td id="mr-komtl" style="color:var(--or)">₺0</td>
             <td id="mr-ygd" style="color:var(--blue)">%0</td>
-            <td id="mr-hizmet" style="color:var(--text)">₺0</td>
-            <td id="mr-stopaj" style="color:var(--text)">₺0</td>
-            <td id="mr-karor" style="color:var(--yellow);background:var(--ybg)">%0</td>
-            <td id="mr-kdv" style="color:var(--text)">₺0</td>
+            <td id="mr-hizmet">₺0</td>
+            <td id="mr-stopaj">₺0</td>
+            <td id="mr-karor" style="background:var(--ybg);color:var(--yellow)">%0</td>
+            <td id="mr-kdv">₺0</td>
           </tr></tbody>
         </table>
-        <!-- Kâr balonu -->
-        <div id="m-circle" style="position:absolute;right:0;top:50%;transform:translateY(-50%);width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(242,122,26,.35)">
-          <div style="font-size:9px;font-weight:700;color:rgba(255,255,255,.8)">Kâr</div>
-          <div style="font-size:13px;font-weight:900;color:#fff;letter-spacing:-.5px;line-height:1.1" id="mr-kar">₺0</div>
+        <div id="m-circle" class="ns-kar-ball" style="position:absolute;right:0;top:50%;transform:translateY(-50%)">
+          <div class="ns-kar-label">Kâr</div>
+          <div class="ns-kar-val" id="mr-kar">₺0</div>
         </div>
       </div>
-      <!-- KDV detay tablosu -->
       <table class="ns-kdv-table">
-        <thead><tr><th>Satıştan Oluşan KDV</th><th>Alıştan Oluşan KDV</th><th>Kargodan Oluşan KDV</th><th>Komisyondan Oluşan KDV</th><th>Hizmet Bed. KDV</th><th>Ödenecek KDV</th></tr></thead>
+        <thead><tr><th>Satıştan KDV</th><th>Alıştan KDV</th><th>Kargodan KDV</th><th>Komisyondan KDV</th><th>Hizmet KDV</th><th>Ödenecek KDV</th></tr></thead>
         <tbody><tr>
-          <td id="mr-kdvs">₺0</td>
-          <td id="mr-kdva">₺0</td>
-          <td id="mr-kdvk">₺0</td>
-          <td id="mr-kdvkom">₺0</td>
-          <td id="mr-kdvhiz">₺0</td>
-          <td id="mr-kdvode">₺0</td>
+          <td id="mr-kdvs">₺0</td><td id="mr-kdva">₺0</td><td id="mr-kdvk">₺0</td>
+          <td id="mr-kdvkom">₺0</td><td id="mr-kdvhiz">₺0</td><td id="mr-kdvode">₺0</td>
         </tr></tbody>
       </table>
-      <!-- Maliyet dökümü -->
       <div class="breakdown">
-        <div class="bd-head">Detaylı Maliyet Dökümü</div>
+        <div class="bd-head">Maliyet Dökümü</div>
         <div class="bd-row"><span class="bd-label">Satış Fiyatı</span><span class="bv p" id="mbd-satis">₺0</span></div>
         <div class="bd-row"><span class="bd-label">− Komisyon</span><span class="bv m" id="mbd-kom">₺0</span></div>
         <div class="bd-row"><span class="bd-label">− Alış Fiyatı</span><span class="bv m" id="mbd-alis">₺0</span></div>
@@ -693,79 +1060,74 @@ select.finput2{cursor:pointer;appearance:none;background-image:url("data:image/s
   </div>
 </div>
 
-<!-- TOPLU KARGO MODAL -->
-<div class="auth-overlay" id="kargo-modal" onclick="closeKargoModal(event)">
-  <div class="auth-box" style="max-width:380px">
-    <button class="auth-close" onclick="closeKargoModal()">✕</button>
-    <div style="font-size:20px;text-align:center;margin-bottom:.5rem">🚚</div>
-    <div class="modal-title" style="text-align:center;margin-bottom:.25rem">Toplu Kargo</div>
+<!-- KARGO MODAL -->
+<div class="overlay" id="kargo-overlay" onclick="closeKargoModal(event)">
+  <div class="kargo-box" onclick="event.stopPropagation()">
+    <div style="text-align:center;font-size:32px;margin-bottom:.5rem">🚚</div>
+    <div style="font-size:17px;font-weight:800;text-align:center;margin-bottom:.25rem">Toplu Kargo</div>
     <div style="font-size:13px;color:var(--t3);text-align:center;margin-bottom:1.25rem">Tüm ürünlere aynı kargo ücretini uygula</div>
-    <div class="auth-field">
+    <div class="auth-field" style="margin-bottom:1rem">
       <div class="auth-label">Kargo Ücreti (₺)</div>
       <input class="auth-input" type="number" id="kargo-input" placeholder="ör: 25" min="0" step="0.01" onkeydown="if(event.key==='Enter')kargoUygula()">
     </div>
-    <button class="btn-auth" onclick="kargoUygula()" style="margin-top:1rem">Uygula</button>
+    <button class="btn-auth" onclick="kargoUygula()">Uygula</button>
+    <button class="btn-auth" style="background:var(--bg2);color:var(--text);margin-top:8px" onclick="closeKargoModal()">İptal</button>
   </div>
 </div>
 
 <div class="toast" id="toast"><span id="t-icon"></span><span id="t-msg"></span></div>
 
 <script>
-// ── VERİ ──
 const KOMISYONLAR=[
-  {k:"Aksesuar",a:"Altın (İşlenmemiş)",o:7.0,v:7},{k:"Aksesuar",a:"Atkı & Bere & Eldiven",o:21.36,v:28},
-  {k:"Aksesuar",a:"Diğer Aksesuar",o:22.37,v:28},{k:"Aksesuar",a:"Çanta",o:22.37,v:28},
-  {k:"Aksesuar",a:"Güneş Gözlüğü",o:21.36,v:28},{k:"Aksesuar",a:"Saat",o:16.27,v:14},
-  {k:"Aksesuar",a:"Takı & Mücevher",o:21.36,v:14},{k:"Moda - Kadın",a:"Elbise",o:24.41,v:28},
-  {k:"Moda - Kadın",a:"Bluz & Gömlek",o:24.41,v:28},{k:"Moda - Kadın",a:"Pantolon",o:24.41,v:28},
-  {k:"Moda - Kadın",a:"Etek",o:24.41,v:28},{k:"Moda - Kadın",a:"Mont & Kaban",o:21.36,v:28},
-  {k:"Moda - Kadın",a:"Pijama & İç Giyim",o:21.36,v:28},{k:"Moda - Kadın",a:"Spor Giyim",o:21.36,v:28},
-  {k:"Moda - Erkek",a:"T-Shirt & Polo",o:21.36,v:28},{k:"Moda - Erkek",a:"Gömlek",o:21.36,v:28},
-  {k:"Moda - Erkek",a:"Pantolon & Jean",o:21.36,v:28},{k:"Moda - Erkek",a:"Mont & Ceket",o:21.36,v:28},
-  {k:"Moda - Erkek",a:"Takım Elbise",o:21.36,v:28},{k:"Ayakkabı",a:"Spor Ayakkabı",o:20.35,v:28},
-  {k:"Ayakkabı",a:"Bot & Çizme",o:21.36,v:28},{k:"Ayakkabı",a:"Sandalet & Terlik",o:21.36,v:28},
-  {k:"Elektronik",a:"Cep Telefonu",o:5.09,v:7},{k:"Elektronik",a:"Laptop & Bilgisayar",o:5.09,v:7},
-  {k:"Elektronik",a:"Tablet",o:5.09,v:7},{k:"Elektronik",a:"Akıllı Saat & Bileklik",o:10.17,v:14},
-  {k:"Elektronik",a:"Kulaklık",o:10.17,v:14},{k:"Elektronik",a:"TV & Monitör",o:5.09,v:7},
-  {k:"Elektronik",a:"Beyaz Eşya",o:7.63,v:7},{k:"Elektronik",a:"Küçük Ev Aletleri",o:12.22,v:14},
-  {k:"Kozmetik",a:"Parfüm",o:18.31,v:14},{k:"Kozmetik",a:"Makyaj",o:20.35,v:14},
-  {k:"Kozmetik",a:"Saç Bakım",o:20.35,v:14},{k:"Kozmetik",a:"Cilt Bakım",o:20.35,v:14},
-  {k:"Ev & Yaşam",a:"Mobilya",o:14.24,v:14},{k:"Ev & Yaşam",a:"Aydınlatma",o:18.31,v:14},
-  {k:"Ev & Yaşam",a:"Tekstil",o:21.36,v:28},{k:"Ev & Yaşam",a:"Mutfak Gereçleri",o:18.31,v:14},
-  {k:"Ev & Yaşam",a:"Dekorasyon",o:20.35,v:14},{k:"Spor & Outdoor",a:"Spor Ekipmanı",o:16.27,v:14},
-  {k:"Spor & Outdoor",a:"Kamp & Outdoor",o:16.27,v:14},{k:"Spor & Outdoor",a:"Bisiklet",o:12.22,v:14},
-  {k:"Oyuncak",a:"Oyuncak & Oyun",o:18.31,v:14},{k:"Bebek & Anne",a:"Bebek Giyim",o:20.35,v:14},
-  {k:"Bebek & Anne",a:"Bebek Arabası",o:14.24,v:14},{k:"Otomobil",a:"Araç Aksesuar",o:14.24,v:14},
-  {k:"Bahçe & Yapı",a:"Bahçe Ürünleri",o:16.27,v:14},{k:"Pet Shop",a:"Evcil Hayvan",o:16.27,v:14},
-  {k:"Gıda",a:"Organik & Doğal",o:12.22,v:7},
+  {k:"Aksesuar",a:"Altın (İşlenmemiş)",o:7.0},{k:"Aksesuar",a:"Atkı & Bere & Eldiven",o:21.36},
+  {k:"Aksesuar",a:"Diğer Aksesuar",o:22.37},{k:"Aksesuar",a:"Çanta",o:22.37},
+  {k:"Aksesuar",a:"Güneş Gözlüğü",o:21.36},{k:"Aksesuar",a:"Saat",o:16.27},
+  {k:"Aksesuar",a:"Takı & Mücevher",o:21.36},{k:"Moda - Kadın",a:"Elbise",o:24.41},
+  {k:"Moda - Kadın",a:"Bluz & Gömlek",o:24.41},{k:"Moda - Kadın",a:"Pantolon",o:24.41},
+  {k:"Moda - Kadın",a:"Etek",o:24.41},{k:"Moda - Kadın",a:"Mont & Kaban",o:21.36},
+  {k:"Moda - Kadın",a:"Pijama & İç Giyim",o:21.36},{k:"Moda - Kadın",a:"Spor Giyim",o:21.36},
+  {k:"Moda - Erkek",a:"T-Shirt & Polo",o:21.36},{k:"Moda - Erkek",a:"Gömlek",o:21.36},
+  {k:"Moda - Erkek",a:"Pantolon & Jean",o:21.36},{k:"Moda - Erkek",a:"Mont & Ceket",o:21.36},
+  {k:"Moda - Erkek",a:"Takım Elbise",o:21.36},{k:"Ayakkabı",a:"Spor Ayakkabı",o:20.35},
+  {k:"Ayakkabı",a:"Bot & Çizme",o:21.36},{k:"Ayakkabı",a:"Sandalet & Terlik",o:21.36},
+  {k:"Elektronik",a:"Cep Telefonu",o:5.09},{k:"Elektronik",a:"Laptop & Bilgisayar",o:5.09},
+  {k:"Elektronik",a:"Tablet",o:5.09},{k:"Elektronik",a:"Akıllı Saat & Bileklik",o:10.17},
+  {k:"Elektronik",a:"Kulaklık",o:10.17},{k:"Elektronik",a:"TV & Monitör",o:5.09},
+  {k:"Elektronik",a:"Beyaz Eşya",o:7.63},{k:"Elektronik",a:"Küçük Ev Aletleri",o:12.22},
+  {k:"Kozmetik",a:"Parfüm",o:18.31},{k:"Kozmetik",a:"Makyaj",o:20.35},
+  {k:"Kozmetik",a:"Saç Bakım",o:20.35},{k:"Kozmetik",a:"Cilt Bakım",o:20.35},
+  {k:"Ev & Yaşam",a:"Mobilya",o:14.24},{k:"Ev & Yaşam",a:"Aydınlatma",o:18.31},
+  {k:"Ev & Yaşam",a:"Tekstil",o:21.36},{k:"Ev & Yaşam",a:"Mutfak Gereçleri",o:18.31},
+  {k:"Ev & Yaşam",a:"Dekorasyon",o:20.35},{k:"Spor & Outdoor",a:"Spor Ekipmanı",o:16.27},
+  {k:"Spor & Outdoor",a:"Kamp & Outdoor",o:16.27},{k:"Spor & Outdoor",a:"Bisiklet",o:12.22},
+  {k:"Oyuncak",a:"Oyuncak & Oyun",o:18.31},{k:"Bebek & Anne",a:"Bebek Giyim",o:20.35},
+  {k:"Bebek & Anne",a:"Bebek Arabası",o:14.24},{k:"Otomobil",a:"Araç Aksesuar",o:14.24},
+  {k:"Bahçe & Yapı",a:"Bahçe Ürünleri",o:16.27},{k:"Pet Shop",a:"Evcil Hayvan",o:16.27},
+  {k:"Gıda",a:"Organik & Doğal",o:12.22},
 ];
 
 const DEMO=[
-  {id:'D1',title:'Pamuklu Basic T-Shirt 3\'lü Set',categoryName:'Moda - Erkek',commissionRate:21.36,salePrice:399,alis:0,kargo:15},
-  {id:'D2',title:'Deri Görünümlü Bayan Çantası',categoryName:'Aksesuar',commissionRate:22.37,salePrice:649,alis:0,kargo:20},
-  {id:'D3',title:'Bluetooth Kablosuz Kulaklık',categoryName:'Elektronik',commissionRate:10.17,salePrice:1499,alis:0,kargo:25},
-  {id:'D4',title:'Yoga Matı + Çanta Seti',categoryName:'Spor & Outdoor',commissionRate:16.27,salePrice:449,alis:0,kargo:18},
-  {id:'D5',title:'Nemlendirici Cilt Bakım Seti 5\'li',categoryName:'Kozmetik',commissionRate:20.35,salePrice:789,alis:0,kargo:12},
-  {id:'D6',title:'Erkek Slim Fit Chino Pantolon',categoryName:'Moda - Erkek',commissionRate:21.36,salePrice:329,alis:0,kargo:15},
-  {id:'D7',title:'Akıllı Spor Bilekliği Pro',categoryName:'Elektronik',commissionRate:10.17,salePrice:2199,alis:0,kargo:20},
-  {id:'D8',title:'Bambu Mutfak Gereçleri Seti',categoryName:'Ev & Yaşam',commissionRate:18.31,salePrice:289,alis:0,kargo:16},
+  {id:'D1',title:'Pamuklu Basic T-Shirt 3\'lü Set',categoryName:'Moda - Erkek',commissionRate:21.36,salePrice:399,alis:0,kargo:15,image:''},
+  {id:'D2',title:'Deri Görünümlü Bayan Çantası',categoryName:'Aksesuar',commissionRate:22.37,salePrice:649,alis:0,kargo:20,image:''},
+  {id:'D3',title:'Bluetooth Kablosuz Kulaklık',categoryName:'Elektronik',commissionRate:10.17,salePrice:1499,alis:0,kargo:25,image:''},
+  {id:'D4',title:'Yoga Matı + Çanta Seti',categoryName:'Spor & Outdoor',commissionRate:16.27,salePrice:449,alis:0,kargo:18,image:''},
+  {id:'D5',title:'Nemlendirici Cilt Bakım Seti',categoryName:'Kozmetik',commissionRate:20.35,salePrice:789,alis:0,kargo:12,image:''},
+  {id:'D6',title:'Erkek Slim Fit Chino Pantolon',categoryName:'Moda - Erkek',commissionRate:21.36,salePrice:329,alis:0,kargo:15,image:''},
+  {id:'D7',title:'Akıllı Spor Bilekliği Pro',categoryName:'Elektronik',commissionRate:10.17,salePrice:2199,alis:0,kargo:20,image:''},
+  {id:'D8',title:'Bambu Mutfak Gereçleri Seti',categoryName:'Ev & Yaşam',commissionRate:18.31,salePrice:289,alis:0,kargo:16,image:''},
 ];
 
-// ── DURUM ──
-let urunler=[], filterMode='hepsi', searchQ='', kargoTipi='satici', modalUrun=null;
-let currentUser=null; // {ad, email, premium}
-
+const PREMIUM_EMAILS=['info@ecuyy.com'];
 const PROXY=window.location.hostname==='localhost'?'http://localhost:3001':window.location.origin;
+
+let urunler=[], filterMode='hepsi', searchQ='', kargoTipi='satici', modalUrun=null, currentUser=null;
+
 const fmt=n=>'₺'+Math.abs(n).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2});
 
-// ── KAR FORMÜLÜ ──
 function calcKar(p){
   const s=p.salePrice||0, a=p.alis||0, k=p.kargo||0, ko=p.commissionRate||0;
-  const kf=1.2;
-  const komisyon=s*(ko/100);
-  const komH=komisyon/kf;
-  const hizmet=13.19;
-  const stopaj=komH*0.05;
+  const kf=1.2, komisyon=s*(ko/100), komH=komisyon/kf;
+  const hizmet=13.19, stopaj=komH*0.05;
   const kdvS=s-s/kf, kdvA=a-a/kf, kdvK=k-k/kf;
   const kdvKom=komisyon-komisyon/kf, kdvHiz=hizmet-hizmet/kf;
   const odKdv=Math.max(0,kdvS-kdvA-kdvK-kdvKom-kdvHiz);
@@ -775,18 +1137,39 @@ function calcKar(p){
   return{komisyon,komH,hizmet,stopaj,kdvS,kdvA,kdvK,kdvKom,kdvHiz,odKdv,net,marj,ygd,hasAlis:a>0};
 }
 
-// ── KULLANICI YÖNETİMİ ──
+// ── NAVIGATION ──
+function goApp(){
+  document.getElementById('hero').style.display='none';
+  document.querySelectorAll('.how-section,.pricing-section,footer').forEach(e=>e.style.display='none');
+  document.getElementById('app-section').style.display='block';
+  document.getElementById('nav-dashboard-btn').style.display='none';
+  window.scrollTo(0,0);
+}
+function goHome(){
+  document.getElementById('hero').style.display='flex';
+  document.querySelectorAll('.how-section,.pricing-section,footer').forEach(e=>e.style.display='');
+  document.getElementById('app-section').style.display='none';
+  if(currentUser) document.getElementById('nav-dashboard-btn').style.display='flex';
+}
+function showAppTab(name,el){
+  document.querySelectorAll('#app-section .page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('#app-section .ftab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('app-'+name).classList.add('active');
+  if(el) el.classList.add('active');
+}
+
+// ── USER ──
 function loadUser(){
   const u=localStorage.getItem('kp_user');
   if(u){currentUser=JSON.parse(u);applyUser();}
   else{showGuestUI();}
 }
-
 function applyUser(){
   document.getElementById('nav-login-btn').style.display='none';
-  document.getElementById('nav-user').style.display='flex';
-  document.getElementById('nav-avatar').textContent=currentUser.ad.charAt(0).toUpperCase();
-  document.getElementById('nav-username').textContent=currentUser.ad;
+  document.getElementById('user-pill').style.display='flex';
+  document.getElementById('user-av').textContent=currentUser.ad.charAt(0).toUpperCase();
+  document.getElementById('user-name').textContent=currentUser.ad;
+  document.getElementById('nav-dashboard-btn').style.display='flex';
   if(currentUser.premium){
     document.getElementById('connect-section').style.display='block';
     document.getElementById('login-cta').style.display='none';
@@ -794,29 +1177,23 @@ function applyUser(){
     document.getElementById('login-cta').style.display='block';
   }
 }
-
 function showGuestUI(){
-  document.getElementById('nav-login-btn').style.display='flex';
-  document.getElementById('nav-user').style.display='none';
+  document.getElementById('nav-login-btn').style.display='block';
+  document.getElementById('user-pill').style.display='none';
+  document.getElementById('nav-dashboard-btn').style.display='none';
   document.getElementById('connect-section').style.display='none';
   document.getElementById('login-cta').style.display='block';
 }
-
 function logout(){
   localStorage.removeItem('kp_user');
-  currentUser=null;
-  urunler=[];
+  currentUser=null; urunler=[];
   document.getElementById('urun-section').style.display='none';
-  showGuestUI();
+  showGuestUI(); goHome();
   toast('Çıkış yapıldı.','info','👋');
 }
 
 // ── AUTH ──
-function openAuth(tab){
-  document.getElementById('auth-overlay').classList.add('open');
-  switchAuth(tab);
-  document.getElementById('auth-error').style.display='none';
-}
+function openAuth(tab){document.getElementById('auth-overlay').classList.add('open');switchAuth(tab);document.getElementById('auth-error').style.display='none';}
 function closeAuth(){document.getElementById('auth-overlay').classList.remove('open');}
 function closeAuthOutside(e){if(e.target===document.getElementById('auth-overlay'))closeAuth();}
 function switchAuth(tab){
@@ -826,14 +1203,7 @@ function switchAuth(tab){
   document.getElementById('tab-kayit').className='auth-tab'+(tab==='kayit'?' active':'');
   document.getElementById('auth-error').style.display='none';
 }
-
-function showAuthError(msg){
-  const el=document.getElementById('auth-error');
-  el.textContent=msg;el.style.display='block';
-}
-
-// Premium e-postalar (otomatik ücretsiz erişim)
-const PREMIUM_EMAILS=['info@ecuyy.com'];
+function showAuthError(msg){const el=document.getElementById('auth-error');el.textContent=msg;el.style.display='block';}
 
 function girisYap(){
   const email=document.getElementById('giris-email').value.trim();
@@ -845,13 +1215,9 @@ function girisYap(){
   const isPremium=user.premium||PREMIUM_EMAILS.includes(email);
   currentUser={ad:user.ad,email:user.email,premium:isPremium};
   localStorage.setItem('kp_user',JSON.stringify(currentUser));
-  closeAuth();
-  applyUser();
-  if(!currentUser.premium){
-    setTimeout(()=>document.getElementById('pay-overlay').classList.add('open'),400);
-  } else {
-    toast('Hoş geldiniz, '+currentUser.ad+'! 🎉','success','👋');
-  }
+  closeAuth(); applyUser();
+  if(!currentUser.premium){setTimeout(()=>document.getElementById('pay-overlay').classList.add('open'),400);}
+  else{toast('Hoş geldiniz, '+currentUser.ad+'! 🎉','success','👋');goApp();}
 }
 
 function kayitOl(){
@@ -862,109 +1228,76 @@ function kayitOl(){
   if(sifre.length<6){showAuthError('Şifre en az 6 karakter olmalı');return;}
   const users=JSON.parse(localStorage.getItem('kp_users')||'[]');
   if(users.find(u=>u.email===email)){showAuthError('Bu e-posta zaten kayıtlı');return;}
-  users.push({ad,email,sifre,premium:false});
-  localStorage.setItem('kp_users',JSON.stringify(users));
   const isPremium=PREMIUM_EMAILS.includes(email);
+  users.push({ad,email,sifre,premium:isPremium});
+  localStorage.setItem('kp_users',JSON.stringify(users));
   currentUser={ad,email,premium:isPremium};
   localStorage.setItem('kp_user',JSON.stringify(currentUser));
-  closeAuth();
-  applyUser();
-  if(!isPremium){
-    setTimeout(()=>document.getElementById('pay-overlay').classList.add('open'),400);
-  } else {
-    toast('Hoş geldiniz, '+ad+'! Premium erişiminiz aktif 🎉','success','👋');
-  }
+  closeAuth(); applyUser();
+  if(!isPremium){setTimeout(()=>document.getElementById('pay-overlay').classList.add('open'),400);}
+  else{toast('Hoş geldiniz, '+ad+'! Premium erişiminiz aktif 🎉','success','👋');goApp();}
 }
 
 // ── ÖDEME ──
-function formatKart(el){
-  let v=el.value.replace(/\D/g,'').substring(0,16);
-  el.value=v.replace(/(\d{4})/g,'$1 ').trim();
-}
-function formatTarih(el){
-  let v=el.value.replace(/\D/g,'');
-  if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2,4);
-  el.value=v;
-}
-
+function formatKart(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.replace(/(\d{4})/g,'$1 ').trim();}
+function formatTarih(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2,4);el.value=v;}
 function odemeYap(){
   const isim=document.getElementById('pay-isim').value.trim();
   const kart=document.getElementById('pay-kart').value.replace(/\s/g,'');
   const tarih=document.getElementById('pay-tarih').value;
   const cvv=document.getElementById('pay-cvv').value;
-  if(!isim||kart.length<16||tarih.length<5||cvv.length<3){
-    toast('Lütfen tüm kart bilgilerini doldurun','error','❌');return;
-  }
-  // Demo ödeme - gerçek iyzico entegrasyonu sonra eklenecek
+  if(!isim||kart.length<16||tarih.length<5||cvv.length<3){toast('Lütfen tüm kart bilgilerini doldurun','error','❌');return;}
   const users=JSON.parse(localStorage.getItem('kp_users')||'[]');
   const idx=users.findIndex(u=>u.email===currentUser.email);
   if(idx>=0){users[idx].premium=true;localStorage.setItem('kp_users',JSON.stringify(users));}
   currentUser.premium=true;
   localStorage.setItem('kp_user',JSON.stringify(currentUser));
   document.getElementById('pay-overlay').classList.remove('open');
-  applyUser();
-  toast('Ödeme başarılı! Premium üyeliğiniz aktif.','success','🎉');
+  applyUser(); goApp();
+  toast('Ödeme başarılı! Premium üyeliğiniz aktif. 🎉','success','🎉');
 }
-
-function demoyaDevam(){
-  document.getElementById('pay-overlay').classList.remove('open');
-  toast('Demo modu aktif. İstediğinizde premium\'a geçebilirsiniz.','info','🎯');
-}
-
-// ── TABS ──
-function showTab(name,el){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
-  if(el)el.classList.add('active');
-}
+function demoyaDevam(){document.getElementById('pay-overlay').classList.remove('open');goApp();}
 
 // ── DEMO ──
-function scrollToDemo(){
-  document.getElementById('demo-section').scrollIntoView({behavior:'smooth'});
-}
-
+function demoVeGo(){loadDemo();goApp();}
 function loadDemo(){
   urunler=DEMO.map(p=>({...p}));
   document.getElementById('urun-section').style.display='block';
   renderUrunler();
   toast('Demo ürünler yüklendi! Alış fiyatı girin.','info','🎯');
-  document.getElementById('urun-section').scrollIntoView({behavior:'smooth'});
 }
 
 // ── API ──
 async function checkProxy(){
   try{
     const r=await fetch(PROXY+'/health',{signal:AbortSignal.timeout(3000)});
-    if(r.ok){toast('Proxy çalışıyor!','success','✅');}
+    if(r.ok)toast('Proxy çalışıyor!','success','✅');
     else throw new Error();
   }catch{toast('Proxy çalışmıyor! node server.js çalıştırın.','error','❌');}
 }
-
 async function urunleriCek(){
   const sid=document.getElementById('inp-sid').value.trim();
   const key=document.getElementById('inp-key').value.trim();
   const sec=document.getElementById('inp-sec').value.trim();
   if(!sid||!key||!sec){toast('Tüm alanları doldurun.','error','⚠️');return;}
   const btn=document.getElementById('btn-cek');
-  btn.innerHTML='<span class="spin"></span> Yükleniyor...';btn.disabled=true;
-  setStatus('loading','Trendyol\'a bağlanılıyor...','');
+  btn.innerHTML='<span class="spin"></span>';btn.disabled=true;
+  setStatus('loading','Bağlanılıyor...','');
   try{
     await fetch(PROXY+'/health',{signal:AbortSignal.timeout(3000)});
     const r=await fetch(`${PROXY}/api/urunler?sellerId=${encodeURIComponent(sid)}&apiKey=${encodeURIComponent(key)}&apiSecret=${encodeURIComponent(sec)}&page=0&size=50`);
     const data=await r.json();
     if(!r.ok)throw new Error(data.error||'API hatası');
-    urunler=data.urunler.map(p=>({...p,alis:0,kargo:0}));
+    urunler=data.urunler.map(p=>({...p,alis:0,kargo:0,image:''}));
     setStatus('on',urunler.length+' ürün çekildi','');
     document.getElementById('urun-section').style.display='block';
     renderUrunler();
     toast(urunler.length+' ürün yüklendi!','success','✅');
   }catch(e){
     setStatus('err','Bağlantı hatası','node server.js çalıştırın');
-    toast('Proxy çalışmıyor veya API bilgileri hatalı.','error','❌');
-  }finally{btn.innerHTML='🚀 Ürünleri Getir';btn.disabled=false;}
+    toast('Hata: '+e.message,'error','❌');
+  }finally{btn.innerHTML='🚀 Getir';btn.disabled=false;}
 }
-
 function setStatus(s,t,sub){
   const dot=document.getElementById('sdot');
   dot.className='sdot'+(s?' '+s:'');
@@ -972,7 +1305,68 @@ function setStatus(s,t,sub){
   document.getElementById('ssub').textContent=sub;
 }
 
-// ── ÜRÜN RENDER ──
+// ── CSV/EXCEL ──
+function csvYukle(input){
+  const file=input.files[0];
+  if(!file)return;
+  const isExcel=file.name.endsWith('.xlsx')||file.name.endsWith('.xls');
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      let rows=[];
+      if(isExcel){
+        const data=new Uint8Array(e.target.result);
+        const wb=XLSX.read(data,{type:'array'});
+        const ws=wb.Sheets[wb.SheetNames[0]];
+        rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+      } else {
+        rows=e.target.result.split('\n').filter(l=>l.trim()).map(l=>parseCsvLine(l));
+      }
+      if(rows.length<2){toast('Dosya boş.','error','❌');return;}
+      const header=rows[0].map(h=>String(h).trim().toLowerCase());
+      console.log('Kolonlar:',header.join(','));
+      const find=(keys)=>header.findIndex(h=>keys.some(k=>h.replace(/\s+/g,'').includes(k.replace(/\s+/g,''))));
+      const titleIdx=find(['ürünadı','ürünbaşlığı','productname','title']);
+      const priceIdx=find(["trendyol'dasatılacakfiyat","trendyoldakifiyat","satışfiyatı","saleprice","fiyat"]);
+      const komIdx=find(['komisyonoranı','komisyon%','commission']);
+      const catIdx=find(['kategoriismi','kategoriadı','category','kategori']);
+      const barcodeIdx=find(['barkod','barcode','ürünkodu']);
+      const img1Idx=header.findIndex(h=>h==='görsel 1'||h==='gorsel 1'||h==='görsel1'||h.startsWith('görsel'));
+      if(titleIdx===-1||priceIdx===-1){toast('Ürün adı veya fiyat kolonu bulunamadı. Kolonlar: '+header.slice(0,8).join(', '),'error','❌');return;}
+      const parsed=[];
+      for(let i=1;i<rows.length;i++){
+        const cols=rows[i];
+        if(!cols||cols.length<2)continue;
+        const title=String(cols[titleIdx]||'').trim();
+        const price=parseFloat(String(cols[priceIdx]||'').replace(/[^0-9.,]/g,'').replace(',','.'))||0;
+        const kom=komIdx>=0?parseFloat(String(cols[komIdx]||'0').replace(/[^0-9.,]/g,'').replace(',','.'))||0:0;
+        const cat=catIdx>=0?String(cols[catIdx]||'').trim():'';
+        const barcode=barcodeIdx>=0?String(cols[barcodeIdx]||'').trim():('R'+i);
+        const img=img1Idx>=0?String(cols[img1Idx]||'').trim():'';
+        if(title&&price>0){parsed.push({id:barcode||('R'+i),title,salePrice:price,commissionRate:kom,categoryName:cat,image:img,alis:0,kargo:0});}
+      }
+      if(parsed.length===0){toast('Ürün bulunamadı.','error','❌');return;}
+      urunler=parsed;
+      document.getElementById('urun-section').style.display='block';
+      renderUrunler();
+      toast(parsed.length+' ürün yüklendi! 🎉','success','✅');
+      document.getElementById('urun-section').scrollIntoView({behavior:'smooth'});
+    }catch(err){toast('Dosya hatası: '+err.message,'error','❌');}
+  };
+  isExcel?reader.readAsArrayBuffer(file):reader.readAsText(file,'UTF-8');
+  input.value='';
+}
+function parseCsvLine(line){
+  const result=[];let current='';let inQ=false;
+  for(let i=0;i<line.length;i++){
+    if(line[i]==='"'){inQ=!inQ;}
+    else if(line[i]===','&&!inQ){result.push(current);current='';}
+    else{current+=line[i];}
+  }
+  result.push(current);return result;
+}
+
+// ── RENDER ──
 function renderUrunler(){
   let list=urunler.filter(p=>{
     const{net,hasAlis}=calcKar(p);
@@ -985,18 +1379,18 @@ function renderUrunler(){
   document.getElementById('urun-count').textContent=list.length+' ürün';
   const tbody=document.getElementById('ptbody');
   if(!list.length){
-    tbody.innerHTML=`<tr><td colspan="8"><div class="empty"><span class="empty-emoji">🔍</span><div class="empty-title">Ürün bulunamadı</div><div class="empty-sub">Filtreyi değiştirin.</div></div></td></tr>`;
+    tbody.innerHTML=`<tr><td colspan="9"><div class="empty"><span class="empty-emoji">🔍</span><div class="empty-title">Ürün bulunamadı</div><div class="empty-sub">Filtreyi değiştirin.</div></div></td></tr>`;
     return;
   }
   tbody.innerHTML=list.map(p=>{
     const{komisyon,net,marj,hasAlis}=calcKar(p);
-    let karBadge=!hasAlis?'<span class="kar-badge kb-neutral">Girin</span>':net>=0?`<span class="kar-badge kb-good">+${fmt(net)}</span>`:`<span class="kar-badge kb-bad">-${fmt(Math.abs(net))}</span>`;
+    const imgHtml=p.image?`<img class="prod-img" src="${p.image}" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">`:'' ;
+    const phHtml=`<div class="prod-img-ph" style="${p.image?'display:none':''}">${p.title.charAt(0).toUpperCase()}</div>`;
+    const karBadge=!hasAlis?'<span class="kar-badge kb-neutral">Girin</span>':net>=0?`<span class="kar-badge kb-good">+${fmt(net)}</span>`:`<span class="kar-badge kb-bad">-${fmt(Math.abs(net))}</span>`;
     const marjStr=hasAlis&&marj!==null?'%'+marj.toFixed(1):'—';
     const marjColor=!hasAlis?'var(--t3)':marj>=15?'var(--green)':marj>=0?'var(--yellow)':'var(--red)';
-    const imgHtml=p.image?`<img class="prod-img" src="${p.image}" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">`:'';
-    const placeholderHtml=`<div class="prod-img-placeholder" style="${p.image?'display:none':''}">${p.title.charAt(0).toUpperCase()}</div>`;
     return`<tr>
-      <td style="width:54px"><div style="display:flex">${imgHtml}${placeholderHtml}</div></td>
+      <td style="width:54px"><div style="display:flex">${imgHtml}${phHtml}</div></td>
       <td><div class="prod-name" title="${p.title}">${p.title}</div><div class="prod-cat">${p.categoryName||'—'}</div></td>
       <td><span class="price-val">${fmt(p.salePrice||0)}</span></td>
       <td><span class="kom-pill">%${(p.commissionRate||0).toFixed(2)}</span><br><span style="font-size:11px;color:var(--or)">${fmt(komisyon)}</span></td>
@@ -1008,58 +1402,24 @@ function renderUrunler(){
     </tr>`;
   }).join('');
 }
-
-function updUrun(id,field,val){
-  const p=urunler.find(x=>String(x.id)===String(id));
-  if(p){p[field]=parseFloat(val)||0;renderUrunler();}
-}
-
-function setFilter(f,el){
-  filterMode=f;
-  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  renderUrunler();
-}
+function updUrun(id,field,val){const p=urunler.find(x=>String(x.id)===String(id));if(p){p[field]=parseFloat(val)||0;renderUrunler();}}
+function setFilter(f,el){filterMode=f;document.querySelectorAll('.filter-bar .ftab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderUrunler();}
 function araUrun(q){searchQ=q.toLowerCase();renderUrunler();}
-
-function topluKargo(){
-  document.getElementById('kargo-input').value='';
-  document.getElementById('kargo-modal').classList.add('open');
-  setTimeout(()=>document.getElementById('kargo-input').focus(),100);
-}
-function closeKargoModal(e){
-  if(!e||e.target===document.getElementById('kargo-modal'))
-    document.getElementById('kargo-modal').classList.remove('open');
-}
-function kargoUygula(){
-  const v=parseFloat(document.getElementById('kargo-input').value)||0;
-  urunler.forEach(p=>p.kargo=v);
-  renderUrunler();
-  document.getElementById('kargo-modal').classList.remove('open');
-  toast('₺'+v+' kargo tüm ürünlere uygulandı.','info','🚚');
-}
-
+function openKargoModal(){document.getElementById('kargo-input').value='';document.getElementById('kargo-overlay').classList.add('open');setTimeout(()=>document.getElementById('kargo-input').focus(),100);}
+function closeKargoModal(e){if(!e||e.target===document.getElementById('kargo-overlay'))document.getElementById('kargo-overlay').classList.remove('open');}
+function kargoUygula(){const v=parseFloat(document.getElementById('kargo-input').value)||0;urunler.forEach(p=>p.kargo=v);renderUrunler();document.getElementById('kargo-overlay').classList.remove('open');toast('₺'+v+' kargo uygulandı.','info','🚚');}
 function csvIndir(){
   if(!urunler.length)return;
   const rows=[['Ürün','Kategori','Satış','Komisyon%','Komisyon₺','Alış','Kargo','Hizmet','Stopaj','Net Kar','Marj%']];
-  urunler.forEach(p=>{
-    const{komisyon,hizmet,stopaj,net,marj,hasAlis}=calcKar(p);
-    rows.push([`"${p.title}"`,p.categoryName,p.salePrice,(p.commissionRate||0).toFixed(2),komisyon.toFixed(2),p.alis||'',p.kargo||'',hizmet.toFixed(2),stopaj.toFixed(2),hasAlis?net.toFixed(2):'',hasAlis&&marj!==null?marj.toFixed(1):'']);
-  });
-  const a=document.createElement('a');
-  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(rows.map(r=>r.join(',')).join('\n'));
-  a.download='karpanel.csv';a.click();
-  toast('CSV indirildi.','success','📥');
+  urunler.forEach(p=>{const{komisyon,hizmet,stopaj,net,marj,hasAlis}=calcKar(p);rows.push([`"${p.title}"`,p.categoryName,p.salePrice,(p.commissionRate||0).toFixed(2),komisyon.toFixed(2),p.alis||'',p.kargo||'',hizmet.toFixed(2),stopaj.toFixed(2),hasAlis?net.toFixed(2):'',hasAlis&&marj!==null?marj.toFixed(1):'']);});
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(rows.map(r=>r.join(',')).join('\n'));a.download='karpanel.csv';a.click();toast('CSV indirildi.','success','📥');
 }
 
 // ── DETAY MODAL ──
 function openModal(id){
-  const p=urunler.find(x=>String(x.id)===String(id));
-  if(!p)return;
+  const p=urunler.find(x=>String(x.id)===String(id));if(!p)return;
   modalUrun=p;
-  const kom=(p.commissionRate||0);
-  const komisyon=(p.salePrice||0)*(kom/100);
-  document.getElementById('m-name').textContent=p.title+' — '+p.categoryName+' · %'+kom.toFixed(2)+' komisyon';
+  document.getElementById('m-name').textContent=p.title+' — '+p.categoryName+' · %'+(p.commissionRate||0).toFixed(2)+' komisyon';
   document.getElementById('m-alis').value=p.alis||'';
   document.getElementById('m-kargo').value=p.kargo||'';
   document.getElementById('modal-result').style.display='none';
@@ -1067,11 +1427,7 @@ function openModal(id){
   document.getElementById('modal-bg').classList.add('open');
   if(p.alis>0)modalHesapla();
 }
-function closeModal(e){
-  if(!e||e.target===document.getElementById('modal-bg'))
-    document.getElementById('modal-bg').classList.remove('open');
-}
-
+function closeModal(e){if(!e||e.target===document.getElementById('modal-bg'))document.getElementById('modal-bg').classList.remove('open');}
 function modalHesapla(){
   if(!modalUrun)return;
   const alis=parseFloat(document.getElementById('m-alis').value)||0;
@@ -1082,27 +1438,23 @@ function modalHesapla(){
   const{komisyon,hizmet,stopaj,kdvS,kdvA,kdvK,kdvKom,kdvHiz,odKdv,net,marj,ygd}=calcKar(p);
   document.getElementById('modal-result').style.display='block';
   document.getElementById('modal-empty').style.display='none';
-  // Kâr balonu
   const circ=document.getElementById('m-circle');
-  circ.style.background=net>=0?'linear-gradient(135deg,var(--or),var(--or2))':'linear-gradient(135deg,var(--red),#FF6B6B)';
+  circ.className='ns-kar-ball'+(net<0?' loss':'');
   document.getElementById('mr-kar').textContent=(net<0?'-':'')+fmt(net);
-  // Üst tablo
   document.getElementById('mr-komtl').textContent=fmt(komisyon);
   document.getElementById('mr-ygd').textContent=ygd!==null?'%'+ygd.toFixed(2):'—';
   document.getElementById('mr-hizmet').textContent=fmt(hizmet);
   document.getElementById('mr-stopaj').textContent=fmt(stopaj);
-  const karorEl=document.getElementById('mr-karor');
-  karorEl.textContent=marj!==null?'%'+marj.toFixed(2):'—';
-  karorEl.style.color=marj>=15?'var(--green)':marj>=0?'var(--yellow)':'var(--red)';
+  const ko=document.getElementById('mr-karor');
+  ko.textContent=marj!==null?'%'+marj.toFixed(2):'—';
+  ko.style.color=marj>=15?'var(--green)':marj>=0?'var(--yellow)':'var(--red)';
   document.getElementById('mr-kdv').textContent=fmt(odKdv);
-  // KDV tablo
   document.getElementById('mr-kdvs').textContent=fmt(kdvS);
   document.getElementById('mr-kdva').textContent=fmt(kdvA);
   document.getElementById('mr-kdvk').textContent=fmt(kdvK);
   document.getElementById('mr-kdvkom').textContent=fmt(kdvKom);
   document.getElementById('mr-kdvhiz').textContent=fmt(kdvHiz);
   document.getElementById('mr-kdvode').textContent=fmt(odKdv);
-  // Döküm
   document.getElementById('mbd-satis').textContent=fmt(p.salePrice||0);
   document.getElementById('mbd-kom').textContent='-'+fmt(komisyon);
   document.getElementById('mbd-alis').textContent='-'+fmt(alis);
@@ -1117,15 +1469,8 @@ function modalHesapla(){
 }
 
 // ── KAR HESAP TAB ──
-function onKatChange(){
-  const v=document.getElementById('h-kat').value;
-  if(v)document.getElementById('h-kom').value=parseFloat(v).toFixed(2);
-}
-function setKargoTipi(t){
-  kargoTipi=t;
-  ['satici','ihracat','aynigun'].forEach(x=>{document.getElementById('kr-'+x).className='kr-opt'+(x===t?' sel':'');});
-}
-
+function onKatChange(){const v=document.getElementById('h-kat').value;if(v)document.getElementById('h-kom').value=parseFloat(v).toFixed(2);}
+function setKargoTipi(t){kargoTipi=t;['satici','ihracat','aynigun'].forEach(x=>{document.getElementById('kr-'+x).className='kr-opt'+(x===t?' sel':'');});}
 function hesapla(){
   const satis=parseFloat(document.getElementById('h-satis').value)||0;
   const alis=parseFloat(document.getElementById('h-alis').value)||0;
@@ -1136,12 +1481,11 @@ function hesapla(){
   if(satis<=0){alert('Satış fiyatını girin.');return;}
   if(alis<=0){alert('Alış fiyatını girin.');return;}
   const kf=1+kdvOran/100;
-  const kdvSatis=satis-satis/kf, kdvAlis=alis-alis/kf, kdvKargo=kargo-kargo/kf;
+  const kdvSatis=satis-satis/kf,kdvAlis=alis-alis/kf,kdvKargo=kargo-kargo/kf;
   const komisyon=satis*(komOran/100);
   const kdvKom=komisyon-komisyon/kf;
   const komH=komisyon/kf;
-  const hizmet=13.19;
-  const kdvHizmet=hizmet-hizmet/kf;
+  const hizmet=13.19,kdvHizmet=hizmet-hizmet/kf;
   const stopaj=komH*0.05;
   const odKdv=Math.max(0,kdvSatis-kdvAlis-kdvKargo-kdvKom-kdvHizmet);
   const net=satis-komisyon-alis-kargo-diger-hizmet-stopaj-odKdv;
@@ -1166,7 +1510,7 @@ function hesapla(){
   const pct=Math.max(0,Math.min(marj,40))/40*100;
   const fill=document.getElementById('meter-fill');
   fill.style.width=pct+'%';
-  fill.style.background=marj<0?'#E53535':marj<10?'#D97706':marj<20?'#F59E0B':'#0EA372';
+  fill.style.background=marj<0?'#DC2626':marj<10?'#D97706':marj<20?'#F59E0B':'#16A34A';
   document.getElementById('meter-txt').textContent='Kâr: %'+marj.toFixed(2);
   document.getElementById('kv-satis').textContent=fmt(kdvSatis);
   document.getElementById('kv-alis').textContent=fmt(kdvAlis);
@@ -1188,14 +1532,7 @@ function hesapla(){
   ne.style.color=net>=0?'var(--green)':'var(--red)';
   document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
 }
-function temizle(){
-  ['h-satis','h-alis','h-kom','h-kargo','h-diger'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('h-kat').value='';
-  document.getElementById('h-kdv').value='20';
-  document.getElementById('results').style.display='none';
-}
-
-
+function temizle(){['h-satis','h-alis','h-kom','h-kargo','h-diger'].forEach(id=>document.getElementById(id).value='');document.getElementById('h-kat').value='';document.getElementById('h-kdv').value='20';document.getElementById('results').style.display='none';}
 
 // ── TOAST ──
 function toast(msg,type,icon){
@@ -1206,117 +1543,7 @@ function toast(msg,type,icon){
   setTimeout(()=>t.className='toast',4000);
 }
 
-// ── CSV YÜKLEME ──
-function csvYukle(input){
-  const file=input.files[0];
-  if(!file) return;
-  document.getElementById('csv-info').style.display='block';
-  const isExcel=file.name.endsWith('.xlsx')||file.name.endsWith('.xls');
-  const reader=new FileReader();
-  
-  reader.onload=function(e){
-    try{
-      let rows=[];
-      if(isExcel){
-        // Excel okuma
-        const data=new Uint8Array(e.target.result);
-        const wb=XLSX.read(data,{type:'array'});
-        const ws=wb.Sheets[wb.SheetNames[0]];
-        rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
-      } else {
-        // CSV okuma
-        const text=e.target.result;
-        const lines=text.split('\n').filter(l=>l.trim());
-        rows=lines.map(l=>parseCsvLine(l));
-      }
-      
-      if(rows.length<2){toast('Dosya boş veya hatalı.','error','❌');return;}
-      
-      // Header
-      const header=rows[0].map(h=>String(h).trim().toLowerCase());
-      console.log('Kolonlar:', header);
-      
-      // Kolon eşleştirme - Trendyol Excel formatı
-      const find=(keys)=>header.findIndex(h=>keys.some(k=>h.replace(/\s+/g,'').includes(k.replace(/\s+/g,''))));
-      const titleIdx=find(['ürünadı','ürünbaşlığı','productname','title']);
-      const priceIdx=find(["trendyol'dasatılacakfiyat","trendyoldakifiyat","satışfiyatı","saleprice","price","fiyat"]);
-      const komIdx=find(['komisyonoranı','komisyon%','commission']);
-      const catIdx=find(['kategoriismi','kategoriadı','category','kategori']);
-      const barcodeIdx=find(['barkod','barcode','ürünkodu']);
-      const img1Idx=header.findIndex(h=>h==='görsel 1'||h==='gorsel 1'||h==='görsel1'||h.startsWith('görsel'));
-      const img2Idx=-1;
-      
-      if(titleIdx===-1||priceIdx===-1){
-        toast('Ürün adı veya fiyat kolonu bulunamadı. Mevcut kolonlar: '+header.slice(0,8).join(', '),'error','❌');
-        return;
-      }
-      
-      const parsed=[];
-      for(let i=1;i<rows.length;i++){
-        const cols=rows[i];
-        if(!cols||cols.length<2) continue;
-        const title=String(cols[titleIdx]||'').trim();
-        const priceRaw=String(cols[priceIdx]||'').replace(/[^0-9.,]/g,'').replace(',','.');
-        const price=parseFloat(priceRaw)||0;
-        const komRaw=String(cols[komIdx]||'0').replace(/[^0-9.,]/g,'').replace(',','.');
-        const kom=komIdx>=0?parseFloat(komRaw)||0:0;
-        const cat=catIdx>=0?String(cols[catIdx]||'').trim():'';
-        const barcode=barcodeIdx>=0?String(cols[barcodeIdx]||'').trim():('R'+i);
-        const img1=img1Idx>=0?String(cols[img1Idx]||'').trim():'';
-        const img2=img2Idx>=0?String(cols[img2Idx]||'').trim():'';
-        if(title&&price>0){
-          parsed.push({
-            id:barcode||('R'+i),
-            title,
-            salePrice:price,
-            commissionRate:kom,
-            categoryName:cat,
-            image:img1||img2||'',
-            alis:0,kargo:0
-          });
-        }
-      }
-      
-      if(parsed.length===0){
-        toast('Ürün bulunamadı. Dosya formatını kontrol edin.','error','❌');
-        return;
-      }
-      
-      urunler=parsed;
-      document.getElementById('urun-section').style.display='block';
-      renderUrunler();
-      toast(parsed.length+' ürün yüklendi! 🎉','success','✅');
-      document.getElementById('urun-section').scrollIntoView({behavior:'smooth'});
-    }catch(err){
-      toast('Dosya okuma hatası: '+err.message,'error','❌');
-      console.error(err);
-    }
-  };
-  
-  if(isExcel){
-    reader.readAsArrayBuffer(file);
-  } else {
-    reader.readAsText(file,'UTF-8');
-  }
-  input.value='';
-}
-
-function parseCsvLine(line){
-  const result=[];
-  let current='';
-  let inQuotes=false;
-  for(let i=0;i<line.length;i++){
-    if(line[i]==='"'){inQuotes=!inQuotes;}
-    else if(line[i]===','&&!inQuotes){result.push(current);current='';}
-    else{current+=line[i];}
-  }
-  result.push(current);
-  return result;
-}
-
 // ── INIT ──
-
-
 function populateKatDropdown(){
   const sel=document.getElementById('h-kat');
   const g={};
@@ -1327,6 +1554,10 @@ function populateKatDropdown(){
     sel.appendChild(og);
   });
 }
+
+// Logo click
+document.querySelector('.logo').addEventListener('click',e=>{e.preventDefault();goHome();});
+
 populateKatDropdown();
 loadUser();
 </script>
