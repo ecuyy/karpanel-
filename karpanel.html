@@ -728,7 +728,7 @@ const DEMO=[
 let urunler=[], filterMode='hepsi', searchQ='', kargoTipi='satici', modalUrun=null;
 let currentUser=null; // {ad, email, premium}
 
-const PROXY='http://localhost:3001';
+const PROXY=window.location.hostname==='localhost'?'http://localhost:3001':window.location.origin;
 const fmt=n=>'₺'+Math.abs(n).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2});
 
 // ── KAR FORMÜLÜ ──
