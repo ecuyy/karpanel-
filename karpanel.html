@@ -1236,16 +1236,15 @@ function csvYukle(input){
       const header=rows[0].map(h=>String(h).trim().toLowerCase());
       console.log('Kolonlar:', header);
       
-      // Kolon eşleştirme - Trendyol Excel formatı dahil
-      const find=(keys)=>header.findIndex(h=>keys.some(k=>h.includes(k)));
-      const titleIdx=find(['ürün adı','urun adi','title','ürün başlığı','ürün ismi','product name']);
-      const priceIdx=find(["trendyol'da satılacak fiyat","trendyolda satılacak","satış fiyatı","satis fiyati","satış","fiyat","price","sale price","birim fiyat"]);
-      const komIdx=find(['komisyon oranı','komisyon %','komisyon','commission rate','commission']);
-      const catIdx=find(['kategori i̇smi','kategori ismi','kategori adı','kategori','category']);
-      const barcodeIdx=find(['barkod','barcode','barkod no','ürün kodu','product code']);
-      // Görsel kolonları - Trendyol Excel'de "Görsel 1", "Görsel 2" şeklinde
-      const img1Idx=find(['görsel 1','gorsel 1','image 1','resim 1','görsel1']);
-      const img2Idx=find(['görsel 2','gorsel 2','image 2','resim 2','görsel2']);
+      // Kolon eşleştirme - Trendyol Excel formatı
+      const find=(keys)=>header.findIndex(h=>keys.some(k=>h.replace(/\s+/g,'').includes(k.replace(/\s+/g,''))));
+      const titleIdx=find(['ürünadı','ürünbaşlığı','productname','title']);
+      const priceIdx=find(["trendyol'dasatılacakfiyat","trendyoldakifiyat","satışfiyatı","saleprice","price","fiyat"]);
+      const komIdx=find(['komisyonoranı','komisyon%','commission']);
+      const catIdx=find(['kategoriismi','kategoriadı','category','kategori']);
+      const barcodeIdx=find(['barkod','barcode','ürünkodu']);
+      const img1Idx=find(['görsel1','gorsel1','image1','resim1']);
+      const img2Idx=find(['görsel2','gorsel2','image2','resim2']);
       
       if(titleIdx===-1||priceIdx===-1){
         toast('Ürün adı veya fiyat kolonu bulunamadı. Mevcut kolonlar: '+header.slice(0,8).join(', '),'error','❌');
