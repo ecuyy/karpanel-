@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KarPanel – Trendyol Kar Hesaplama</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root{
   --or:#F27A1A;--or2:#FF8C38;--or-dim:#FFF4E8;
@@ -385,7 +386,16 @@ select.finput2{cursor:pointer;appearance:none;background-image:url("data:image/s
           <h3>🎯 Demo Ürünlerle Deneyin</h3>
           <p>8 örnek ürün ile KarPanel'i keşfedin. Alış fiyatı girin, karınızı görün.</p>
         </div>
-        <button class="btn btn-primary" onclick="loadDemo()">Demo Başlat</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="loadDemo()">Demo Başlat</button>
+          <button class="btn btn-secondary" onclick="document.getElementById('csv-upload').click()">📂 Excel / CSV Yükle</button>
+          <input type="file" id="csv-upload" accept=".csv,.xlsx,.xls" style="display:none" onchange="csvYukle(this)">
+        </div>
+      </div>
+      <!-- CSV Bilgi kutusu -->
+      <div id="csv-info" style="display:none;background:var(--bbg);border:1px solid var(--bbr);border-radius:var(--r2);padding:12px 16px;margin-top:10px;font-size:13px;color:var(--blue)">
+        <strong>📋 Trendyol'dan nasıl indirilir?</strong><br>
+        Partner Panel → Ürünler → Ürün Listesi → <strong>Dışa Aktar</strong> butonuna basın → Excel veya CSV formatında indirin → buraya yükleyin.
       </div>
     </div>
 
@@ -1165,6 +1175,109 @@ function toast(msg,type,icon){
   document.getElementById('t-icon').textContent=icon||'';
   t.className='toast '+type+' show';
   setTimeout(()=>t.className='toast',4000);
+}
+
+// ── CSV YÜKLEME ──
+function csvYukle(input){
+  const file=input.files[0];
+  if(!file) return;
+  document.getElementById('csv-info').style.display='block';
+  const isExcel=file.name.endsWith('.xlsx')||file.name.endsWith('.xls');
+  const reader=new FileReader();
+  
+  reader.onload=function(e){
+    try{
+      let rows=[];
+      if(isExcel){
+        // Excel okuma
+        const data=new Uint8Array(e.target.result);
+        const wb=XLSX.read(data,{type:'array'});
+        const ws=wb.Sheets[wb.SheetNames[0]];
+        rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+      } else {
+        // CSV okuma
+        const text=e.target.result;
+        const lines=text.split('\n').filter(l=>l.trim());
+        rows=lines.map(l=>parseCsvLine(l));
+      }
+      
+      if(rows.length<2){toast('Dosya boş veya hatalı.','error','❌');return;}
+      
+      // Header
+      const header=rows[0].map(h=>String(h).trim().toLowerCase());
+      console.log('Kolonlar:', header);
+      
+      // Kolon eşleştirme
+      const find=(keys)=>header.findIndex(h=>keys.some(k=>h.includes(k)));
+      const titleIdx=find(['ürün adı','urun adi','title','ürün başlığı','ürün ismi','product name','ad']);
+      const priceIdx=find(['satış fiyatı','satis fiyati','satış','fiyat','price','sale price','birim fiyat']);
+      const komIdx=find(['komisyon oranı','komisyon %','komisyon','commission rate','commission']);
+      const catIdx=find(['kategori','category','kategori adı']);
+      const barcodeIdx=find(['barkod','barcode','barkod no','ürün kodu','product code']);
+      
+      if(titleIdx===-1||priceIdx===-1){
+        toast('Ürün adı veya fiyat kolonu bulunamadı. Mevcut kolonlar: '+header.slice(0,6).join(', '),'error','❌');
+        return;
+      }
+      
+      const parsed=[];
+      for(let i=1;i<rows.length;i++){
+        const cols=rows[i];
+        if(!cols||cols.length<2) continue;
+        const title=String(cols[titleIdx]||'').trim();
+        const priceRaw=String(cols[priceIdx]||'').replace(/[^0-9.,]/g,'').replace(',','.');
+        const price=parseFloat(priceRaw)||0;
+        const komRaw=String(cols[komIdx]||'0').replace(/[^0-9.,]/g,'').replace(',','.');
+        const kom=komIdx>=0?parseFloat(komRaw)||0:0;
+        const cat=catIdx>=0?String(cols[catIdx]||'').trim():'';
+        const barcode=barcodeIdx>=0?String(cols[barcodeIdx]||'').trim():('R'+i);
+        if(title&&price>0){
+          parsed.push({
+            id:barcode||('R'+i),
+            title,
+            salePrice:price,
+            commissionRate:kom,
+            categoryName:cat,
+            alis:0,kargo:0
+          });
+        }
+      }
+      
+      if(parsed.length===0){
+        toast('Ürün bulunamadı. Dosya formatını kontrol edin.','error','❌');
+        return;
+      }
+      
+      urunler=parsed;
+      document.getElementById('urun-section').style.display='block';
+      renderUrunler();
+      toast(parsed.length+' ürün yüklendi! 🎉','success','✅');
+      document.getElementById('urun-section').scrollIntoView({behavior:'smooth'});
+    }catch(err){
+      toast('Dosya okuma hatası: '+err.message,'error','❌');
+      console.error(err);
+    }
+  };
+  
+  if(isExcel){
+    reader.readAsArrayBuffer(file);
+  } else {
+    reader.readAsText(file,'UTF-8');
+  }
+  input.value='';
+}
+
+function parseCsvLine(line){
+  const result=[];
+  let current='';
+  let inQuotes=false;
+  for(let i=0;i<line.length;i++){
+    if(line[i]==='"'){inQuotes=!inQuotes;}
+    else if(line[i]===','&&!inQuotes){result.push(current);current='';}
+    else{current+=line[i];}
+  }
+  result.push(current);
+  return result;
 }
 
 // ── INIT ──
