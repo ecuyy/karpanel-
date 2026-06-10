@@ -200,6 +200,8 @@ nav{background:#fff;height:68px;display:flex;align-items:center;padding:0 2rem;p
 .empty-emoji{font-size:48px;opacity:.3;display:block;margin-bottom:1rem}
 .empty-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:.5rem}
 .empty-sub{font-size:13px;line-height:1.6;max-width:280px;margin:0 auto}
+.prod-img{width:46px;height:46px;border-radius:8px;object-fit:cover;border:1px solid var(--border);background:var(--bg2)}
+.prod-img-placeholder{width:46px;height:46px;border-radius:8px;background:linear-gradient(135deg,var(--navy),var(--navy2));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;flex-shrink:0}
 
 /* HESAP TAB */
 .calc-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);box-shadow:var(--sh2);margin-bottom:1.5rem;overflow:hidden}
@@ -456,7 +458,7 @@ select.finput2{cursor:pointer;appearance:none;background-image:url("data:image/s
       </div>
       <div class="prod-table-wrap">
         <table class="ptable">
-          <thead><tr><th>Ürün</th><th>Satış Fiyatı</th><th>Komisyon</th><th>Alış Fiyatı</th><th>Kargo</th><th>Net Kar</th><th>Marj</th><th>İşlem</th></tr></thead>
+          <thead><tr><th>Görsel</th><th>Ürün</th><th>Satış Fiyatı</th><th>Komisyon</th><th>Alış Fiyatı</th><th>Kargo</th><th>Net Kar</th><th>Marj</th><th>İşlem</th></tr></thead>
           <tbody id="ptbody"></tbody>
         </table>
       </div>
@@ -688,6 +690,21 @@ select.finput2{cursor:pointer;appearance:none;background-image:url("data:image/s
       </div>
     </div>
     <div id="modal-empty" class="modal-empty">👆 Alış fiyatını girerek detaylı hesaplamayı görün</div>
+  </div>
+</div>
+
+<!-- TOPLU KARGO MODAL -->
+<div class="auth-overlay" id="kargo-modal" onclick="closeKargoModal(event)">
+  <div class="auth-box" style="max-width:380px">
+    <button class="auth-close" onclick="closeKargoModal()">✕</button>
+    <div style="font-size:20px;text-align:center;margin-bottom:.5rem">🚚</div>
+    <div class="modal-title" style="text-align:center;margin-bottom:.25rem">Toplu Kargo</div>
+    <div style="font-size:13px;color:var(--t3);text-align:center;margin-bottom:1.25rem">Tüm ürünlere aynı kargo ücretini uygula</div>
+    <div class="auth-field">
+      <div class="auth-label">Kargo Ücreti (₺)</div>
+      <input class="auth-input" type="number" id="kargo-input" placeholder="ör: 25" min="0" step="0.01" onkeydown="if(event.key==='Enter')kargoUygula()">
+    </div>
+    <button class="btn-auth" onclick="kargoUygula()" style="margin-top:1rem">Uygula</button>
   </div>
 </div>
 
@@ -976,7 +993,10 @@ function renderUrunler(){
     let karBadge=!hasAlis?'<span class="kar-badge kb-neutral">Girin</span>':net>=0?`<span class="kar-badge kb-good">+${fmt(net)}</span>`:`<span class="kar-badge kb-bad">-${fmt(Math.abs(net))}</span>`;
     const marjStr=hasAlis&&marj!==null?'%'+marj.toFixed(1):'—';
     const marjColor=!hasAlis?'var(--t3)':marj>=15?'var(--green)':marj>=0?'var(--yellow)':'var(--red)';
+    const imgHtml=p.image?`<img class="prod-img" src="${p.image}" alt="" onerror="this.style.display='none';this.nextSibling.style.display='flex'">`:'';
+    const placeholderHtml=`<div class="prod-img-placeholder" style="${p.image?'display:none':''}">${p.title.charAt(0).toUpperCase()}</div>`;
     return`<tr>
+      <td style="width:54px"><div style="display:flex">${imgHtml}${placeholderHtml}</div></td>
       <td><div class="prod-name" title="${p.title}">${p.title}</div><div class="prod-cat">${p.categoryName||'—'}</div></td>
       <td><span class="price-val">${fmt(p.salePrice||0)}</span></td>
       <td><span class="kom-pill">%${(p.commissionRate||0).toFixed(2)}</span><br><span style="font-size:11px;color:var(--or)">${fmt(komisyon)}</span></td>
@@ -1003,11 +1023,20 @@ function setFilter(f,el){
 function araUrun(q){searchQ=q.toLowerCase();renderUrunler();}
 
 function topluKargo(){
-  const v=prompt('Tüm ürünlere uygulanacak kargo ücreti (₺):');
-  if(v===null)return;
-  urunler.forEach(p=>p.kargo=parseFloat(v)||0);
+  document.getElementById('kargo-input').value='';
+  document.getElementById('kargo-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('kargo-input').focus(),100);
+}
+function closeKargoModal(e){
+  if(!e||e.target===document.getElementById('kargo-modal'))
+    document.getElementById('kargo-modal').classList.remove('open');
+}
+function kargoUygula(){
+  const v=parseFloat(document.getElementById('kargo-input').value)||0;
+  urunler.forEach(p=>p.kargo=v);
   renderUrunler();
-  toast('Kargo uygulandı.','info','🚚');
+  document.getElementById('kargo-modal').classList.remove('open');
+  toast('₺'+v+' kargo tüm ürünlere uygulandı.','info','🚚');
 }
 
 function csvIndir(){
@@ -1207,16 +1236,19 @@ function csvYukle(input){
       const header=rows[0].map(h=>String(h).trim().toLowerCase());
       console.log('Kolonlar:', header);
       
-      // Kolon eşleştirme
+      // Kolon eşleştirme - Trendyol Excel formatı dahil
       const find=(keys)=>header.findIndex(h=>keys.some(k=>h.includes(k)));
-      const titleIdx=find(['ürün adı','urun adi','title','ürün başlığı','ürün ismi','product name','ad']);
-      const priceIdx=find(['satış fiyatı','satis fiyati','satış','fiyat','price','sale price','birim fiyat']);
+      const titleIdx=find(['ürün adı','urun adi','title','ürün başlığı','ürün ismi','product name']);
+      const priceIdx=find(["trendyol'da satılacak fiyat","trendyolda satılacak","satış fiyatı","satis fiyati","satış","fiyat","price","sale price","birim fiyat"]);
       const komIdx=find(['komisyon oranı','komisyon %','komisyon','commission rate','commission']);
-      const catIdx=find(['kategori','category','kategori adı']);
+      const catIdx=find(['kategori i̇smi','kategori ismi','kategori adı','kategori','category']);
       const barcodeIdx=find(['barkod','barcode','barkod no','ürün kodu','product code']);
+      // Görsel kolonları - Trendyol Excel'de "Görsel 1", "Görsel 2" şeklinde
+      const img1Idx=find(['görsel 1','gorsel 1','image 1','resim 1','görsel1']);
+      const img2Idx=find(['görsel 2','gorsel 2','image 2','resim 2','görsel2']);
       
       if(titleIdx===-1||priceIdx===-1){
-        toast('Ürün adı veya fiyat kolonu bulunamadı. Mevcut kolonlar: '+header.slice(0,6).join(', '),'error','❌');
+        toast('Ürün adı veya fiyat kolonu bulunamadı. Mevcut kolonlar: '+header.slice(0,8).join(', '),'error','❌');
         return;
       }
       
@@ -1231,6 +1263,8 @@ function csvYukle(input){
         const kom=komIdx>=0?parseFloat(komRaw)||0:0;
         const cat=catIdx>=0?String(cols[catIdx]||'').trim():'';
         const barcode=barcodeIdx>=0?String(cols[barcodeIdx]||'').trim():('R'+i);
+        const img1=img1Idx>=0?String(cols[img1Idx]||'').trim():'';
+        const img2=img2Idx>=0?String(cols[img2Idx]||'').trim():'';
         if(title&&price>0){
           parsed.push({
             id:barcode||('R'+i),
@@ -1238,6 +1272,7 @@ function csvYukle(input){
             salePrice:price,
             commissionRate:kom,
             categoryName:cat,
+            image:img1||img2||'',
             alis:0,kargo:0
           });
         }
