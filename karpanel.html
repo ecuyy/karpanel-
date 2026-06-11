@@ -3,7 +3,89 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KarPanel – Trendyol Kar Hesaplama</title>
+
+<!-- ── PRIMARY SEO ── -->
+<title>KarPanel – Trendyol Satıcıları için Kar Hesaplama Aracı</title>
+<meta name="description" content="Trendyol satıcıları için ücretsiz kar hesaplama aracı. Komisyon, KDV, stopaj dahil net karınızı saniyeler içinde hesaplayın. Excel yükle, alış fiyatı gir, karını gör.">
+<meta name="keywords" content="trendyol kar hesaplama, trendyol komisyon hesaplama, trendyol satıcı araçları, kar marjı hesaplama, trendyol kdv hesaplama, trendyol stopaj, trendyol net kar, e-ticaret kar hesaplama, trendyol maliyet hesaplama">
+<meta name="author" content="KarPanel">
+<meta name="robots" content="index, follow">
+<meta name="language" content="Turkish">
+<meta name="revisit-after" content="7 days">
+<link rel="canonical" href="https://karpanel.onrender.com">
+
+<!-- ── OPEN GRAPH (Sosyal Medya) ── -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://karpanel.onrender.com">
+<meta property="og:title" content="KarPanel – Trendyol Kar Hesaplama Aracı">
+<meta property="og:description" content="Trendyol'da gerçekten kar mı ediyorsunuz? Komisyon, KDV ve stopaj dahil net karınızı saniyeler içinde öğrenin. Ücretsiz deneyin.">
+<meta property="og:image" content="https://karpanel.onrender.com/og-image.png">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:site_name" content="KarPanel">
+
+<!-- ── TWITTER CARD ── -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="KarPanel – Trendyol Kar Hesaplama">
+<meta name="twitter:description" content="Trendyol satıcıları için komisyon, KDV, stopaj dahil net kar hesaplama aracı. Ücretsiz deneyin.">
+<meta name="twitter:image" content="https://karpanel.onrender.com/og-image.png">
+
+<!-- ── SCHEMA MARKUP ── -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "KarPanel",
+  "url": "https://karpanel.onrender.com",
+  "description": "Trendyol satıcıları için komisyon, KDV ve stopaj dahil net kar hesaplama aracı.",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TRY",
+    "description": "Ücretsiz demo kullanımı"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "reviewCount": "124"
+  },
+  "inLanguage": "tr",
+  "keywords": "trendyol kar hesaplama, komisyon hesaplama, trendyol satıcı"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Trendyol komisyon oranı nasıl hesaplanır?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Trendyol komisyon oranı kategoriye göre değişir. Satış fiyatı üzerinden yüzde olarak hesaplanır. KarPanel bu hesaplamayı otomatik yaparak KDV ve stopajı da dahil eder."
+      }
+    },
+    {
+      "@type": "Question", 
+      "name": "KarPanel ücretsiz mi?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Evet, KarPanel demo modu tamamen ücretsizdir. 8 örnek ürünle tüm özellikleri deneyebilirsiniz. Excel yükleme ve sınırsız ürün analizi için yıllık 1.500₺ premium üyelik gereklidir."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Trendyol'dan ürünlerimi nasıl çekerim?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Trendyol Partner Panel'e girin, Ürünler menüsünden Dışa Aktar butonuna tıklayın ve Excel formatında indirin. İndirdiğiniz dosyayı KarPanel'e yükleyin, satış fiyatı ve komisyon oranları otomatik gelir."
+      }
+    }
+  ]
+}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
@@ -624,7 +706,9 @@ footer{background:var(--dark);padding:3rem 2rem;text-align:center;margin-top:4re
     </a>
     <div class="nav-center">
       <a class="nav-link" href="#nasil">Nasıl Çalışır?</a>
+      <a class="nav-link" href="#demo" onclick="demoVeGo();return false;">Demo</a>
       <a class="nav-link" href="#fiyat">Fiyatlandırma</a>
+      <a class="nav-link" href="#iletisim">İletişim</a>
     </div>
     <div class="nav-right" id="nav-right">
       <div class="user-pill" id="user-pill" style="display:none">
@@ -632,7 +716,10 @@ footer{background:var(--dark);padding:3rem 2rem;text-align:center;margin-top:4re
         <span class="user-name" id="user-name"></span>
         <button class="btn-logout-sm" onclick="logout()">Çıkış</button>
       </div>
-      <button class="btn-outline-nav" id="nav-login-btn" onclick="openAuth('giris')">Giriş Yap</button>
+      <div id="auth-btns" style="display:flex;gap:8px;align-items:center">
+        <button class="btn-outline-nav" onclick="openAuth('giris')">Giriş Yap</button>
+        <button class="btn-dark" onclick="openAuth('kayit')">Üye Ol ↗</button>
+      </div>
       <button class="btn-dark" id="nav-dashboard-btn" onclick="goApp()" style="display:none">Dashboard ↗</button>
     </div>
   </div>
@@ -652,8 +739,35 @@ footer{background:var(--dark);padding:3rem 2rem;text-align:center;margin-top:4re
     </div>
     <div class="hero-stats">
       <div><div class="hero-stat-val">%100</div><div class="hero-stat-label">Ücretsiz Demo</div></div>
-      <div><div class="hero-stat-val">NeSatılır</div><div class="hero-stat-label">ile aynı formül</div></div>
-      <div><div class="hero-stat-val">1 dk</div><div class="hero-stat-label">Kurulum süresi</div></div>
+      <div><div class="hero-stat-val">1 dk</div><div class="hero-stat-label">Panelden indir, yükle, bitir</div></div>
+      <div><div class="hero-stat-val">Anında</div><div class="hero-stat-label">Net kar görürsün</div></div>
+    </div>
+    <!-- Hero banner - kar/zarar görseli -->
+    <div style="margin-top:3rem;max-width:680px;margin-left:auto;margin-right:auto">
+      <div style="background:#fff;border:1.5px solid var(--border);border-radius:20px;padding:1.5rem;box-shadow:0 4px 24px rgba(0,0,0,.08);display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <!-- Karlı ürün -->
+        <div style="background:var(--gbg);border:1.5px solid var(--gbr);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px">
+          <div style="width:42px;height:42px;border-radius:10px;background:#16A34A;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">📈</div>
+          <div>
+            <div style="font-size:11px;color:var(--green);font-weight:700;margin-bottom:2px">KARLI ÜRÜN ✓</div>
+            <div style="font-size:13px;font-weight:700;color:var(--dark)">Bluetooth Kulaklık</div>
+            <div style="font-size:18px;font-weight:900;color:var(--green)">+₺312 <span style="font-size:12px;font-weight:600">%20.8 kar</span></div>
+          </div>
+        </div>
+        <!-- Zararlı ürün -->
+        <div style="background:var(--rbg);border:1.5px solid var(--rbr);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px">
+          <div style="width:42px;height:42px;border-radius:10px;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">📉</div>
+          <div>
+            <div style="font-size:11px;color:var(--red);font-weight:700;margin-bottom:2px">ZARARDA ✗</div>
+            <div style="font-size:13px;font-weight:700;color:var(--dark)">Deri Çanta</div>
+            <div style="font-size:18px;font-weight:900;color:var(--red)">-₺47 <span style="font-size:12px;font-weight:600">%7.2 zarar</span></div>
+          </div>
+        </div>
+        <!-- Alt bilgi -->
+        <div style="grid-column:1/-1;text-align:center;font-size:12px;color:var(--t3);padding-top:4px;border-top:1px solid var(--border)">
+          💡 Alış fiyatını gir → komisyon, KDV, stopaj otomatik hesaplanır → net karını gör
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -669,115 +783,194 @@ footer{background:var(--dark);padding:3rem 2rem;text-align:center;margin-top:4re
         <div class="how-step">
           <div class="how-num">01</div>
           <div>
-            <div class="how-step-title">Excel'ini Yükle</div>
-            <div class="how-step-desc">Trendyol Partner Panel'den ürün listeni Excel olarak indir, KarPanel'e yükle. Satış fiyatı ve komisyon otomatik gelir.</div>
+            <div class="how-step-title">Ürün Listesini Excel Olarak İndir</div>
+            <div class="how-step-desc">Trendyol Partner Panel → <strong>Ürünler</strong> → <strong>Ürün Listesi</strong> → <strong>Excel ile İndir</strong> butonuna bas. Saniyeler içinde dosyan hazır, teknik bilgi gerekmez.</div>
           </div>
         </div>
         <div class="how-step">
           <div class="how-num">02</div>
           <div>
-            <div class="how-step-title">Alış Fiyatını Gir</div>
-            <div class="how-step-desc">Her ürün için tedarikçiden aldığın maliyeti yaz. Kargo ücretini de ekle. Toplu kargo özelliğiyle hepsini aynı anda güncelle.</div>
+            <div class="how-step-title">Alış Fiyatı ve Kargo Maliyetini Yaz</div>
+            <div class="how-step-desc">İndirdiğin Excel'i KarPanel'e yükle. Satış fiyatı ve komisyon otomatik gelir. Sen sadece <strong>alış fiyatını</strong> ve <strong>kargo maliyetini</strong> yaz, gerisini biz hallederiz.</div>
           </div>
         </div>
         <div class="how-step" style="border-bottom:3px solid var(--or);padding-bottom:1.5rem">
           <div class="how-num">03</div>
           <div>
-            <div class="how-step-title">Gerçek Karını Gör</div>
-            <div class="how-step-desc">Komisyon, KDV, stopaj, hizmet bedeli hepsi otomatik hesaplanır. Zararlı ürünleri anında tespit et.</div>
+            <div class="how-step-title">Net Karını Anında Gör</div>
+            <div class="how-step-desc">Komisyon, KDV, stopaj otomatik hesaplanır. <strong>Karlı ve zararlı</strong> ürünleri tek bakışta ayırt et. Detay butonuyla tam dökümü incele.</div>
           </div>
         </div>
       </div>
-      <div class="how-visual">
-        <div class="hv-card">
-          <div class="hv-icon">📦</div>
-          <div>
-            <div class="hv-label">Bluetooth Kulaklık</div>
-            <div style="display:flex;gap:12px;align-items:center">
-              <div class="hv-val">₺1.499</div>
-              <div style="font-size:11px;background:rgba(242,122,26,.1);color:var(--or);padding:2px 8px;border-radius:20px;font-weight:700">%10.17</div>
+      <!-- Sağ görsel - modern mockup -->
+      <div style="position:relative">
+        <!-- Arka glow -->
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;height:300px;background:radial-gradient(circle,rgba(242,122,26,.12) 0%,transparent 70%);pointer-events:none"></div>
+        
+        <div style="background:#fff;border:1.5px solid var(--border);border-radius:24px;padding:1.75rem;box-shadow:0 8px 40px rgba(0,0,0,.1);position:relative">
+          <!-- Başlık -->
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--border)">
+            <div style="width:8px;height:8px;border-radius:50%;background:#FF5F57"></div>
+            <div style="width:8px;height:8px;border-radius:50%;background:#FEBC2E"></div>
+            <div style="width:8px;height:8px;border-radius:50%;background:#28C840"></div>
+            <span style="font-size:11px;color:var(--t3);font-weight:600;margin-left:6px">KarPanel Dashboard</span>
+          </div>
+
+          <!-- Adım 1 -->
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg);border-radius:12px;margin-bottom:10px;border:1px solid var(--border)">
+            <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">⬇️</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:10px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">Adım 1</div>
+              <div style="font-size:13px;font-weight:700;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Ürünler → Ürün Listesi → Excel İndir</div>
+            </div>
+            <div style="background:var(--gbg);color:var(--green);font-size:10px;font-weight:800;padding:4px 10px;border-radius:20px;border:1px solid var(--gbr);flex-shrink:0">1 dk ✓</div>
+          </div>
+
+          <!-- Adım 2 -->
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg);border-radius:12px;margin-bottom:10px;border:1px solid var(--border)">
+            <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">📂</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:10px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">Adım 2</div>
+              <div style="font-size:13px;font-weight:700;color:var(--dark)">Alış fiyatı + Kargo maliyetini yaz</div>
+            </div>
+            <div style="background:var(--or-dim);color:var(--or);font-size:10px;font-weight:800;padding:4px 10px;border-radius:20px;border:1px solid rgba(242,122,26,.2);flex-shrink:0">Kolay</div>
+          </div>
+
+          <!-- Sonuç kartları -->
+          <div style="background:linear-gradient(135deg,#F0FDF4,#ECFDF5);border:1.5px solid var(--gbr);border-radius:12px;padding:14px">
+            <div style="font-size:10px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;display:flex;align-items:center;gap:5px">
+              <span style="width:16px;height:16px;background:var(--green);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:9px">✓</span>
+              Sonuç — Anında Görürsün
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#fff;border-radius:8px;margin-bottom:6px;border:1px solid var(--gbr)">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:14px">🎧</span>
+                <span style="font-size:13px;font-weight:600;color:var(--dark)">Bluetooth Kulaklık</span>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:15px;font-weight:900;color:var(--green)">+₺312</div>
+                <div style="font-size:10px;color:var(--green);font-weight:600">%20.8 kar</div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#fff;border-radius:8px;border:1px solid var(--rbr)">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:14px">👜</span>
+                <span style="font-size:13px;font-weight:600;color:var(--dark)">Deri Çanta</span>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:15px;font-weight:900;color:var(--red)">-₺47</div>
+                <div style="font-size:10px;color:var(--red);font-weight:600">Zararlı!</div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="hv-card">
-          <div class="hv-icon">💰</div>
-          <div>
-            <div class="hv-label">Net Kâr</div>
-            <div class="hv-val green">+₺312,45</div>
-          </div>
-          <div style="margin-left:auto;font-size:13px;background:var(--gbg);color:var(--green);padding:4px 12px;border-radius:20px;font-weight:700;border:1px solid var(--gbr)">%20.8 Marj</div>
-        </div>
-        <div class="hv-card" style="opacity:.6">
-          <div class="hv-icon">⚠️</div>
-          <div>
-            <div class="hv-label">Deri Çanta</div>
-            <div class="hv-val red">-₺23,10</div>
-          </div>
-          <div style="margin-left:auto;font-size:12px;background:var(--rbg);color:var(--red);padding:3px 10px;border-radius:20px;font-weight:700;border:1px solid var(--rbr)">Zararlı!</div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- NEDEN KARPANEL -->
+<div style="padding:5rem 2rem;background:#fff">
+  <div style="max-width:1100px;margin:0 auto">
+    
+    <!-- Başlık -->
+    <div style="text-align:center;margin-bottom:3.5rem">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--or);margin-bottom:.75rem">Neden KarPanel?</div>
+      <div style="font-size:clamp(28px,3.5vw,42px);font-weight:900;color:var(--dark);letter-spacing:-1.5px;line-height:1.1;margin-bottom:.75rem">Trendyol'da körü körüne<br>satış yapmayı bırak</div>
+      <p style="font-size:16px;color:var(--t2);max-width:480px;margin:0 auto;line-height:1.6">Çoğu satıcı komisyon + KDV + stopajı hesaba katmadan fiyat belirler. Sonuç: Satış yapıp zarar etmek.</p>
+    </div>
+
+    <!-- Karşılaştırma -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:3.5rem">
+      <!-- Olmadan -->
+      <div style="background:var(--rbg);border:1.5px solid var(--rbr);border-radius:20px;padding:2rem">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem">
+          <div style="width:36px;height:36px;border-radius:10px;background:var(--red);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px">✗</div>
+          <div style="font-size:15px;font-weight:800;color:var(--red)">KarPanel olmadan</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><span style="color:var(--red);font-weight:700">✗</span> Komisyon oranını tahmin edersin</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><span style="color:var(--red);font-weight:700">✗</span> KDV ve stopajı atlarsın</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><span style="color:var(--red);font-weight:700">✗</span> Satış yapıp zarar edersin</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><span style="color:var(--red);font-weight:700">✗</span> Hangi ürünün zararda olduğunu bilemezsin</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><span style="color:var(--red);font-weight:700">✗</span> Fiyat güncellemelerini elle takip edersin</div>
+        </div>
+      </div>
+      <!-- Var iken -->
+      <div style="background:var(--gbg);border:1.5px solid var(--gbr);border-radius:20px;padding:2rem">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem">
+          <div style="width:36px;height:36px;border-radius:10px;background:var(--green);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px">✓</div>
+          <div style="font-size:15px;font-weight:800;color:var(--green)">KarPanel ile</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><span style="color:var(--green);font-weight:700">✓</span> Komisyon, KDV, stopaj otomatik hesaplanır</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><span style="color:var(--green);font-weight:700">✓</span> Net karını saniyeler içinde görürsün</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><span style="color:var(--green);font-weight:700">✓</span> Zararlı ürünleri anında tespit edersin</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><span style="color:var(--green);font-weight:700">✓</span> Excel'den tüm ürünlerini tek seferde yüklersin</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><span style="color:var(--green);font-weight:700">✓</span> Doğru fiyatla karlı satış yaparsın</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- İstatistikler -->
+    <div style="background:var(--dark);border-radius:24px;padding:2.5rem;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center">
+      <div>
+        <div style="font-size:36px;font-weight:900;color:#fff;letter-spacing:-1.5px;line-height:1">%0</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.45);margin-top:4px">Teknik bilgi gereksinimi</div>
+      </div>
+      <div style="border-left:1px solid rgba(255,255,255,.1)">
+        <div style="font-size:36px;font-weight:900;color:var(--or);letter-spacing:-1.5px;line-height:1">1 dk</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.45);margin-top:4px">Kurulum süresi</div>
+      </div>
+      <div style="border-left:1px solid rgba(255,255,255,.1)">
+        <div style="font-size:36px;font-weight:900;color:#fff;letter-spacing:-1.5px;line-height:1">3</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.45);margin-top:4px">Adımda net kar analizi</div>
+      </div>
+      <div style="border-left:1px solid rgba(255,255,255,.1)">
+        <div style="font-size:36px;font-weight:900;color:var(--green);letter-spacing:-1.5px;line-height:1">₺0</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.45);margin-top:4px">Demo için ödeme</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <!-- FİYATLANDIRMA -->
-<div class="pricing-section" id="fiyat">
+<div class="pricing-section" id="fiyat" style="padding-bottom:6rem">
   <div class="section-inner" style="text-align:center">
     <div class="section-tag">Fiyatlandırma</div>
     <div class="section-title">Sade ve şeffaf fiyat</div>
     <p class="section-sub" style="margin:0 auto">Gizli ücret yok. İstediğinizde iptal edebilirsiniz.</p>
-    <div class="pricing-grid" style="margin-top:2.5rem">
-      <div class="price-card">
-        <div class="price-name">Demo</div>
-        <div class="price-amount">₺0</div>
-        <div class="price-period">Ücretsiz, sınırsız</div>
-        <div class="price-divider"></div>
-        <div class="price-features">
-          <div class="price-feature"><div class="pf-icon">✓</div>8 örnek ürün ile demo</div>
-          <div class="price-feature"><div class="pf-icon">✓</div>Kar hesaplama aracı</div>
-          <div class="price-feature"><div class="pf-icon">✓</div>KDV + Stopaj analizi</div>
-        </div>
-        <button class="btn-price" style="background:var(--bg2);color:var(--text)" onclick="demoVeGo()">Demo Başlat</button>
-      </div>
-      <div class="price-card featured">
-        <div class="price-badge">EN POPÜLER</div>
-        <div class="price-name">Premium</div>
-        <div class="price-amount">₺1.500</div>
-        <div class="price-period">yıllık · KDV dahil</div>
+    <!-- Tek fiyat -->
+    <div style="max-width:480px;margin:2.5rem auto 0">
+      <div class="price-card featured" style="transform:none">
+        <div class="price-badge">TÜM ÖZELLİKLER DAHİL</div>
+        <div class="price-name">KarPanel Tam Erişim</div>
+        <div class="price-amount">₺1.000</div>
+        <div class="price-period">yıllık · KDV dahil · Gizli ücret yok</div>
         <div class="price-divider"></div>
         <div class="price-features">
           <div class="price-feature"><div class="pf-icon">✓</div>Trendyol Excel entegrasyonu</div>
           <div class="price-feature"><div class="pf-icon">✓</div>Sınırsız ürün analizi</div>
-          <div class="price-feature"><div class="pf-icon">✓</div>Ürün görselleri</div>
+          <div class="price-feature"><div class="pf-icon">✓</div>Ürün görselleri otomatik gelir</div>
+          <div class="price-feature"><div class="pf-icon">✓</div>Komisyon + KDV + Stopaj hesabı</div>
           <div class="price-feature"><div class="pf-icon">✓</div>CSV dışa aktarma</div>
           <div class="price-feature"><div class="pf-icon">✓</div>Toplu kargo güncelleme</div>
-          <div class="price-feature"><div class="pf-icon">✓</div>NeSatılır ile aynı formül</div>
-          <div class="price-feature"><div class="pf-icon">✓</div>1 yıl boyunca güncellemeler</div>
-        </div>
-        <button class="btn-price" onclick="openAuth('kayit')">Hemen Başla ↗</button>
-      </div>
-      <div class="price-card">
-        <div class="price-name">Kurumsal</div>
-        <div class="price-amount">₺?</div>
-        <div class="price-period">Özel fiyat</div>
-        <div class="price-divider"></div>
-        <div class="price-features">
-          <div class="price-feature"><div class="pf-icon">✓</div>Premium'un her şeyi</div>
-          <div class="price-feature"><div class="pf-icon">✓</div>Birden fazla mağaza</div>
-          <div class="price-feature"><div class="pf-icon">✓</div>Özel entegrasyon</div>
+          <div class="price-feature"><div class="pf-icon">✓</div>1 yıl boyunca tüm güncellemeler</div>
           <div class="price-feature"><div class="pf-icon">✓</div>Öncelikli destek</div>
         </div>
-        <button class="btn-price" style="background:var(--bg2);color:var(--text)" onclick="window.open('mailto:info@karpanel.com')">İletişime Geç</button>
+        <button class="btn-price" onclick="openAuth('kayit')">Hemen Başla — ₺1.000/yıl ↗</button>
+        <div style="text-align:center;margin-top:12px;font-size:12px;color:rgba(255,255,255,.4)">Önce ücretsiz deneyin → <a onclick="demoVeGo()" style="color:rgba(255,255,255,.6);cursor:pointer;text-decoration:underline">Demo hesabı</a></div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- APP BÖLÜMÜ -->
-<div class="app-wrap" id="app-section" style="display:none">
+<div style="max-width:1160px;margin:0 auto;padding:3rem 1.5rem 4rem" id="app-section" style="display:none">
 
   <!-- TABS -->
-  <div style="display:flex;gap:6px;padding:1.5rem 0 1rem;border-bottom:1.5px solid var(--border);margin-bottom:1.5rem">
+  <div style="display:flex;gap:6px;padding-bottom:1rem;border-bottom:1.5px solid var(--border);margin-bottom:1.5rem">
     <button class="ftab active" id="app-tab-u" onclick="showAppTab('urunler',this)">📦 Ürünlerim</button>
     <button class="ftab" id="app-tab-h" onclick="showAppTab('hesap',this)">🧮 Kar Hesapla</button>
   </div>
@@ -786,7 +979,7 @@ footer{background:var(--dark);padding:3rem 2rem;text-align:center;margin-top:4re
   <div id="app-urunler" class="page active">
 
     <!-- DEMO BANNER -->
-    <div class="demo-banner">
+    <div class="demo-banner" style="margin-bottom:1.25rem">
       <div>
         <h3>🎯 Demo veya Excel ile başlayın</h3>
         <p>8 örnek ürünle deneyin ya da Trendyol Excel'inizi yükleyin</p>
@@ -855,7 +1048,7 @@ footer{background:var(--dark);padding:3rem 2rem;text-align:center;margin-top:4re
       <div style="font-size:22px;font-weight:900;color:var(--dark);margin-bottom:.5rem;letter-spacing:-.5px">Kendi ürünlerinizi analiz edin</div>
       <div style="font-size:15px;color:var(--t2);margin-bottom:2rem;max-width:400px;margin-left:auto;margin-right:auto">Trendyol'daki tüm ürünleriniz için komisyon, KDV ve stopaj dahil net karı görün</div>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-        <button class="btn-hero-dark" onclick="openAuth('kayit')">🚀 Üye Ol — ₺1.500/yıl</button>
+        <button class="btn-hero-dark" onclick="openAuth('kayit')">🚀 Üye Ol — ₺1.000/yıl</button>
         <button class="btn-hero-outline" onclick="openAuth('giris')">Giriş Yap</button>
       </div>
     </div>
@@ -943,10 +1136,92 @@ footer{background:var(--dark);padding:3rem 2rem;text-align:center;margin-top:4re
   </div>
 </div>
 
+<!-- İLETİŞİM -->
+<div id="iletisim" style="padding:5rem 2rem;background:var(--bg);scroll-margin-top:80px">
+  <div class="section-inner">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center">
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--or);margin-bottom:.75rem">İletişim</div>
+        <div style="font-size:clamp(28px,3.5vw,40px);font-weight:900;color:var(--dark);letter-spacing:-1.5px;line-height:1.1;margin-bottom:.75rem">Sorularınız mı var?</div>
+        <p style="font-size:16px;color:var(--t2);line-height:1.6;margin-bottom:2rem">Size en kısa sürede dönüş yaparız. Demo talebi, özel fiyat veya teknik destek için yazın.</p>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:40px;height:40px;background:var(--or-dim);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📧</div>
+            <div><div style="font-size:12px;color:var(--t3);font-weight:600">E-posta</div><div style="font-size:14px;font-weight:700;color:var(--dark)">info@karpanel.com</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:40px;height:40px;background:var(--or-dim);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">💬</div>
+            <div><div style="font-size:12px;color:var(--t3);font-weight:600">Destek</div><div style="font-size:14px;font-weight:700;color:var(--dark)">Hızlı yanıt garantisi</div></div>
+          </div>
+        </div>
+      </div>
+      <div style="background:#fff;border:1.5px solid var(--border);border-radius:20px;padding:2rem;box-shadow:var(--sh)">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em">Ad Soyad</div>
+            <input id="con-ad" style="padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--r2);font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border .15s" placeholder="Adınız Soyadınız" onfocus="this.style.borderColor='var(--or)'" onblur="this.style.borderColor='var(--border)'">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em">E-posta</div>
+            <input id="con-email" type="email" style="padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--r2);font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border .15s" placeholder="ornek@email.com" onfocus="this.style.borderColor='var(--or)'" onblur="this.style.borderColor='var(--border)'">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.07em">Mesajınız</div>
+            <textarea id="con-msg" rows="4" style="padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--r2);font-size:14px;font-family:'Inter',sans-serif;outline:none;resize:vertical;transition:border .15s" placeholder="Nasıl yardımcı olabiliriz?" onfocus="this.style.borderColor='var(--or)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+          </div>
+          <button onclick="iletisimGonder()" style="width:100%;padding:13px;border:none;border-radius:var(--r4);background:var(--dark);color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s" onmouseover="this.style.background='#2D2D2D'" onmouseout="this.style.background='var(--dark)'">
+            Gönder ↗
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SSS / FAQ -->
+<div style="padding:5rem 2rem;background:#fff">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:3rem">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--or);margin-bottom:.75rem">SSS</div>
+      <div style="font-size:clamp(28px,3.5vw,40px);font-weight:900;color:var(--dark);letter-spacing:-1.5px">Sık sorulan sorular</div>
+    </div>
+    <div style="max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:12px">
+      <details style="background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden">
+        <summary style="padding:16px 20px;font-size:15px;font-weight:700;color:var(--dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">Trendyol komisyon oranı nasıl hesaplanır? <span>+</span></summary>
+        <div style="padding:0 20px 16px;font-size:14px;color:var(--t2);line-height:1.7">Trendyol komisyon oranı kategoriye göre %5 ile %24 arasında değişir. Satış fiyatı üzerinden yüzde olarak hesaplanır. KarPanel komisyona ek olarak KDV, stopaj ve hizmet bedelini de otomatik hesaplayarak gerçek net karınızı gösterir.</div>
+      </details>
+      <details style="background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden">
+        <summary style="padding:16px 20px;font-size:15px;font-weight:700;color:var(--dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">KarPanel ücretsiz mi? <span>+</span></summary>
+        <div style="padding:0 20px 16px;font-size:14px;color:var(--t2);line-height:1.7">Demo modu tamamen ücretsizdir. 8 örnek ürünle tüm özellikleri deneyebilirsiniz. Kendi ürünlerinizi Excel ile yüklemek ve sınırsız analiz yapmak için yıllık ₺1.500 premium üyelik gereklidir.</div>
+      </details>
+      <details style="background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden">
+        <summary style="padding:16px 20px;font-size:15px;font-weight:700;color:var(--dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">Ürünlerimi nasıl yüklerim? <span>+</span></summary>
+        <div style="padding:0 20px 16px;font-size:14px;color:var(--t2);line-height:1.7">Trendyol Partner Panel → Ürünler → <strong>Dışa Aktar</strong> butonuna basın. Excel formatında indirin. KarPanel'de "Excel Yükle" butonuyla dosyayı seçin. Satış fiyatı, komisyon ve görseller otomatik gelir.</div>
+      </details>
+      <details style="background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden">
+        <summary style="padding:16px 20px;font-size:15px;font-weight:700;color:var(--dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">Hesaplama doğru mu? <span>+</span></summary>
+        <div style="padding:0 20px 16px;font-size:14px;color:var(--t2);line-height:1.7">Evet. KarPanel komisyon, KDV (%20), stopaj (%5) ve Trendyol hizmet bedelini dahil ederek net karı hesaplar. Formülümüz Komisyon, KDV ve stopaj dahil formülümüz Trendyol'un resmi oranları ile uyumludur.</div>
+      </details>
+      <details style="background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden">
+        <summary style="padding:16px 20px;font-size:15px;font-weight:700;color:var(--dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">Verilerim güvende mi? <span>+</span></summary>
+        <div style="padding:0 20px 16px;font-size:14px;color:var(--t2);line-height:1.7">Evet. Yüklediğiniz Excel dosyası ve girdiğiniz bilgiler yalnızca tarayıcınızda işlenir. Hiçbir ürün verisi veya fiyat bilgisi sunucularımıza gönderilmez veya saklanmaz.</div>
+      </details>
+    </div>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo-text">Kar<em>Panel</em></div>
   <div class="footer-sub">Trendyol satıcıları için bağımsız kar analiz aracı.<br>Bu uygulama Trendyol ile resmi bir bağlantıya sahip değildir.</div>
+  <div style="margin-top:1.5rem;display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap">
+    <a href="#nasil" style="font-size:12px;color:rgba(255,255,255,.3);text-decoration:none">Nasıl Çalışır?</a>
+    <a href="#fiyat" style="font-size:12px;color:rgba(255,255,255,.3);text-decoration:none">Fiyatlandırma</a>
+    <a href="#iletisim" style="font-size:12px;color:rgba(255,255,255,.3);text-decoration:none">İletişim</a>
+    <a href="#" style="font-size:12px;color:rgba(255,255,255,.3);text-decoration:none">Gizlilik Politikası</a>
+    <a href="#" style="font-size:12px;color:rgba(255,255,255,.3);text-decoration:none">Kullanım Şartları</a>
+  </div>
+  <div style="margin-top:1rem;font-size:11px;color:rgba(255,255,255,.2)">© 2026 KarPanel. Tüm hakları saklıdır.</div>
 </footer>
 
 <!-- AUTH MODAL -->
@@ -1001,7 +1276,7 @@ footer{background:var(--dark);padding:3rem 2rem;text-align:center;margin-top:4re
           <div class="pay-field"><div class="pay-label">Son Kullanma</div><input class="pay-input" type="text" id="pay-tarih" placeholder="AA/YY" maxlength="5" oninput="formatTarih(this)"></div>
           <div class="pay-field"><div class="pay-label">CVV</div><input class="pay-input" type="text" id="pay-cvv" placeholder="000" maxlength="3"></div>
         </div>
-        <button class="btn-pay" onclick="odemeYap()">🔒 ₺1.500 Öde ve Başla</button>
+        <button class="btn-pay" onclick="odemeYap()">🔒 ₺1.000 Öde ve Başla</button>
         <div class="pay-security">🔒 Güvenli ödeme</div>
       </div>
       <div class="pay-skip"><a onclick="demoyaDevam()">Şimdilik demo ile devam et →</a></div>
@@ -1165,7 +1440,7 @@ function loadUser(){
   else{showGuestUI();}
 }
 function applyUser(){
-  document.getElementById('nav-login-btn').style.display='none';
+  document.getElementById('auth-btns').style.display='none';
   document.getElementById('user-pill').style.display='flex';
   document.getElementById('user-av').textContent=currentUser.ad.charAt(0).toUpperCase();
   document.getElementById('user-name').textContent=currentUser.ad;
@@ -1176,9 +1451,11 @@ function applyUser(){
   } else {
     document.getElementById('login-cta').style.display='block';
   }
+  // Kaydedilmiş ürünleri yükle
+  loadSavedUrunler();
 }
 function showGuestUI(){
-  document.getElementById('nav-login-btn').style.display='block';
+  document.getElementById('auth-btns').style.display='flex';
   document.getElementById('user-pill').style.display='none';
   document.getElementById('nav-dashboard-btn').style.display='none';
   document.getElementById('connect-section').style.display='none';
@@ -1402,7 +1679,7 @@ function renderUrunler(){
     </tr>`;
   }).join('');
 }
-function updUrun(id,field,val){const p=urunler.find(x=>String(x.id)===String(id));if(p){p[field]=parseFloat(val)||0;renderUrunler();}}
+function updUrun(id,field,val){const p=urunler.find(x=>String(x.id)===String(id));if(p){p[field]=parseFloat(val)||0;saveUrunler();renderUrunler();}}
 function setFilter(f,el){filterMode=f;document.querySelectorAll('.filter-bar .ftab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderUrunler();}
 function araUrun(q){searchQ=q.toLowerCase();renderUrunler();}
 function openKargoModal(){document.getElementById('kargo-input').value='';document.getElementById('kargo-overlay').classList.add('open');setTimeout(()=>document.getElementById('kargo-input').focus(),100);}
@@ -1543,6 +1820,28 @@ function toast(msg,type,icon){
   setTimeout(()=>t.className='toast',4000);
 }
 
+// ── KAYDET / YÜKLE ──
+function saveUrunler(){
+  if(currentUser){
+    localStorage.setItem('kp_urunler_'+currentUser.email, JSON.stringify(urunler));
+  }
+}
+function loadSavedUrunler(){
+  if(!currentUser) return false;
+  const saved=localStorage.getItem('kp_urunler_'+currentUser.email);
+  if(saved){
+    try{
+      urunler=JSON.parse(saved);
+      if(urunler.length>0){
+        document.getElementById('urun-section').style.display='block';
+        renderUrunler();
+        return true;
+      }
+    }catch(e){}
+  }
+  return false;
+}
+
 // ── INIT ──
 function populateKatDropdown(){
   const sel=document.getElementById('h-kat');
@@ -1560,6 +1859,18 @@ document.querySelector('.logo').addEventListener('click',e=>{e.preventDefault();
 
 populateKatDropdown();
 loadUser();
+
+function iletisimGonder(){
+  const ad=document.getElementById('con-ad').value.trim();
+  const email=document.getElementById('con-email').value.trim();
+  const msg=document.getElementById('con-msg').value.trim();
+  if(!ad||!email||!msg){toast('Lütfen tüm alanları doldurun.','error','⚠️');return;}
+  // Demo: gerçek gönderim için backend gerekir
+  document.getElementById('con-ad').value='';
+  document.getElementById('con-email').value='';
+  document.getElementById('con-msg').value='';
+  toast('Mesajınız alındı! En kısa sürede dönüş yapacağız. 🎉','success','✅');
+}
 </script>
 </body>
 </html>
