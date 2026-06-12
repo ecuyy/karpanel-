@@ -2220,16 +2220,26 @@ document.querySelector('.logo').addEventListener('click',e=>{e.preventDefault();
 populateKatDropdown();
 loadUser();
 
-function iletisimGonder(){
+async function iletisimGonder(){
   const ad=document.getElementById('con-ad').value.trim();
   const email=document.getElementById('con-email').value.trim();
   const msg=document.getElementById('con-msg').value.trim();
   if(!ad||!email||!msg){toast('Lütfen tüm alanları doldurun.','error','⚠️');return;}
-  // Demo: gerçek gönderim için backend gerekir
-  document.getElementById('con-ad').value='';
-  document.getElementById('con-email').value='';
-  document.getElementById('con-msg').value='';
-  toast('Mesajınız alındı! En kısa sürede dönüş yapacağız. 🎉','success','✅');
+  const btn=document.querySelector('[onclick="iletisimGonder()"]');
+  if(btn){btn.disabled=true;btn.textContent='Gönderiliyor...';}
+  try{
+    const r=await fetch(PROXY+'/api/iletisim',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ad,email,msg})});
+    const d=await r.json();
+    if(!r.ok) throw new Error(d.error||'Hata');
+    document.getElementById('con-ad').value='';
+    document.getElementById('con-email').value='';
+    document.getElementById('con-msg').value='';
+    toast('Mesajınız iletildi! En kısa sürede dönüş yapacağız. 🎉','success','✅');
+  }catch(e){
+    toast('Mesaj gönderilemedi. Lütfen tekrar deneyin.','error','❌');
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='Mesaj Gönder →';}
+  }
 }
 </script>
 </body>
