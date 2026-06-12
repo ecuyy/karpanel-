@@ -137,6 +137,31 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // Ürünleri kaydet
+  if (parsed.pathname === '/api/urunler/kaydet' && req.method === 'POST') {
+    const body = await getBody(req);
+    const { email, urunler } = body;
+    if (!email || !db) { res.writeHead(400); res.end(JSON.stringify({ error: 'Hata' })); return; }
+    await db.collection('urunler').updateOne(
+      { email },
+      { $set: { email, urunler, guncelleme: new Date() } },
+      { upsert: true }
+    );
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true }));
+    return;
+  }
+
+  // Ürünleri yükle
+  if (parsed.pathname === '/api/urunler/yukle' && req.method === 'GET') {
+    const email = parsed.query.email;
+    if (!email || !db) { res.writeHead(400); res.end(JSON.stringify({ urunler: [] })); return; }
+    const doc = await db.collection('urunler').findOne({ email });
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ urunler: doc ? doc.urunler : [] }));
+    return;
+  }
+
   // İletişim formu
   if (parsed.pathname === '/api/iletisim' && req.method === 'POST') {
     const body = await getBody(req);
