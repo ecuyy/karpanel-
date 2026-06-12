@@ -1640,7 +1640,7 @@ function sifremiUnuttum(){
 async function fetchWithRetry(url, options, retries=2){
   for(let i=0;i<retries;i++){
     try{
-      const r=await fetch(url,{...options,signal:AbortSignal.timeout(15000)});
+      const r=await fetch(url,{...options,signal:AbortSignal.timeout(40000)});
       return r;
     }catch(e){
       if(i===retries-1) throw e;
