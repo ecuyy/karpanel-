@@ -2177,27 +2177,55 @@ function toast(msg,type,icon){
 
 // ── KAYDET / YÜKLE ──
 function saveUrunler(){
-  if(currentUser){
-    localStorage.setItem('kp_urunler_'+currentUser.email, JSON.stringify(urunler));
-  }
-}
-function loadSavedUrunler(){
-  if(!currentUser) return false;
-  const saved=localStorage.getItem('kp_urunler_'+currentUser.email);
-  if(saved){
+  if(!currentUser) return;
+  localStorage.setItem('kp_urunler_'+currentUser.email, JSON.stringify(urunler));
+  // MongoDB'ye de kaydet (debounce ile - 2 sn bekle)
+  clearTimeout(window._saveTimer);
+  window._saveTimer=setTimeout(async()=>{
     try{
-      urunler=JSON.parse(saved);
-      if(urunler.length>0){
-        document.getElementById('urun-section').style.display='block';
-        renderUrunler();
-        // App section'ı göster
-        document.getElementById('hero').style.display='none';
-        document.querySelectorAll('.how-section,.pricing-section,footer').forEach(e=>e.style.display='none');
-        document.getElementById('app-section').style.display='block';
-        window.scrollTo(0,0);
-        return true;
-      }
+      await fetch(PROXY+'/api/urunler/kaydet',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({email:currentUser.email,urunler})
+      });
     }catch(e){}
+  },2000);
+}
+async function loadSavedUrunler(){
+  if(!currentUser) return false;
+  try{
+    // Önce MongoDB'den çek
+    const r=await fetch(PROXY+'/api/urunler/yukle?email='+encodeURIComponent(currentUser.email));
+    const d=await r.json();
+    if(d.urunler&&d.urunler.length>0){
+      urunler=d.urunler;
+      // localStorage'ı da güncelle
+      localStorage.setItem('kp_urunler_'+currentUser.email, JSON.stringify(urunler));
+      document.getElementById('urun-section').style.display='block';
+      renderUrunler();
+      document.getElementById('hero').style.display='none';
+      document.querySelectorAll('.how-section,.pricing-section,footer').forEach(e=>e.style.display='none');
+      document.getElementById('app-section').style.display='block';
+      window.scrollTo(0,0);
+      return true;
+    }
+  }catch(e){
+    // MongoDB'ye ulaşılamazsa localStorage'dan yükle
+    const saved=localStorage.getItem('kp_urunler_'+currentUser.email);
+    if(saved){
+      try{
+        urunler=JSON.parse(saved);
+        if(urunler.length>0){
+          document.getElementById('urun-section').style.display='block';
+          renderUrunler();
+          document.getElementById('hero').style.display='none';
+          document.querySelectorAll('.how-section,.pricing-section,footer').forEach(e=>e.style.display='none');
+          document.getElementById('app-section').style.display='block';
+          window.scrollTo(0,0);
+          return true;
+        }
+      }catch(e2){}
+    }
   }
   return false;
 }
