@@ -1637,12 +1637,25 @@ function sifremiUnuttum(){
   localStorage.setItem('kp_users',JSON.stringify(users));
   toast('Şifreniz güncellendi! Giriş yapabilirsiniz.','success','✅');
 }
+async function fetchWithRetry(url, options, retries=2){
+  for(let i=0;i<retries;i++){
+    try{
+      const r=await fetch(url,{...options,signal:AbortSignal.timeout(15000)});
+      return r;
+    }catch(e){
+      if(i===retries-1) throw e;
+      await new Promise(res=>setTimeout(res,2000));
+    }
+  }
+}
+
 async function girisYap(){
   const email=document.getElementById('giris-email').value.trim();
   const sifre=document.getElementById('giris-sifre').value;
   if(!email||!sifre){showAuthError('E-posta ve şifre gerekli');return;}
+  showAuthError('Bağlanılıyor...');
   try{
-    const r=await fetch(PROXY+'/api/giris',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,sifre})});
+    const r=await fetchWithRetry(PROXY+'/api/giris',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,sifre})});
     const d=await r.json();
     if(!r.ok){showAuthError(d.error||'Giriş başarısız');return;}
     const isPremium=d.user.premium||PREMIUM_EMAILS.includes(email);
@@ -1657,7 +1670,7 @@ async function girisYap(){
     closeAuth(); applyUser();
     if(!currentUser.premium){setTimeout(()=>document.getElementById('pay-overlay').classList.add('open'),400);}
     else{toast('Hoş geldiniz, '+currentUser.ad+'! 🎉','success','👋');goApp();}
-  }catch(e){showAuthError('Bağlantı hatası. Tekrar deneyin.');}
+  }catch(e){showAuthError('Sunucu yanıt vermiyor. Birkaç saniye bekleyip tekrar deneyin.');}
 }
 
 async function kayitOl(){
@@ -1666,8 +1679,9 @@ async function kayitOl(){
   const sifre=document.getElementById('kayit-sifre').value;
   if(!ad||!email||!sifre){showAuthError('Tüm alanları doldurun');return;}
   if(sifre.length<6){showAuthError('Şifre en az 6 karakter olmalı');return;}
+  showAuthError('Kayıt yapılıyor...');
   try{
-    const r=await fetch(PROXY+'/api/kayit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ad,email,sifre})});
+    const r=await fetchWithRetry(PROXY+'/api/kayit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ad,email,sifre})});
     const d=await r.json();
     if(!r.ok){showAuthError(d.error||'Kayıt başarısız');return;}
     const isPremium=PREMIUM_EMAILS.includes(email);
@@ -1676,7 +1690,7 @@ async function kayitOl(){
     closeAuth();applyUser();
     if(!isPremium){setTimeout(()=>document.getElementById('pay-overlay').classList.add('open'),400);}
     else{toast('Hoş geldiniz, '+ad+'! 🎉','success','👋');goApp();}
-  }catch(e){showAuthError('Bağlantı hatası: '+e.message);}
+  }catch(e){showAuthError('Sunucu yanıt vermiyor. Birkaç saniye bekleyip tekrar deneyin.');}
 }
 
 // ── ÖDEME ──
