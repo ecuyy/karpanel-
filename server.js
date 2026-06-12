@@ -8,6 +8,7 @@ const { MongoClient } = require('mongodb');
 const PORT = process.env.PORT || 3001;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://info_db_user:rWUh1N0WLUblIVTa@karpanel.g062rms.mongodb.net/?appName=karpanel';
 const ADMIN_SIFRE = process.env.ADMIN_SIFRE || 'karpanel2026admin';
+const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
 
 let db;
 
@@ -133,6 +134,39 @@ const server = http.createServer(async (req, res) => {
     await db.collection('users').updateOne({ email }, { $set: { premium: true, odemeTarihi, uyelikBitis } });
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ ok: true, uyelikBitis }));
+    return;
+  }
+
+  // İletişim formu
+  if (parsed.pathname === '/api/iletisim' && req.method === 'POST') {
+    const body = await getBody(req);
+    const { ad, email, msg } = body;
+    if (!ad || !email || !msg) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Tüm alanlar gerekli' })); return;
+    }
+    try {
+      const resendRes = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + RESEND_API_KEY,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: 'KarPanel İletişim <info@komisyonhesap.com>',
+          to: ['info@ecuyy.com'],
+          reply_to: email,
+          subject: 'Yeni İletişim Mesajı - ' + ad,
+          html: '<h2>Yeni mesaj</h2><p><strong>Ad:</strong> ' + ad + '</p><p><strong>E-posta:</strong> ' + email + '</p><p><strong>Mesaj:</strong></p><p>' + msg.replace(/\n/g, '<br>') + '</p>'
+        })
+      });
+      if (!resendRes.ok) throw new Error('Mail gönderilemedi');
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true }));
+    } catch(e) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: e.message }));
+    }
     return;
   }
 
