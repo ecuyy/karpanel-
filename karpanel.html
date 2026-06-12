@@ -1831,7 +1831,21 @@ function csvYukle(input){
         if(!title)continue; // ürün adı yoksa atla
         // Fiyat - virgül ve nokta dönüşümü
         const priceRaw=priceIdx>=0?String(cols[priceIdx]||''):'';
-        const price=parseFloat(priceRaw.replace(/\./g,'').replace(',','.'))||0;
+        // Fiyat parse: "1.499,90" → 1499.90, "1499.90" → 1499.90, "499,9" → 499.9
+        let price=0;
+        if(priceRaw){
+          const p=priceRaw.trim();
+          // Virgül ve nokta ikisi de varsa: Türkçe format (1.499,90)
+          if(p.includes(',')&&p.includes('.')){
+            price=parseFloat(p.replace(/\./g,'').replace(',','.'))||0;
+          } else if(p.includes(',')){
+            // Sadece virgül: ondalık ayraç (499,90)
+            price=parseFloat(p.replace(',','.'))||0;
+          } else {
+            // Sadece nokta veya yok
+            price=parseFloat(p)||0;
+          }
+        }
         const komRaw=komIdx>=0?String(cols[komIdx]||'0'):'0';
         const kom=parseFloat(komRaw.replace(/[^0-9.,]/g,'').replace(',','.'))||0;
         const cat=catIdx>=0?String(cols[catIdx]||'').trim():'';
