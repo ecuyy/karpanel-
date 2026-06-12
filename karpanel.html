@@ -550,6 +550,21 @@ nav{
   display:flex;align-items:center;gap:5px;
 }
 .btn-sm:hover{border-color:var(--or);color:var(--or);background:var(--or-dim)}
+.btn-danger-sm{
+  padding:8px 14px;border:1.5px solid var(--rbr);border-radius:var(--r4);
+  font-size:12px;font-weight:600;cursor:pointer;color:var(--red);
+  background:var(--rbg);font-family:'Inter',sans-serif;transition:all .15s;
+  display:flex;align-items:center;gap:5px;
+}
+.btn-danger-sm:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.cb-wrap{display:flex;align-items:center;justify-content:center}
+input[type=checkbox].row-cb{width:16px;height:16px;cursor:pointer;accent-color:var(--or)}
+.sel-bar{
+  display:none;align-items:center;gap:10px;
+  padding:10px 14px;background:var(--or-dim);border:1.5px solid rgba(242,122,26,.2);
+  border-radius:var(--r2);margin-bottom:10px;font-size:13px;font-weight:600;color:var(--or);
+}
+.sel-bar.show{display:flex}
 
 /* PRODUCT TABLE */
 .prod-table-wrap{background:#fff;border:1.5px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:var(--sh)}
@@ -1123,12 +1138,17 @@ input[type=number]{-moz-appearance:textfield}
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-inp" type="text" placeholder="Ürün ara..." oninput="araUrun(this.value)"></div>
           <button class="btn-sm" onclick="openKargoModal()">🚚 Kargo Fiyat Gir</button>
-          
+          <button class="btn-danger-sm" onclick="tumunuSil()">🗑 Tümünü Sil</button>
         </div>
+      </div>
+      <div class="sel-bar" id="sel-bar">
+        <span id="sel-count">0 ürün seçildi</span>
+        <button class="btn-danger-sm" onclick="secilenSil()">🗑 Seçilenleri Sil</button>
+        <button class="btn-sm" onclick="secimIptal()" style="margin-left:auto">İptal</button>
       </div>
       <div class="prod-table-wrap">
         <table class="ptable">
-          <thead><tr><th>Görsel</th><th>Ürün</th><th>Satış Fiyatı ✏️</th><th>Komisyon ✏️</th><th>Alış Fiyatı</th><th>Kargo</th><th>Net Kar</th><th>Marj</th><th>İşlem</th></tr></thead>
+          <thead><tr><th style="width:36px"><input type="checkbox" class="row-cb" id="cb-all" onchange="tumSecToggle(this)"></th><th>Görsel</th><th>Ürün</th><th>Satış Fiyatı ✏️</th><th>Komisyon ✏️</th><th>Alış Fiyatı</th><th>Kargo</th><th>Net Kar</th><th>Marj</th><th>İşlem</th></tr></thead>
           <tbody id="ptbody"></tbody>
         </table>
       </div>
@@ -1897,7 +1917,7 @@ function renderUrunler(page){
   document.getElementById('urun-count').textContent=total+' ürün';
   const tbody=document.getElementById('ptbody');
   if(!list.length){
-    tbody.innerHTML=`<tr><td colspan="9"><div class="empty"><span class="empty-emoji">🔍</span><div class="empty-title">Ürün bulunamadı</div><div class="empty-sub">Filtreyi değiştirin.</div></div></td></tr>`;
+    tbody.innerHTML=`<tr><td colspan="10"><div class="empty"><span class="empty-emoji">🔍</span><div class="empty-title">Ürün bulunamadı</div><div class="empty-sub">Filtreyi değiştirin.</div></div></td></tr>`;
     renderPagination(0,0);
     return;
   }
@@ -1916,6 +1936,7 @@ function renderUrunler(page){
       ?`<input class="tinput" type="number" style="width:68px;opacity:.55;cursor:not-allowed" value="${(p.commissionRate||0).toFixed(2)}" readonly title="Demo modda düzenlenemez">`
       :`<input class="tinput" type="number" style="width:68px" min="0" max="100" step="0.01" value="${(p.commissionRate||0).toFixed(2)}" onchange="updUrun('${p.id}','commissionRate',this.value)" title="Komisyon oranını düzenleyebilirsiniz">`;
     return`<tr>
+      <td class="cb-wrap"><input type="checkbox" class="row-cb" data-id="${p.id}" onchange="satirSec(this)"></td>
       <td style="width:54px"><div style="display:flex">${imgHtml}${phHtml}</div></td>
       <td><div class="prod-name" title="${p.title}">${p.title}</div><div class="prod-cat">${p.categoryName||'—'}</div></td>
       <td>${satisInput}</td>
@@ -2087,6 +2108,63 @@ function hesapla(){
   document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function temizle(){['h-satis','h-alis','h-kom','h-kargo','h-diger'].forEach(id=>document.getElementById(id).value='');document.getElementById('h-kat').value='';document.getElementById('h-kdv').value='20';document.getElementById('results').style.display='none';}
+
+// ── SEÇİM & SİL ──
+let seciliIDs=new Set();
+
+function satirSec(cb){
+  const id=cb.dataset.id;
+  if(cb.checked) seciliIDs.add(id); else seciliIDs.delete(id);
+  guncelleSilBar();
+}
+
+function tumSecToggle(cb){
+  document.querySelectorAll('.row-cb[data-id]').forEach(c=>{
+    c.checked=cb.checked;
+    if(cb.checked) seciliIDs.add(c.dataset.id); else seciliIDs.delete(c.dataset.id);
+  });
+  guncelleSilBar();
+}
+
+function guncelleSilBar(){
+  const bar=document.getElementById('sel-bar');
+  const count=document.getElementById('sel-count');
+  if(seciliIDs.size>0){
+    bar.classList.add('show');
+    count.textContent=seciliIDs.size+' ürün seçildi';
+  } else {
+    bar.classList.remove('show');
+  }
+}
+
+function secimIptal(){
+  seciliIDs.clear();
+  document.querySelectorAll('.row-cb').forEach(c=>c.checked=false);
+  guncelleSilBar();
+}
+
+function secilenSil(){
+  if(!seciliIDs.size) return;
+  if(!confirm(seciliIDs.size+' ürünü silmek istiyor musun?')) return;
+  urunler=urunler.filter(p=>!seciliIDs.has(String(p.id)));
+  seciliIDs.clear();
+  saveUrunler();
+  if(!urunler.length) document.getElementById('urun-section').style.display='none';
+  else renderUrunler(1);
+  guncelleSilBar();
+  toast(seciliIDs.size+' ürün silindi','info','🗑');
+}
+
+function tumunuSil(){
+  if(!urunler.length) return;
+  if(!confirm('Tüm '+urunler.length+' ürünü silmek istiyor musun?')) return;
+  urunler=[];
+  seciliIDs.clear();
+  saveUrunler();
+  document.getElementById('urun-section').style.display='none';
+  guncelleSilBar();
+  toast('Tüm ürünler silindi','info','🗑');
+}
 
 // ── TOAST ──
 function toast(msg,type,icon){
