@@ -306,6 +306,8 @@ input:focus{border-color:#F27A1A}
 .stat{background:#1A2D4A;border-radius:12px;padding:1.25rem;text-align:center}
 .stat-val{font-size:32px;font-weight:900;color:#F27A1A}
 .stat-label{font-size:12px;color:rgba(255,255,255,.5);margin-top:4px}
+.stat:hover{border:1px solid var(--or);transform:translateY(-2px);transition:all .15s}
+.stat{transition:all .15s;border:1px solid transparent}
 table{width:100%;border-collapse:collapse;background:#1A2D4A;border-radius:12px;overflow:hidden}
 th{padding:12px 16px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,.4);border-bottom:1px solid rgba(255,255,255,.08)}
 td{padding:12px 16px;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05)}
@@ -337,10 +339,10 @@ tr:hover td{background:rgba(255,255,255,.03)}
     <button class="btn btn-danger" onclick="adminCikis()">Çıkış</button>
   </div>
   <div class="stats">
-    <div class="stat"><div class="stat-val" id="stat-toplam">0</div><div class="stat-label">Toplam Üye</div></div>
-    <div class="stat"><div class="stat-val" id="stat-premium">0</div><div class="stat-label">Premium</div></div>
-    <div class="stat"><div class="stat-val" id="stat-ucretsiz">0</div><div class="stat-label">Ücretsiz</div></div>
-    <div class="stat"><div class="stat-val" id="stat-bitis">0</div><div class="stat-label">Bu Ay Bitiyor</div></div>
+    <div class="stat" onclick="filtrele('hepsi')" style="cursor:pointer" title="Tümünü göster"><div class="stat-val" id="stat-toplam">0</div><div class="stat-label">Toplam Üye</div></div>
+    <div class="stat" onclick="filtrele('premium')" style="cursor:pointer" title="Premium üyeleri göster"><div class="stat-val" id="stat-premium">0</div><div class="stat-label">Premium</div></div>
+    <div class="stat" onclick="filtrele('ucretsiz')" style="cursor:pointer" title="Ücretsiz üyeleri göster"><div class="stat-val" id="stat-ucretsiz">0</div><div class="stat-label">Ücretsiz</div></div>
+    <div class="stat" onclick="filtrele('bitiyor')" style="cursor:pointer" title="Bu ay bitenleri göster"><div class="stat-val" id="stat-bitis">0</div><div class="stat-label">Bu Ay Bitiyor</div></div>
   </div>
   <table id="users-table">
     <thead>
