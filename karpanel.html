@@ -1589,13 +1589,17 @@ function closeHesabim(e){
     document.getElementById('hesabim-overlay').style.display='none';
   }
 }
-function sifreDegistir(){
+async function sifreDegistir(){
+  const eski=document.getElementById('hm-eski-sifre')?document.getElementById('hm-eski-sifre').value:'';
   const yeni=document.getElementById('hm-yeni-sifre').value;
   if(!yeni||yeni.length<6){toast('Şifre en az 6 karakter olmalı.','error','❌');return;}
-  const users=JSON.parse(localStorage.getItem('kp_users')||'[]');
-  const idx=users.findIndex(u=>u.email===currentUser.email);
-  if(idx>=0){users[idx].sifre=yeni;localStorage.setItem('kp_users',JSON.stringify(users));}
+  try{
+    const r=await fetch(PROXY+'/api/sifre-degistir',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:currentUser.email,eskiSifre:eski,yeniSifre:yeni})});
+    const d=await r.json();
+    if(!r.ok){toast(d.error||'Mevcut şifre hatalı.','error','❌');return;}
+  }catch(e){toast('Bağlantı hatası.','error','❌');return;}
   document.getElementById('hm-yeni-sifre').value='';
+  if(document.getElementById('hm-eski-sifre')) document.getElementById('hm-eski-sifre').value='';
   toast('Şifre güncellendi! ✓','success','✅');
 }
 function logout(){
@@ -1656,38 +1660,45 @@ async function girisYap(){
   }catch(e){showAuthError('Bağlantı hatası. Tekrar deneyin.');}
 }
 
-function kayitOl(){
+async function kayitOl(){
   const ad=document.getElementById('kayit-ad').value.trim();
   const email=document.getElementById('kayit-email').value.trim();
   const sifre=document.getElementById('kayit-sifre').value;
   if(!ad||!email||!sifre){showAuthError('Tüm alanları doldurun');return;}
   if(sifre.length<6){showAuthError('Şifre en az 6 karakter olmalı');return;}
-  const users=JSON.parse(localStorage.getItem('kp_users')||'[]');
-  if(users.find(u=>u.email===email)){showAuthError('Bu e-posta zaten kayıtlı');return;}
-  const isPremium=PREMIUM_EMAILS.includes(email);
-  users.push({ad,email,sifre,premium:isPremium});
-  localStorage.setItem('kp_users',JSON.stringify(users));
-  currentUser={ad,email,premium:isPremium};
-  localStorage.setItem('kp_user',JSON.stringify(currentUser));
-  closeAuth(); applyUser();
-  if(!isPremium){setTimeout(()=>document.getElementById('pay-overlay').classList.add('open'),400);}
-  else{toast('Hoş geldiniz, '+ad+'! Premium erişiminiz aktif 🎉','success','👋');goApp();}
+  try{
+    const r=await fetch(PROXY+'/api/kayit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ad,email,sifre})});
+    const d=await r.json();
+    if(!r.ok){showAuthError(d.error||'Kayıt başarısız');return;}
+    const isPremium=PREMIUM_EMAILS.includes(email);
+    currentUser={ad,email,premium:isPremium};
+    localStorage.setItem('kp_user',JSON.stringify(currentUser));
+    closeAuth();applyUser();
+    if(!isPremium){setTimeout(()=>document.getElementById('pay-overlay').classList.add('open'),400);}
+    else{toast('Hoş geldiniz, '+ad+'! 🎉','success','👋');goApp();}
+  }catch(e){showAuthError('Bağlantı hatası: '+e.message);}
 }
 
 // ── ÖDEME ──
 function formatKart(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.replace(/(\d{4})/g,'$1 ').trim();}
 function formatTarih(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2,4);el.value=v;}
-function odemeYap(){
+async function odemeYap(){
   const isim=document.getElementById('pay-isim').value.trim();
   const kart=document.getElementById('pay-kart').value.replace(/\s/g,'');
   const tarih=document.getElementById('pay-tarih').value;
   const cvv=document.getElementById('pay-cvv').value;
   if(!isim||kart.length<16||tarih.length<5||cvv.length<3){toast('Lütfen tüm kart bilgilerini doldurun','error','❌');return;}
-  const users=JSON.parse(localStorage.getItem('kp_users')||'[]');
-  const idx=users.findIndex(u=>u.email===currentUser.email);
-  if(idx>=0){users[idx].premium=true;localStorage.setItem('kp_users',JSON.stringify(users));}
-  currentUser.premium=true;
-  localStorage.setItem('kp_user',JSON.stringify(currentUser));
+  try{
+    const r=await fetch(PROXY+'/api/odeme',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:currentUser.email})});
+    const d=await r.json();
+    if(!r.ok) throw new Error(d.error||'Ödeme hatası');
+    currentUser.premium=true;
+    currentUser.uyelikBitis=d.uyelikBitis;
+    const stored=localStorage.getItem('kp_user')?localStorage:sessionStorage;
+    stored.setItem('kp_user',JSON.stringify(currentUser));
+  }catch(e){
+    toast('Ödeme hatası: '+e.message,'error','❌');return;
+  }
   document.getElementById('pay-overlay').classList.remove('open');
   applyUser(); goApp();
   toast('Ödeme başarılı! Premium üyeliğiniz aktif. 🎉','success','🎉');
