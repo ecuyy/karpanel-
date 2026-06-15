@@ -168,8 +168,8 @@ const server = http.createServer(async (req, res) => {
     const iyziBody = {
       locale: 'tr',
       conversationId,
-      price: '1500',
-      paidPrice: '1500',
+      price: '1',
+      paidPrice: '1',
       currency: 'TRY',
       basketId: conversationId,
       paymentGroup: 'SUBSCRIPTION',
@@ -189,7 +189,7 @@ const server = http.createServer(async (req, res) => {
       },
       shippingAddress: { contactName: user.ad, city: 'Istanbul', country: 'Turkey', address: 'Türkiye' },
       billingAddress: { contactName: user.ad, city: 'Istanbul', country: 'Turkey', address: 'Türkiye' },
-      basketItems: [{ id: 'KARPANEL_PREMIUM', name: 'KarPanel Premium Üyelik 1 Yil', category1: 'Yazilim', itemType: 'VIRTUAL', price: '1500' }]
+      basketItems: [{ id: 'KARPANEL_PREMIUM', name: 'KarPanel Test Odeme', category1: 'Yazilim', itemType: 'VIRTUAL', price: '1500' }]
     };
     try {
       const result = await iyzicoPost('/payment/iyzipos/checkoutform/initialize/auth/ecom', iyziBody);
