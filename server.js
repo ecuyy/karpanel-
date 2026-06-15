@@ -31,17 +31,19 @@ function corsHeaders(res) {
 
 async function iyzicoPost(endpoint, body) {
   const crypto = require('crypto');
-  const randomStr = crypto.randomBytes(12).toString('hex');
+  const randomKey = new Date().getTime() + '123456789';
   const bodyStr = JSON.stringify(body);
-  // iyzico imza: HMAC-SHA256(apiKey + randomKey + secretKey + body, secretKey)
-  const hashStr = IYZICO_API_KEY + randomStr + IYZICO_SECRET + bodyStr;
-  const hash = crypto.createHmac('sha256', IYZICO_SECRET).update(hashStr).digest('base64');
+  // iyzico IYZWSv2 imza: HMAC-SHA256(randomKey + uri_path + body, secretKey) -> hex -> base64
+  const payload = randomKey + endpoint + bodyStr;
+  const encryptedData = crypto.createHmac('sha256', IYZICO_SECRET).update(payload).digest('hex');
+  const authStr = 'apiKey:' + IYZICO_API_KEY + '&randomKey:' + randomKey + '&signature:' + encryptedData;
+  const base64Auth = Buffer.from(authStr).toString('base64');
   const r = await fetch(IYZICO_BASE + endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'IYZWS ' + IYZICO_API_KEY + ':' + hash,
-      'x-iyzi-rnd': randomStr,
+      'Authorization': 'IYZWSv2 ' + base64Auth,
+      'x-iyzi-rnd': randomKey,
       'x-iyzi-client-version': 'iyzipay-node-2.0.48'
     },
     body: bodyStr
