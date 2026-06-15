@@ -32,8 +32,10 @@ function corsHeaders(res) {
 async function iyzicoPost(endpoint, body) {
   const crypto = require('crypto');
   const randomStr = crypto.randomBytes(12).toString('hex');
-  const hashStr = IYZICO_API_KEY + randomStr + IYZICO_SECRET + JSON.stringify(body);
-  const hash = crypto.createHash('sha256').update(hashStr).digest('base64');
+  const bodyStr = JSON.stringify(body);
+  // iyzico imza: HMAC-SHA256(apiKey + randomKey + secretKey + body, secretKey)
+  const hashStr = IYZICO_API_KEY + randomStr + IYZICO_SECRET + bodyStr;
+  const hash = crypto.createHmac('sha256', IYZICO_SECRET).update(hashStr).digest('base64');
   const r = await fetch(IYZICO_BASE + endpoint, {
     method: 'POST',
     headers: {
@@ -42,7 +44,7 @@ async function iyzicoPost(endpoint, body) {
       'x-iyzi-rnd': randomStr,
       'x-iyzi-client-version': 'iyzipay-node-2.0.48'
     },
-    body: JSON.stringify(body)
+    body: bodyStr
   });
   return r.json();
 }
