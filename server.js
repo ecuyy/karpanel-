@@ -9,6 +9,9 @@ const PORT = process.env.PORT || 3001;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://info_db_user:rWUh1N0WLUblIVTa@karpanel.g062rms.mongodb.net/?appName=karpanel';
 const ADMIN_SIFRE = process.env.ADMIN_SIFRE || 'karpanel2026admin';
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
+const IYZICO_API_KEY = process.env.IYZICO_API_KEY || 'OHsPgULIkX0P2lBo6XXUKrNZvE6PNBYf';
+const IYZICO_SECRET = process.env.IYZICO_SECRET || 'XnjSF1WSqXarHDxIPx9RACTZ1cuytzEU';
+const IYZICO_BASE = 'https://api.iyzipay.com';
 
 let db;
 
@@ -132,6 +135,113 @@ const server = http.createServer(async (req, res) => {
   }
 
   // Ödeme yap
+  // iyzico ödeme formu başlat
+  if (parsed.pathname === '/api/odeme-baslat' && req.method === 'POST') {
+    const body = await getBody(req);
+    const { email, ad, soyad, telefon, ip } = body;
+    if (!email) { res.writeHead(400); res.end(JSON.stringify({ error: 'Email gerekli' })); return; }
+    const user = await db.collection('users').findOne({ email });
+    if (!user) { res.writeHead(404); res.end(JSON.stringify({ error: 'Kullanıcı bulunamadı' })); return; }
+    
+    const conversationId = 'kp_' + Date.now() + '_' + Math.random().toString(36).substr(2,6);
+    
+    const iyziBody = {
+      locale: 'tr',
+      conversationId,
+      price: '1500',
+      paidPrice: '1500',
+      currency: 'TRY',
+      basketId: conversationId,
+      paymentGroup: 'SUBSCRIPTION',
+      callbackUrl: 'https://komisyonhesap.com/api/odeme-callback',
+      enabledInstallments: [1, 2, 3, 6, 9, 12],
+      buyer: {
+        id: user._id ? user._id.toString() : email,
+        name: ad || user.ad.split(' ')[0] || 'Ad',
+        surname: soyad || (user.ad.split(' ')[1] || 'Soyad'),
+        gsmNumber: telefon || '+905000000000',
+        email,
+        identityNumber: '11111111111',
+        registrationAddress: 'Türkiye',
+        ip: ip || '85.34.78.112',
+        city: 'Istanbul',
+        country: 'Turkey'
+      },
+      shippingAddress: {
+        contactName: user.ad,
+        city: 'Istanbul',
+        country: 'Turkey',
+        address: 'Türkiye'
+      },
+      billingAddress: {
+        contactName: user.ad,
+        city: 'Istanbul',
+        country: 'Turkey',
+        address: 'Türkiye'
+      },
+      basketItems: [{
+        id: 'KARPANEL_PREMIUM',
+        name: 'KarPanel Premium Üyelik (1 Yıl)',
+        category1: 'Yazılım',
+        category2: 'SaaS',
+        itemType: 'VIRTUAL',
+        price: '1500'
+      }]
+    };
+    
+    try {
+      const result = await iyzicoPost('/payment/iyzipos/checkoutform/initialize/auth/ecom', iyziBody);
+      if (result.status === 'success') {
+        // conversationId'yi DB'ye kaydet
+        await db.collection('users').updateOne({ email }, { $set: { pendingConversationId: conversationId } });
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true, checkoutFormContent: result.checkoutFormContent, token: result.token }));
+      } else {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: result.errorMessage || 'Ödeme başlatılamadı' }));
+      }
+    } catch(e) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: e.message }));
+    }
+    return;
+  }
+
+  // iyzico ödeme callback
+  if (parsed.pathname === '/api/odeme-callback' && req.method === 'POST') {
+    const body = await getBody(req);
+    const { token } = body;
+    if (!token) { res.writeHead(302, { Location: 'https://komisyonhesap.com/?odeme=hata' }); res.end(); return; }
+    
+    try {
+      const result = await iyzicoPost('/payment/iyzipos/checkoutform/auth/ecom/detail', {
+        locale: 'tr',
+        token
+      });
+      
+      if (result.status === 'success' && result.paymentStatus === 'SUCCESS') {
+        const user = await db.collection('users').findOne({ pendingConversationId: result.conversationId });
+        if (user) {
+          const odemeTarihi = new Date();
+          const uyelikBitis = new Date();
+          uyelikBitis.setFullYear(uyelikBitis.getFullYear() + 1);
+          await db.collection('users').updateOne(
+            { _id: user._id },
+            { $set: { premium: true, odemeTarihi, uyelikBitis, pendingConversationId: null } }
+          );
+        }
+        res.writeHead(302, { Location: 'https://komisyonhesap.com/?odeme=basarili' });
+      } else {
+        res.writeHead(302, { Location: 'https://komisyonhesap.com/?odeme=hata' });
+      }
+    } catch(e) {
+      res.writeHead(302, { Location: 'https://komisyonhesap.com/?odeme=hata' });
+    }
+    res.end();
+    return;
+  }
+
+  // Eski ödeme endpoint (admin için manuel)
   if (parsed.pathname === '/api/odeme' && req.method === 'POST') {
     const body = await getBody(req);
     const { email } = body;
