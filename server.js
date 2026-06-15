@@ -209,22 +209,47 @@ const server = http.createServer(async (req, res) => {
   }
 
   // iyzico callback
-  if (parsed.pathname === '/api/odeme-callback' && req.method === 'POST') {
-    const body = await getBody(req);
-    const { token } = body;
+  if (parsed.pathname === '/api/odeme-callback') {
+    // Hem GET hem POST'u kabul et
+    let token, status;
+    if (req.method === 'POST') {
+      const body = await getBody(req);
+      token = body.token;
+      status = body.status;
+    } else {
+      token = parsed.query.token;
+      status = parsed.query.status;
+    }
+    
+    // Başarısız ödeme
+    if (!token || status === 'failure') {
+      res.writeHead(302, { Location: 'https://komisyonhesap.com/?odeme=hata' });
+      res.end();
+      return;
+    }
+    
     try {
-      const result = await iyzicoPost('/payment/iyzipos/checkoutform/auth/ecom/detail', { locale: 'tr', token });
+      const result = await iyzicoPost('/payment/iyzipos/checkoutform/auth/ecom/detail', { locale: 'tr', conversationId: '', token });
       if (result.status === 'success' && result.paymentStatus === 'SUCCESS') {
-        const user = await db.collection('users').findOne({ pendingConversationId: result.conversationId });
+        // conversationId ile kullanıcıyı bul, yoksa email ile ara
+        let user = await db.collection('users').findOne({ pendingConversationId: result.conversationId });
+        if (!user && result.buyer && result.buyer.email) {
+          user = await db.collection('users').findOne({ email: result.buyer.email });
+        }
         if (user) {
-          const uyelikBitis = new Date(); uyelikBitis.setFullYear(uyelikBitis.getFullYear() + 1);
-          await db.collection('users').updateOne({ _id: user._id }, { $set: { premium: true, odemeTarihi: new Date(), uyelikBitis, pendingConversationId: null } });
+          const uyelikBitis = new Date(); 
+          uyelikBitis.setFullYear(uyelikBitis.getFullYear() + 1);
+          await db.collection('users').updateOne(
+            { _id: user._id }, 
+            { $set: { premium: true, odemeTarihi: new Date(), uyelikBitis, pendingConversationId: null } }
+          );
         }
         res.writeHead(302, { Location: 'https://komisyonhesap.com/?odeme=basarili' });
       } else {
         res.writeHead(302, { Location: 'https://komisyonhesap.com/?odeme=hata' });
       }
     } catch(e) {
+      console.error('Callback hatası:', e.message);
       res.writeHead(302, { Location: 'https://komisyonhesap.com/?odeme=hata' });
     }
     res.end();
