@@ -29,6 +29,24 @@ function corsHeaders(res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 }
 
+async function iyzicoPost(endpoint, body) {
+  const crypto = require('crypto');
+  const randomStr = crypto.randomBytes(12).toString('hex');
+  const hashStr = IYZICO_API_KEY + randomStr + IYZICO_SECRET + JSON.stringify(body);
+  const hash = crypto.createHash('sha256').update(hashStr).digest('base64');
+  const r = await fetch(IYZICO_BASE + endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'IYZWS ' + IYZICO_API_KEY + ':' + hash,
+      'x-iyzi-rnd': randomStr,
+      'x-iyzi-client-version': 'iyzipay-node-2.0.48'
+    },
+    body: JSON.stringify(body)
+  });
+  return r.json();
+}
+
 function getBody(req) {
   return new Promise((resolve) => {
     let body = '';
