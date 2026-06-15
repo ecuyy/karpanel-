@@ -786,6 +786,31 @@ select.finput2{cursor:pointer;appearance:none;background-image:url("data:image/s
 
 /* FOOTER */
 footer{background:var(--dark);padding:3rem 2rem;text-align:center;margin-top:4rem}
+.footer-payment{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:1.5rem;flex-wrap:wrap}
+.footer-payment img{height:28px;opacity:.7;filter:brightness(0) invert(1)}
+.footer-payment .pay-badge{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;padding:6px 12px;
+}
+.footer-payment .pay-badge span{font-size:11px;color:rgba(255,255,255,.5);font-weight:600}
+.policy-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;
+  display:none;align-items:center;justify-content:center;padding:1rem;
+}
+.policy-overlay.open{display:flex}
+.policy-box{
+  background:#fff;border-radius:16px;max-width:700px;width:100%;
+  max-height:85vh;overflow-y:auto;padding:2.5rem;position:relative;
+}
+.policy-box h2{font-size:20px;font-weight:800;margin-bottom:1rem;color:#111}
+.policy-box h3{font-size:15px;font-weight:700;margin:1.5rem 0 .5rem;color:#222}
+.policy-box p,.policy-box li{font-size:14px;line-height:1.7;color:#444}
+.policy-box ul{padding-left:1.2rem;margin:.5rem 0}
+.policy-close{
+  position:absolute;top:1rem;right:1rem;
+  background:none;border:none;font-size:20px;cursor:pointer;color:#888;
+}
 .footer-logo-text{font-size:18px;font-weight:800;color:#fff;margin-bottom:.5rem}
 .footer-logo-text em{color:var(--or);font-style:normal}
 .footer-sub{font-size:13px;color:rgba(255,255,255,.3);line-height:1.6}
@@ -1253,15 +1278,49 @@ input[type=number]{-moz-appearance:textfield}
 <footer>
   <div class="footer-logo-text">Kar<em>Panel</em></div>
   <div class="footer-sub">Trendyol satıcıları için bağımsız kar analiz aracı.<br>Bu uygulama Trendyol ile resmi bir bağlantıya sahip değildir.</div>
+  
   <div style="margin-top:1.5rem;display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap">
     <a href="#nasil" style="font-size:12px;color:rgba(255,255,255,.3);text-decoration:none">Nasıl Çalışır?</a>
     <a href="#fiyat" style="font-size:12px;color:rgba(255,255,255,.3);text-decoration:none">Fiyatlandırma</a>
     <a href="#iletisim" style="font-size:12px;color:rgba(255,255,255,.3);text-decoration:none">İletişim</a>
-    <a href="#" style="font-size:12px;color:rgba(255,255,255,.3);text-decoration:none">Gizlilik Politikası</a>
-    <a href="#" style="font-size:12px;color:rgba(255,255,255,.3);text-decoration:none">Kullanım Şartları</a>
+    <a href="#" onclick="openPolicy('gizlilik');return false;" style="font-size:12px;color:rgba(255,255,255,.3);text-decoration:none">Gizlilik Politikası</a>
+    <a href="#" onclick="openPolicy('teslimat');return false;" style="font-size:12px;color:rgba(255,255,255,.3);text-decoration:none">Teslimat ve İade</a>
   </div>
+
+  <!-- Ödeme logoları -->
+  <div class="footer-payment">
+    <div class="pay-badge">
+      <svg width="60" height="20" viewBox="0 0 60 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="15" font-family="Arial" font-size="13" font-weight="900" fill="white" opacity="0.6">iyzico</text>
+      </svg>
+      <span>ile Öde</span>
+    </div>
+    <div class="pay-badge">
+      <svg width="38" height="24" viewBox="0 0 38 24" xmlns="http://www.w3.org/2000/svg">
+        <rect width="38" height="24" rx="4" fill="#1A1F71" opacity="0.8"/>
+        <text x="4" y="17" font-family="Arial" font-size="10" font-weight="900" fill="white">VISA</text>
+      </svg>
+    </div>
+    <div class="pay-badge">
+      <svg width="38" height="24" viewBox="0 0 38 24" xmlns="http://www.w3.org/2000/svg">
+        <rect width="38" height="24" rx="4" fill="#252525" opacity="0.8"/>
+        <circle cx="15" cy="12" r="7" fill="#EB001B" opacity="0.9"/>
+        <circle cx="23" cy="12" r="7" fill="#F79E1B" opacity="0.9"/>
+        <path d="M19 6.8a7 7 0 0 1 0 10.4A7 7 0 0 1 19 6.8z" fill="#FF5F00" opacity="0.9"/>
+      </svg>
+    </div>
+  </div>
+
   <div style="margin-top:1rem;font-size:11px;color:rgba(255,255,255,.2)">© 2026 KarPanel. Tüm hakları saklıdır.</div>
 </footer>
+
+<!-- GİZLİLİK POLİTİKASI & TESLİMAT MODAL -->
+<div class="policy-overlay" id="policy-overlay" onclick="closePolicy(event)">
+  <div class="policy-box" onclick="event.stopPropagation()">
+    <button class="policy-close" onclick="closePolicy()">✕</button>
+    <div id="policy-content"></div>
+  </div>
+</div>
 
 <!-- HESABIM MODAL -->
 <div class="overlay" id="hesabim-overlay" onclick="closeHesabim(event)" style="display:none">
@@ -2164,6 +2223,71 @@ function tumunuSil(){
   document.getElementById('urun-section').style.display='none';
   guncelleSilBar();
   toast('Tüm ürünler silindi','info','🗑');
+}
+
+// ── POLİTİKA MODALLARI ──
+const POLICY_CONTENT = {
+  gizlilik: `
+    <h2>🔒 Gizlilik Politikası</h2>
+    <p>Son güncelleme: Haziran 2026</p>
+    <h3>1. Toplanan Bilgiler</h3>
+    <p>KarPanel olarak yalnızca hizmetimizi sunmak için gerekli bilgileri topluyoruz:</p>
+    <ul>
+      <li>Ad, e-posta adresi ve şifre (kayıt sırasında)</li>
+      <li>Trendyol ürün verileri (Excel yükleme yoluyla, yalnızca sizin tarafınızdan)</li>
+      <li>Ödeme bilgileri (iyzico güvenli altyapısı üzerinden işlenir, biz saklamayız)</li>
+    </ul>
+    <h3>2. Bilgilerin Kullanımı</h3>
+    <p>Topladığımız bilgiler yalnızca şu amaçlarla kullanılır:</p>
+    <ul>
+      <li>Hesabınızı oluşturmak ve yönetmek</li>
+      <li>Ürün verilerinizi kaydetmek ve senkronize etmek</li>
+      <li>Premium üyelik hizmetini sunmak</li>
+      <li>Sizinle iletişim kurmak</li>
+    </ul>
+    <h3>3. Veri Güvenliği</h3>
+    <p>Verileriniz MongoDB Atlas güvenli altyapısında şifreli olarak saklanmaktadır. Ödeme işlemleri iyzico'nun PCI-DSS sertifikalı altyapısı üzerinden gerçekleştirilir.</p>
+    <h3>4. Üçüncü Taraflarla Paylaşım</h3>
+    <p>Verileriniz hiçbir koşulda üçüncü taraflarla satılmaz veya kiralanmaz. Yalnızca hizmet sunumu için zorunlu olan altyapı sağlayıcılarıyla (MongoDB, iyzico, Render) paylaşılır.</p>
+    <h3>5. Çerezler</h3>
+    <p>Oturum bilgilerinizi korumak için tarayıcı depolaması (localStorage/sessionStorage) kullanılmaktadır. Üçüncü taraf reklam çerezi kullanılmamaktadır.</p>
+    <h3>6. İletişim</h3>
+    <p>Gizlilik ile ilgili sorularınız için: <a href="mailto:info@komisyonhesap.com">info@komisyonhesap.com</a></p>
+  `,
+  teslimat: `
+    <h2>📦 Teslimat ve İade Politikası</h2>
+    <p>Son güncelleme: Haziran 2026</p>
+    <h3>Hizmet Türü</h3>
+    <p>KarPanel, dijital bir SaaS (Software as a Service) hizmetidir. Fiziksel ürün teslimatı yapılmamaktadır.</p>
+    <h3>Üyelik Aktivasyonu</h3>
+    <p>Ödemeniz onaylandıktan sonra premium üyeliğiniz <strong>anında aktif</strong> olur. Herhangi bir bekleme süresi yoktur.</p>
+    <h3>Üyelik Süresi</h3>
+    <ul>
+      <li>Premium üyelik <strong>1 yıl</strong> sürelidir (₺1.500/yıl)</li>
+      <li>Süre sonunda otomatik yenileme yapılmaz, manuel yenileme gerekir</li>
+      <li>Süre bitmeden 30 gün önce e-posta ile bildirim yapılır</li>
+    </ul>
+    <h3>İptal ve İade</h3>
+    <ul>
+      <li>Ödeme tarihinden itibaren <strong>14 gün içinde</strong> herhangi bir gerekçe göstermeksizin iade talep edebilirsiniz</li>
+      <li>14 günlük süre içindeki iade talepleri <strong>5 iş günü</strong> içinde işleme alınır</li>
+      <li>İade, ödeme yönteminize (kredi/banka kartı) iade edilir</li>
+      <li>14 günden sonra yapılan iade talepleri değerlendirmeye alınmaz</li>
+    </ul>
+    <h3>İade Talebi</h3>
+    <p>İade talebiniz için: <a href="mailto:info@komisyonhesap.com">info@komisyonhesap.com</a> adresine e-posta gönderin. Konu satırına "İade Talebi" yazmanız yeterlidir.</p>
+    <h3>İletişim</h3>
+    <p>Sorularınız için: <a href="mailto:info@komisyonhesap.com">info@komisyonhesap.com</a></p>
+  `
+};
+
+function openPolicy(tip){
+  document.getElementById('policy-content').innerHTML = POLICY_CONTENT[tip];
+  document.getElementById('policy-overlay').classList.add('open');
+}
+function closePolicy(e){
+  if(!e||e.target===document.getElementById('policy-overlay'))
+    document.getElementById('policy-overlay').classList.remove('open');
 }
 
 // ── TOAST ──
