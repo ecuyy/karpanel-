@@ -2282,6 +2282,26 @@ document.querySelector('.logo').addEventListener('click',e=>{e.preventDefault();
 populateKatDropdown();
 loadUser();
 
+// ── ÖDEME GERİ DÖNÜŞ KONTROLÜ ──
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  const odeme = params.get('odeme');
+  if(odeme === 'basarili'){
+    history.replaceState(null,'',window.location.pathname);
+    const stored = localStorage.getItem('kp_user') ? localStorage : sessionStorage;
+    const u = stored.getItem('kp_user');
+    if(u){ try{ const parsed=JSON.parse(u); parsed.premium=true; stored.setItem('kp_user',JSON.stringify(parsed)); }catch(e){} }
+    setTimeout(()=>toast('Ödeme başarılı! Premium üyeliğiniz aktif. 🎉','success','🎉'),800);
+    setTimeout(()=>location.reload(),1500);
+  } else if(odeme === 'basarisiz'){
+    history.replaceState(null,'',window.location.pathname);
+    setTimeout(()=>toast('Ödeme tamamlanamadı. Tekrar deneyebilirsiniz.','error','❌'),800);
+  } else if(odeme === 'hata'){
+    history.replaceState(null,'',window.location.pathname);
+    setTimeout(()=>toast('Ödeme işleminde bir hata oluştu.','error','❌'),800);
+  }
+})();
+
 async function iletisimGonder(){
   const ad=document.getElementById('con-ad').value.trim();
   const email=document.getElementById('con-email').value.trim();
