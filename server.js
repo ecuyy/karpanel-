@@ -401,96 +401,282 @@ const server = http.createServer(async (req, res) => {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>KarPanel Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',system-ui,sans-serif;background:#0F1A2E;color:#fff;min-height:100vh}
-.login{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem}
-.login-box{background:#1A2D4A;border-radius:16px;padding:2.5rem;width:100%;max-width:380px}
-.logo{font-size:22px;font-weight:900;color:#fff;text-align:center;margin-bottom:1.5rem}
-.logo em{color:#F27A1A;font-style:normal}
-input{width:100%;padding:11px 14px;border:1.5px solid rgba(255,255,255,.15);border-radius:8px;font-size:14px;background:rgba(255,255,255,.08);color:#fff;font-family:inherit;outline:none;margin-bottom:10px}
-input::placeholder{color:rgba(255,255,255,.35)}
-input:focus{border-color:#F27A1A}
-.btn{width:100%;padding:12px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
-.btn-primary{background:#F27A1A;color:#fff}
-.btn-danger{background:#DC2626;color:#fff;font-size:12px;padding:6px 12px;width:auto;border-radius:6px}
-.btn-success{background:#059669;color:#fff;font-size:12px;padding:6px 12px;width:auto;border-radius:6px}
-.btn-warning{background:#D97706;color:#fff;font-size:12px;padding:6px 12px;width:auto;border-radius:6px}
-.panel{display:none;padding:2rem;max-width:1200px;margin:0 auto}
-.panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem}
-.panel-title{font-size:24px;font-weight:900}
+:root{--bg:#0A0F1E;--sidebar:#0D1525;--card:#111827;--border:rgba(255,255,255,.07);--or:#F27A1A;--text:#F1F5F9;--muted:#64748B;--green:#10B981;--red:#EF4444;--blue:#3B82F6;--yellow:#F59E0B}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex}
+
+/* LOGIN */
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;width:100%;background:var(--bg)}
+.login-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2.5rem 2rem;width:100%;max-width:360px;box-shadow:0 25px 60px rgba(0,0,0,.5)}
+.login-logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:2rem}
+.login-logo .icon{width:42px;height:42px;background:var(--or);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.login-logo span{font-size:22px;font-weight:900}
+.login-logo em{color:var(--or);font-style:normal}
+.login-subtitle{text-align:center;color:var(--muted);font-size:13px;margin-bottom:1.5rem}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.field input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:rgba(255,255,255,.05);color:var(--text);font-family:inherit;outline:none;transition:.2s}
+.field input:focus{border-color:var(--or);background:rgba(242,122,26,.05)}
+.field input::placeholder{color:var(--muted)}
+.btn-login{width:100%;padding:13px;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;background:var(--or);color:#fff;transition:.2s;margin-top:4px}
+.btn-login:hover{background:#D96B10}
+.err{color:var(--red);font-size:13px;text-align:center;margin-top:10px;min-height:18px}
+
+/* LAYOUT */
+.app{display:none;width:100%;min-height:100vh}
+.sidebar{width:240px;min-height:100vh;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:10}
+.sidebar-logo{padding:1.5rem 1.25rem;border-bottom:1px solid var(--border)}
+.sidebar-logo .logo-row{display:flex;align-items:center;gap:10px}
+.sidebar-logo .icon{width:36px;height:36px;background:var(--or);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.sidebar-logo span{font-size:17px;font-weight:900}
+.sidebar-logo em{color:var(--or);font-style:normal}
+.sidebar-logo .sub{font-size:11px;color:var(--muted);margin-top:2px}
+.sidebar-nav{flex:1;padding:1rem 0.75rem;display:flex;flex-direction:column;gap:4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:500;color:var(--muted);transition:.15s;border:none;background:none;width:100%;text-align:left;font-family:inherit}
+.nav-item:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.nav-item.active{background:rgba(242,122,26,.12);color:var(--or)}
+.nav-item .icon{font-size:16px;width:20px;text-align:center}
+.sidebar-footer{padding:1rem 0.75rem;border-top:1px solid var(--border)}
+.btn-logout{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;color:var(--red);background:rgba(239,68,68,.08);border:none;width:100%;font-family:inherit;transition:.15s}
+.btn-logout:hover{background:rgba(239,68,68,.15)}
+
+/* MAIN */
+.main{margin-left:240px;padding:2rem;flex:1;min-height:100vh}
+.page-header{margin-bottom:2rem}
+.page-title{font-size:24px;font-weight:800}
+.page-sub{color:var(--muted);font-size:14px;margin-top:4px}
+
+/* STATS */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
-.stat{background:#1A2D4A;border-radius:12px;padding:1.25rem;text-align:center}
-.stat-val{font-size:32px;font-weight:900;color:#F27A1A}
-.stat-label{font-size:12px;color:rgba(255,255,255,.5);margin-top:4px}
-.stat:hover{border:1px solid var(--or);transform:translateY(-2px);transition:all .15s}
-.stat{transition:all .15s;border:1px solid transparent}
-table{width:100%;border-collapse:collapse;background:#1A2D4A;border-radius:12px;overflow:hidden}
-th{padding:12px 16px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;color:rgba(255,255,255,.4);border-bottom:1px solid rgba(255,255,255,.08)}
-td{padding:12px 16px;font-size:13px;border-bottom:1px solid rgba(255,255,255,.05)}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.25rem 1.5rem;cursor:pointer;transition:.2s;position:relative;overflow:hidden}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--or);opacity:0;transition:.2s}
+.stat:hover{border-color:rgba(242,122,26,.3);transform:translateY(-2px)}
+.stat:hover::before{opacity:1}
+.stat.active-filter{border-color:rgba(242,122,26,.4)}
+.stat.active-filter::before{opacity:1}
+.stat-icon{font-size:22px;margin-bottom:.75rem}
+.stat-val{font-size:32px;font-weight:900;line-height:1}
+.stat-label{font-size:12px;color:var(--muted);margin-top:6px;font-weight:500}
+
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem}
+.search-box{position:relative;flex:1}
+.search-box input{width:100%;padding:10px 14px 10px 38px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:var(--card);color:var(--text);font-family:inherit;outline:none;transition:.2s}
+.search-box input:focus{border-color:var(--or)}
+.search-box input::placeholder{color:var(--muted)}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px}
+.filter-btns{display:flex;gap:6px}
+.fbtn{padding:9px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s}
+.fbtn:hover,.fbtn.active{border-color:var(--or);color:var(--or);background:rgba(242,122,26,.08)}
+.btn-refresh{padding:9px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--card);color:var(--muted);font-size:13px;cursor:pointer;font-family:inherit;transition:.2s}
+.btn-refresh:hover{border-color:var(--or);color:var(--or)}
+
+/* TABLE */
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.table-info{padding:1rem 1.5rem;border-bottom:1px solid var(--border);font-size:13px;color:var(--muted);display:flex;align-items:center;justify-content:space-between}
+.table-info strong{color:var(--text)}
+table{width:100%;border-collapse:collapse}
+th{padding:11px 16px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:13px 16px;font-size:13px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
 tr:last-child td{border-bottom:none}
-tr:hover td{background:rgba(255,255,255,.03)}
-.badge{display:inline-flex;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
-.badge-green{background:rgba(5,150,105,.2);color:#34D399;border:1px solid rgba(5,150,105,.3)}
-.badge-gray{background:rgba(255,255,255,.08);color:rgba(255,255,255,.4)}
-.badge-red{background:rgba(220,38,38,.2);color:#F87171;border:1px solid rgba(220,38,38,.3)}
+tr:hover td{background:rgba(255,255,255,.02)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-green{background:rgba(16,185,129,.12);color:#34D399;border:1px solid rgba(16,185,129,.2)}
+.badge-gray{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--border)}
+.badge-red{background:rgba(239,68,68,.12);color:#F87171;border:1px solid rgba(239,68,68,.2)}
+.badge-yellow{background:rgba(245,158,11,.12);color:#FCD34D;border:1px solid rgba(245,158,11,.2)}
 .actions{display:flex;gap:6px;flex-wrap:wrap}
-.err{color:#F87171;font-size:13px;text-align:center;margin-top:8px}
+.action-btn{padding:5px 11px;border-radius:7px;border:none;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s;white-space:nowrap}
+.action-btn.green{background:rgba(16,185,129,.15);color:#34D399;border:1px solid rgba(16,185,129,.2)}
+.action-btn.green:hover{background:rgba(16,185,129,.25)}
+.action-btn.orange{background:rgba(245,158,11,.15);color:#FCD34D;border:1px solid rgba(245,158,11,.2)}
+.action-btn.orange:hover{background:rgba(245,158,11,.25)}
+.action-btn.blue{background:rgba(59,130,246,.15);color:#93C5FD;border:1px solid rgba(59,130,246,.2)}
+.action-btn.blue:hover{background:rgba(59,130,246,.25)}
+.action-btn.red{background:rgba(239,68,68,.12);color:#F87171;border:1px solid rgba(239,68,68,.2)}
+.action-btn.red:hover{background:rgba(239,68,68,.22)}
+.user-avatar{width:30px;height:30px;border-radius:50%;background:var(--or);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;margin-right:8px;flex-shrink:0}
+.user-cell{display:flex;align-items:center}
+.empty{padding:3rem;text-align:center;color:var(--muted);font-size:14px}
+.loading{padding:3rem;text-align:center;color:var(--muted);font-size:14px}
+
+/* TOAST */
+.toast-wrap{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.4);animation:slideIn .25s ease;display:flex;align-items:center;gap:8px}
+.toast.success{background:#059669}
+.toast.error{background:#DC2626}
+.toast.info{background:#2563EB}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 </style>
 </head>
 <body>
-<!-- Login -->
-<div class="login" id="login-section">
+
+<!-- LOGIN -->
+<div class="login-wrap" id="login-section">
   <div class="login-box">
-    <div class="logo">Kar<em>Panel</em> Admin</div>
-    <input type="password" id="admin-sifre" placeholder="Admin şifresi" onkeydown="if(event.key==='Enter')adminGiris()">
-    <button class="btn btn-primary" onclick="adminGiris()">Giriş Yap</button>
+    <div class="login-logo">
+      <div class="icon">💎</div>
+      <span>Kar<em>Panel</em></span>
+    </div>
+    <div class="login-subtitle">Admin paneline giriş yapın</div>
+    <div class="field">
+      <label>Admin Şifresi</label>
+      <input type="password" id="admin-sifre" placeholder="••••••••" onkeydown="if(event.key==='Enter')adminGiris()">
+    </div>
+    <button class="btn-login" onclick="adminGiris()">Giriş Yap</button>
     <div class="err" id="admin-err"></div>
   </div>
 </div>
 
-<!-- Panel -->
-<div class="panel" id="admin-panel">
-  <div class="panel-header">
-    <div class="panel-title">🛠️ KarPanel Admin</div>
-    <button class="btn btn-danger" onclick="adminCikis()">Çıkış</button>
+<!-- APP -->
+<div class="app" id="admin-panel">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-row">
+        <div class="icon">💎</div>
+        <div>
+          <div><span>Kar<em>Panel</em></span></div>
+          <div class="sub">Admin Paneli</div>
+        </div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" onclick="sayfaGoster('kullanicilar')">
+        <span class="icon">👥</span> Kullanıcılar
+      </button>
+      <button class="nav-item" onclick="sayfaGoster('istatistikler')">
+        <span class="icon">📊</span> İstatistikler
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="adminCikis()">🚪 Çıkış Yap</button>
+    </div>
   </div>
-  <div class="stats">
-    <div class="stat" onclick="filtrele('hepsi')" style="cursor:pointer" title="Tümünü göster"><div class="stat-val" id="stat-toplam">0</div><div class="stat-label">Toplam Üye</div></div>
-    <div class="stat" onclick="filtrele('premium')" style="cursor:pointer" title="Premium üyeleri göster"><div class="stat-val" id="stat-premium">0</div><div class="stat-label">Premium</div></div>
-    <div class="stat" onclick="filtrele('ucretsiz')" style="cursor:pointer" title="Ücretsiz üyeleri göster"><div class="stat-val" id="stat-ucretsiz">0</div><div class="stat-label">Ücretsiz</div></div>
-    <div class="stat" onclick="filtrele('bitiyor')" style="cursor:pointer" title="Bu ay bitenleri göster"><div class="stat-val" id="stat-bitis">0</div><div class="stat-label">Bu Ay Bitiyor</div></div>
+
+  <!-- Main -->
+  <div class="main">
+    <!-- Kullanıcılar Sayfası -->
+    <div id="page-kullanicilar">
+      <div class="page-header">
+        <div class="page-title">Kullanıcılar</div>
+        <div class="page-sub">Tüm kayıtlı üyeleri yönetin</div>
+      </div>
+      <div class="stats">
+        <div class="stat" onclick="filtrele('hepsi')" id="sf-hepsi">
+          <div class="stat-icon">👥</div>
+          <div class="stat-val" id="stat-toplam">0</div>
+          <div class="stat-label">Toplam Üye</div>
+        </div>
+        <div class="stat" onclick="filtrele('premium')" id="sf-premium">
+          <div class="stat-icon">💎</div>
+          <div class="stat-val" id="stat-premium">0</div>
+          <div class="stat-label">Premium</div>
+        </div>
+        <div class="stat" onclick="filtrele('ucretsiz')" id="sf-ucretsiz">
+          <div class="stat-icon">🆓</div>
+          <div class="stat-val" id="stat-ucretsiz">0</div>
+          <div class="stat-label">Ücretsiz</div>
+        </div>
+        <div class="stat" onclick="filtrele('bitiyor')" id="sf-bitiyor">
+          <div class="stat-icon">⚠️</div>
+          <div class="stat-val" id="stat-bitis">0</div>
+          <div class="stat-label">Bu Ay Bitiyor</div>
+        </div>
+      </div>
+      <div class="toolbar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Ad veya e-posta ile ara..." oninput="aramaYap()">
+        </div>
+        <button class="btn-refresh" onclick="yukleCullanicilari()" title="Yenile">🔄 Yenile</button>
+      </div>
+      <div class="table-wrap">
+        <div class="table-info">
+          <span>Gösterilen: <strong id="gosterilen-sayi">0</strong> kullanıcı</span>
+          <span id="aktif-filtre" style="color:var(--or);font-weight:600;font-size:12px"></span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Kullanıcı</th>
+              <th>E-posta</th>
+              <th>Kayıt</th>
+              <th>Durum</th>
+              <th>Üyelik Bitiş</th>
+              <th>İşlemler</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody"><tr><td colspan="6" class="loading">⏳ Yükleniyor...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- İstatistikler Sayfası -->
+    <div id="page-istatistikler" style="display:none">
+      <div class="page-header">
+        <div class="page-title">İstatistikler</div>
+        <div class="page-sub">Gelir ve büyüme verileri</div>
+      </div>
+      <div class="stats" style="grid-template-columns:repeat(3,1fr)">
+        <div class="stat">
+          <div class="stat-icon">💰</div>
+          <div class="stat-val" id="ist-gelir">₺0</div>
+          <div class="stat-label">Toplam Gelir (Tahmini)</div>
+        </div>
+        <div class="stat">
+          <div class="stat-icon">📅</div>
+          <div class="stat-val" id="ist-bu-ay">0</div>
+          <div class="stat-label">Bu Ay Yeni Premium</div>
+        </div>
+        <div class="stat">
+          <div class="stat-icon">📈</div>
+          <div class="stat-val" id="ist-oran">%0</div>
+          <div class="stat-label">Premium Dönüşüm Oranı</div>
+        </div>
+      </div>
+      <div class="table-wrap" style="padding:1.5rem">
+        <p style="color:var(--muted);font-size:14px;text-align:center;padding:2rem">Daha fazla analitik yakında eklenecek 🚀</p>
+      </div>
+    </div>
   </div>
-  <table id="users-table">
-    <thead>
-      <tr>
-        <th>Ad</th>
-        <th>E-posta</th>
-        <th>Kayıt Tarihi</th>
-        <th>Durum</th>
-        <th>Üyelik Bitiş</th>
-        <th>İşlem</th>
-      </tr>
-    </thead>
-    <tbody id="users-tbody"></tbody>
-  </table>
 </div>
 
+<div class="toast-wrap" id="toast-wrap"></div>
+
 <script>
-let adminToken = '';
+let adminToken='';
+let tumKullanicilar=[];
+let aktifFiltre='hepsi';
+
+function toast(msg,type='info'){
+  const wrap=document.getElementById('toast-wrap');
+  const t=document.createElement('div');
+  t.className='toast '+type;
+  t.textContent=msg;
+  wrap.appendChild(t);
+  setTimeout(()=>t.remove(),3000);
+}
 
 async function adminGiris(){
-  const sifre = document.getElementById('admin-sifre').value;
-  const r = await fetch('/api/admin/giris', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sifre})});
-  const d = await r.json();
-  if(d.ok){
-    adminToken = sifre;
-    document.getElementById('login-section').style.display='none';
-    document.getElementById('admin-panel').style.display='block';
-    yukleCullanicilari();
-  } else {
-    document.getElementById('admin-err').textContent = d.error || 'Hatalı şifre';
-  }
+  const sifre=document.getElementById('admin-sifre').value;
+  const btn=document.querySelector('.btn-login');
+  btn.disabled=true; btn.textContent='Giriş yapılıyor...';
+  try{
+    const r=await fetch('/api/admin/giris',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sifre})});
+    const d=await r.json();
+    if(d.ok){
+      adminToken=sifre;
+      document.getElementById('login-section').style.display='none';
+      document.getElementById('admin-panel').style.display='flex';
+      yukleCullanicilari();
+    } else {
+      document.getElementById('admin-err').textContent=d.error||'Hatalı şifre';
+    }
+  } catch(e){ document.getElementById('admin-err').textContent='Bağlantı hatası'; }
+  btn.disabled=false; btn.textContent='Giriş Yap';
 }
 
 function adminCikis(){
@@ -498,72 +684,126 @@ function adminCikis(){
   document.getElementById('login-section').style.display='flex';
   document.getElementById('admin-panel').style.display='none';
   document.getElementById('admin-sifre').value='';
+  document.getElementById('admin-err').textContent='';
+}
+
+function sayfaGoster(sayfa){
+  document.getElementById('page-kullanicilar').style.display=sayfa==='kullanicilar'?'block':'none';
+  document.getElementById('page-istatistikler').style.display=sayfa==='istatistikler'?'block':'none';
+  document.querySelectorAll('.nav-item').forEach((el,i)=>{
+    el.classList.toggle('active',(sayfa==='kullanicilar'&&i===0)||(sayfa==='istatistikler'&&i===1));
+  });
 }
 
 async function yukleCullanicilari(){
-  const r = await fetch('/api/admin/users?token='+adminToken);
-  const users = await r.json();
-  
-  const bugun = new Date();
-  const birAySonra = new Date(); birAySonra.setMonth(birAySonra.getMonth()+1);
-  
-  let premium=0, ucretsiz=0, bitiyorCount=0;
-  users.forEach(u => {
-    if(u.premium) premium++;
-    else ucretsiz++;
-    if(u.uyelikBitis){
-      const bitis = new Date(u.uyelikBitis);
-      if(bitis < birAySonra && bitis > bugun) bitiyorCount++;
-    }
+  document.getElementById('users-tbody').innerHTML='<tr><td colspan="6" class="loading">⏳ Yükleniyor...</td></tr>';
+  try{
+    const r=await fetch('/api/admin/users?token='+adminToken);
+    tumKullanicilar=await r.json();
+    hesaplaIstatistikler();
+    renderTablo();
+  } catch(e){ toast('Kullanıcılar yüklenemedi','error'); }
+}
+
+function hesaplaIstatistikler(){
+  const bugun=new Date();
+  const birAySonra=new Date(); birAySonra.setMonth(birAySonra.getMonth()+1);
+  const buAyBaslangic=new Date(bugun.getFullYear(),bugun.getMonth(),1);
+  let premium=0,ucretsiz=0,bitiyor=0,buAyPremium=0;
+  tumKullanicilar.forEach(u=>{
+    if(u.premium){ premium++;
+      if(u.odemeTarihi&&new Date(u.odemeTarihi)>=buAyBaslangic) buAyPremium++;
+      if(u.uyelikBitis){const b=new Date(u.uyelikBitis);if(b<birAySonra&&b>bugun)bitiyor++;}
+    } else ucretsiz++;
   });
-  
-  document.getElementById('stat-toplam').textContent = users.length;
-  document.getElementById('stat-premium').textContent = premium;
-  document.getElementById('stat-ucretsiz').textContent = ucretsiz;
-  document.getElementById('stat-bitis').textContent = bitiyorCount;
-  
-  const tbody = document.getElementById('users-tbody');
-  tbody.innerHTML = users.map(u => {
-    const kayit = u.kayitTarihi ? new Date(u.kayitTarihi).toLocaleDateString('tr-TR') : '—';
-    const bitis = u.uyelikBitis ? new Date(u.uyelikBitis).toLocaleDateString('tr-TR') : '—';
-    const bitisDate = u.uyelikBitis ? new Date(u.uyelikBitis) : null;
-    const bitis30 = bitisDate && bitisDate < birAySonra && bitisDate > bugun;
-    const badge = u.premium 
-      ? (bitis30 ? '<span class="badge badge-red">⚠️ Bitiyor</span>' : '<span class="badge badge-green">Premium ✓</span>')
-      : '<span class="badge badge-gray">Ücretsiz</span>';
+  document.getElementById('stat-toplam').textContent=tumKullanicilar.length;
+  document.getElementById('stat-premium').textContent=premium;
+  document.getElementById('stat-ucretsiz').textContent=ucretsiz;
+  document.getElementById('stat-bitis').textContent=bitiyor;
+  document.getElementById('ist-gelir').textContent='₺'+(premium*1500).toLocaleString('tr-TR');
+  document.getElementById('ist-bu-ay').textContent=buAyPremium;
+  const oran=tumKullanicilar.length>0?Math.round(premium/tumKullanicilar.length*100):0;
+  document.getElementById('ist-oran').textContent='%'+oran;
+}
+
+function renderTablo(){
+  const arama=document.getElementById('search-input').value.toLowerCase();
+  const bugun=new Date();
+  const birAySonra=new Date(); birAySonra.setMonth(birAySonra.getMonth()+1);
+  let liste=tumKullanicilar.filter(u=>{
+    if(arama&&!u.ad.toLowerCase().includes(arama)&&!u.email.toLowerCase().includes(arama)) return false;
+    if(aktifFiltre==='premium') return u.premium;
+    if(aktifFiltre==='ucretsiz') return !u.premium;
+    if(aktifFiltre==='bitiyor'){
+      if(!u.uyelikBitis) return false;
+      const b=new Date(u.uyelikBitis); return b<birAySonra&&b>bugun;
+    }
+    return true;
+  });
+  document.getElementById('gosterilen-sayi').textContent=liste.length;
+  const filtreLabelMap={'hepsi':'Tümü','premium':'Premium','ucretsiz':'Ücretsiz','bitiyor':'Bu Ay Bitiyor'};
+  document.getElementById('aktif-filtre').textContent=filtreLabelMap[aktifFiltre]||'';
+  if(!liste.length){
+    document.getElementById('users-tbody').innerHTML='<tr><td colspan="6" class="empty">🔍 Kullanıcı bulunamadı</td></tr>';
+    return;
+  }
+  const tbody=document.getElementById('users-tbody');
+  tbody.innerHTML=liste.map(u=>{
+    const kayit=u.kayitTarihi?new Date(u.kayitTarihi).toLocaleDateString('tr-TR'):'—';
+    const bitis=u.uyelikBitis?new Date(u.uyelikBitis).toLocaleDateString('tr-TR'):'—';
+    const bitisDate=u.uyelikBitis?new Date(u.uyelikBitis):null;
+    const bitis30=bitisDate&&bitisDate<birAySonra&&bitisDate>bugun;
+    const av=u.ad.charAt(0).toUpperCase();
+    let badge;
+    if(u.premium&&bitis30) badge='<span class="badge badge-yellow">⚠️ Bitiyor</span>';
+    else if(u.premium) badge='<span class="badge badge-green">💎 Premium</span>';
+    else badge='<span class="badge badge-gray">Ücretsiz</span>';
+    const bitisStyle=bitis30?'color:#F87171;font-weight:600':'';
     return \`<tr>
-      <td>\${u.ad}</td>
-      <td>\${u.email}</td>
-      <td>\${kayit}</td>
+      <td><div class="user-cell"><div class="user-avatar">\${av}</div><span style="font-weight:600">\${u.ad}</span></div></td>
+      <td style="color:var(--muted)">\${u.email}</td>
+      <td style="color:var(--muted)">\${kayit}</td>
       <td>\${badge}</td>
-      <td style="color:\${bitis30?'#F87171':'inherit'}">\${bitis}</td>
+      <td style="\${bitisStyle}">\${bitis}</td>
       <td><div class="actions">
-        \${u.premium 
-          ? \`<button class="btn btn-warning" onclick="premiumDegistir('\${u.email}',false)">Premium Al</button>\`
-          : \`<button class="btn btn-success" onclick="premiumDegistir('\${u.email}',true)">Premium Ver</button>\`}
-        <button class="btn btn-primary" style="background:#2563EB" onclick="sifreSifirla('\${u.email}')">Şifre</button>
-        <button class="btn btn-danger" onclick="kullaniciSil('\${u.email}','\${u.ad}')">Sil</button>
+        \${u.premium
+          ? \`<button class="action-btn orange" onclick="premiumDegistir('\${u.email}',false)">Premium Al</button>\`
+          : \`<button class="action-btn green" onclick="premiumDegistir('\${u.email}',true)">💎 Premium Ver</button>\`}
+        <button class="action-btn blue" onclick="sifreSifirla('\${u.email}')">🔑 Şifre</button>
+        <button class="action-btn red" onclick="kullaniciSil('\${u.email}','\${u.ad}')">🗑️ Sil</button>
       </div></td>
     </tr>\`;
   }).join('');
 }
 
-async function premiumDegistir(email, aktif){
-  if(!confirm(aktif ? email+' kullanıcısına premium ver?' : email+' kullanıcısının premiumunu al?')) return;
+function filtrele(tip){
+  aktifFiltre=tip;
+  document.querySelectorAll('.stat').forEach(el=>el.classList.remove('active-filter'));
+  const map={hepsi:'sf-hepsi',premium:'sf-premium',ucretsiz:'sf-ucretsiz',bitiyor:'sf-bitiyor'};
+  if(map[tip]) document.getElementById(map[tip]).classList.add('active-filter');
+  renderTablo();
+}
+
+function aramaYap(){ renderTablo(); }
+
+async function premiumDegistir(email,aktif){
+  if(!confirm(aktif?email+' kullanıcısına premium ver?':email+' kullanıcısının premiumunu al?')) return;
   await fetch('/api/admin/premium',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:adminToken,email,aktif})});
+  toast(aktif?'Premium verildi ✓':'Premium alındı','success');
   yukleCullanicilari();
 }
 
 async function sifreSifirla(email){
-  const yeni = prompt(email+' için yeni şifre girin:');
-  if(!yeni||yeni.length<6){alert('Şifre en az 6 karakter olmalı');return;}
+  const yeni=prompt(email+' için yeni şifre girin (min 6 karakter):');
+  if(!yeni||yeni.length<6){if(yeni!==null)alert('Şifre en az 6 karakter olmalı');return;}
   await fetch('/api/admin/sifre-sifirla',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:adminToken,email,yeniSifre:yeni})});
-  alert('Şifre güncellendi!');
+  toast('Şifre güncellendi ✓','success');
 }
 
-async function kullaniciSil(email, ad){
-  if(!confirm(ad+' ('+email+') kullanıcısını silmek istediğinden emin misin?')) return;
+async function kullaniciSil(email,ad){
+  if(!confirm(ad+' ('+email+') silinsin mi? Bu işlem geri alınamaz!')) return;
   await fetch('/api/admin/sil',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:adminToken,email})});
+  toast('Kullanıcı silindi','info');
   yukleCullanicilari();
 }
 </script>
