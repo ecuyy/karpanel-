@@ -1372,15 +1372,19 @@ input[type=number]{-moz-appearance:textfield}
         <div class="pay-feature"><div class="pf-icon2">✓</div>CSV export ve raporlar</div>
       </div>
       <div class="pay-form">
-        <div class="pay-field"><div class="pay-label">Kart Üzerindeki İsim</div><input class="pay-input" type="text" id="pay-isim" placeholder="Ad Soyad"></div>
-        <div class="pay-field"><div class="pay-label">Kart Numarası</div><input class="pay-input" type="text" id="pay-kart" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatKart(this)"></div>
-        <div class="pay-row">
-          <div class="pay-field"><div class="pay-label">Son Kullanma</div><input class="pay-input" type="text" id="pay-tarih" placeholder="AA/YY" maxlength="5" oninput="formatTarih(this)"></div>
-          <div class="pay-field"><div class="pay-label">CVV</div><input class="pay-input" type="text" id="pay-cvv" placeholder="000" maxlength="3"></div>
-        </div>
-        <button class="btn-pay" onclick="odemeYap()">🔒 ₺1.500 Öde ve Başla</button>
-        <div class="pay-security">🔒 Güvenli ödeme</div>
+        <button class="btn-pay" id="btn-odeme" onclick="odemeYap()">🔒 ₺1.500 Öde ve Başla</button>
+        <div class="pay-security">🔒 iyzico güvencesiyle güvenli ödeme</div>
       </div>
+
+
+
+
+
+
+
+
+
+
       <div class="pay-skip"><a onclick="demoyaDevam()">Şimdilik demo ile devam et →</a></div>
     </div>
   </div>
@@ -1734,28 +1738,20 @@ async function kayitOl(){
 }
 
 // ── ÖDEME ──
-function formatKart(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.replace(/(\d{4})/g,'$1 ').trim();}
-function formatTarih(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2,4);el.value=v;}
 async function odemeYap(){
-  const isim=document.getElementById('pay-isim').value.trim();
-  const kart=document.getElementById('pay-kart').value.replace(/\s/g,'');
-  const tarih=document.getElementById('pay-tarih').value;
-  const cvv=document.getElementById('pay-cvv').value;
-  if(!isim||kart.length<16||tarih.length<5||cvv.length<3){toast('Lütfen tüm kart bilgilerini doldurun','error','❌');return;}
+  if(!currentUser||!currentUser.email){toast('Lütfen önce giriş yapın','error','❌');return;}
+  const btn=document.getElementById('btn-odeme');
+  if(btn){btn.disabled=true;btn.textContent='Yönlendiriliyor...';}
   try{
-    const r=await fetch(PROXY+'/api/odeme',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:currentUser.email})});
+    const r=await fetch(PROXY+'/api/odeme-baslat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:currentUser.email,ad:currentUser.ad})});
     const d=await r.json();
-    if(!r.ok) throw new Error(d.error||'Ödeme hatası');
-    currentUser.premium=true;
-    currentUser.uyelikBitis=d.uyelikBitis;
-    const stored=localStorage.getItem('kp_user')?localStorage:sessionStorage;
-    stored.setItem('kp_user',JSON.stringify(currentUser));
+    if(!r.ok||!d.checkoutFormContent) throw new Error(d.error||'Ödeme başlatılamadı');
+    // iyzico sayfasına yönlendir
+    window.location.href=d.paymentPageUrl;
   }catch(e){
-    toast('Ödeme hatası: '+e.message,'error','❌');return;
+    toast('Ödeme başlatılamadı: '+e.message,'error','❌');
+    if(btn){btn.disabled=false;btn.textContent='🔒 ₺1.500 Öde ve Başla';}
   }
-  document.getElementById('pay-overlay').classList.remove('open');
-  applyUser(); goApp();
-  toast('Ödeme başarılı! Premium üyeliğiniz aktif. 🎉','success','🎉');
 }
 function demoyaDevam(){document.getElementById('pay-overlay').classList.remove('open');goApp();}
 
