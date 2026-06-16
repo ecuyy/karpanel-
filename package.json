@@ -1,6 +1,16 @@
 {
+  "name": "karpanel",
+  "version": "1.0.0",
+  "description": "KarPanel - Trendyol Kar Hesaplama",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
-    "mongodb": "^7.3.0",
+    "mongodb": "^6.3.0",
     "iyzipay": "^2.0.48"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
