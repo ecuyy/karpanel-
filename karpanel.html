@@ -1735,8 +1735,19 @@ async function odemeYap(){
   const tarih=document.getElementById('pay-tarih').value;
   const cvv=document.getElementById('pay-cvv').value;
   if(!isim||kart.length<16||tarih.length<5||cvv.length<3){toast('Lütfen tüm kart bilgilerini doldurun','error','❌');return;}
+  const [ay,yil]=tarih.split('/');
+  const fullYil=yil?('20'+yil.trim()):'';
+  const btn=document.querySelector('.btn-pay');
+  if(btn){btn.disabled=true;btn.textContent='İşlem yapılıyor...';}
   try{
-    const r=await fetch(PROXY+'/api/odeme',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:currentUser.email})});
+    const r=await fetch(PROXY+'/api/odeme',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      email:currentUser.email,
+      kartIsim:isim,
+      kartNo:kart,
+      kartAy:ay?ay.trim():'',
+      kartYil:fullYil,
+      kartCvv:cvv
+    })});
     const d=await r.json();
     if(!r.ok) throw new Error(d.error||'Ödeme hatası');
     currentUser.premium=true;
@@ -1744,8 +1755,11 @@ async function odemeYap(){
     const stored=localStorage.getItem('kp_user')?localStorage:sessionStorage;
     stored.setItem('kp_user',JSON.stringify(currentUser));
   }catch(e){
-    toast('Ödeme hatası: '+e.message,'error','❌');return;
+    toast('Ödeme hatası: '+e.message,'error','❌');
+    if(btn){btn.disabled=false;btn.innerHTML='🔒 ₺1.500 Öde ve Başla';}
+    return;
   }
+  if(btn){btn.disabled=false;btn.innerHTML='🔒 ₺1.500 Öde ve Başla';}
   document.getElementById('pay-overlay').classList.remove('open');
   applyUser(); goApp();
   toast('Ödeme başarılı! Premium üyeliğiniz aktif. 🎉','success','🎉');
