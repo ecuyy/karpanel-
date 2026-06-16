@@ -5,54 +5,21 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { MongoClient } = require('mongodb');
+const Iyzipay = require('iyzipay');
 
 const PORT = process.env.PORT || 3001;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://info_db_user:rWUh1N0WLUblIVTa@karpanel.g062rms.mongodb.net/?appName=karpanel';
 const ADMIN_SIFRE = process.env.ADMIN_SIFRE || 'karpanel2026admin';
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
 
-// iyzico Ayarları
-const IYZICO_API_KEY = process.env.IYZICO_API_KEY || 'OHsPgULIkX0P2lBo6XXUKrNZvE6PNBYf';
-const IYZICO_SECRET = process.env.IYZICO_SECRET || 'XnjSF1WSqXarHDxIPx9RACTZ1cuytzEU';
-const IYZICO_BASE_URL = 'https://api.iyzipay.com';
+// iyzico yapılandırması (resmi npm paketi)
+const iyzipay = new Iyzipay({
+  apiKey: process.env.IYZICO_API_KEY || 'OHsPgULIkX0P2lBo6XXUKrNZvE6PNBYf',
+  secretKey: process.env.IYZICO_SECRET || 'XnjSF1WSqXarHDxIPx9RACTZ1cuytzEU',
+  uri: 'https://api.iyzipay.com'
+});
 
-function iyzicoRequest(method, uri, body) {
-  return new Promise((resolve, reject) => {
-    const randomStr = crypto.randomBytes(12).toString('hex');
-    const bodyStr = body ? JSON.stringify(body) : '';
 
-    // iyzico PKI v2 imzasi
-    const hashStr = IYZICO_API_KEY + randomStr + IYZICO_SECRET + bodyStr;
-    const signature = crypto.createHmac('sha256', IYZICO_SECRET).update(hashStr).digest('hex');
-    const pkiStr = 'apiKey:' + IYZICO_API_KEY + '&randomKey:' + randomStr + '&signature:' + signature;
-    const authorization = 'IYZWSv2 ' + Buffer.from(pkiStr).toString('base64');
-
-    const options = {
-      hostname: 'api.iyzipay.com',
-      path: uri,
-      method: method,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-        'x-iyzi-rnd': randomStr,
-        'x-iyzi-client-version': 'iyzipay-node-2.0.48',
-        'Content-Length': Buffer.byteLength(bodyStr, 'utf8')
-      }
-    };
-
-    const req = https.request(options, (res) => {
-      let data = '';
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => {
-        try { resolve(JSON.parse(data)); }
-        catch { reject(new Error('iyzico yaniti parse edilemedi: ' + data.substring(0,200))); }
-      });
-    });
-    req.on('error', reject);
-    if (bodyStr) req.write(bodyStr, 'utf8');
-    req.end();
-  });
-}
 
 let db;
 
@@ -184,46 +151,40 @@ const server = http.createServer(async (req, res) => {
     const user = await db.collection('users').findOne({ email });
     if (!user) { res.writeHead(404); res.end(JSON.stringify({ error: 'Kullanıcı bulunamadı' })); return; }
 
-    const conversationId = 'kp_' + Date.now();
     const callbackUrl = (process.env.RENDER_EXTERNAL_URL || 'http://localhost:' + PORT) + '/api/odeme-callback?email=' + encodeURIComponent(email);
-
-    const adParts = (ad || email).split(' ');
+    const adParts = (ad || user.ad || 'Kullanici Kullanici').split(' ');
     const firstName = adParts[0] || 'Kullanici';
     const lastName = adParts.slice(1).join(' ') || 'Kullanici';
 
-    const payload = {
+    const request = {
       locale: 'tr',
-      conversationId,
+      conversationId: 'kp_' + Date.now(),
       price: '1500',
       paidPrice: '1500',
       currency: 'TRY',
-      basketId: 'kp_' + Date.now(),
+      basketId: 'kp_basket_' + Date.now(),
       paymentGroup: 'PRODUCT',
-      callbackUrl,
+      callbackUrl: callbackUrl,
       enabledInstallments: [1, 2, 3, 6, 9],
       buyer: {
         id: user._id ? user._id.toString() : email,
         name: firstName,
         surname: lastName,
         gsmNumber: '+905000000000',
-        email,
+        email: email,
         identityNumber: '11111111110',
         registrationAddress: 'Turkiye',
-        ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1',
-        city: 'Istanbul',
-        country: 'Turkey'
-      },
-      shippingAddress: {
-        contactName: ad || email,
+        ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || '85.34.78.112',
         city: 'Istanbul',
         country: 'Turkey',
-        address: 'Turkiye'
+        zipCode: '34000'
       },
       billingAddress: {
-        contactName: ad || email,
+        contactName: (ad || user.ad || 'Kullanici'),
         city: 'Istanbul',
         country: 'Turkey',
-        address: 'Turkiye'
+        address: 'Turkiye',
+        zipCode: '34000'
       },
       basketItems: [
         {
@@ -236,55 +197,51 @@ const server = http.createServer(async (req, res) => {
       ]
     };
 
-    try {
-      const iyzicoRes = await iyzicoRequest('POST', '/payment/checkoutform/initialize', payload);
+    iyzipay.checkoutFormInitialize.create(request, function(err, result) {
+      if (err) {
+        console.error('iyzico hata:', err);
+        res.writeHead(500); res.end(JSON.stringify({ error: 'iyzico bağlantı hatası: ' + err.message }));
+        return;
+      }
+      console.log('iyzico token yanıtı:', JSON.stringify(result).substring(0, 300));
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify(iyzicoRes));
-    } catch (e) {
-      console.error('iyzico token hatası:', e.message);
-      res.writeHead(500); res.end(JSON.stringify({ error: 'iyzico bağlantı hatası' }));
-    }
+      res.end(JSON.stringify(result));
+    });
     return;
   }
 
   // ── iyzico Callback (ödeme sonucu) ──
   if (parsed.pathname === '/api/odeme-callback') {
     const email = parsed.query.email;
-    const body = await getBody(req);
-    // POST body'den token al
-    let token = body.token || parsed.query.token || '';
-    if (!token && req.method === 'POST') {
-      // form-urlencoded olabilir
-      const rawBody = await new Promise(r => { let b=''; req.on('data',c=>b+=c); req.on('end',()=>r(b)); });
-      const params = new URLSearchParams(rawBody);
-      token = params.get('token') || '';
+
+    // iyzico POST ile form-urlencoded token gönderir
+    let rawBody = '';
+    await new Promise(r => { req.on('data', c => rawBody += c); req.on('end', r); });
+    const params = new URLSearchParams(rawBody);
+    const token = params.get('token') || parsed.query.token || '';
+
+    if (!token) {
+      res.writeHead(400); res.end(JSON.stringify({ error: 'Token yok' })); return;
     }
 
-    try {
-      const checkPayload = { locale: 'tr', conversationId: 'kp_cb_' + Date.now(), token };
-      const iyzicoRes = await iyzicoRequest('POST', '/payment/checkoutform/auth/detail', checkPayload);
-
-      if (iyzicoRes.status === 'success' && email && db) {
+    iyzipay.checkoutForm.retrieve({ locale: 'tr', conversationId: 'kp_cb_' + Date.now(), token }, async function(err, result) {
+      if (err) {
+        console.error('iyzico callback hata:', err);
+        res.writeHead(500); res.end(JSON.stringify({ error: 'Callback hatası' })); return;
+      }
+      console.log('iyzico callback yanıtı:', JSON.stringify(result).substring(0, 300));
+      if (result.status === 'success' && result.paymentStatus === 'SUCCESS' && email && db) {
         const odemeTarihi = new Date();
         const uyelikBitis = new Date();
         uyelikBitis.setFullYear(uyelikBitis.getFullYear() + 1);
         await db.collection('users').updateOne(
           { email },
-          { $set: { premium: true, odemeTarihi, uyelikBitis, iyzicoPaymentId: iyzicoRes.paymentId } }
+          { $set: { premium: true, odemeTarihi, uyelikBitis, iyzicoPaymentId: result.paymentId } }
         );
       }
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ status: iyzicoRes.status, paymentId: iyzicoRes.paymentId }));
-    } catch (e) {
-      console.error('iyzico callback hatası:', e.message);
-      res.writeHead(500); res.end(JSON.stringify({ error: 'Callback işleme hatası' }));
-    }
-    return;
-  }
-
-  // ── Eski /api/odeme (artık kullanılmıyor ama geriye dönük uyumluluk) ──
-  if (parsed.pathname === '/api/odeme' && req.method === 'POST') {
-    res.writeHead(400); res.end(JSON.stringify({ error: 'Bu endpoint artık kullanılmıyor. /api/odeme-token kullanın.' }));
+      res.end(JSON.stringify({ status: result.status, paymentStatus: result.paymentStatus, paymentId: result.paymentId }));
+    });
     return;
   }
 
