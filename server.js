@@ -131,6 +131,101 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // iyzico Checkout Form Başlat
+  if (parsed.pathname === '/api/odeme-baslat' && req.method === 'POST') {
+    const body = await getBody(req);
+    const { email, ad } = body;
+    if (!email || !db) { res.writeHead(400); res.end(JSON.stringify({ error: 'Email gerekli' })); return; }
+
+    const crypto = require('crypto');
+    const IYZICO_API_KEY = 'OHsPgULIkX0P2lBo6XXUKrNZvE6PNBYf';
+    const IYZICO_SECRET = 'XnjSF1WSqXarHDxIPx9RACTZ1cuytzEU';
+    const IYZICO_BASE_URL = 'https://api.iyzipay.com';
+    const CALLBACK_URL = 'https://karpanel.onrender.com/api/odeme-callback';
+
+    const randomStr = Date.now().toString();
+    const conversationId = 'kp_' + Date.now();
+
+    const requestBody = {
+      locale: 'tr',
+      conversationId,
+      price: '1500',
+      paidPrice: '1500',
+      currency: 'TRY',
+      basketId: 'karpanel_premium',
+      paymentGroup: 'PRODUCT',
+      callbackUrl: CALLBACK_URL,
+      enabledInstallments: [1, 2, 3, 6, 9, 12],
+      buyer: {
+        id: email,
+        name: (ad || 'Kullanici').split(' ')[0] || 'Ad',
+        surname: (ad || 'Kullanici Soyad').split(' ').slice(1).join(' ') || 'Soyad',
+        gsmNumber: '+905000000000',
+        email: email,
+        identityNumber: '74300864791',
+        registrationAddress: 'Türkiye',
+        ip: '85.34.78.112',
+        city: 'Istanbul',
+        country: 'Turkey'
+      },
+      shippingAddress: { contactName: ad || 'Kullanici', city: 'Istanbul', country: 'Turkey', address: 'Türkiye' },
+      billingAddress: { contactName: ad || 'Kullanici', city: 'Istanbul', country: 'Turkey', address: 'Türkiye' },
+      basketItems: [{
+        id: 'karpanel_premium_1yil',
+        name: 'KarPanel Premium 1 Yıllık Üyelik',
+        category1: 'Yazılım',
+        itemType: 'VIRTUAL',
+        price: '1500'
+      }]
+    };
+
+    const bodyStr = JSON.stringify(requestBody);
+    const hashStr = IYZICO_API_KEY + IYZICO_SECRET + randomStr + bodyStr;
+    const signature = crypto.createHmac('sha256', IYZICO_SECRET).update(IYZICO_API_KEY + randomStr + bodyStr).digest('base64');
+    // iyzico PKI string oluştur
+    const pkiStr = Object.entries(requestBody).map(([k,v]) => {
+      if(typeof v === 'object' && !Array.isArray(v)) return k+'=['+Object.entries(v).map(([k2,v2])=>k2+'='+v2).join(', ')+']';
+      if(Array.isArray(v)) return k+'=['+v.map(item => typeof item==='object'?'['+Object.entries(item).map(([k2,v2])=>k2+'='+v2).join(', ')+']':item).join(', ')+']';
+      return k+'='+v;
+    }).join('&');
+    const authStr = 'IYZWS ' + IYZICO_API_KEY + ':' + crypto.createHmac('sha256', IYZICO_SECRET).update(IYZICO_API_KEY + randomStr + pkiStr).digest('base64');
+
+    try {
+      const iyziRes = await fetch(`${IYZICO_BASE_URL}/payment/iyzipos/checkoutform/initialize/auth/ecom`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': authStr,
+          'x-iyzi-rnd': randomStr,
+          'Accept': 'application/json'
+        },
+        body: bodyStr
+      });
+
+      const iyziData = await iyziRes.json();
+      console.log('iyzico baslat:', iyziData.status, iyziData.errorMessage || '');
+
+      if (iyziData.status === 'success' && iyziData.paymentPageUrl) {
+        // conversationId → email eşleştirmesini kaydet
+        await db.collection('odeme_sessions').updateOne(
+          { conversationId },
+          { $set: { conversationId, email, olusturma: new Date() } },
+          { upsert: true }
+        );
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: true, paymentPageUrl: iyziData.paymentPageUrl, checkoutFormContent: iyziData.checkoutFormContent }));
+      } else {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: iyziData.errorMessage || 'iyzico bağlantı hatası' }));
+      }
+    } catch(e) {
+      console.error('iyzico baslat hata:', e.message);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'iyzico bağlantı hatası' }));
+    }
+    return;
+  }
+
   // iyzico Callback - ödeme sonucu
   if (parsed.pathname === '/api/odeme-callback' && req.method === 'POST') {
     let rawBody = '';
@@ -155,23 +250,23 @@ const server = http.createServer(async (req, res) => {
     console.log('📩 iyzico Callback:', { paymentStatus, conversationId, token });
 
     // Ödeme başarılıysa kullanıcıyı premium yap
-    if (paymentStatus === 'success' && conversationId && db) {
+    if (paymentStatus === 'success' && token && db) {
       try {
-        // iyzico'ya token ile doğrulama isteği at
         const crypto = require('crypto');
         const IYZICO_API_KEY = 'OHsPgULIkX0P2lBo6XXUKrNZvE6PNBYf';
         const IYZICO_SECRET = 'XnjSF1WSqXarHDxIPx9RACTZ1cuytzEU';
         const IYZICO_BASE_URL = 'https://api.iyzipay.com';
 
+        // iyzico'ya token ile doğrulama yap
         const randomStr = Date.now().toString();
-        const hashStr = IYZICO_API_KEY + IYZICO_SECRET + randomStr + token;
-        const signature = crypto.createHash('sha1').update(hashStr).digest('base64');
+        const pkiStr = `locale=tr&token=${token}`;
+        const authStr = 'IYZWS ' + IYZICO_API_KEY + ':' + crypto.createHmac('sha256', IYZICO_SECRET).update(IYZICO_API_KEY + randomStr + pkiStr).digest('base64');
 
         const verifyRes = await fetch(`${IYZICO_BASE_URL}/payment/iyzipos/checkoutform/auth/ecom/detail`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `IYZWS ${IYZICO_API_KEY}:${signature}`,
+            'Authorization': authStr,
             'x-iyzi-rnd': randomStr,
             'Accept': 'application/json'
           },
@@ -182,17 +277,21 @@ const server = http.createServer(async (req, res) => {
         console.log('✅ iyzico Doğrulama:', verifyData.status, verifyData.paymentStatus);
 
         if (verifyData.status === 'success' && verifyData.paymentStatus === 'SUCCESS') {
-          const odemeTarihi = new Date();
-          const uyelikBitis = new Date();
-          uyelikBitis.setFullYear(uyelikBitis.getFullYear() + 1);
+          // conversationId'den email bul
+          const session = await db.collection('odeme_sessions').findOne({ conversationId });
+          const email = session ? session.email : null;
 
-          await db.collection('users').updateOne(
-            { email: conversationId },
-            { $set: { premium: true, odemeTarihi, uyelikBitis } }
-          );
-          console.log('🎉 Kullanıcı premium yapıldı:', conversationId);
+          if (email) {
+            const odemeTarihi = new Date();
+            const uyelikBitis = new Date();
+            uyelikBitis.setFullYear(uyelikBitis.getFullYear() + 1);
+            await db.collection('users').updateOne(
+              { email },
+              { $set: { premium: true, odemeTarihi, uyelikBitis } }
+            );
+            console.log('🎉 Premium yapıldı:', email);
+          }
 
-          // Başarı sayfasına yönlendir
           res.writeHead(302, { 'Location': '/?odeme=basarili' });
           res.end();
           return;
