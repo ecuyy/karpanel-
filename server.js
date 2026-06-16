@@ -160,8 +160,8 @@ const server = http.createServer(async (req, res) => {
     const request = {
       locale: 'tr',
       conversationId: 'kp_' + Date.now(),
-      price: '1500',
-      paidPrice: '1500',
+      price: '1500.00',
+      paidPrice: '1500.00',
       currency: 'TRY',
       basketId: 'kp_basket_' + Date.now(),
       paymentGroup: 'PRODUCT',
@@ -193,7 +193,7 @@ const server = http.createServer(async (req, res) => {
           name: 'KarPanel Premium Yillik Uyelik',
           category1: 'Yazilim',
           itemType: 'VIRTUAL',
-          price: '1500'
+          price: '1500.00'
         }
       ]
     };
