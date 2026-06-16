@@ -131,53 +131,6 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // iyzico ödeme callback - ödeme sonrası otomatik premium yap
-  if (parsed.pathname === '/api/odeme-callback' && req.method === 'POST') {
-    let rawBody = '';
-    await new Promise(resolve => { req.on('data', c => rawBody += c); req.on('end', resolve); });
-    const params = {};
-    rawBody.split('&').forEach(pair => {
-      const [k, v] = pair.split('=');
-      if (k) params[decodeURIComponent(k)] = decodeURIComponent((v||'').replace(/\+/g,' '));
-    });
-    const token = params.token;
-    const status = params.status;
-    console.log('iyzico callback:', status, token);
-    if (status === 'success' && token && db) {
-      try {
-        const crypto = require('crypto');
-        const API_KEY = 'OHsPgULIkX0P2lBo6XXUKrNZvE6PNBYf';
-        const SECRET = 'XnjSF1WSqXarHDxIPx9RACTZ1cuytzEU';
-        const rnd = Date.now().toString();
-        const body = JSON.stringify({ locale: 'tr', token });
-        const uri = '/payment/iyzipos/checkoutform/auth/ecom/detail';
-        const encrypted = crypto.createHmac('sha256', SECRET).update(rnd + uri + body).digest('hex');
-        const auth = 'IYZWSv2 ' + Buffer.from('apiKey:' + API_KEY + '&randomKey:' + rnd + '&signature:' + encrypted).toString('base64');
-        const verify = await fetch('https://api.iyzipay.com' + uri, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': auth, 'x-iyzi-rnd': rnd }
-          , body
-        });
-        const vd = await verify.json();
-        console.log('iyzico dogrulama:', vd.status, vd.paymentStatus, vd.paymentConversationId);
-        if (vd.status === 'success' && vd.paymentStatus === 'SUCCESS') {
-          const email = vd.buyerEmail || (vd.buyer && vd.buyer.email);
-          const convId = vd.paymentConversationId;
-          // session tablosundan email bul
-          const session = convId ? await db.collection('odeme_sessions').findOne({ conversationId: convId }) : null;
-          const hedefEmail = (session && session.email) || email;
-          if (hedefEmail) {
-            const bitis = new Date(); bitis.setFullYear(bitis.getFullYear() + 1);
-            await db.collection('users').updateOne({ email: hedefEmail }, { $set: { premium: true, odemeTarihi: new Date(), uyelikBitis: bitis } });
-            console.log('Premium yapildi:', hedefEmail);
-          }
-          res.writeHead(302, { 'Location': '/?odeme=basarili' }); res.end(); return;
-        }
-      } catch(e) { console.error('callback hata:', e.message); }
-    }
-    res.writeHead(302, { 'Location': '/?odeme=basarisiz' }); res.end(); return;
-  }
-
   // Ödeme yap
   if (parsed.pathname === '/api/odeme' && req.method === 'POST') {
     const body = await getBody(req);
