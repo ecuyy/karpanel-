@@ -177,44 +177,37 @@ const server = http.createServer(async (req, res) => {
   }
 
   // Ödeme yap
-  if (parsed.pathname === '/api/odeme' && req.method === 'POST') {
+  // ── iyzico Checkout Form Token Al ──
+  if (parsed.pathname === '/api/odeme-token' && req.method === 'POST') {
     const body = await getBody(req);
-    const { email, kartIsim, kartNo, kartAy, kartYil, kartCvv } = body;
+    const { email, ad } = body;
     if (!db) { res.writeHead(500); res.end(JSON.stringify({ error: 'DB bağlantısı yok' })); return; }
-    if (!kartIsim || !kartNo || !kartAy || !kartYil || !kartCvv) {
-      res.writeHead(400); res.end(JSON.stringify({ error: 'Kart bilgileri eksik' })); return;
-    }
-
-    // Kullanıcı bilgilerini DB'den al
     const user = await db.collection('users').findOne({ email });
     if (!user) { res.writeHead(404); res.end(JSON.stringify({ error: 'Kullanıcı bulunamadı' })); return; }
 
-    const conversationId = 'kp_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+    const conversationId = 'kp_' + Date.now();
+    const callbackUrl = (process.env.RENDER_EXTERNAL_URL || 'http://localhost:' + PORT) + '/api/odeme-callback?email=' + encodeURIComponent(email);
 
-    const iyzicoPayload = {
+    const adParts = (ad || email).split(' ');
+    const firstName = adParts[0] || 'Kullanici';
+    const lastName = adParts.slice(1).join(' ') || 'Kullanici';
+
+    const payload = {
       locale: 'tr',
-      conversationId: conversationId,
+      conversationId,
       price: '1500',
       paidPrice: '1500',
       currency: 'TRY',
-      installment: '1',
-      basketId: 'kp_premium_' + Date.now(),
-      paymentChannel: 'WEB',
+      basketId: 'kp_' + Date.now(),
       paymentGroup: 'PRODUCT',
-      paymentCard: {
-        cardHolderName: kartIsim,
-        cardNumber: kartNo.replace(/\s/g, ''),
-        expireMonth: kartAy,
-        expireYear: kartYil,
-        cvc: kartCvv,
-        registerCard: '0'
-      },
+      callbackUrl,
+      enabledInstallments: [1, 2, 3, 6, 9],
       buyer: {
         id: user._id ? user._id.toString() : email,
-        name: (user.ad || email).split(' ')[0] || 'Kullanici',
-        surname: (user.ad || email).split(' ').slice(1).join(' ') || 'Kullanici',
+        name: firstName,
+        surname: lastName,
         gsmNumber: '+905000000000',
-        email: email,
+        email,
         identityNumber: '11111111110',
         registrationAddress: 'Turkiye',
         ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1',
@@ -222,13 +215,13 @@ const server = http.createServer(async (req, res) => {
         country: 'Turkey'
       },
       shippingAddress: {
-        contactName: user.ad || email,
+        contactName: ad || email,
         city: 'Istanbul',
         country: 'Turkey',
         address: 'Turkiye'
       },
       billingAddress: {
-        contactName: user.ad || email,
+        contactName: ad || email,
         city: 'Istanbul',
         country: 'Turkey',
         address: 'Turkiye'
@@ -245,22 +238,54 @@ const server = http.createServer(async (req, res) => {
     };
 
     try {
-      const iyzicoRes = await iyzicoRequest('POST', '/payment/auth', iyzicoPayload);
-      if (iyzicoRes.status !== 'success') {
-        const errMsg = iyzicoRes.errorMessage || iyzicoRes.errorCode || 'Ödeme başarısız';
-        res.writeHead(400); res.end(JSON.stringify({ error: errMsg })); return;
-      }
-      // Ödeme başarılı → premium yap
-      const odemeTarihi = new Date();
-      const uyelikBitis = new Date();
-      uyelikBitis.setFullYear(uyelikBitis.getFullYear() + 1);
-      await db.collection('users').updateOne({ email }, { $set: { premium: true, odemeTarihi, uyelikBitis, iyzicoPaymentId: iyzicoRes.paymentId } });
+      const iyzicoRes = await iyzicoRequest('POST', '/payment/iyzipos/initialize', payload);
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ ok: true, uyelikBitis }));
+      res.end(JSON.stringify(iyzicoRes));
     } catch (e) {
-      console.error('iyzico hata:', e.message);
-      res.writeHead(500); res.end(JSON.stringify({ error: 'Ödeme işlemi sırasında hata oluştu' }));
+      console.error('iyzico token hatası:', e.message);
+      res.writeHead(500); res.end(JSON.stringify({ error: 'iyzico bağlantı hatası' }));
     }
+    return;
+  }
+
+  // ── iyzico Callback (ödeme sonucu) ──
+  if (parsed.pathname === '/api/odeme-callback') {
+    const email = parsed.query.email;
+    const body = await getBody(req);
+    // POST body'den token al
+    let token = body.token || parsed.query.token || '';
+    if (!token && req.method === 'POST') {
+      // form-urlencoded olabilir
+      const rawBody = await new Promise(r => { let b=''; req.on('data',c=>b+=c); req.on('end',()=>r(b)); });
+      const params = new URLSearchParams(rawBody);
+      token = params.get('token') || '';
+    }
+
+    try {
+      const checkPayload = { locale: 'tr', conversationId: 'kp_cb_' + Date.now(), token };
+      const iyzicoRes = await iyzicoRequest('POST', '/payment/iyzipos/detail', checkPayload);
+
+      if (iyzicoRes.status === 'success' && email && db) {
+        const odemeTarihi = new Date();
+        const uyelikBitis = new Date();
+        uyelikBitis.setFullYear(uyelikBitis.getFullYear() + 1);
+        await db.collection('users').updateOne(
+          { email },
+          { $set: { premium: true, odemeTarihi, uyelikBitis, iyzicoPaymentId: iyzicoRes.paymentId } }
+        );
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ status: iyzicoRes.status, paymentId: iyzicoRes.paymentId }));
+    } catch (e) {
+      console.error('iyzico callback hatası:', e.message);
+      res.writeHead(500); res.end(JSON.stringify({ error: 'Callback işleme hatası' }));
+    }
+    return;
+  }
+
+  // ── Eski /api/odeme (artık kullanılmıyor ama geriye dönük uyumluluk) ──
+  if (parsed.pathname === '/api/odeme' && req.method === 'POST') {
+    res.writeHead(400); res.end(JSON.stringify({ error: 'Bu endpoint artık kullanılmıyor. /api/odeme-token kullanın.' }));
     return;
   }
 
