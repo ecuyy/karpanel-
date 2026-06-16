@@ -2047,8 +2047,8 @@ function renderUrunler(page){
     const marjStr=hasAlis&&marj!==null?'%'+marj.toFixed(1):'—';
     const marjColor=!hasAlis?'var(--t3)':marj>=15?'var(--green)':marj>=0?'var(--yellow)':'var(--red)';
     const satisInput=isDemo
-      ?`<input class="tinput" type="number" style="width:95px;opacity:.55;cursor:not-allowed" value="${p.salePrice||''}" readonly title="Demo modda düzenlenemez">`
-      :`<input class="tinput" type="number" style="width:95px" min="0" step="0.01" value="${p.salePrice||''}" onchange="updUrun('${p.id}','salePrice',this.value)" title="Satış fiyatını düzenleyebilirsiniz">`;
+      ?`<input class="tinput" type="text" style="width:95px;opacity:.55;cursor:not-allowed" value="${fmtSP(p.salePrice)}" readonly title="Demo modda düzenlenemez">`
+      :`<input class="tinput" type="text" style="width:95px" value="${fmtSP(p.salePrice)}" onfocus="this.value=p.salePrice||''" onblur="this.value=fmtSP(this.value)" onchange="updUrun('${p.id}','salePrice',parseTR(this.value))" title="Satış fiyatını düzenleyebilirsiniz">`;
     const komInput=isDemo
       ?`<input class="tinput" type="number" style="width:68px;opacity:.55;cursor:not-allowed" value="${(p.commissionRate||0).toFixed(2)}" readonly title="Demo modda düzenlenemez">`
       :`<input class="tinput" type="number" style="width:68px" min="0" max="100" step="0.01" value="${(p.commissionRate||0).toFixed(2)}" onchange="updUrun('${p.id}','commissionRate',this.value)" title="Komisyon oranını düzenleyebilirsiniz">`;
@@ -2159,6 +2159,18 @@ function kargoBaremUygula(){
   if(s1&&sayac.barem1>0) mesaj+=' 200-349,99→'+s1.firma+'('+sayac.barem1+')';
   if(manuelVal>0&&sayac.barem2>0) mesaj+=' 350+→₺'+manuelVal.toFixed(2)+'('+sayac.barem2+')';
   toast(mesaj,'info','🚚');
+}
+
+// Satış fiyatı formatlama (2319.9 → "2.319,90")
+function fmtSP(v){
+  const n=parseFloat(v)||0;
+  if(!n) return '';
+  return n.toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+// TR formatındaki string'i sayıya çevir ("2.319,90" → 2319.9)
+function parseTR(v){
+  if(!v) return 0;
+  return parseFloat(String(v).replace(/\./g,'').replace(',','.'))||0;
 }
 
 function openKargoModal(){document.getElementById('kargo-input').value='';document.getElementById('kargo-overlay').classList.add('open');setTimeout(()=>document.getElementById('kargo-input').focus(),100);}
