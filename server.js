@@ -394,6 +394,143 @@ const server = http.createServer(async (req, res) => {
   }
 
   // Admin sayfası
+  // ── /odeme sayfası ──
+  if (parsed.pathname === '/odeme') {
+    const email = parsed.query.email || '';
+    const odemeHtml = `<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ödeme | KarPanel</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:#F8F9FA;min-height:100vh;display:flex;flex-direction:column}
+.header{background:#fff;border-bottom:1px solid #E5E7EB;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between}
+.back-btn{display:flex;align-items:center;gap:6px;color:#6B7280;font-size:14px;font-weight:500;cursor:pointer;border:none;background:none;font-family:inherit;text-decoration:none;transition:.15s}
+.back-btn:hover{color:#111}
+.header-logo{font-size:16px;font-weight:800;color:#111}
+.header-logo em{color:#F27A1A;font-style:normal}
+.header-secure{display:flex;align-items:center;gap:6px;font-size:13px;color:#6B7280}
+.main{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem;gap:2rem}
+.left-panel{width:320px;flex-shrink:0}
+.product-card{background:#fff;border:1px solid #E5E7EB;border-radius:16px;padding:1.5rem;margin-bottom:1rem}
+.product-badge{display:inline-flex;align-items:center;gap:6px;background:#FFF3E8;color:#F27A1A;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;margin-bottom:1rem}
+.product-name{font-size:18px;font-weight:800;color:#111;margin-bottom:.25rem}
+.product-desc{font-size:13px;color:#6B7280;margin-bottom:1.25rem}
+.product-price{display:flex;align-items:baseline;gap:4px;margin-bottom:1rem}
+.price-amount{font-size:36px;font-weight:900;color:#111}
+.price-period{font-size:14px;color:#6B7280}
+.feature-list{display:flex;flex-direction:column;gap:8px}
+.feature{display:flex;align-items:center;gap:8px;font-size:13px;color:#374151}
+.feature-icon{width:18px;height:18px;background:#ECFDF5;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0}
+.secure-badges{background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:1rem;display:flex;flex-direction:column;gap:8px}
+.secure-item{display:flex;align-items:center;gap:8px;font-size:12px;color:#6B7280}
+.right-panel{width:480px;flex-shrink:0}
+.checkout-wrap{background:#fff;border:1px solid #E5E7EB;border-radius:16px;overflow:hidden;min-height:400px}
+.checkout-header{padding:1.25rem 1.5rem;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;justify-content:space-between}
+.checkout-title{font-size:15px;font-weight:700;color:#111}
+.checkout-amount{font-size:15px;font-weight:800;color:#F27A1A}
+#iyzipay-checkout-form{padding:0}
+#iyzipay-checkout-form iframe{width:100%!important;border:none!important}
+.loading-state{padding:3rem;text-align:center;color:#9CA3AF}
+.loading-spinner{width:32px;height:32px;border:3px solid #F3F4F6;border-top-color:#F27A1A;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="header">
+  <a href="https://komisyonhesap.com" class="back-btn">← Geri Dön</a>
+  <div class="header-logo">Kar<em>Panel</em></div>
+  <div class="header-secure">🔒 Güvenli Ödeme</div>
+</div>
+
+<div class="main">
+  <!-- Sol: Ürün Bilgisi -->
+  <div class="left-panel">
+    <div class="product-card">
+      <div class="product-badge">💎 Premium</div>
+      <div class="product-name">KarPanel Premium</div>
+      <div class="product-desc">Trendyol ürünlerinizin net karını saniyeler içinde görün</div>
+      <div class="product-price">
+        <span class="price-amount">₺1.500</span>
+        <span class="price-period">/ yıl · KDV dahil</span>
+      </div>
+      <div class="feature-list">
+        <div class="feature"><div class="feature-icon">✓</div>Excel ile otomatik ürün yükleme</div>
+        <div class="feature"><div class="feature-icon">✓</div>Komisyon + KDV + Stopaj analizi</div>
+        <div class="feature"><div class="feature-icon">✓</div>Ürün görselleri</div>
+        <div class="feature"><div class="feature-icon">✓</div>Sınırsız ürün analizi</div>
+      </div>
+    </div>
+    <div class="secure-badges">
+      <div class="secure-item">🔒 256-bit SSL şifreleme</div>
+      <div class="secure-item">🛡️ iyzico güvencesiyle ödeme</div>
+      <div class="secure-item">↩️ Sorun yaşarsanız destek garantisi</div>
+    </div>
+  </div>
+
+  <!-- Sağ: iyzico Formu -->
+  <div class="right-panel">
+    <div class="checkout-wrap">
+      <div class="checkout-header">
+        <span class="checkout-title">Ödeme Bilgileri</span>
+        <span class="checkout-amount">₺1.500,00</span>
+      </div>
+      <div id="iyzipay-checkout-form">
+        <div class="loading-state">
+          <div class="loading-spinner"></div>
+          <div>Ödeme formu yükleniyor...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const email = decodeURIComponent('${email}');
+
+async function odemeSayfasiYukle(){
+  try{
+    const r = await fetch('/api/odeme-token', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({email, ad: ''})
+    });
+    const d = await r.json();
+    if(!d.checkoutFormContent) throw new Error(d.errorMessage || d.error || 'Token alınamadı');
+
+    const container = document.getElementById('iyzipay-checkout-form');
+    container.innerHTML = d.checkoutFormContent.replace(/<script[^>]*>/gi,'').replace(/<\/script>/gi,'');
+
+    const script = document.createElement('script');
+    script.textContent = d.checkoutFormContent.replace(/<\/?script[^>]*>/gi, '');
+    document.body.appendChild(script);
+
+  } catch(e){
+    document.getElementById('iyzipay-checkout-form').innerHTML =
+      '<div style="padding:2rem;text-align:center;color:#EF4444">❌ ' + e.message + '</div>';
+  }
+}
+
+window.iyziEventSubscribe = function(e){
+  if(e && e.status === 'success'){
+    window.location.href = 'https://komisyonhesap.com?odeme=basarili&email=' + encodeURIComponent(email);
+  } else if(e && e.status === 'failure'){
+    window.location.href = 'https://komisyonhesap.com?odeme=basarisiz';
+  }
+};
+
+odemeSayfasiYukle();
+</script>
+</body>
+</html>`;
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    res.end(odemeHtml);
+    return;
+  }
+
   if (parsed.pathname === '/admin') {
     const adminHtml = `<!DOCTYPE html>
 <html lang="tr">
