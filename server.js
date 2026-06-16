@@ -228,10 +228,13 @@ const server = http.createServer(async (req, res) => {
     iyzipay.checkoutForm.retrieve({ locale: 'tr', conversationId: 'kp_cb_' + Date.now(), token }, async function(err, result) {
       if (err) {
         console.error('iyzico callback hata:', err);
-        res.writeHead(500); res.end(JSON.stringify({ error: 'Callback hatası' })); return;
+        const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><script>window.location.href='https://komisyonhesap.com?odeme=hata';<\/script></head><body></body></html>`;
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(html); return;
       }
-      console.log('iyzico callback yanıtı:', JSON.stringify(result).substring(0, 300));
-      if (result.status === 'success' && result.paymentStatus === 'SUCCESS' && email && db) {
+      console.log('iyzico callback yaniti:', JSON.stringify(result).substring(0, 300));
+      const basarili = result.status === 'success' && result.paymentStatus === 'SUCCESS';
+      if (basarili && email && db) {
         const odemeTarihi = new Date();
         const uyelikBitis = new Date();
         uyelikBitis.setFullYear(uyelikBitis.getFullYear() + 1);
@@ -239,9 +242,14 @@ const server = http.createServer(async (req, res) => {
           { email },
           { $set: { premium: true, odemeTarihi, uyelikBitis, iyzicoPaymentId: result.paymentId } }
         );
+        const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><script>window.location.href='https://komisyonhesap.com?odeme=basarili&email=${encodeURIComponent(email)}';<\/script></head><body></body></html>`;
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(html);
+      } else {
+        const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><script>window.location.href='https://komisyonhesap.com?odeme=basarisiz';<\/script></head><body></body></html>`;
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(html);
       }
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ status: result.status, paymentStatus: result.paymentStatus, paymentId: result.paymentId }));
     });
     return;
   }
