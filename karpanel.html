@@ -835,6 +835,19 @@ input[type=number]{-moz-appearance:textfield}
   max-width: 95vw !important;
   max-height: 95vh !important;
 }
+
+/* Kargo Barem */
+.kbt{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg);color:var(--t2);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
+.kbt.active{border-color:var(--or);background:rgba(242,122,26,.08);color:var(--or)}
+.kbp{display:flex}
+.kargo-secim-card{flex:1;min-width:100px;padding:10px 12px;border-right:1px solid var(--border);cursor:pointer;text-align:center;transition:.15s;position:relative}
+.kargo-secim-card:last-child{border-right:none}
+.kargo-secim-card:hover{background:rgba(242,122,26,.05)}
+.kargo-secim-card.secili{background:rgba(242,122,26,.08);outline:2px solid var(--or);outline-offset:-2px}
+.ksc-firma{font-size:11px;color:var(--t3);font-weight:600;margin-bottom:4px}
+.ksc-fiyat{font-size:15px;font-weight:800;color:var(--dark)}
+.ksc-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-top:4px;display:inline-block}
+.ksc-badge.en-uygun{background:rgba(16,185,129,.1);color:#059669}
 </style>
 </head>
 <body>
@@ -1156,6 +1169,103 @@ input[type=number]{-moz-appearance:textfield}
           <button class="btn-danger-sm" onclick="tumunuSil()">🗑 Tümünü Sil</button>
         </div>
       </div>
+      <!-- KARGO BAREM TABLOSU -->
+      <div id="kargo-barem-wrap" style="margin-bottom:1rem;background:#fff;border:1.5px solid var(--border);border-radius:14px;overflow:hidden">
+        <div style="padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div style="font-size:13px;font-weight:700;color:var(--dark)">🚚 Anlaşmalı Kargo Fiyatları <span style="font-size:11px;color:var(--t3);font-weight:400">— Her barem için firma seçin, Uygula'ya basın</span><span style="font-size:11px;font-weight:700;color:#059669;background:rgba(16,185,129,.1);padding:2px 8px;border-radius:10px;margin-left:4px">KDV Dahil</span></div>
+        </div>
+
+        <!-- Barem 0: 0-199,99 -->
+        <div style="border-bottom:1px solid var(--border)">
+          <div style="padding:8px 16px;background:rgba(242,122,26,.04);display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span style="font-size:12px;font-weight:700;color:var(--or);min-width:110px">0 – 199,99 TL</span>
+            <span style="font-size:11px;color:var(--t3)">Satış fiyatı bu aralıktaki ürünlere uygulanır</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:0">
+            <div class="kargo-secim-card" id="ksc-0-0" onclick="kargoSecim(0,40.99,'TEX/PTT',0)">
+              <div class="ksc-firma">TEX / PTT</div>
+              <div class="ksc-fiyat">₺40,99</div>
+              <div class="ksc-badge en-uygun">En Uygun</div>
+            </div>
+            <div class="kargo-secim-card" id="ksc-0-1" onclick="kargoSecim(0,51.49,'Aras',1)">
+              <div class="ksc-firma">Aras</div>
+              <div class="ksc-fiyat">₺51,49</div>
+            </div>
+            <div class="kargo-secim-card" id="ksc-0-2" onclick="kargoSecim(0,52.49,'Sürat',2)">
+              <div class="ksc-firma">Sürat</div>
+              <div class="ksc-fiyat">₺52,49</div>
+            </div>
+            <div class="kargo-secim-card" id="ksc-0-3" onclick="kargoSecim(0,61.49,'Kolay Gelsin',3)">
+              <div class="ksc-firma">Kolay Gelsin</div>
+              <div class="ksc-fiyat">₺61,49</div>
+            </div>
+            <div class="kargo-secim-card" id="ksc-0-4" onclick="kargoSecim(0,62.50,'DHL eCommerce',4)">
+              <div class="ksc-firma">DHL eCommerce</div>
+              <div class="ksc-fiyat">₺62,50</div>
+            </div>
+            <div class="kargo-secim-card" id="ksc-0-5" onclick="kargoSecim(0,89.50,'YK',5)">
+              <div class="ksc-firma">YK</div>
+              <div class="ksc-fiyat">₺89,50</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barem 1: 200-349,99 -->
+        <div style="border-bottom:1px solid var(--border)">
+          <div style="padding:8px 16px;background:rgba(242,122,26,.04);display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span style="font-size:12px;font-weight:700;color:var(--or);min-width:110px">200 – 349,99 TL</span>
+            <span style="font-size:11px;color:var(--t3)">Satış fiyatı bu aralıktaki ürünlere uygulanır</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:0">
+            <div class="kargo-secim-card" id="ksc-1-0" onclick="kargoSecim(1,79.00,'TEX/PTT',0)">
+              <div class="ksc-firma">TEX / PTT</div>
+              <div class="ksc-fiyat">₺79,00</div>
+              <div class="ksc-badge en-uygun">En Uygun</div>
+            </div>
+            <div class="kargo-secim-card" id="ksc-1-1" onclick="kargoSecim(1,88.49,'Aras',1)">
+              <div class="ksc-firma">Aras</div>
+              <div class="ksc-fiyat">₺88,49</div>
+            </div>
+            <div class="kargo-secim-card" id="ksc-1-2" onclick="kargoSecim(1,95.50,'Sürat',2)">
+              <div class="ksc-firma">Sürat</div>
+              <div class="ksc-fiyat">₺95,50</div>
+            </div>
+            <div class="kargo-secim-card" id="ksc-1-3" onclick="kargoSecim(1,98.50,'Kolay Gelsin',3)">
+              <div class="ksc-firma">Kolay Gelsin</div>
+              <div class="ksc-fiyat">₺98,50</div>
+            </div>
+            <div class="kargo-secim-card" id="ksc-1-4" onclick="kargoSecim(1,99.49,'DHL eCommerce',4)">
+              <div class="ksc-firma">DHL eCommerce</div>
+              <div class="ksc-fiyat">₺99,49</div>
+            </div>
+            <div class="kargo-secim-card" id="ksc-1-5" onclick="kargoSecim(1,125.50,'YK',5)">
+              <div class="ksc-firma">YK</div>
+              <div class="ksc-fiyat">₺125,50</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barem 2: 350+ -->
+        <div>
+          <div style="padding:8px 16px;background:rgba(242,122,26,.04);display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span style="font-size:12px;font-weight:700;color:var(--or);min-width:110px">350 TL ve üzeri</span>
+            <span style="font-size:11px;color:var(--t3)">Kargo maliyetini manuel girin</span>
+          </div>
+          <div style="padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <input type="number" id="kargo-manuel-input" placeholder="ör: 120" min="0" step="0.01"
+              style="padding:7px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;width:130px;font-family:inherit;outline:none"
+              onkeydown="if(event.key==='Enter')kargoBaremUygula()">
+            <span id="kargo-manuel-info" style="font-size:12px;color:var(--t3)"></span>
+          </div>
+        </div>
+
+        <!-- Uygula Butonu -->
+        <div style="padding:10px 16px;background:var(--bg);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <span id="kargo-secim-ozet" style="font-size:12px;color:var(--t3)">Firma seçin ve Uygula'ya basın</span>
+          <button onclick="kargoBaremUygula()" style="padding:8px 20px;background:var(--or);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">🚚 Uygula</button>
+        </div>
+      </div>
+
       <div class="sel-bar" id="sel-bar">
         <span id="sel-count">0 ürün seçildi</span>
         <button class="btn-danger-sm" onclick="secilenSil()">🗑 Seçilenleri Sil</button>
@@ -1985,6 +2095,72 @@ function renderPagination(totalPages,total){
 function updUrun(id,field,val){const p=urunler.find(x=>String(x.id)===String(id));if(p){p[field]=parseFloat(val)||0;saveUrunler();renderUrunler();}}
 function setFilter(f,el){filterMode=f;document.querySelectorAll('.filter-bar .ftab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderUrunler();}
 function araUrun(q){searchQ=q.toLowerCase();renderUrunler();}
+// ── Kargo Barem Fonksiyonları ──
+// barem0: {fiyat, firma}, barem1: {fiyat, firma}
+const kargoSecimleri = {0: null, 1: null};
+
+function kargoSecim(baremIdx, fiyat, firma, cardIdx){
+  kargoSecimleri[baremIdx] = {fiyat, firma};
+  // O barema ait kartları temizle, seçiliyi işaretle
+  for(let i=0;i<6;i++){
+    const el=document.getElementById('ksc-'+baremIdx+'-'+i);
+    if(el) el.classList.remove('secili');
+  }
+  const sel=document.getElementById('ksc-'+baremIdx+'-'+cardIdx);
+  if(sel) sel.classList.add('secili');
+  // Özet güncelle
+  kargoOzetGuncelle();
+}
+
+function kargoOzetGuncelle(){
+  const s0=kargoSecimleri[0], s1=kargoSecimleri[1];
+  let ozet='';
+  if(s0) ozet+='0-199,99 TL → '+s0.firma+' ₺'+s0.fiyat.toFixed(2);
+  if(s0&&s1) ozet+=' | ';
+  if(s1) ozet+='200-349,99 TL → '+s1.firma+' ₺'+s1.fiyat.toFixed(2);
+  if(!s0&&!s1) ozet='Firma seçin ve Uygula'ya basın';
+  const el=document.getElementById('kargo-secim-ozet');
+  if(el) el.textContent=ozet;
+}
+
+function kargoBaremUygula(){
+  const s0=kargoSecimleri[0];
+  const s1=kargoSecimleri[1];
+  const manuelVal=parseFloat(document.getElementById('kargo-manuel-input').value)||0;
+
+  if(!s0&&!s1&&manuelVal<=0){
+    toast('En az bir barem için firma seçin veya 350+ için fiyat girin','error','❌');
+    return;
+  }
+
+  let sayac={barem0:0, barem1:0, barem2:0};
+
+  urunler.forEach(p=>{
+    const sp=p.salePrice||0;
+    if(sp>=350){
+      if(manuelVal>0){ p.kargo=manuelVal; sayac.barem2++; }
+    } else if(sp>=200){
+      if(s1){ p.kargo=s1.fiyat; sayac.barem1++; }
+    } else {
+      if(s0){ p.kargo=s0.fiyat; sayac.barem0++; }
+    }
+  });
+
+  renderUrunler();
+
+  // Manuel info güncelle
+  if(manuelVal>0){
+    const el=document.getElementById('kargo-manuel-info');
+    if(el) el.textContent='✓ '+sayac.barem2+' ürüne uygulandı';
+  }
+
+  let mesaj='🚚 Kargo uygulandı:';
+  if(s0&&sayac.barem0>0) mesaj+=' 0-199,99→'+s0.firma+'('+sayac.barem0+')';
+  if(s1&&sayac.barem1>0) mesaj+=' 200-349,99→'+s1.firma+'('+sayac.barem1+')';
+  if(manuelVal>0&&sayac.barem2>0) mesaj+=' 350+→₺'+manuelVal.toFixed(2)+'('+sayac.barem2+')';
+  toast(mesaj,'info','🚚');
+}
+
 function openKargoModal(){document.getElementById('kargo-input').value='';document.getElementById('kargo-overlay').classList.add('open');setTimeout(()=>document.getElementById('kargo-input').focus(),100);}
 function closeKargoModal(e){if(!e||e.target===document.getElementById('kargo-overlay'))document.getElementById('kargo-overlay').classList.remove('open');}
 function kargoUygula(){const v=parseFloat(document.getElementById('kargo-input').value)||0;urunler.forEach(p=>p.kargo=v);renderUrunler();document.getElementById('kargo-overlay').classList.remove('open');toast('₺'+v+' kargo uygulandı.','info','🚚');}
