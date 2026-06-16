@@ -194,7 +194,6 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://static.iyzipay.com/checkoutform/v2/bundle.js"></script>
 <style>
 :root{
   --or:#F27A1A;--or2:#FF8C38;--or-dim:#FFF4E8;
@@ -1734,41 +1733,56 @@ async function odemeYap(){
       body:JSON.stringify({email:currentUser.email, ad:currentUser.ad})
     });
     const d=await r.json();
-    if(!r.ok||d.status!=='success') throw new Error(d.errorMessage||d.error||'Token alınamadı');
 
-    // iyzico popup'ı aç
-    window.iyziEventSubscribe = function(e){
-      if(e && e.status==='success'){
-        currentUser.premium=true;
-        const stored=localStorage.getItem('kp_user')?localStorage:sessionStorage;
-        stored.setItem('kp_user',JSON.stringify(currentUser));
-        document.getElementById('pay-overlay').classList.remove('open');
-        applyUser(); goApp();
-        toast('Ödeme başarılı! Premium üyeliğiniz aktif. 🎉','success','🎉');
-      } else if(e && e.status==='failure'){
-        toast('Ödeme başarısız. Lütfen tekrar deneyin.','error','❌');
-      }
-    };
+    // Tam hata mesajını göster
+    if(!r.ok||d.status!=='success'){
+      const errMsg=d.errorMessage||d.error||JSON.stringify(d);
+      throw new Error(errMsg);
+    }
 
-    // Mevcut checkout container'ı temizle
+    // iyzico checkoutFormContent = popup'ı açan HTML script bloğu
+    const formContent = d.checkoutFormContent;
+    if(!formContent) throw new Error('iyzico form içeriği boş. Token: '+(d.token||'yok'));
+
+    // Eski overlay ve container'ı kapat
+    document.getElementById('pay-overlay').classList.remove('open');
+
+    // iyzico'nun verdiği HTML'i sayfaya yaz (popup kendisi açılır)
     const existing=document.getElementById('iyzipay-checkout-form');
     if(existing) existing.remove();
     const container=document.createElement('div');
     container.id='iyzipay-checkout-form';
     document.body.appendChild(container);
 
-    // iyzico popup'ı tetikle
-    const token = d.checkoutFormContent || d.token;
-    if(!token) throw new Error('iyzico token boş geldi');
+    // checkoutFormContent bir <script> bloğu içeriyor, innerHTML ile yaz
+    container.innerHTML = formContent;
 
-    const oldScript=document.getElementById('iyzico-checkout-script');
-    if(oldScript) oldScript.remove();
-    const script=document.createElement('script');
-    script.id='iyzico-checkout-script';
-    // Template literal kaçınmak için string concat kullan
-    script.textContent='window.iyziInit={tag:"div",id:"iyzipay-checkout-form",token:"'+token.replace(/"/g,'\"')+'",overrideLocale:"tr"};'
-      +'if(typeof window.iyziLoad==="function") window.iyziLoad(window.iyziInit);';
-    document.body.appendChild(script);
+    // Sayfadaki script taglerini çalıştır (innerHTML script'leri çalıştırmaz)
+    Array.from(container.querySelectorAll('script')).forEach(oldScript => {
+      const newScript = document.createElement('script');
+      if(oldScript.src) {
+        newScript.src = oldScript.src;
+      } else {
+        newScript.textContent = oldScript.textContent;
+      }
+      document.body.appendChild(newScript);
+      oldScript.remove();
+    });
+
+    // Ödeme sonucunu dinle (iyzico window.message ile bildirir)
+    window.iyziEventSubscribe = function(e){
+      if(e && e.status==='success'){
+        currentUser.premium=true;
+        const stored=localStorage.getItem('kp_user')?localStorage:sessionStorage;
+        stored.setItem('kp_user',JSON.stringify(currentUser));
+        applyUser(); goApp();
+        toast('Ödeme başarılı! Premium üyeliğiniz aktif. 🎉','success','🎉');
+        const c=document.getElementById('iyzipay-checkout-form');
+        if(c) c.remove();
+      } else if(e && e.status==='failure'){
+        toast('Ödeme başarısız. Lütfen tekrar deneyin.','error','❌');
+      }
+    };
 
   }catch(e){
     toast('Hata: '+e.message,'error','❌');
