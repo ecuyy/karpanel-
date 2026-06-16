@@ -1734,42 +1734,17 @@ async function odemeYap(){
     });
     const d=await r.json();
 
-    // Tam hata mesajını göster
     if(!r.ok||d.status!=='success'){
-      const errMsg=d.errorMessage||d.error||JSON.stringify(d);
-      throw new Error(errMsg);
+      throw new Error(d.errorMessage||d.error||JSON.stringify(d));
     }
 
-    // iyzico checkoutFormContent = popup'ı açan HTML script bloğu
     const formContent = d.checkoutFormContent;
-    if(!formContent) throw new Error('iyzico form içeriği boş. Token: '+(d.token||'yok'));
+    if(!formContent) throw new Error('iyzico form içeriği boş');
 
-    // Eski overlay ve container'ı kapat
+    // Overlay'i kapat
     document.getElementById('pay-overlay').classList.remove('open');
 
-    // iyzico'nun verdiği HTML'i sayfaya yaz (popup kendisi açılır)
-    const existing=document.getElementById('iyzipay-checkout-form');
-    if(existing) existing.remove();
-    const container=document.createElement('div');
-    container.id='iyzipay-checkout-form';
-    document.body.appendChild(container);
-
-    // checkoutFormContent bir <script> bloğu içeriyor, innerHTML ile yaz
-    container.innerHTML = formContent;
-
-    // Sayfadaki script taglerini çalıştır (innerHTML script'leri çalıştırmaz)
-    Array.from(container.querySelectorAll('script')).forEach(oldScript => {
-      const newScript = document.createElement('script');
-      if(oldScript.src) {
-        newScript.src = oldScript.src;
-      } else {
-        newScript.textContent = oldScript.textContent;
-      }
-      document.body.appendChild(newScript);
-      oldScript.remove();
-    });
-
-    // Ödeme sonucunu dinle (iyzico window.message ile bildirir)
+    // Ödeme sonucunu dinle
     window.iyziEventSubscribe = function(e){
       if(e && e.status==='success'){
         currentUser.premium=true;
@@ -1783,6 +1758,30 @@ async function odemeYap(){
         toast('Ödeme başarısız. Lütfen tekrar deneyin.','error','❌');
       }
     };
+
+    // Önce iyzico kütüphanesini yükle, sonra formContent'i çalıştır
+    function runFormContent(){
+      const existing=document.getElementById('iyzipay-checkout-form');
+      if(existing) existing.remove();
+      const container=document.createElement('div');
+      container.id='iyzipay-checkout-form';
+      document.body.appendChild(container);
+      // formContent içindeki script'i çalıştır
+      const scriptEl=document.createElement('script');
+      scriptEl.textContent=formContent.replace(/<script[^>]*>/gi,'').replace(/<\/script>/gi,'');
+      document.body.appendChild(scriptEl);
+    }
+
+    // iyzico kütüphanesi zaten yüklüyse direkt çalıştır, değilse yükle
+    if(window.iyziLoad){
+      runFormContent();
+    } else {
+      const libScript=document.createElement('script');
+      libScript.src='https://static.iyzipay.com/checkoutform/v2/bundle.js';
+      libScript.onload=runFormContent;
+      libScript.onerror=function(){ toast('iyzico kütüphanesi yüklenemedi','error','❌'); };
+      document.head.appendChild(libScript);
+    }
 
   }catch(e){
     toast('Hata: '+e.message,'error','❌');
