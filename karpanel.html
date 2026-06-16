@@ -2118,7 +2118,7 @@ function kargoOzetGuncelle(){
   if(s0) ozet+='0-199,99 TL → '+s0.firma+' ₺'+s0.fiyat.toFixed(2);
   if(s0&&s1) ozet+=' | ';
   if(s1) ozet+='200-349,99 TL → '+s1.firma+' ₺'+s1.fiyat.toFixed(2);
-  if(!s0&&!s1) ozet='Firma seçin ve Uygula'ya basın';
+  if(!s0&&!s1) ozet='Firma seçin, Uygula\'ya basın';
   const el=document.getElementById('kargo-secim-ozet');
   if(el) el.textContent=ozet;
 }
