@@ -16,19 +16,17 @@ const IYZICO_API_KEY = process.env.IYZICO_API_KEY || 'OHsPgULIkX0P2lBo6XXUKrNZvE
 const IYZICO_SECRET = process.env.IYZICO_SECRET || 'XnjSF1WSqXarHDxIPx9RACTZ1cuytzEU';
 const IYZICO_BASE_URL = 'https://api.iyzipay.com';
 
-function iyzicoAuthHeader(uri, body) {
-  const randomStr = Math.random().toString(36).substring(2) + Date.now();
-  const bodyStr = body ? JSON.stringify(body) : '';
-  const hashData = IYZICO_API_KEY + randomStr + IYZICO_SECRET + uri + bodyStr;
-  const hash = crypto.createHmac('sha256', IYZICO_SECRET).update(hashData).digest('base64');
-  const authorization = `IYZWS ${IYZICO_API_KEY}:${hash}`;
-  return { authorization, randomStr };
-}
-
 function iyzicoRequest(method, uri, body) {
   return new Promise((resolve, reject) => {
-    const { authorization, randomStr } = iyzicoAuthHeader(uri, body);
+    const randomStr = crypto.randomBytes(12).toString('hex');
     const bodyStr = body ? JSON.stringify(body) : '';
+
+    // iyzico PKI v2 imzasi
+    const hashStr = IYZICO_API_KEY + randomStr + IYZICO_SECRET + bodyStr;
+    const signature = crypto.createHmac('sha256', IYZICO_SECRET).update(hashStr).digest('hex');
+    const pkiStr = 'apiKey:' + IYZICO_API_KEY + '&randomKey:' + randomStr + '&signature:' + signature;
+    const authorization = 'IYZWSv2 ' + Buffer.from(pkiStr).toString('base64');
+
     const options = {
       hostname: 'api.iyzipay.com',
       path: uri,
@@ -38,19 +36,20 @@ function iyzicoRequest(method, uri, body) {
         'Authorization': authorization,
         'x-iyzi-rnd': randomStr,
         'x-iyzi-client-version': 'iyzipay-node-2.0.48',
-        'Content-Length': Buffer.byteLength(bodyStr)
+        'Content-Length': Buffer.byteLength(bodyStr, 'utf8')
       }
     };
+
     const req = https.request(options, (res) => {
       let data = '';
       res.on('data', chunk => data += chunk);
       res.on('end', () => {
         try { resolve(JSON.parse(data)); }
-        catch { reject(new Error('iyzico yanıtı parse edilemedi')); }
+        catch { reject(new Error('iyzico yaniti parse edilemedi: ' + data.substring(0,200))); }
       });
     });
     req.on('error', reject);
-    if (bodyStr) req.write(bodyStr);
+    if (bodyStr) req.write(bodyStr, 'utf8');
     req.end();
   });
 }
@@ -238,7 +237,7 @@ const server = http.createServer(async (req, res) => {
     };
 
     try {
-      const iyzicoRes = await iyzicoRequest('POST', '/payment/iyzipos/initialize', payload);
+      const iyzicoRes = await iyzicoRequest('POST', '/payment/checkoutform/initialize', payload);
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(iyzicoRes));
     } catch (e) {
@@ -263,7 +262,7 @@ const server = http.createServer(async (req, res) => {
 
     try {
       const checkPayload = { locale: 'tr', conversationId: 'kp_cb_' + Date.now(), token };
-      const iyzicoRes = await iyzicoRequest('POST', '/payment/iyzipos/detail', checkPayload);
+      const iyzicoRes = await iyzicoRequest('POST', '/payment/checkoutform/auth/detail', checkPayload);
 
       if (iyzicoRes.status === 'success' && email && db) {
         const odemeTarihi = new Date();
