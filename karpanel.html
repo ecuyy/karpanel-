@@ -1385,7 +1385,13 @@ input[type=number]{-moz-appearance:textfield}
         <div class="pay-feature"><div class="pf-icon2">✓</div>CSV export ve raporlar</div>
       </div>
       <div class="pay-form">
-        <button class="btn-pay" id="btn-odeme" onclick="odemeYap()">🔒 ₺1.500 Öde ve Başla</button>
+        <div class="pay-field"><div class="pay-label">Kart Üzerindeki İsim</div><input class="pay-input" type="text" id="pay-isim" placeholder="Ad Soyad"></div>
+        <div class="pay-field"><div class="pay-label">Kart Numarası</div><input class="pay-input" type="text" id="pay-kart" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatKart(this)"></div>
+        <div class="pay-row">
+          <div class="pay-field"><div class="pay-label">Son Kullanma</div><input class="pay-input" type="text" id="pay-tarih" placeholder="AA/YY" maxlength="5" oninput="formatTarih(this)"></div>
+          <div class="pay-field"><div class="pay-label">CVV</div><input class="pay-input" type="text" id="pay-cvv" placeholder="000" maxlength="3"></div>
+        </div>
+        <button class="btn-pay" onclick="odemeYap()">🔒 ₺1.500 Öde ve Başla</button>
         <div class="pay-security">🔒 Güvenli ödeme</div>
       </div>
       <div class="pay-skip"><a onclick="demoyaDevam()">Şimdilik demo ile devam et →</a></div>
@@ -1724,31 +1730,25 @@ async function kayitOl(){
 function formatKart(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.replace(/(\d{4})/g,'$1 ').trim();}
 function formatTarih(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2,4);el.value=v;}
 async function odemeYap(){
-  const btn=document.getElementById('btn-odeme');
-  btn.disabled=true;btn.textContent='Yükleniyor...';
+  const isim=document.getElementById('pay-isim').value.trim();
+  const kart=document.getElementById('pay-kart').value.replace(/\s/g,'');
+  const tarih=document.getElementById('pay-tarih').value;
+  const cvv=document.getElementById('pay-cvv').value;
+  if(!isim||kart.length<16||tarih.length<5||cvv.length<3){toast('Lütfen tüm kart bilgilerini doldurun','error','❌');return;}
   try{
     const r=await fetch(PROXY+'/api/odeme',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:currentUser.email})});
     const d=await r.json();
     if(!r.ok) throw new Error(d.error||'Ödeme hatası');
-    // Backend iyzico checkoutFormContent veya paymentPageUrl dönerse oraya yönlendir
-    const url=d.paymentPageUrl||d.checkoutFormUrl||d.redirectUrl;
-    if(url){window.location.href=url;return;}
-    // Eğer backend direkt success dönerse (test modu)
-    if(d.status==='success'||d.premium){
-      currentUser.premium=true;
-      currentUser.uyelikBitis=d.uyelikBitis;
-      const stored=localStorage.getItem('kp_user')?localStorage:sessionStorage;
-      stored.setItem('kp_user',JSON.stringify(currentUser));
-      document.getElementById('pay-overlay').classList.remove('open');
-      applyUser(); goApp();
-      toast('Ödeme başarılı! Premium üyeliğiniz aktif. 🎉','success','🎉');
-      return;
-    }
-    throw new Error('Ödeme sayfası alınamadı');
+    currentUser.premium=true;
+    currentUser.uyelikBitis=d.uyelikBitis;
+    const stored=localStorage.getItem('kp_user')?localStorage:sessionStorage;
+    stored.setItem('kp_user',JSON.stringify(currentUser));
   }catch(e){
-    toast('Ödeme hatası: '+e.message,'error','❌');
-    btn.disabled=false;btn.textContent='🔒 ₺1.500 Öde ve Başla';
+    toast('Ödeme hatası: '+e.message,'error','❌');return;
   }
+  document.getElementById('pay-overlay').classList.remove('open');
+  applyUser(); goApp();
+  toast('Ödeme başarılı! Premium üyeliğiniz aktif. 🎉','success','🎉');
 }
 function demoyaDevam(){document.getElementById('pay-overlay').classList.remove('open');goApp();}
 
@@ -2281,26 +2281,6 @@ document.querySelector('.logo').addEventListener('click',e=>{e.preventDefault();
 
 populateKatDropdown();
 loadUser();
-
-// ── ÖDEME GERİ DÖNÜŞ KONTROLÜ ──
-(function(){
-  const params = new URLSearchParams(window.location.search);
-  const odeme = params.get('odeme');
-  if(odeme === 'basarili'){
-    history.replaceState(null,'',window.location.pathname);
-    const stored = localStorage.getItem('kp_user') ? localStorage : sessionStorage;
-    const u = stored.getItem('kp_user');
-    if(u){ try{ const parsed=JSON.parse(u); parsed.premium=true; stored.setItem('kp_user',JSON.stringify(parsed)); }catch(e){} }
-    setTimeout(()=>toast('Ödeme başarılı! Premium üyeliğiniz aktif. 🎉','success','🎉'),800);
-    setTimeout(()=>location.reload(),1500);
-  } else if(odeme === 'basarisiz'){
-    history.replaceState(null,'',window.location.pathname);
-    setTimeout(()=>toast('Ödeme tamamlanamadı. Tekrar deneyebilirsiniz.','error','❌'),800);
-  } else if(odeme === 'hata'){
-    history.replaceState(null,'',window.location.pathname);
-    setTimeout(()=>toast('Ödeme işleminde bir hata oluştu.','error','❌'),800);
-  }
-})();
 
 async function iletisimGonder(){
   const ad=document.getElementById('con-ad').value.trim();
