@@ -1757,20 +1757,17 @@ async function odemeYap(){
     container.id='iyzipay-checkout-form';
     document.body.appendChild(container);
 
-    // iyzico script tag'i ile popup'ı tetikle
+    // iyzico popup'ı tetikle
+    const token = d.checkoutFormContent || d.token;
+    if(!token) throw new Error('iyzico token boş geldi');
+
     const oldScript=document.getElementById('iyzico-checkout-script');
     if(oldScript) oldScript.remove();
     const script=document.createElement('script');
     script.id='iyzico-checkout-script';
-    script.innerHTML=`
-      window.iyziInit={
-        tag:'div',
-        id:'iyzipay-checkout-form',
-        token:'${d.checkoutFormContent}',
-        overrideLocale:'tr'
-      };
-      if(typeof window.iyziLoad==='function') window.iyziLoad(window.iyziInit);
-    `;
+    // Template literal kaçınmak için string concat kullan
+    script.textContent='window.iyziInit={tag:"div",id:"iyzipay-checkout-form",token:"'+token.replace(/"/g,'\"')+'",overrideLocale:"tr"};'
+      +'if(typeof window.iyziLoad==="function") window.iyziLoad(window.iyziInit);';
     document.body.appendChild(script);
 
   }catch(e){
