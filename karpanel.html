@@ -1739,55 +1739,10 @@ async function kayitOl(){
 function formatKart(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.replace(/(\d{4})/g,'$1 ').trim();}
 function formatTarih(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2,4);el.value=v;}
 async function odemeYap(){
-  const btn=document.getElementById('btn-iyzico-pay');
-  if(btn){btn.disabled=true;btn.textContent='Yükleniyor...';}
-  try{
-    const r=await fetch(PROXY+'/api/odeme-token',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({email:currentUser.email, ad:currentUser.ad})
-    });
-    const d=await r.json();
-
-    if(!r.ok||d.status!=='success'){
-      throw new Error(d.errorMessage||d.error||JSON.stringify(d));
-    }
-
-    const formContent = d.checkoutFormContent;
-    if(!formContent) throw new Error('iyzico form içeriği boş');
-
-    // Overlay'i kapat
-    document.getElementById('pay-overlay').classList.remove('open');
-
-    // Ödeme sonucunu dinle
-    window.iyziEventSubscribe = function(e){
-      if(e && e.status==='success'){
-        currentUser.premium=true;
-        const stored=localStorage.getItem('kp_user')?localStorage:sessionStorage;
-        stored.setItem('kp_user',JSON.stringify(currentUser));
-        applyUser(); goApp();
-        toast('Ödeme başarılı! Premium üyeliğiniz aktif. 🎉','success','🎉');
-        const c=document.getElementById('iyzipay-checkout-form');
-        if(c) c.remove();
-      } else if(e && e.status==='failure'){
-        toast('Ödeme başarısız. Lütfen tekrar deneyin.','error','❌');
-      }
-    };
-
-    // Sayfada iyzico'dan kalan her şeyi temizle
-    document.querySelectorAll('#iyzipay-checkout-form, #iyzico-checkout-script, iframe[src*="iyzipay"]').forEach(function(el){ el.remove(); });
-
-    // iyzico'nun popup'ı kendisi açar — sadece script'i çalıştır
-    const iyziScript = document.createElement('script');
-    iyziScript.id = 'iyzico-checkout-script';
-    iyziScript.textContent = formContent.replace(/<\/?script[^>]*>/gi, '');
-    document.body.appendChild(iyziScript);
-
-  }catch(e){
-    toast('Hata: '+e.message,'error','❌');
-  }finally{
-    if(btn){btn.disabled=false;btn.innerHTML='🔒 ₺1.500 Öde ve Başla';}
-  }
+  if(!currentUser||!currentUser.email){toast('Lütfen önce giriş yapın','error','❌');return;}
+  // Ödeme sayfasına yönlendir
+  const url = PROXY + '/odeme?email=' + encodeURIComponent(currentUser.email);
+  window.location.href = url;
 }
 function demoyaDevam(){document.getElementById('pay-overlay').classList.remove('open');goApp();}
 
