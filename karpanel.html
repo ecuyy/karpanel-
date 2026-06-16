@@ -817,6 +817,24 @@ footer{background:#1a1a2e;padding:3rem 2rem;text-align:center;margin-top:4rem}
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 input[type=number]{-moz-appearance:textfield}
+
+/* iyzico popup tam ekran */
+#iyzipay-checkout-form {
+  position: fixed !important;
+  top: 0 !important; left: 0 !important;
+  width: 100vw !important; height: 100vh !important;
+  z-index: 99999 !important;
+  background: rgba(0,0,0,0.7) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+#iyzipay-checkout-form iframe {
+  border-radius: 12px !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important;
+  max-width: 95vw !important;
+  max-height: 95vh !important;
+}
 </style>
 </head>
 <body>
@@ -1759,29 +1777,14 @@ async function odemeYap(){
       }
     };
 
-    // Önce iyzico kütüphanesini yükle, sonra formContent'i çalıştır
-    function runFormContent(){
-      const existing=document.getElementById('iyzipay-checkout-form');
-      if(existing) existing.remove();
-      const container=document.createElement('div');
-      container.id='iyzipay-checkout-form';
-      document.body.appendChild(container);
-      // formContent içindeki script'i çalıştır
-      const scriptEl=document.createElement('script');
-      scriptEl.textContent=formContent.replace(/<script[^>]*>/gi,'').replace(/<\/script>/gi,'');
-      document.body.appendChild(scriptEl);
-    }
+    // Sayfada iyzico'dan kalan her şeyi temizle
+    document.querySelectorAll('#iyzipay-checkout-form, #iyzico-checkout-script, iframe[src*="iyzipay"]').forEach(function(el){ el.remove(); });
 
-    // iyzico kütüphanesi zaten yüklüyse direkt çalıştır, değilse yükle
-    if(window.iyziLoad){
-      runFormContent();
-    } else {
-      const libScript=document.createElement('script');
-      libScript.src='https://static.iyzipay.com/checkoutform/v2/bundle.js';
-      libScript.onload=runFormContent;
-      libScript.onerror=function(){ toast('iyzico kütüphanesi yüklenemedi','error','❌'); };
-      document.head.appendChild(libScript);
-    }
+    // iyzico'nun popup'ı kendisi açar — sadece script'i çalıştır
+    const iyziScript = document.createElement('script');
+    iyziScript.id = 'iyzico-checkout-script';
+    iyziScript.textContent = formContent.replace(/<\/?script[^>]*>/gi, '');
+    document.body.appendChild(iyziScript);
 
   }catch(e){
     toast('Hata: '+e.message,'error','❌');
