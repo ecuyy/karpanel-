@@ -488,7 +488,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:#F8F9FA;min-height:100v
   </div>
 </div>
 
-<script>
+<scr` + 'ipt>' + `
 const email = decodeURIComponent('${email}');
 
 async function odemeSayfasiYukle(){
@@ -496,21 +496,21 @@ async function odemeSayfasiYukle(){
     const r = await fetch('/api/odeme-token', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({email, ad: ''})
+      body: JSON.stringify({email: email, ad: ''})
     });
     const d = await r.json();
-    if(!d.checkoutFormContent) throw new Error(d.errorMessage || d.error || 'Token alınamadı');
+    if(!d.checkoutFormContent) throw new Error(d.errorMessage || d.error || 'Token alinamadi');
 
     const container = document.getElementById('iyzipay-checkout-form');
-    container.innerHTML = d.checkoutFormContent.replace(/<script[^>]*>/gi,'').replace(/<\/script>/gi,'');
+    container.innerHTML = '';
 
-    const script = document.createElement('script');
-    script.textContent = d.checkoutFormContent.replace(/<\/?script[^>]*>/gi, '');
-    document.body.appendChild(script);
+    const scriptEl = document.createElement('script');
+    scriptEl.textContent = d.checkoutFormContent.replace(/<[^>]+>/g, '');
+    document.body.appendChild(scriptEl);
 
   } catch(e){
     document.getElementById('iyzipay-checkout-form').innerHTML =
-      '<div style="padding:2rem;text-align:center;color:#EF4444">❌ ' + e.message + '</div>';
+      '<div style="padding:2rem;text-align:center;color:#EF4444">Hata: ' + e.message + '</div>';
   }
 }
 
@@ -523,7 +523,7 @@ window.iyziEventSubscribe = function(e){
 };
 
 odemeSayfasiYukle();
-</script>
+` + '</scr' + `ipt>
 </body>
 </html>`;
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
