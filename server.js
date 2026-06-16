@@ -151,7 +151,8 @@ const server = http.createServer(async (req, res) => {
     const user = await db.collection('users').findOne({ email });
     if (!user) { res.writeHead(404); res.end(JSON.stringify({ error: 'Kullanıcı bulunamadı' })); return; }
 
-    const callbackUrl = (process.env.RENDER_EXTERNAL_URL || 'http://localhost:' + PORT) + '/api/odeme-callback?email=' + encodeURIComponent(email);
+    const baseUrl = process.env.RENDER_EXTERNAL_URL || process.env.BASE_URL || 'https://karpanel.onrender.com';
+    const callbackUrl = baseUrl + '/api/odeme-callback?email=' + encodeURIComponent(email);
     const adParts = (ad || user.ad || 'Kullanici Kullanici').split(' ');
     const firstName = adParts[0] || 'Kullanici';
     const lastName = adParts.slice(1).join(' ') || 'Kullanici';
@@ -174,7 +175,7 @@ const server = http.createServer(async (req, res) => {
         email: email,
         identityNumber: '11111111110',
         registrationAddress: 'Turkiye',
-        ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || '85.34.78.112',
+        ip: (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '85.34.78.112').split(',')[0].trim().substring(0, 50),
         city: 'Istanbul',
         country: 'Turkey',
         zipCode: '34000'
