@@ -3,12 +3,57 @@ const https = require('https');
 const url = require('url');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { MongoClient } = require('mongodb');
 
 const PORT = process.env.PORT || 3001;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://info_db_user:rWUh1N0WLUblIVTa@karpanel.g062rms.mongodb.net/?appName=karpanel';
 const ADMIN_SIFRE = process.env.ADMIN_SIFRE || 'karpanel2026admin';
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
+
+// iyzico Ayarları
+const IYZICO_API_KEY = process.env.IYZICO_API_KEY || 'OHsPgULIkX0P2lBo6XXUKrNZvE6PNBYf';
+const IYZICO_SECRET = process.env.IYZICO_SECRET || 'XnjSF1WSqXarHDxIPx9RACTZ1cuytzEU';
+const IYZICO_BASE_URL = 'https://api.iyzipay.com';
+
+function iyzicoAuthHeader(uri, body) {
+  const randomStr = Math.random().toString(36).substring(2) + Date.now();
+  const bodyStr = body ? JSON.stringify(body) : '';
+  const hashData = IYZICO_API_KEY + randomStr + IYZICO_SECRET + uri + bodyStr;
+  const hash = crypto.createHmac('sha256', IYZICO_SECRET).update(hashData).digest('base64');
+  const authorization = `IYZWS ${IYZICO_API_KEY}:${hash}`;
+  return { authorization, randomStr };
+}
+
+function iyzicoRequest(method, uri, body) {
+  return new Promise((resolve, reject) => {
+    const { authorization, randomStr } = iyzicoAuthHeader(uri, body);
+    const bodyStr = body ? JSON.stringify(body) : '';
+    const options = {
+      hostname: 'api.iyzipay.com',
+      path: uri,
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+        'x-iyzi-rnd': randomStr,
+        'x-iyzi-client-version': 'iyzipay-node-2.0.48',
+        'Content-Length': Buffer.byteLength(bodyStr)
+      }
+    };
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try { resolve(JSON.parse(data)); }
+        catch { reject(new Error('iyzico yanıtı parse edilemedi')); }
+      });
+    });
+    req.on('error', reject);
+    if (bodyStr) req.write(bodyStr);
+    req.end();
+  });
+}
 
 let db;
 
@@ -134,14 +179,88 @@ const server = http.createServer(async (req, res) => {
   // Ödeme yap
   if (parsed.pathname === '/api/odeme' && req.method === 'POST') {
     const body = await getBody(req);
-    const { email } = body;
+    const { email, kartIsim, kartNo, kartAy, kartYil, kartCvv } = body;
     if (!db) { res.writeHead(500); res.end(JSON.stringify({ error: 'DB bağlantısı yok' })); return; }
-    const odemeTarihi = new Date();
-    const uyelikBitis = new Date();
-    uyelikBitis.setFullYear(uyelikBitis.getFullYear() + 1);
-    await db.collection('users').updateOne({ email }, { $set: { premium: true, odemeTarihi, uyelikBitis } });
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true, uyelikBitis }));
+    if (!kartIsim || !kartNo || !kartAy || !kartYil || !kartCvv) {
+      res.writeHead(400); res.end(JSON.stringify({ error: 'Kart bilgileri eksik' })); return;
+    }
+
+    // Kullanıcı bilgilerini DB'den al
+    const user = await db.collection('users').findOne({ email });
+    if (!user) { res.writeHead(404); res.end(JSON.stringify({ error: 'Kullanıcı bulunamadı' })); return; }
+
+    const conversationId = 'kp_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+
+    const iyzicoPayload = {
+      locale: 'tr',
+      conversationId: conversationId,
+      price: '1500',
+      paidPrice: '1500',
+      currency: 'TRY',
+      installment: '1',
+      basketId: 'kp_premium_' + Date.now(),
+      paymentChannel: 'WEB',
+      paymentGroup: 'PRODUCT',
+      paymentCard: {
+        cardHolderName: kartIsim,
+        cardNumber: kartNo.replace(/\s/g, ''),
+        expireMonth: kartAy,
+        expireYear: kartYil,
+        cvc: kartCvv,
+        registerCard: '0'
+      },
+      buyer: {
+        id: user._id ? user._id.toString() : email,
+        name: (user.ad || email).split(' ')[0] || 'Kullanici',
+        surname: (user.ad || email).split(' ').slice(1).join(' ') || 'Kullanici',
+        gsmNumber: '+905000000000',
+        email: email,
+        identityNumber: '11111111110',
+        registrationAddress: 'Turkiye',
+        ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1',
+        city: 'Istanbul',
+        country: 'Turkey'
+      },
+      shippingAddress: {
+        contactName: user.ad || email,
+        city: 'Istanbul',
+        country: 'Turkey',
+        address: 'Turkiye'
+      },
+      billingAddress: {
+        contactName: user.ad || email,
+        city: 'Istanbul',
+        country: 'Turkey',
+        address: 'Turkiye'
+      },
+      basketItems: [
+        {
+          id: 'karpanel_premium',
+          name: 'KarPanel Premium Yillik Uyelik',
+          category1: 'Yazilim',
+          itemType: 'VIRTUAL',
+          price: '1500'
+        }
+      ]
+    };
+
+    try {
+      const iyzicoRes = await iyzicoRequest('POST', '/payment/auth', iyzicoPayload);
+      if (iyzicoRes.status !== 'success') {
+        const errMsg = iyzicoRes.errorMessage || iyzicoRes.errorCode || 'Ödeme başarısız';
+        res.writeHead(400); res.end(JSON.stringify({ error: errMsg })); return;
+      }
+      // Ödeme başarılı → premium yap
+      const odemeTarihi = new Date();
+      const uyelikBitis = new Date();
+      uyelikBitis.setFullYear(uyelikBitis.getFullYear() + 1);
+      await db.collection('users').updateOne({ email }, { $set: { premium: true, odemeTarihi, uyelikBitis, iyzicoPaymentId: iyzicoRes.paymentId } });
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, uyelikBitis }));
+    } catch (e) {
+      console.error('iyzico hata:', e.message);
+      res.writeHead(500); res.end(JSON.stringify({ error: 'Ödeme işlemi sırasında hata oluştu' }));
+    }
     return;
   }
 
