@@ -928,93 +928,135 @@ input[type=number]{-moz-appearance:textfield}
 <!-- HOW IT WORKS -->
 <div class="how-section" id="nasil" style="scroll-margin-top:80px">
   <div class="section-inner">
-    <div class="section-tag">Nasıl Çalışır?</div>
-    <div class="section-title">3 adımda karını gör</div>
-    <p class="section-sub">Teknik bilgiye gerek yok. Dakikalar içinde ürünlerinizin gerçek karını görün.</p>
+    <div style="text-align:center;margin-bottom:3.5rem">
+      <div class="section-tag" style="display:inline-block">Nasıl Çalışır?</div>
+      <div class="section-title" style="text-align:center">3 adımda karını gör</div>
+      <p class="section-sub" style="margin:0 auto;text-align:center">Teknik bilgiye gerek yok. Dakikalar içinde ürünlerinizin gerçek karını görün.</p>
+    </div>
+
     <div class="how-grid">
-      <div class="how-steps">
-        <div class="how-step">
-          <div class="how-num">01</div>
-          <div>
-            <div class="how-step-title">Ürün Listesini Excel Olarak İndir</div>
-            <div class="how-step-desc">Trendyol Partner Panel → <strong>Ürünler</strong> → <strong>Ürün Listesi</strong> → <strong>Excel ile İndir</strong> butonuna bas. Saniyeler içinde dosyan hazır, teknik bilgi gerekmez.</div>
+      <!-- Sol: Adım Kartları -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+
+        <!-- Adım 1 -->
+        <div style="display:flex;gap:20px;align-items:flex-start;background:#fff;border:1.5px solid var(--border);border-radius:20px;padding:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,.05);transition:.2s" onmouseover="this.style.borderColor='var(--or)';this.style.boxShadow='0 4px 24px rgba(242,122,26,.12)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='0 2px 12px rgba(0,0,0,.05)'">
+          <div style="width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 4px 12px rgba(102,126,234,.35)">⬇️</div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span style="font-size:11px;font-weight:900;color:var(--or);background:rgba(242,122,26,.08);padding:2px 8px;border-radius:20px;border:1px solid rgba(242,122,26,.15)">ADIM 01</span>
+              <span style="font-size:11px;color:var(--t3);font-weight:600">≈ 1 dakika</span>
+            </div>
+            <div style="font-size:16px;font-weight:800;color:var(--dark);margin-bottom:6px">Ürün Listesini Excel Olarak İndir</div>
+            <div style="font-size:13px;color:var(--t2);line-height:1.6">Trendyol Partner Panel → <strong>Ürünler</strong> → <strong>Ürün Listesi</strong> → <strong>Excel ile İndir</strong>. Saniyeler içinde hazır, teknik bilgi gerekmez.</div>
           </div>
         </div>
-        <div class="how-step">
-          <div class="how-num">02</div>
-          <div>
-            <div class="how-step-title">Alış Fiyatı ve Kargo Maliyetini Yaz</div>
-            <div class="how-step-desc">İndirdiğin Excel'i komisyonhesap'a yükle. Satış fiyatı ve komisyon otomatik gelir. Sen sadece <strong>alış fiyatını</strong> ve <strong>kargo maliyetini</strong> yaz, gerisini biz hallederiz.</div>
+
+        <!-- Adım 2 -->
+        <div style="display:flex;gap:20px;align-items:flex-start;background:#fff;border:1.5px solid var(--border);border-radius:20px;padding:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,.05);transition:.2s" onmouseover="this.style.borderColor='var(--or)';this.style.boxShadow='0 4px 24px rgba(242,122,26,.12)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow='0 2px 12px rgba(0,0,0,.05)'">
+          <div style="width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#F27A1A,#FF8C38);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 4px 12px rgba(242,122,26,.35)">📂</div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span style="font-size:11px;font-weight:900;color:var(--or);background:rgba(242,122,26,.08);padding:2px 8px;border-radius:20px;border:1px solid rgba(242,122,26,.15)">ADIM 02</span>
+              <span style="font-size:11px;color:var(--t3);font-weight:600">Çok kolay</span>
+            </div>
+            <div style="font-size:16px;font-weight:800;color:var(--dark);margin-bottom:6px">Alış Fiyatı ve Kargo Maliyetini Gir</div>
+            <div style="font-size:13px;color:var(--t2);line-height:1.6">Excel'i yükle, satış fiyatı ve komisyon <strong>otomatik gelir</strong>. Sen sadece <strong>alış fiyatını</strong> ve <strong>kargo maliyetini</strong> gir, gerisini biz hallederiz.</div>
           </div>
         </div>
-        <div class="how-step" style="border-bottom:3px solid var(--or);padding-bottom:1.5rem">
-          <div class="how-num">03</div>
-          <div>
-            <div class="how-step-title">Net Karını Anında Gör</div>
-            <div class="how-step-desc">Komisyon, KDV, stopaj otomatik hesaplanır. <strong>Karlı ve zararlı</strong> ürünleri tek bakışta ayırt et. Detay butonuyla tam dökümü incele.</div>
+
+        <!-- Adım 3 -->
+        <div style="display:flex;gap:20px;align-items:flex-start;background:linear-gradient(135deg,#F0FDF4,#ECFDF5);border:1.5px solid var(--gbr);border-radius:20px;padding:1.5rem;box-shadow:0 2px 12px rgba(16,185,129,.08);transition:.2s" onmouseover="this.style.boxShadow='0 4px 24px rgba(16,185,129,.18)'" onmouseout="this.style.boxShadow='0 2px 12px rgba(16,185,129,.08)'">
+          <div style="width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#10B981,#059669);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 4px 12px rgba(16,185,129,.35)">📊</div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span style="font-size:11px;font-weight:900;color:#059669;background:rgba(16,185,129,.1);padding:2px 8px;border-radius:20px;border:1px solid rgba(16,185,129,.2)">ADIM 03</span>
+              <span style="font-size:11px;color:#059669;font-weight:700">✓ Anında sonuç</span>
+            </div>
+            <div style="font-size:16px;font-weight:800;color:var(--dark);margin-bottom:6px">Net Karını Anında Gör</div>
+            <div style="font-size:13px;color:var(--t2);line-height:1.6">Komisyon, KDV, stopaj <strong>otomatik hesaplanır</strong>. Karlı ve zararlı ürünleri tek bakışta ayırt et. Detay butonuyla tam dökümü incele.</div>
           </div>
         </div>
+
       </div>
-      <!-- Sağ görsel - modern mockup -->
-      <div style="position:relative">
-        <!-- Arka glow -->
-        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;height:300px;background:radial-gradient(circle,rgba(242,122,26,.12) 0%,transparent 70%);pointer-events:none"></div>
-        
-        <div style="background:#fff;border:1.5px solid var(--border);border-radius:24px;padding:1.75rem;box-shadow:0 8px 40px rgba(0,0,0,.1);position:relative">
-          <!-- Başlık -->
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--border)">
-            <div style="width:8px;height:8px;border-radius:50%;background:#FF5F57"></div>
-            <div style="width:8px;height:8px;border-radius:50%;background:#FEBC2E"></div>
-            <div style="width:8px;height:8px;border-radius:50%;background:#28C840"></div>
-            <span style="font-size:11px;color:var(--t3);font-weight:600;margin-left:6px">komisyonhesap Dashboard</span>
+
+      <!-- Sağ: Mockup -->
+      <div style="position:relative;display:flex;align-items:center;justify-content:center">
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:320px;height:320px;background:radial-gradient(circle,rgba(242,122,26,.10) 0%,transparent 70%);pointer-events:none"></div>
+
+        <div style="background:#fff;border:1.5px solid var(--border);border-radius:24px;padding:1.5rem;box-shadow:0 16px 56px rgba(0,0,0,.12);width:100%;max-width:420px;position:relative">
+          <!-- Tarayıcı bar -->
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--border)">
+            <div style="width:10px;height:10px;border-radius:50%;background:#FF5F57"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#FEBC2E"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#28C840"></div>
+            <div style="flex:1;background:var(--bg);border-radius:6px;padding:4px 10px;margin-left:6px">
+              <div style="font-size:10px;color:var(--t3);font-weight:600">komisyonhesap.com</div>
+            </div>
           </div>
 
-          <!-- Adım 1 -->
-          <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg);border-radius:12px;margin-bottom:10px;border:1px solid var(--border)">
-            <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">⬇️</div>
-            <div style="flex:1;min-width:0">
-              <div style="font-size:10px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">Adım 1</div>
-              <div style="font-size:13px;font-weight:700;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Ürünler → Ürün Listesi → Excel İndir</div>
+          <!-- Özet istatistikler -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+            <div style="background:var(--gbg);border:1px solid var(--gbr);border-radius:10px;padding:8px;text-align:center">
+              <div style="font-size:15px;font-weight:900;color:var(--green)">+₺8.4K</div>
+              <div style="font-size:9px;color:var(--green);font-weight:600;margin-top:1px">Toplam Kar</div>
             </div>
-            <div style="background:var(--gbg);color:var(--green);font-size:10px;font-weight:800;padding:4px 10px;border-radius:20px;border:1px solid var(--gbr);flex-shrink:0">1 dk ✓</div>
+            <div style="background:#FFF7ED;border:1px solid rgba(242,122,26,.2);border-radius:10px;padding:8px;text-align:center">
+              <div style="font-size:15px;font-weight:900;color:var(--or)">217</div>
+              <div style="font-size:9px;color:var(--or);font-weight:600;margin-top:1px">Ürün</div>
+            </div>
+            <div style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15);border-radius:10px;padding:8px;text-align:center">
+              <div style="font-size:15px;font-weight:900;color:var(--red)">23</div>
+              <div style="font-size:9px;color:var(--red);font-weight:600;margin-top:1px">Zararlı</div>
+            </div>
           </div>
 
-          <!-- Adım 2 -->
-          <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg);border-radius:12px;margin-bottom:10px;border:1px solid var(--border)">
-            <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--or),var(--or2));display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0">📂</div>
-            <div style="flex:1;min-width:0">
-              <div style="font-size:10px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">Adım 2</div>
-              <div style="font-size:13px;font-weight:700;color:var(--dark)">Alış fiyatı + Kargo maliyetini yaz</div>
-            </div>
-            <div style="background:var(--or-dim);color:var(--or);font-size:10px;font-weight:800;padding:4px 10px;border-radius:20px;border:1px solid rgba(242,122,26,.2);flex-shrink:0">Kolay</div>
-          </div>
-
-          <!-- Sonuç kartları -->
-          <div style="background:linear-gradient(135deg,#F0FDF4,#ECFDF5);border:1.5px solid var(--gbr);border-radius:12px;padding:14px">
-            <div style="font-size:10px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;display:flex;align-items:center;gap:5px">
-              <span style="width:16px;height:16px;background:var(--green);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:9px">✓</span>
-              Sonuç — Anında Görürsün
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#fff;border-radius:8px;margin-bottom:6px;border:1px solid var(--gbr)">
+          <!-- Ürün listesi -->
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--gbg);border-radius:10px;border:1px solid var(--gbr)">
               <div style="display:flex;align-items:center;gap:8px">
-                <span style="font-size:14px">🎧</span>
-                <span style="font-size:13px;font-weight:600;color:var(--dark)">Bluetooth Kulaklık</span>
+                <span style="font-size:16px">🎧</span>
+                <div>
+                  <div style="font-size:12px;font-weight:700;color:var(--dark)">Bluetooth Kulaklık</div>
+                  <div style="font-size:10px;color:var(--t3)">Satış: ₺489 · Komisyon: %15</div>
+                </div>
               </div>
               <div style="text-align:right">
-                <div style="font-size:15px;font-weight:900;color:var(--green)">+₺312</div>
-                <div style="font-size:10px;color:var(--green);font-weight:600">%20.8 kar</div>
+                <div style="font-size:16px;font-weight:900;color:var(--green)">+₺312</div>
+                <div style="font-size:10px;color:var(--green);font-weight:700;background:rgba(16,185,129,.1);padding:1px 6px;border-radius:10px">%20.8 kar</div>
               </div>
             </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#fff;border-radius:8px;border:1px solid var(--rbr)">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#fff;border-radius:10px;border:1px solid var(--border)">
               <div style="display:flex;align-items:center;gap:8px">
-                <span style="font-size:14px">👜</span>
-                <span style="font-size:13px;font-weight:600;color:var(--dark)">Deri Çanta</span>
+                <span style="font-size:16px">⌚</span>
+                <div>
+                  <div style="font-size:12px;font-weight:700;color:var(--dark)">Akıllı Saat</div>
+                  <div style="font-size:10px;color:var(--t3)">Satış: ₺1.250 · Komisyon: %12</div>
+                </div>
               </div>
               <div style="text-align:right">
-                <div style="font-size:15px;font-weight:900;color:var(--red)">-₺47</div>
-                <div style="font-size:10px;color:var(--red);font-weight:600">Zararlı!</div>
+                <div style="font-size:16px;font-weight:900;color:var(--green)">+₺184</div>
+                <div style="font-size:10px;color:var(--green);font-weight:700;background:rgba(16,185,129,.1);padding:1px 6px;border-radius:10px">%14.7 kar</div>
               </div>
             </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:rgba(239,68,68,.04);border-radius:10px;border:1px solid rgba(239,68,68,.15)">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:16px">👜</span>
+                <div>
+                  <div style="font-size:12px;font-weight:700;color:var(--dark)">Deri Çanta</div>
+                  <div style="font-size:10px;color:var(--t3)">Satış: ₺650 · Komisyon: %18</div>
+                </div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:16px;font-weight:900;color:var(--red)">-₺47</div>
+                <div style="font-size:10px;color:var(--red);font-weight:700;background:rgba(239,68,68,.08);padding:1px 6px;border-radius:10px">Zararlı! ✗</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alt banner -->
+          <div style="margin-top:12px;padding:10px 12px;background:linear-gradient(135deg,#1A1A1A,#2D2D2D);border-radius:10px;display:flex;align-items:center;justify-content:space-between">
+            <div style="font-size:11px;color:rgba(255,255,255,.6)">💡 Komisyon + KDV + Stopaj otomatik</div>
+            <div style="font-size:11px;font-weight:800;color:var(--or)">Anında ✓</div>
           </div>
         </div>
       </div>
