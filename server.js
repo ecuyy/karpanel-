@@ -190,7 +190,7 @@ const server = http.createServer(async (req, res) => {
       basketItems: [
         {
           id: 'karpanel_premium',
-          name: 'KarPanel Premium Yillik Uyelik',
+          name: 'komisyonhesap Premium Yillik Uyelik',
           category1: 'Yazilim',
           itemType: 'VIRTUAL',
           price: '1500.00'
@@ -295,7 +295,7 @@ const server = http.createServer(async (req, res) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          from: 'KarPanel İletişim <info@komisyonhesap.com>',
+          from: 'komisyonhesap İletişim <info@komisyonhesap.com>',
           to: ['info@ecuyy.com'],
           reply_to: email,
           subject: 'Yeni İletişim Mesajı - ' + ad,
@@ -402,7 +402,7 @@ const server = http.createServer(async (req, res) => {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ödeme | KarPanel</title>
+<title>Ödeme | komisyonhesap</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -451,7 +451,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:#F8F9FA;min-height:100v
   <div class="left-panel">
     <div class="product-card">
       <div class="product-badge">💎 Premium</div>
-      <div class="product-name">KarPanel Premium</div>
+      <div class="product-name">komisyonhesap Premium</div>
       <div class="product-desc">Trendyol ürünlerinizin net karını saniyeler içinde görün</div>
       <div class="product-price">
         <span class="price-amount">₺1.500</span>
@@ -537,7 +537,7 @@ odemeSayfasiYukle();
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KarPanel Admin</title>
+<title>komisyonhesap Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -957,7 +957,7 @@ async function kullaniciSil(email,ad){
 
 server.listen(PORT, () => {
   console.log('');
-  console.log('✅ KarPanel Sunucusu Başladı!');
+  console.log('✅ komisyonhesap Sunucusu Başladı!');
   console.log('🌐 http://localhost:' + PORT);
   console.log('🛠️  Admin: http://localhost:' + PORT + '/admin');
   console.log('');
