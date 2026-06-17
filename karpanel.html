@@ -1511,7 +1511,7 @@ input[type=number]{-moz-appearance:textfield}
             <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(242,122,26,.1);border:1px solid rgba(242,122,26,.2);color:var(--or);font-size:11px;font-weight:800;padding:4px 12px;border-radius:20px;margin-bottom:14px;letter-spacing:.04em">💎 PREMIUM</div>
             <div style="font-size:22px;font-weight:900;color:var(--dark);margin-bottom:8px;letter-spacing:-.5px;line-height:1.2">Gerçek ürünlerinizin<br>karını görün</div>
             <div style="font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:1.5rem">Trendyol'daki tüm ürünleriniz için komisyon, KDV ve stopaj dahil net kar hesabı.</div>
-            <button onclick="window.location.href=PROXY+'/odeme?email='+encodeURIComponent(currentUser.email)" style="padding:14px 28px;background:var(--or);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 8px 24px rgba(242,122,26,.35);transition:.2s;display:inline-flex;align-items:center;gap:8px" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 32px rgba(242,122,26,.45)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 8px 24px rgba(242,122,26,.35)'">
+            <button onclick="openIyzicoOverlay()" style="padding:14px 28px;background:var(--or);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 8px 24px rgba(242,122,26,.35);transition:.2s;display:inline-flex;align-items:center;gap:8px" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 32px rgba(242,122,26,.45)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 8px 24px rgba(242,122,26,.35)'">
               🔒 Premium'a Geç — ₺1.500/yıl
             </button>
             <div style="display:flex;gap:14px;margin-top:12px;flex-wrap:wrap">
@@ -2155,9 +2155,54 @@ function formatKart(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.valu
 function formatTarih(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2,4);el.value=v;}
 async function odemeYap(){
   if(!currentUser||!currentUser.email){toast('Lütfen önce giriş yapın','error','❌');return;}
-  // Ödeme sayfasına yönlendir
-  const url = PROXY + '/odeme?email=' + encodeURIComponent(currentUser.email);
-  window.location.href = url;
+  // Ödeme overlay'ini aç
+  openIyzicoOverlay();
+}
+
+async function openIyzicoOverlay(){
+  const overlay = document.getElementById('iyzico-overlay');
+  const container = document.getElementById('iyzico-overlay-form');
+  if(!overlay||!container) return;
+  overlay.style.display='flex';
+  container.innerHTML='<div style="text-align:center;padding:3rem;color:#6B7280"><div style="width:36px;height:36px;border:3px solid #F3F4F6;border-top-color:#F27A1A;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem"></div>Ödeme formu yükleniyor...</div>';
+
+  try{
+    const r = await fetch(PROXY+'/api/odeme-token',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email:currentUser.email, ad:currentUser.ad})
+    });
+    const d = await r.json();
+    if(!d.checkoutFormContent) throw new Error(d.errorMessage||d.error||'Token alınamadı');
+
+    container.innerHTML = '';
+    window.iyziEventSubscribe = function(e){
+      if(e && e.status==='success'){
+        currentUser.premium=true;
+        const stored=localStorage.getItem('kp_user')?localStorage:sessionStorage;
+        stored.setItem('kp_user',JSON.stringify(currentUser));
+        closeIyzicoOverlay();
+        applyUser();
+        goApp();
+        toast('Ödeme başarılı! Premium üyeliğiniz aktif. 🎉','success','🎉');
+      } else if(e && e.status==='failure'){
+        toast('Ödeme başarısız. Lütfen tekrar deneyin.','error','❌');
+      }
+    };
+
+    const scriptEl = document.createElement('script');
+    scriptEl.textContent = d.checkoutFormContent.replace(/<[^>]+>/g,'');
+    document.body.appendChild(scriptEl);
+  } catch(e){
+    container.innerHTML='<div style="text-align:center;padding:2rem;color:#EF4444">❌ '+e.message+'</div>';
+  }
+}
+
+function closeIyzicoOverlay(){
+  const overlay=document.getElementById('iyzico-overlay');
+  if(overlay) overlay.style.display='none';
+  // iyzico kalıntılarını temizle
+  document.querySelectorAll('iframe[src*="iyzipay"],iframe[src*="iyzico"]').forEach(el=>el.remove());
 }
 
 function openWelcome(ad){
@@ -2868,6 +2913,26 @@ async function iletisimGonder(){
 </div>
 <style>
 @keyframes welcomePop{from{opacity:0;transform:scale(.85) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+</style>
+
+<!-- İYZİCO OVERLAY (sayfa içi ödeme) -->
+<div id="iyzico-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:99998;display:none;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto">
+  <div style="background:#fff;border-radius:20px;width:100%;max-width:520px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.3);margin:auto">
+    <!-- Başlık -->
+    <div style="background:linear-gradient(135deg,#1A1A2E,#16213E);padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-size:15px;font-weight:800;color:#fff">komisyonhesap Premium</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:2px">₺1.500 / yıl · KDV dahil</div>
+      </div>
+      <button onclick="closeIyzicoOverlay()" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.1);border:none;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+    <!-- iyzico form buraya gelir -->
+    <div id="iyzico-overlay-form" style="min-height:200px"></div>
+  </div>
+</div>
+<style>
+@keyframes spin{to{transform:rotate(360deg)}}
+#iyzico-overlay-form iframe{width:100%!important;border:none!important}
 </style>
 </body>
 </html>
