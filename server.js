@@ -238,10 +238,63 @@ const server = http.createServer(async (req, res) => {
         const odemeTarihi = new Date();
         const uyelikBitis = new Date();
         uyelikBitis.setFullYear(uyelikBitis.getFullYear() + 1);
+        const user = await db.collection('users').findOne({ email });
         await db.collection('users').updateOne(
           { email },
           { $set: { premium: true, odemeTarihi, uyelikBitis, iyzicoPaymentId: result.paymentId } }
         );
+
+        // Premium teşekkür maili gönder
+        if (RESEND_API_KEY) {
+          const ad = user ? user.ad : email;
+          const bitisTarihi = uyelikBitis.toLocaleDateString('tr-TR');
+          fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + RESEND_API_KEY },
+            body: JSON.stringify({
+              from: 'komisyonhesap <info@komisyonhesap.com>',
+              to: [email],
+              subject: '🎉 Premium üyeliğiniz aktif!',
+              html: `<div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;padding:0;background:#fff">
+                <div style="background:linear-gradient(135deg,#1A1A2E,#16213E);padding:2.5rem 2rem;text-align:center;border-radius:16px 16px 0 0">
+                  <div style="font-size:48px;margin-bottom:12px">🎉</div>
+                  <div style="font-size:24px;font-weight:900;color:#fff;margin-bottom:6px">Artık Premium Üyesiniz!</div>
+                  <div style="font-size:14px;color:rgba(255,255,255,.5)">komisyonhesap.com</div>
+                </div>
+                <div style="padding:2rem;border:1px solid #eee;border-top:none;border-radius:0 0 16px 16px">
+                  <p style="font-size:15px;color:#374151;margin-bottom:1rem">Merhaba <strong>${ad}</strong>,</p>
+                  <p style="font-size:14px;color:#6B7280;line-height:1.7;margin-bottom:1.5rem">
+                    Premium üyeliğiniz başarıyla aktive edildi. Artık Trendyol'daki tüm ürünlerinizin gerçek net karını görebilirsiniz.
+                  </p>
+                  <div style="background:#F8F9FA;border-radius:12px;padding:1.25rem;margin-bottom:1.5rem">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+                      <span style="font-size:13px;color:#6B7280">Üyelik Türü</span>
+                      <span style="font-size:13px;font-weight:700;color:#111">Premium Yıllık</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+                      <span style="font-size:13px;color:#6B7280">Başlangıç</span>
+                      <span style="font-size:13px;font-weight:700;color:#111">${odemeTarihi.toLocaleDateString('tr-TR')}</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between">
+                      <span style="font-size:13px;color:#6B7280">Bitiş Tarihi</span>
+                      <span style="font-size:13px;font-weight:700;color:#F27A1A">${bitisTarihi}</span>
+                    </div>
+                  </div>
+                  <div style="margin-bottom:1.5rem">
+                    <div style="font-size:13px;font-weight:700;color:#111;margin-bottom:10px">Neler yapabilirsiniz?</div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="color:#10B981;font-weight:700">✓</span><span style="font-size:13px;color:#6B7280">Excel ile ürün yükle, satış fiyatı otomatik gelir</span></div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="color:#10B981;font-weight:700">✓</span><span style="font-size:13px;color:#6B7280">Komisyon + KDV + Stopaj otomatik hesaplanır</span></div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="color:#10B981;font-weight:700">✓</span><span style="font-size:13px;color:#6B7280">Karlı ve zararlı ürünleri anında ayırt et</span></div>
+                    <div style="display:flex;align-items:center;gap:8px"><span style="color:#10B981;font-weight:700">✓</span><span style="font-size:13px;color:#6B7280">Anlaşmalı kargo fiyatları dahil hesaplama</span></div>
+                  </div>
+                  <a href="https://komisyonhesap.com" style="display:block;text-align:center;padding:14px;background:#F27A1A;color:#fff;border-radius:10px;text-decoration:none;font-size:15px;font-weight:800">Hemen Başla →</a>
+                  <p style="font-size:12px;color:#9CA3AF;text-align:center;margin-top:1.5rem">Herhangi bir sorunuz için <a href="mailto:info@komisyonhesap.com" style="color:#F27A1A">info@komisyonhesap.com</a> adresine yazabilirsiniz.</p>
+                </div>
+              </div>`
+            })
+          }).catch(e => console.error('Premium mail hatası:', e.message));
+        }
+
         const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><script>window.location.href='https://komisyonhesap.com?odeme=basarili&email=${encodeURIComponent(email)}';<\/script></head><body></body></html>`;
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end(html);
