@@ -1492,12 +1492,25 @@ input[type=number]{-moz-appearance:textfield}
 
     <!-- LOGIN CTA -->
     <div id="login-cta" class="login-cta" style="display:none">
-      <div style="font-size:48px;margin-bottom:1rem">🔐</div>
-      <div style="font-size:22px;font-weight:900;color:var(--dark);margin-bottom:.5rem;letter-spacing:-.5px">Kendi ürünlerinizi analiz edin</div>
-      <div style="font-size:15px;color:var(--t2);margin-bottom:2rem;max-width:400px;margin-left:auto;margin-right:auto">Trendyol'daki tüm ürünleriniz için komisyon, KDV ve stopaj dahil net karı görün</div>
-      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-        <button class="btn-hero-dark" onclick="openAuth('kayit')">🚀 Üye Ol — ₺1.500/yıl</button>
-        <button class="btn-hero-outline" onclick="openAuth('giris')">Giriş Yap</button>
+      <!-- Giriş yapılmamış: kayıt + giriş -->
+      <div id="lc-guest">
+        <div style="font-size:48px;margin-bottom:1rem">🔐</div>
+        <div style="font-size:22px;font-weight:900;color:var(--dark);margin-bottom:.5rem;letter-spacing:-.5px">Kendi ürünlerinizi analiz edin</div>
+        <div style="font-size:15px;color:var(--t2);margin-bottom:2rem;max-width:400px;margin-left:auto;margin-right:auto">Trendyol'daki tüm ürünleriniz için komisyon, KDV ve stopaj dahil net karı görün</div>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <button class="btn-hero-dark" onclick="openAuth('kayit')">🚀 Üye Ol — ₺1.500/yıl</button>
+          <button class="btn-hero-outline" onclick="openAuth('giris')">Giriş Yap</button>
+        </div>
+      </div>
+      <!-- Giriş yapılmış ücretsiz: ödeme sayfasına git -->
+      <div id="lc-ucretsiz" style="display:none">
+        <div style="font-size:48px;margin-bottom:1rem">💎</div>
+        <div style="font-size:22px;font-weight:900;color:var(--dark);margin-bottom:.5rem;letter-spacing:-.5px">Tüm ürünlerinize erişin</div>
+        <div style="font-size:15px;color:var(--t2);margin-bottom:2rem;max-width:400px;margin-left:auto;margin-right:auto">Komisyon, KDV ve stopaj dahil net karı gerçek ürünlerinizde görün</div>
+        <button class="btn-hero-dark" onclick="window.location.href=PROXY+'/odeme?email='+encodeURIComponent(currentUser.email)" style="background:var(--or);box-shadow:0 8px 24px rgba(242,122,26,.3)">
+          🔒 Premium'a Geç — ₺1.500/yıl
+        </button>
+        <div style="font-size:12px;color:var(--t3);margin-top:10px">iyzico güvenceli · Anında aktif</div>
       </div>
     </div>
 
@@ -1939,6 +1952,8 @@ function applyUser(){
     if(excelSection) excelSection.style.display='block';
   } else {
     document.getElementById('login-cta').style.display='block';
+    document.getElementById('lc-guest').style.display='none';
+    document.getElementById('lc-ucretsiz').style.display='block';
     // Ücretsiz: demo banner göster
     const demoBanner=document.getElementById('demo-banner');
     if(demoBanner) demoBanner.style.display='block';
@@ -1957,6 +1972,8 @@ function showGuestUI(){
   document.getElementById('connect-section').style.display='none';
   const excelSec=document.getElementById('excel-upload-section');if(excelSec)excelSec.style.display='none';
   document.getElementById('login-cta').style.display='block';
+  document.getElementById('lc-guest').style.display='block';
+  document.getElementById('lc-ucretsiz').style.display='none';
 }
 function openHesabim(){
   if(!currentUser)return;
