@@ -1955,7 +1955,27 @@ function showAppTab(name,el){
 // ── USER ──
 function loadUser(){
   const u=localStorage.getItem('kp_user')||sessionStorage.getItem('kp_user');
-  if(u){currentUser=JSON.parse(u);applyUser();}
+  if(u){
+    currentUser=JSON.parse(u);
+    // Premium süresi dolmuş mu kontrol et
+    if(currentUser.premium && currentUser.uyelikBitis){
+      const bitis=new Date(currentUser.uyelikBitis);
+      if(bitis < new Date()){
+        // Süresi dolmuş — premium'u kaldır, ürünleri sil
+        currentUser.premium=false;
+        const stored=localStorage.getItem('kp_user')?localStorage:sessionStorage;
+        stored.setItem('kp_user',JSON.stringify(currentUser));
+        // DB'deki ürün listesini de temizle
+        fetch(PROXY+'/api/urunler/sil',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({email:currentUser.email})
+        }).catch(()=>{});
+        toast('Premium üyeliğinizin süresi doldu. Ürün listeniz temizlendi.','error','⚠️');
+      }
+    }
+    applyUser();
+  }
   else{showGuestUI();}
 }
 function applyUser(){
