@@ -308,6 +308,21 @@ const server = http.createServer(async (req, res) => {
   }
 
   // Ürünleri kaydet
+  // ── Ürün Listesi Sil (premium süresi dolunca) ──
+  if (parsed.pathname === '/api/urunler/sil' && req.method === 'POST') {
+    const body = await getBody(req);
+    const { email } = body;
+    if (!db || !email) { res.writeHead(400); res.end(JSON.stringify({ error: 'Geçersiz istek' })); return; }
+    // Premium kontrolü — gerçekten süresi dolmuş mu?
+    const user = await db.collection('users').findOne({ email });
+    if (user && user.uyelikBitis && new Date(user.uyelikBitis) < new Date()) {
+      await db.collection('users').updateOne({ email }, { $set: { premium: false, urunler: [] } });
+    }
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true }));
+    return;
+  }
+
   if (parsed.pathname === '/api/urunler/kaydet' && req.method === 'POST') {
     const body = await getBody(req);
     const { email, urunler } = body;
