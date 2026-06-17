@@ -1241,43 +1241,6 @@ input[type=number]{-moz-appearance:textfield}
   <!-- TAB: ÜRÜNLER -->
   <div id="app-urunler" class="page active">
 
-    <!-- HOŞGELDİN KARTI -->
-    <div id="hosgeldin-karti" style="display:none;margin-bottom:1.5rem">
-      <!-- Premium kullanıcı -->
-      <div id="hk-premium" style="display:none;background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:20px;padding:1.5rem 2rem;border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
-        <div>
-          <div style="font-size:11px;color:rgba(255,255,255,.4);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Hoş geldin 👋</div>
-          <div style="font-size:20px;font-weight:900;color:#fff" id="hk-ad-premium">Merhaba!</div>
-          <div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:4px">Premium üyeliğin aktif · Bitiş: <span id="hk-bitis" style="color:var(--or);font-weight:600"></span></div>
-        </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <div style="background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.2);border-radius:12px;padding:10px 16px;text-align:center">
-            <div style="font-size:18px;font-weight:900;color:#34D399" id="hk-urun-say">0</div>
-            <div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:2px">Ürün</div>
-          </div>
-          <div style="background:rgba(242,122,26,.12);border:1px solid rgba(242,122,26,.2);border-radius:12px;padding:10px 16px;text-align:center">
-            <div style="font-size:18px;font-weight:900;color:var(--or)" id="hk-karli-say">0</div>
-            <div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:2px">Karlı</div>
-          </div>
-          <div style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.15);border-radius:12px;padding:10px 16px;text-align:center">
-            <div style="font-size:18px;font-weight:900;color:#F87171" id="hk-zarli-say">0</div>
-            <div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:2px">Zararlı</div>
-          </div>
-        </div>
-      </div>
-      <!-- Ücretsiz kullanıcı -->
-      <div id="hk-ucretsiz" style="display:none;background:#fff;border:1.5px solid var(--border);border-radius:20px;padding:1.5rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;box-shadow:0 2px 12px rgba(0,0,0,.05)">
-        <div>
-          <div style="font-size:11px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Hoş geldin 👋</div>
-          <div style="font-size:20px;font-weight:900;color:var(--dark)" id="hk-ad-ucretsiz">Merhaba!</div>
-          <div style="font-size:13px;color:var(--t2);margin-top:4px">Demo moddasın · Kendi ürünlerini görmek için premium ol</div>
-        </div>
-        <button onclick="openPayOverlay()" style="padding:12px 24px;background:var(--or);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 4px 16px rgba(242,122,26,.3);white-space:nowrap">
-          💎 Premium'a Geç — ₺1.500/yıl
-        </button>
-      </div>
-    </div>
-
     <!-- DEMO BANNER -->
     <div id="demo-banner" style="background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:20px;padding:2rem;margin-bottom:1.5rem;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.07)">
       <!-- Arka plan glow efektleri -->
@@ -1966,23 +1929,9 @@ function applyUser(){
   // Giriş yapıldıktan sonra landing linkleri gizle
   const navLinks=document.getElementById('nav-center-links');
   if(navLinks) navLinks.style.display='none';
-  // Hoşgeldin kartını göster
-  const hkKarti=document.getElementById('hosgeldin-karti');
-  if(hkKarti) hkKarti.style.display='block';
-
   if(currentUser.premium){
     document.getElementById('login-cta').style.display='none';
     // Premium hoşgeldin kartı
-    const hkP=document.getElementById('hk-premium');
-    const hkU=document.getElementById('hk-ucretsiz');
-    if(hkP){hkP.style.display='flex';}
-    if(hkU){hkU.style.display='none';}
-    const adEl=document.getElementById('hk-ad-premium');
-    if(adEl) adEl.textContent=currentUser.ad;
-    const bitisEl=document.getElementById('hk-bitis');
-    if(bitisEl&&currentUser.uyelikBitis){
-      bitisEl.textContent=new Date(currentUser.uyelikBitis).toLocaleDateString('tr-TR');
-    }
     // Demo banner gizle, excel yükle göster
     const demoBanner=document.getElementById('demo-banner');
     if(demoBanner) demoBanner.style.display='none';
@@ -1990,13 +1939,6 @@ function applyUser(){
     if(excelSection) excelSection.style.display='block';
   } else {
     document.getElementById('login-cta').style.display='block';
-    // Ücretsiz hoşgeldin kartı
-    const hkP=document.getElementById('hk-premium');
-    const hkU=document.getElementById('hk-ucretsiz');
-    if(hkP){hkP.style.display='none';}
-    if(hkU){hkU.style.display='flex';}
-    const adEl=document.getElementById('hk-ad-ucretsiz');
-    if(adEl) adEl.textContent=currentUser.ad;
     // Ücretsiz: demo banner göster
     const demoBanner=document.getElementById('demo-banner');
     if(demoBanner) demoBanner.style.display='block';
