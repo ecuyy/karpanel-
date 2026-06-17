@@ -1503,14 +1503,38 @@ input[type=number]{-moz-appearance:textfield}
         </div>
       </div>
       <!-- Giriş yapılmış ücretsiz: ödeme sayfasına git -->
-      <div id="lc-ucretsiz" style="display:none">
-        <div style="font-size:48px;margin-bottom:1rem">💎</div>
-        <div style="font-size:22px;font-weight:900;color:var(--dark);margin-bottom:.5rem;letter-spacing:-.5px">Tüm ürünlerinize erişin</div>
-        <div style="font-size:15px;color:var(--t2);margin-bottom:2rem;max-width:400px;margin-left:auto;margin-right:auto">Komisyon, KDV ve stopaj dahil net karı gerçek ürünlerinizde görün</div>
-        <button class="btn-hero-dark" onclick="window.location.href=PROXY+'/odeme?email='+encodeURIComponent(currentUser.email)" style="background:var(--or);box-shadow:0 8px 24px rgba(242,122,26,.3)">
-          🔒 Premium'a Geç — ₺1.500/yıl
-        </button>
-        <div style="font-size:12px;color:var(--t3);margin-top:10px">iyzico güvenceli · Anında aktif</div>
+      <div id="lc-ucretsiz" style="display:none;text-align:left">
+        <div style="display:flex;align-items:center;gap:2rem;flex-wrap:wrap">
+          <!-- Sol -->
+          <div style="flex:1;min-width:220px">
+            <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(242,122,26,.1);border:1px solid rgba(242,122,26,.2);color:var(--or);font-size:11px;font-weight:800;padding:4px 12px;border-radius:20px;margin-bottom:14px;letter-spacing:.04em">💎 PREMIUM</div>
+            <div style="font-size:22px;font-weight:900;color:var(--dark);margin-bottom:8px;letter-spacing:-.5px;line-height:1.2">Gerçek ürünlerinizin<br>karını görün</div>
+            <div style="font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:1.5rem">Trendyol'daki tüm ürünleriniz için komisyon, KDV ve stopaj dahil net kar hesabı.</div>
+            <button onclick="window.location.href=PROXY+'/odeme?email='+encodeURIComponent(currentUser.email)" style="padding:14px 28px;background:var(--or);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 8px 24px rgba(242,122,26,.35);transition:.2s;display:inline-flex;align-items:center;gap:8px" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 32px rgba(242,122,26,.45)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 8px 24px rgba(242,122,26,.35)'">
+              🔒 Premium'a Geç — ₺1.500/yıl
+            </button>
+            <div style="display:flex;gap:14px;margin-top:12px;flex-wrap:wrap">
+              <span style="font-size:12px;color:var(--t3);display:flex;align-items:center;gap:4px"><span style="color:var(--green);font-weight:700">✓</span> iyzico güvenceli</span>
+              <span style="font-size:12px;color:var(--t3);display:flex;align-items:center;gap:4px"><span style="color:var(--green);font-weight:700">✓</span> Anında aktif</span>
+              <span style="font-size:12px;color:var(--t3);display:flex;align-items:center;gap:4px"><span style="color:var(--green);font-weight:700">✓</span> Günde ₺4,10</span>
+            </div>
+          </div>
+          <!-- Sağ: özellik listesi -->
+          <div style="flex-shrink:0;display:flex;flex-direction:column;gap:8px;min-width:200px">
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.05)">
+              <span style="font-size:18px">📊</span>
+              <div><div style="font-size:12px;font-weight:700;color:var(--dark)">Excel entegrasyonu</div><div style="font-size:11px;color:var(--t3)">Trendyol'dan direkt yükle</div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.05)">
+              <span style="font-size:18px">💰</span>
+              <div><div style="font-size:12px;font-weight:700;color:var(--dark)">Komisyon + KDV + Stopaj</div><div style="font-size:11px;color:var(--t3)">Otomatik hesaplanır</div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.05)">
+              <span style="font-size:18px">🚚</span>
+              <div><div style="font-size:12px;font-weight:700;color:var(--dark)">Kargo barem tablosu</div><div style="font-size:11px;color:var(--t3)">Anlaşmalı fiyatlar dahil</div></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
