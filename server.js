@@ -328,6 +328,143 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // ── Şifremi Unuttum — Mail Gönder ──
+  if (parsed.pathname === '/api/sifre-sifirla-mail' && req.method === 'POST') {
+    const body = await getBody(req);
+    const { email } = body;
+    if (!db) { res.writeHead(500); res.end(JSON.stringify({ error: 'DB bağlantısı yok' })); return; }
+    const user = await db.collection('users').findOne({ email });
+    if (!user) {
+      res.writeHead(404); res.end(JSON.stringify({ error: 'Bu e-posta ile kayıtlı hesap bulunamadı.' })); return;
+    }
+    // Token üret, 1 saat geçerli
+    const token = crypto.randomBytes(32).toString('hex');
+    const tokenExpiry = new Date(Date.now() + 60 * 60 * 1000);
+    await db.collection('users').updateOne({ email }, { $set: { resetToken: token, resetTokenExpiry: tokenExpiry } });
+
+    const baseUrl = process.env.RENDER_EXTERNAL_URL || 'https://komisyonhesap.com';
+    const resetLink = baseUrl + '/sifre-sifirla?token=' + token;
+
+    if (RESEND_API_KEY) {
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + RESEND_API_KEY },
+        body: JSON.stringify({
+          from: 'komisyonhesap <info@komisyonhesap.com>',
+          to: [email],
+          subject: 'Şifre Sıfırlama Talebi',
+          html: '<div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;padding:24px">'
+            + '<h2 style="color:#F27A1A">Şifre Sıfırlama</h2>'
+            + '<p>Merhaba <strong>' + (user.ad || '') + '</strong>,</p>'
+            + '<p>Şifrenizi sıfırlamak için aşağıdaki butona tıklayın. Bu link <strong>1 saat</strong> geçerlidir.</p>'
+            + '<a href="' + resetLink + '" style="display:inline-block;padding:14px 28px;background:#F27A1A;color:#fff;border-radius:10px;text-decoration:none;font-weight:bold;margin:16px 0">Şifremi Sıfırla →</a>'
+            + '<p style="color:#999;font-size:12px">Bu talebi siz yapmadıysanız bu e-postayı görmezden gelebilirsiniz.</p>'
+            + '<hr><p style="color:#ccc;font-size:11px">komisyonhesap.com</p>'
+            + '</div>'
+        })
+      }).catch(e => console.error('Reset mail hatası:', e.message));
+    }
+
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true }));
+    return;
+  }
+
+  // ── Şifre Sıfırlama Sayfası ──
+  if (parsed.pathname === '/sifre-sifirla' && req.method === 'GET') {
+    const token = parsed.query.token || '';
+    const resetHtml = `<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Şifre Sıfırla | komisyonhesap</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#F8F9FA;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem}
+.card{background:#fff;border-radius:20px;padding:2.5rem 2rem;width:100%;max-width:400px;box-shadow:0 8px 40px rgba(0,0,0,.1)}
+.logo{text-align:center;font-size:22px;font-weight:900;margin-bottom:2rem}
+.logo em{color:#F27A1A;font-style:normal}
+h2{font-size:20px;font-weight:800;margin-bottom:6px;text-align:center}
+p{font-size:13px;color:#6B7280;text-align:center;margin-bottom:1.5rem}
+label{display:block;font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+input{width:100%;padding:12px 14px;border:1.5px solid #E5E7EB;border-radius:10px;font-size:14px;font-family:inherit;outline:none;margin-bottom:12px;transition:.2s}
+input:focus{border-color:#F27A1A}
+button{width:100%;padding:14px;background:#F27A1A;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:4px}
+button:hover{background:#D96B10}
+.msg{padding:12px;border-radius:10px;font-size:13px;text-align:center;margin-top:12px}
+.msg.ok{background:#ECFDF5;color:#059669}
+.msg.err{background:#FEF2F2;color:#DC2626}
+.back{display:block;text-align:center;margin-top:16px;font-size:13px;color:#F27A1A;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">komisyon<em>hesap</em></div>
+  <h2>Yeni Şifre Belirle</h2>
+  <p>Şifrenizi sıfırlamak için yeni şifrenizi girin.</p>
+  <label>Yeni Şifre</label>
+  <input type="password" id="yeni" placeholder="En az 6 karakter">
+  <label>Şifre Tekrar</label>
+  <input type="password" id="tekrar" placeholder="Şifreyi tekrar girin">
+  <button onclick="sifirla()">Şifremi Güncelle</button>
+  <div id="msg"></div>
+  <a href="https://komisyonhesap.com" class="back">← Ana sayfaya dön</a>
+</div>
+<scr` + 'ipt>' + `
+async function sifirla(){
+  const yeni=document.getElementById('yeni').value;
+  const tekrar=document.getElementById('tekrar').value;
+  const msg=document.getElementById('msg');
+  if(!yeni||yeni.length<6){msg.className='msg err';msg.textContent='Şifre en az 6 karakter olmalı.';return;}
+  if(yeni!==tekrar){msg.className='msg err';msg.textContent='Şifreler eşleşmiyor.';return;}
+  msg.className='msg';msg.textContent='İşleniyor...';
+  const r=await fetch('/api/sifre-sifirla-token',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({token:'${token}',yeniSifre:yeni})
+  });
+  const d=await r.json();
+  if(d.ok){
+    msg.className='msg ok';
+    msg.textContent='Şifreniz güncellendi! Giriş yapabilirsiniz.';
+    setTimeout(()=>window.location.href='https://komisyonhesap.com',2500);
+  } else {
+    msg.className='msg err';msg.textContent=d.error||'Hata oluştu.';
+  }
+}
+` + '</scr' + `ipt>
+</body>
+</html>`;
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    res.end(resetHtml);
+    return;
+  }
+
+  // ── Token ile Şifre Güncelle ──
+  if (parsed.pathname === '/api/sifre-sifirla-token' && req.method === 'POST') {
+    const body = await getBody(req);
+    const { token, yeniSifre } = body;
+    if (!db || !token || !yeniSifre || yeniSifre.length < 6) {
+      res.writeHead(400); res.end(JSON.stringify({ error: 'Geçersiz istek' })); return;
+    }
+    const user = await db.collection('users').findOne({ resetToken: token });
+    if (!user) {
+      res.writeHead(400); res.end(JSON.stringify({ error: 'Geçersiz veya süresi dolmuş link.' })); return;
+    }
+    if (new Date() > new Date(user.resetTokenExpiry)) {
+      res.writeHead(400); res.end(JSON.stringify({ error: 'Sıfırlama linkinizin süresi dolmuş. Lütfen tekrar talep edin.' })); return;
+    }
+    await db.collection('users').updateOne(
+      { resetToken: token },
+      { $set: { sifre: yeniSifre }, $unset: { resetToken: '', resetTokenExpiry: '' } }
+    );
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true }));
+    return;
+  }
+
   // ── ADMİN API ──
 
   // Admin giriş
