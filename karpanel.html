@@ -2028,18 +2028,23 @@ function switchAuth(tab){
 }
 function showAuthError(msg){const el=document.getElementById('auth-error');el.textContent=msg;el.style.display='block';}
 
-function sifremiUnuttum(){
+async function sifremiUnuttum(){
   const email=document.getElementById('giris-email').value.trim();
   if(!email){showAuthError('Önce e-posta adresinizi girin.');return;}
-  const users=JSON.parse(localStorage.getItem('kp_users')||'[]');
-  const user=users.find(u=>u.email===email);
-  if(!user){showAuthError('Bu e-posta ile kayıtlı hesap bulunamadı.');return;}
-  // Şifreyi göster
-  const yeni=prompt('Yeni şifrenizi belirleyin (en az 6 karakter):');
-  if(!yeni||yeni.length<6){toast('Şifre en az 6 karakter olmalı.','error','❌');return;}
-  user.sifre=yeni;
-  localStorage.setItem('kp_users',JSON.stringify(users));
-  toast('Şifreniz güncellendi! Giriş yapabilirsiniz.','success','✅');
+  showAuthError('Mail gönderiliyor...');
+  try{
+    const r=await fetch(PROXY+'/api/sifre-sifirla-mail',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email})
+    });
+    const d=await r.json();
+    if(!r.ok||!d.ok) throw new Error(d.error||'Hata oluştu');
+    showAuthError('');
+    toast('Şifre sıfırlama linki e-posta adresinize gönderildi. Lütfen gelen kutunuzu kontrol edin.','success','📧');
+  }catch(e){
+    showAuthError(e.message);
+  }
 }
 async function fetchWithRetry(url, options, retries=2){
   for(let i=0;i<retries;i++){
