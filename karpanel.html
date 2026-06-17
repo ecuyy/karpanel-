@@ -1176,13 +1176,48 @@ input[type=number]{-moz-appearance:textfield}
   <div id="app-urunler" class="page active">
 
     <!-- DEMO BANNER -->
-    <div id="demo-banner" style="background:linear-gradient(135deg,#1A1A1A,#2D2D2D);border-radius:16px;padding:2rem;margin-bottom:1.5rem;text-align:center">
-      <div style="font-size:32px;margin-bottom:.75rem">🎯</div>
-      <div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:.5rem">Demo ile deneyin</div>
-      <div style="font-size:14px;color:rgba(255,255,255,.5);margin-bottom:1.5rem">3 örnek ürünle komisyonhesap'ı keşfedin. Alış fiyatı girin, net karı görün.</div>
-      <button onclick="loadDemo()" style="background:var(--or);color:#fff;border:none;padding:14px 36px;border-radius:var(--r4);font-size:16px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s" onmouseover="this.style.background='#FF8C38'" onmouseout="this.style.background='var(--or)'">
-        🚀 Demo Başlat
-      </button>
+    <div id="demo-banner" style="background:linear-gradient(135deg,#0F172A,#1E293B);border-radius:20px;padding:2rem;margin-bottom:1.5rem;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.07)">
+      <!-- Arka plan glow efektleri -->
+      <div style="position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:radial-gradient(circle,rgba(242,122,26,.15),transparent 70%);pointer-events:none"></div>
+      <div style="position:absolute;bottom:-30px;left:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(99,102,241,.1),transparent 70%);pointer-events:none"></div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;position:relative">
+        <!-- Sol: Bilgi -->
+        <div style="flex:1;min-width:260px">
+          <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(242,122,26,.15);border:1px solid rgba(242,122,26,.25);color:var(--or);font-size:11px;font-weight:800;padding:4px 12px;border-radius:20px;margin-bottom:12px;letter-spacing:.04em">
+            ✦ ÜCRETSİZ DEMO
+          </div>
+          <div style="font-size:22px;font-weight:900;color:#fff;margin-bottom:8px;letter-spacing:-.5px">Satın almadan önce deneyin</div>
+          <div style="font-size:14px;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:1.25rem">3 gerçek ürün örneğiyle komisyonhesap'ı keşfedin. Alış fiyatı girin, komisyon + KDV + stopaj dahil net karı anında görün.</div>
+          <!-- Özellik listesi -->
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:rgba(255,255,255,.5)"><span style="color:#34D399">✓</span> Kayıt gerekmez</div>
+            <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:rgba(255,255,255,.5)"><span style="color:#34D399">✓</span> Anında başla</div>
+            <div style="display:flex;align-items:center;gap:5px;font-size:12px;color:rgba(255,255,255,.5)"><span style="color:#34D399">✓</span> Tüm özellikler açık</div>
+          </div>
+        </div>
+
+        <!-- Sağ: Mini önizleme + buton -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:12px;flex-shrink:0">
+          <!-- Mini ürün kartları -->
+          <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px;width:220px">
+            <div style="font-size:10px;color:rgba(255,255,255,.35);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Örnek Analiz</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 8px;background:rgba(16,185,129,.08);border-radius:8px;margin-bottom:5px;border:1px solid rgba(16,185,129,.15)">
+              <span style="font-size:12px;color:rgba(255,255,255,.7)">🎧 Kulaklık</span>
+              <span style="font-size:13px;font-weight:800;color:#34D399">+₺312</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 8px;background:rgba(239,68,68,.06);border-radius:8px;border:1px solid rgba(239,68,68,.12)">
+              <span style="font-size:12px;color:rgba(255,255,255,.7)">👜 Çanta</span>
+              <span style="font-size:13px;font-weight:800;color:#F87171">-₺47</span>
+            </div>
+          </div>
+
+          <button onclick="loadDemo()" style="background:var(--or);color:#fff;border:none;padding:14px 32px;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;transition:.2s;box-shadow:0 8px 24px rgba(242,122,26,.35);white-space:nowrap;width:220px" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 32px rgba(242,122,26,.45)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 8px 24px rgba(242,122,26,.35)'">
+            🚀 Demo Başlat
+          </button>
+          <div style="font-size:11px;color:rgba(255,255,255,.25);text-align:center">Kredi kartı gerekmez</div>
+        </div>
+      </div>
     </div>
 
     <!-- EXCEL UPLOAD -->
