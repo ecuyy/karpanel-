@@ -1065,31 +1065,99 @@ input[type=number]{-moz-appearance:textfield}
 </div>
 
 <!-- FİYATLANDIRMA -->
-<div class="pricing-section" id="fiyat" style="scroll-margin-top:80px" style="padding-bottom:6rem">
+<div class="pricing-section" id="fiyat" style="scroll-margin-top:80px;padding-bottom:6rem">
   <div class="section-inner" style="text-align:center">
-    <div class="section-tag">Fiyatlandırma</div>
-    <div class="section-title">Sade ve şeffaf fiyat</div>
-    <p class="section-sub" style="margin:0 auto">Gizli ücret yok. İstediğinizde iptal edebilirsiniz.</p>
-    <!-- Tek fiyat -->
-    <div style="max-width:480px;margin:2.5rem auto 0">
-      <div class="price-card featured" style="transform:none">
-        <div class="price-badge">TÜM ÖZELLİKLER DAHİL</div>
-        <div class="price-name">komisyonhesap Tam Erişim</div>
-        <div class="price-amount">₺1.500</div>
-        <div class="price-period">yıllık · KDV dahil · Gizli ücret yok</div>
-        <div class="price-divider"></div>
-        <div class="price-features">
-          <div class="price-feature"><div class="pf-icon">✓</div>Trendyol Excel entegrasyonu</div>
-          <div class="price-feature"><div class="pf-icon">✓</div>Sınırsız ürün analizi</div>
-          <div class="price-feature"><div class="pf-icon">✓</div>Ürün görselleri otomatik gelir</div>
-          <div class="price-feature"><div class="pf-icon">✓</div>Komisyon + KDV + Stopaj hesabı</div>
-          <div class="price-feature"><div class="pf-icon">✓</div>CSV dışa aktarma</div>
-          <div class="price-feature"><div class="pf-icon">✓</div>Toplu kargo güncelleme</div>
-          <div class="price-feature"><div class="pf-icon">✓</div>1 yıl boyunca tüm güncellemeler</div>
-          <div class="price-feature"><div class="pf-icon">✓</div>Öncelikli destek</div>
+    <div class="section-tag" style="display:inline-block">Fiyatlandırma</div>
+    <div class="section-title">Günde sadece ₺4,10</div>
+    <p class="section-sub" style="margin:0 auto">Zararlı sattığın tek bir ürünün zararı bunu karşılar. Gizli ücret yok.</p>
+
+    <!-- Sosyal kanıt -->
+    <div style="display:flex;justify-content:center;gap:2rem;margin:1.5rem 0;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--t2)"><span style="color:var(--green);font-weight:700">✓</span> iyzico güvenceli ödeme</div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--t2)"><span style="color:var(--green);font-weight:700">✓</span> Anında aktif</div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--t2)"><span style="color:var(--green);font-weight:700">✓</span> 1 yıl tüm güncellemeler</div>
+    </div>
+
+    <div style="max-width:520px;margin:0 auto">
+      <!-- Ana kart -->
+      <div style="background:linear-gradient(160deg,#1A1A2E,#16213E,#0F3460);border-radius:28px;padding:2.5rem;position:relative;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.25)">
+
+        <!-- Arka plan efekti -->
+        <div style="position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(242,122,26,.2),transparent 70%);pointer-events:none"></div>
+        <div style="position:absolute;bottom:-40px;left:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(59,130,246,.1),transparent 70%);pointer-events:none"></div>
+
+        <!-- Rozet -->
+        <div style="display:inline-flex;align-items:center;gap:6px;background:var(--or);color:#fff;font-size:11px;font-weight:800;padding:5px 14px;border-radius:20px;margin-bottom:1.5rem;letter-spacing:.05em">
+          💎 TÜM ÖZELLİKLER DAHİL
         </div>
-        <button class="btn-price" onclick="openAuth('kayit')">Hemen Başla — ₺1.500/yıl ↗</button>
-        <div style="text-align:center;margin-top:12px;font-size:12px;color:rgba(255,255,255,.4)">Önce ücretsiz deneyin → <a onclick="demoVeGo()" style="color:rgba(255,255,255,.6);cursor:pointer;text-decoration:underline">Demo hesabı</a></div>
+
+        <!-- Fiyat -->
+        <div style="margin-bottom:1.5rem">
+          <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:6px;font-weight:500">komisyonhesap Premium · Yıllık Plan</div>
+          <div style="display:flex;align-items:flex-start;justify-content:center;gap:4px">
+            <span style="font-size:28px;font-weight:900;color:#fff;margin-top:8px">₺</span>
+            <span style="font-size:72px;font-weight:900;color:#fff;line-height:1;letter-spacing:-3px">1.500</span>
+          </div>
+          <div style="font-size:13px;color:rgba(255,255,255,.4);margin-top:4px">yıllık · KDV dahil · <span style="color:var(--or);font-weight:700">= günde ₺4,10</span></div>
+        </div>
+
+        <!-- Özellikler - 2 kolon -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:2rem;text-align:left">
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,.06);border-radius:10px;border:1px solid rgba(255,255,255,.08)">
+            <span style="color:var(--green);font-weight:900;font-size:14px">✓</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.8)">Excel entegrasyonu</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,.06);border-radius:10px;border:1px solid rgba(255,255,255,.08)">
+            <span style="color:var(--green);font-weight:900;font-size:14px">✓</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.8)">Sınırsız ürün</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,.06);border-radius:10px;border:1px solid rgba(255,255,255,.08)">
+            <span style="color:var(--green);font-weight:900;font-size:14px">✓</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.8)">Komisyon + KDV + Stopaj</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,.06);border-radius:10px;border:1px solid rgba(255,255,255,.08)">
+            <span style="color:var(--green);font-weight:900;font-size:14px">✓</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.8)">Ürün görselleri</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,.06);border-radius:10px;border:1px solid rgba(255,255,255,.08)">
+            <span style="color:var(--green);font-weight:900;font-size:14px">✓</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.8)">Toplu kargo güncelleme</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,.06);border-radius:10px;border:1px solid rgba(255,255,255,.08)">
+            <span style="color:var(--green);font-weight:900;font-size:14px">✓</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.8)">Öncelikli destek</span>
+          </div>
+          <div style="grid-column:1/-1;display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(242,122,26,.12);border-radius:10px;border:1px solid rgba(242,122,26,.25)">
+            <span style="color:var(--or);font-weight:900;font-size:14px">✓</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.9);font-weight:600">1 yıl boyunca tüm güncellemeler ücretsiz</span>
+          </div>
+        </div>
+
+        <!-- CTA Buton -->
+        <button onclick="openAuth('kayit')" style="width:100%;padding:16px;border:none;border-radius:14px;background:var(--or);color:#fff;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;transition:.2s;box-shadow:0 8px 24px rgba(242,122,26,.4);letter-spacing:-.2px" onmouseover="this.style.background='#D96B10';this.style.transform='translateY(-2px)'" onmouseout="this.style.background='var(--or)';this.style.transform='none'">
+          Hemen Başla — ₺1.500/yıl ↗
+        </button>
+
+        <!-- Alt güven -->
+        <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-top:14px;flex-wrap:wrap">
+          <div style="font-size:11px;color:rgba(255,255,255,.35);display:flex;align-items:center;gap:4px">🔒 iyzico güvenceli</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.35);display:flex;align-items:center;gap:4px">⚡ Anında aktif</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.35);display:flex;align-items:center;gap:4px">📧 Destek garantisi</div>
+        </div>
+
+        <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08);font-size:12px;color:rgba(255,255,255,.3);text-align:center">
+          Önce ücretsiz deneyin → <a onclick="demoVeGo()" style="color:rgba(255,255,255,.5);cursor:pointer;text-decoration:underline;font-weight:600">Demo hesabı</a>
+        </div>
+      </div>
+
+      <!-- Alt sosyal kanıt -->
+      <div style="margin-top:1.5rem;display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--t3)">
+          <span style="font-size:16px">⭐</span> Trendyol satıcılarının tercihi
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--t3)">
+          <span style="font-size:16px">🚀</span> Dakikalar içinde kullanıma hazır
+        </div>
       </div>
     </div>
   </div>
