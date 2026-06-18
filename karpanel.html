@@ -210,6 +210,7 @@
   --sh2:0 8px 40px rgba(0,0,0,.12);
 }
 *{box-sizing:border-box;margin:0;padding:0}
+html,body{overflow-x:hidden;max-width:100vw}
 html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;background:var(--white);color:var(--text);-webkit-font-smoothing:antialiased}
 
@@ -837,6 +838,103 @@ footer{background:linear-gradient(180deg,#0D1117 0%,#090D13 100%);padding:0;marg
   .modal-inputs{grid-template-columns:1fr}
   .fr2,.fr3{grid-template-columns:1fr}
 }
+
+/* ── MOBİL RESPONSIVE ── */
+@media(max-width:768px){
+  /* Navbar */
+  #hamburger-btn{display:flex!important}
+  .nav-right{display:none!important}
+  #nav-center-links{display:none!important}
+  nav{border-radius:0;top:0;left:0;right:0;border-left:none;border-right:none;border-top:none;width:100%}
+  .nav-inner{padding:0 1rem;height:56px}
+  .nav-right .btn-outline-sm,.nav-right .btn-dark-sm{padding:7px 12px;font-size:12px}
+  .nav-dashboard-btn{padding:7px 12px;font-size:12px}
+
+  /* Hero */
+  .hero{padding:4rem 1rem 2.5rem;min-height:auto}
+  .hero h1{font-size:clamp(28px,8vw,48px);letter-spacing:-1.5px}
+  .hero-sub{font-size:15px;margin-bottom:1.5rem}
+  .hero-btns{flex-direction:column;align-items:center;gap:10px}
+  .btn-hero-dark,.btn-hero-outline{width:100%;max-width:320px;justify-content:center}
+  .hero-stats{max-width:100%;margin-bottom:2rem}
+  .hero-stats > div{padding:10px 8px}
+  .hero-stat-val{font-size:18px}
+
+  /* Hero mockup */
+  .hero > div > div:last-child{max-width:100%}
+
+  /* Section */
+  .section-inner{padding:0 1rem}
+  .section-title{font-size:clamp(24px,6vw,40px);letter-spacing:-1px}
+
+  /* Nasıl Çalışır */
+  .how-grid{grid-template-columns:1fr;gap:1.5rem}
+
+  /* Fiyatlandırma */
+  #fiyat .section-inner{padding:0 1rem}
+
+  /* Footer */
+  footer .main{grid-template-columns:1fr;gap:2rem;padding:2rem 1rem}
+  footer > div:first-child{padding:1.5rem 1rem}
+  footer > div:first-child > div{flex-direction:column;align-items:flex-start}
+
+  /* App sayfası */
+  #app-section{padding:4rem 0 1rem}
+  .app-inner{padding:0 .75rem}
+  .sel-bar{flex-wrap:wrap;gap:8px}
+  .sel-bar > div:first-child{flex-wrap:wrap;gap:6px}
+
+  /* Kargo barem tablosu */
+  #kargo-barem-wrap .kbp{flex-wrap:wrap}
+  .kargo-secim-card{flex:1;min-width:calc(33% - 4px)}
+
+  /* Ürün tablosu */
+  .prod-table-wrap{border-radius:12px;overflow-x:auto}
+  .ptable{font-size:12px}
+  .ptable th{padding:8px 6px;font-size:10px}
+  .ptable td{padding:8px 5px}
+  .tinput{width:70px;padding:5px 6px;font-size:12px}
+  .prod-img,.prod-img-ph{width:36px;height:36px;border-radius:8px}
+  .prod-name{max-width:110px;font-size:12px}
+  .detay-btn{padding:5px 8px;font-size:11px}
+  .kar-badge{padding:3px 7px;font-size:11px}
+
+  /* Araç çubuğu */
+  .toolbar-row{flex-wrap:wrap;gap:8px}
+  #search-box-wrap{width:100%}
+  #search-box-wrap input{width:100%}
+
+  /* Modaller */
+  .auth-box{margin:1rem;padding:1.5rem 1.25rem;max-width:calc(100vw - 2rem)}
+  .modal-inner{margin:1rem;padding:1.25rem;max-width:calc(100vw - 2rem);max-height:calc(100vh - 2rem)}
+
+  /* Pay overlay */
+  #pay-overlay .pay-box{margin:1rem;padding:1.5rem 1.25rem;max-width:calc(100vw - 2rem)}
+
+  /* Fatura overlay */
+  #fatura-overlay > div{margin:1rem;max-width:calc(100vw - 2rem)}
+  #fatura-overlay > div > div:last-child{grid-template-columns:1fr!important}
+
+  /* iyzico overlay */
+  #iyzico-overlay > div{margin:.5rem;max-width:calc(100vw - 1rem)}
+
+  /* Hoş geldin modal */
+  #welcome-overlay > div{margin:1rem;max-width:calc(100vw - 2rem)}
+
+  /* Upload alanı */
+  .upload-steps{grid-template-columns:1fr!important}
+  .how-steps-row{flex-direction:column;gap:.5rem}
+}
+
+@media(max-width:480px){
+  .hero h1{font-size:26px}
+  .nav-logo img{height:70px}
+  .kargo-secim-card{min-width:calc(50% - 4px)}
+  .tinput{width:62px}
+  .prod-name{max-width:80px;font-size:11px}
+  .detay-btn{padding:4px 6px;font-size:10px}
+  .ptable th,.ptable td{padding:6px 4px}
+}
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 input[type=number]{-moz-appearance:textfield}
@@ -885,6 +983,12 @@ input[type=number]{-moz-appearance:textfield}
       <a class="nav-link" href="#fiyat" onclick="if(document.getElementById('app-section').style.display==='block'){goHome();setTimeout(()=>{document.getElementById('fiyat').scrollIntoView({behavior:'smooth'})},350)}return true;">Fiyatlandırma</a>
       <a class="nav-link" href="#iletisim" onclick="if(document.getElementById('app-section').style.display==='block'){goHome();setTimeout(()=>{document.getElementById('iletisim').scrollIntoView({behavior:'smooth'})},350)}return true;">İletişim</a>
     </div>
+    <!-- Hamburger (sadece mobilde görünür) -->
+    <button id="hamburger-btn" onclick="toggleMobileMenu()" style="display:none;background:none;border:none;cursor:pointer;padding:6px;flex-direction:column;gap:5px">
+      <span style="display:block;width:22px;height:2px;background:var(--dark);border-radius:2px;transition:.3s"></span>
+      <span style="display:block;width:22px;height:2px;background:var(--dark);border-radius:2px;transition:.3s"></span>
+      <span style="display:block;width:22px;height:2px;background:var(--dark);border-radius:2px;transition:.3s"></span>
+    </button>
     <div class="nav-right" id="nav-right">
       <div class="user-pill" id="user-pill" style="display:none">
         <div class="user-avatar" id="user-av">U</div>
@@ -900,6 +1004,25 @@ input[type=number]{-moz-appearance:textfield}
     </div>
   </div>
 </nav>
+
+<!-- MOBİL MENÜ -->
+<div id="mobile-menu" style="display:none;position:fixed;top:56px;left:0;right:0;background:#fff;border-bottom:1px solid var(--border);z-index:999;padding:1rem;box-shadow:0 8px 24px rgba(0,0,0,.1)">
+  <div id="mm-guest" style="display:flex;flex-direction:column;gap:4px">
+    <a class="nav-link" style="display:block;padding:12px 16px;border-radius:10px" href="#nasil" onclick="closeMobileMenu();goHome();setTimeout(()=>document.getElementById('nasil').scrollIntoView({behavior:'smooth'}),350)">Nasıl Çalışır?</a>
+    <a class="nav-link" style="display:block;padding:12px 16px;border-radius:10px" href="#" onclick="closeMobileMenu();demoVeGo()">Demo</a>
+    <a class="nav-link" style="display:block;padding:12px 16px;border-radius:10px" href="#fiyat" onclick="closeMobileMenu();goHome();setTimeout(()=>document.getElementById('fiyat').scrollIntoView({behavior:'smooth'}),350)">Fiyatlandırma</a>
+    <a class="nav-link" style="display:block;padding:12px 16px;border-radius:10px" href="#iletisim" onclick="closeMobileMenu();goHome();setTimeout(()=>document.getElementById('iletisim').scrollIntoView({behavior:'smooth'}),350)">İletişim</a>
+    <div style="border-top:1px solid var(--border);margin:8px 0;padding-top:8px;display:flex;gap:8px">
+      <button onclick="closeMobileMenu();openAuth('giris')" style="flex:1;padding:11px;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Giriş Yap</button>
+      <button onclick="closeMobileMenu();openAuth('kayit')" style="flex:1;padding:11px;border:none;border-radius:10px;background:var(--dark);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">Üye Ol ↗</button>
+    </div>
+  </div>
+  <div id="mm-user" style="display:none;flex-direction:column;gap:4px">
+    <button onclick="closeMobileMenu();goApp()" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--or);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px">Dashboard ↗</button>
+    <button onclick="closeMobileMenu();openHesabim()" style="width:100%;padding:11px;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:4px">Hesabım</button>
+    <button onclick="closeMobileMenu();logout()" style="width:100%;padding:11px;border:1.5px solid var(--border);border-radius:10px;background:#fff;font-size:14px;color:var(--red);font-weight:600;cursor:pointer;font-family:inherit">Çıkış Yap</button>
+  </div>
+</div>
 
 <!-- HERO -->
 <div class="hero" id="hero">
@@ -2174,6 +2297,25 @@ async function kayitOl(){
 // ── ÖDEME ──
 function formatKart(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.replace(/(\d{4})/g,'$1 ').trim();}
 function formatTarih(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2,4);el.value=v;}
+function toggleMobileMenu(){
+  const menu = document.getElementById('mobile-menu');
+  const isOpen = menu.style.display === 'block';
+  menu.style.display = isOpen ? 'none' : 'block';
+  // Kullanıcı durumuna göre menü içeriğini göster
+  const mmGuest = document.getElementById('mm-guest');
+  const mmUser = document.getElementById('mm-user');
+  if(currentUser){
+    if(mmGuest) mmGuest.style.display='none';
+    if(mmUser) mmUser.style.display='flex';
+  } else {
+    if(mmGuest) mmGuest.style.display='flex';
+    if(mmUser) mmUser.style.display='none';
+  }
+}
+function closeMobileMenu(){
+  document.getElementById('mobile-menu').style.display='none';
+}
+
 function closeFaturaOverlay(){
   document.getElementById('fatura-overlay').style.display='none';
 }
