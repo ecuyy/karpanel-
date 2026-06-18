@@ -880,12 +880,12 @@ tr:hover td{background:#FAFAFA}
 <div class="main">
   <!-- Yükleme alanı -->
   <div id="upload-area">
-    <div class="upload-card" onclick="document.getElementById('file-inp').click()">
+    <label for="file-inp" class="upload-card" style="display:block;cursor:pointer">
       <div style="font-size:40px">📊</div>
       <h3>Avantajlı Fiyat Excel'ini Yükle</h3>
       <p>Trendyol → Fiyatlandırma → Avantajlı Etiket → <strong>Excel ile Güncelle</strong> butonundan indirdiğin dosyayı yükle.<br><br>Sistemdeki alış fiyatı ve kargo maliyetin otomatik gelir, her yıldız seviyesinde kar/zarar gösterilir.</p>
-      <button class="upload-btn">📂 Dosya Seç</button>
-    </div>
+      <span class="upload-btn">📂 Dosya Seç</span>
+    </label>
     <input type="file" id="file-inp" accept=".xlsx,.xls" style="display:none" onchange="excelYukle(this)">
     <div id="yukle-hata" style="color:#DC2626;font-size:13px;margin-top:8px;display:none"></div>
   </div>
