@@ -1016,6 +1016,58 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 </div>
 
+<!-- FATURA DETAY MODAL -->
+<div id="fatura-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;align-items:center;justify-content:center;padding:1rem">
+  <div style="background:#0D1525;border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:2rem;width:100%;max-width:480px;box-shadow:0 24px 64px rgba(0,0,0,.5)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+      <div>
+        <div style="font-size:16px;font-weight:800;color:#fff">📄 Fatura Bilgileri</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:3px" id="fm-kullanici"></div>
+      </div>
+      <button onclick="document.getElementById('fatura-modal').style.display='none'" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:#fff;font-size:16px;cursor:pointer">✕</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="background:rgba(255,255,255,.04);border-radius:10px;padding:12px">
+        <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Ad Soyad</div>
+        <div style="font-size:13px;font-weight:600;color:#fff" id="fm-ad">—</div>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border-radius:10px;padding:12px">
+        <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">TC Kimlik No</div>
+        <div style="font-size:13px;font-weight:600;color:#fff" id="fm-tc">—</div>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border-radius:10px;padding:12px">
+        <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Vergi Kimlik No</div>
+        <div style="font-size:13px;font-weight:600;color:#fff" id="fm-vkn">—</div>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border-radius:10px;padding:12px">
+        <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Vergi Dairesi</div>
+        <div style="font-size:13px;font-weight:600;color:#fff" id="fm-vd">—</div>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border-radius:10px;padding:12px">
+        <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Telefon</div>
+        <div style="font-size:13px;font-weight:600;color:#fff" id="fm-tel">—</div>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border-radius:10px;padding:12px">
+        <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Fatura E-posta</div>
+        <div style="font-size:13px;font-weight:600;color:#fff;word-break:break-all" id="fm-email">—</div>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border-radius:10px;padding:12px">
+        <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">İl</div>
+        <div style="font-size:13px;font-weight:600;color:#fff" id="fm-il">—</div>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border-radius:10px;padding:12px">
+        <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">İlçe</div>
+        <div style="font-size:13px;font-weight:600;color:#fff" id="fm-ilce">—</div>
+      </div>
+      <div style="grid-column:1/-1;background:rgba(255,255,255,.04);border-radius:10px;padding:12px">
+        <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Açık Adres</div>
+        <div style="font-size:13px;font-weight:600;color:#fff" id="fm-adres">—</div>
+      </div>
+    </div>
+    <button onclick="document.getElementById('fatura-modal').style.display='none'" style="width:100%;margin-top:1.25rem;padding:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit">Kapat</button>
+  </div>
+</div>
+
 <div class="toast-wrap" id="toast-wrap"></div>
 
 <script>
@@ -1143,6 +1195,7 @@ function renderTablo(){
           ? \`<button class="action-btn orange" onclick="premiumDegistir('\${u.email}',false)">Premium Al</button>\`
           : \`<button class="action-btn green" onclick="premiumDegistir('\${u.email}',true)">💎 Premium Ver</button>\`}
         <button class="action-btn blue" onclick="sifreSifirla('\${u.email}')">🔑 Şifre</button>
+        <button class="action-btn green" onclick="faturaGoster('\${u.email}')">📄 Fatura</button>
         <button class="action-btn red" onclick="kullaniciSil('\${u.email}','\${u.ad}')">🗑️ Sil</button>
       </div></td>
     </tr>\`;
@@ -1171,6 +1224,28 @@ async function sifreSifirla(email){
   if(!yeni||yeni.length<6){if(yeni!==null)alert('Şifre en az 6 karakter olmalı');return;}
   await fetch('/api/admin/sifre-sifirla',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:adminToken,email,yeniSifre:yeni})});
   toast('Şifre güncellendi ✓','success');
+}
+
+function faturaGoster(email) {
+  const u = tumKullanicilar.find(x => x.email === email);
+  if (!u) return;
+  const f = u.fatura;
+  if (!f) {
+    alert('Bu kullanıcı için fatura bilgisi bulunamadı.');
+    return;
+  }
+  const modal = document.getElementById('fatura-modal');
+  document.getElementById('fm-ad').textContent = f.ad || '—';
+  document.getElementById('fm-tc').textContent = f.tc || '—';
+  document.getElementById('fm-vkn').textContent = f.vkn || '—';
+  document.getElementById('fm-vd').textContent = f.vd || '—';
+  document.getElementById('fm-tel').textContent = f.tel || '—';
+  document.getElementById('fm-email').textContent = f.email || '—';
+  document.getElementById('fm-il').textContent = f.il || '—';
+  document.getElementById('fm-ilce').textContent = f.ilce || '—';
+  document.getElementById('fm-adres').textContent = f.adres || '—';
+  document.getElementById('fm-kullanici').textContent = u.ad + ' (' + u.email + ')';
+  modal.style.display = 'flex';
 }
 
 async function kullaniciSil(email,ad){
