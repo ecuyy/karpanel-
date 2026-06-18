@@ -930,6 +930,7 @@ tr:hover td{background:#FAFAFA}
 // Ürün verilerini sessionStorage'dan al
 let urunler = [];
 try { urunler = JSON.parse(localStorage.getItem('kp_etiket_urunler')||'[]'); } catch(e){}
+console.log('Sistem ürünleri:', urunler.length, urunler.length>0?urunler[0]:{});
 
 let tumVeri = [];
 let aktifFiltre = 'hepsi';
@@ -1031,10 +1032,16 @@ function excelYukle(input){
         const komVar=String(r[H['KOMİSYON TARİFESİ']]||'').trim()==='Var';
 
         // Sistemdeki ürünle eşleştir
-        const urun = urunler.find(u=>
-          (u.modelCode&&u.modelCode.trim().toUpperCase()===modelKodu.toUpperCase())||
-          (u.stockCode&&u.stockCode.trim().toUpperCase()===modelKodu.toUpperCase())
-        );
+        // id = barkod veya title; model kodu barkodda veya title'da geçebilir
+        const modelKoduUp = modelKodu.toUpperCase();
+        const urun = urunler.find(u=> {
+          const uid = String(u.id||'').toUpperCase();
+          const ttl = String(u.title||'').toUpperCase();
+          return uid === modelKoduUp ||
+                 uid.includes(modelKoduUp) ||
+                 modelKoduUp.includes(uid) ||
+                 ttl.includes(modelKoduUp);
+        });
         const alis=urun?(urun.alis||0):0;
         const kargo=urun?(urun.kargo||0):0;
         const komOran=urun?(urun.commissionRate||0):0;
