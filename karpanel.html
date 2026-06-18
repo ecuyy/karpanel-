@@ -219,6 +219,19 @@ nav{
   position:sticky;top:16px;z-index:200;
   padding:0 2rem;
   pointer-events:none;
+  transition:top .3s ease, padding .3s ease;
+}
+nav.scrolled{
+  top:0;
+  padding:0;
+}
+nav.scrolled .nav-inner{
+  border-radius:0;
+  border-left:none;
+  border-right:none;
+  border-top:none;
+  box-shadow:0 2px 20px rgba(0,0,0,.1);
+  max-width:100%;
 }
 .nav-inner{
   max-width:1160px;margin:0 auto;
@@ -230,6 +243,7 @@ nav{
   display:flex;align-items:center;justify-content:space-between;
   padding:0 1.5rem;
   box-shadow:0 4px 24px rgba(0,0,0,.08);
+  transition:border-radius .3s, box-shadow .3s, max-width .3s;
   pointer-events:all;
 }
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
@@ -2297,6 +2311,17 @@ async function kayitOl(){
 // ── ÖDEME ──
 function formatKart(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.replace(/(\d{4})/g,'$1 ').trim();}
 function formatTarih(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2,4);el.value=v;}
+// Navbar scroll efekti
+window.addEventListener('scroll', function(){
+  const nav = document.querySelector('nav');
+  if(!nav) return;
+  if(window.scrollY > 60){
+    nav.classList.add('scrolled');
+  } else {
+    nav.classList.remove('scrolled');
+  }
+});
+
 function toggleMobileMenu(){
   const menu = document.getElementById('mobile-menu');
   const isOpen = menu.style.display === 'block';
