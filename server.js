@@ -124,6 +124,33 @@ const server = http.createServer(async (req, res) => {
     await db.collection('users').insertOne(user);
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ ok: true, user: { ad, email, premium: false } }));
+
+    // Admin bildirim maili
+    if (RESEND_API_KEY) {
+      const toplamUye = await db.collection('users').countDocuments();
+      fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + RESEND_API_KEY },
+        body: JSON.stringify({
+          from: 'komisyonhesap <info@komisyonhesap.com>',
+          to: ['info@komisyonhesap.com'],
+          subject: '🎉 Yeni Üye: ' + ad,
+          html: '<div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;padding:24px;border:1px solid #eee;border-radius:12px">'
+            + '<h2 style="color:#F27A1A;margin-bottom:4px">🎉 Yeni Üye Kaydı</h2>'
+            + '<p style="color:#666;font-size:13px;margin-top:0">komisyonhesap\u0027a yeni bir kullan\u0131c\u0131 kat\u0131ld\u0131</p>'
+            + '<hr style="border:none;border-top:1px solid #eee;margin:16px 0">'
+            + '<table style="width:100%;font-size:14px">'
+            + '<tr><td style="color:#888;padding:4px 0">👤 Ad Soyad</td><td style="font-weight:bold">' + ad + '</td></tr>'
+            + '<tr><td style="color:#888;padding:4px 0">📧 E-posta</td><td>' + email + '</td></tr>'
+            + '<tr><td style="color:#888;padding:4px 0">📅 Kayıt Tarihi</td><td>' + new Date().toLocaleString("tr-TR") + '</td></tr>'
+            + '<tr><td style="color:#888;padding:4px 0">👥 Toplam Üye</td><td style="font-weight:bold;color:#F27A1A">' + toplamUye + ' kişi</td></tr>'
+            + '</table>'
+            + '<hr style="border:none;border-top:1px solid #eee;margin:16px 0">'
+            + '<a href="https://karpanel.onrender.com/admin" style="display:inline-block;padding:10px 20px;background:#F27A1A;color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:bold">Admin Paneline Git →</a>'
+            + '</div>'
+        })
+      }).catch(e => console.error('Bildirim maili hatası:', e.message));
+    }
     return;
   }
 
