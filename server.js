@@ -1137,7 +1137,7 @@ function renderTablo(){
       <td style="color:var(--muted)">\${kayit}</td>
       <td>\${badge}</td>
       <td style="\${bitisStyle}">\${bitis}</td>
-      <td style="font-size:12px">${u.fatura ? '✓' : '—'}</td>
+      <td style="font-size:12px">\${u.fatura ? '✓' : '—'}</td>
       <td><div class="actions">
         \${u.premium
           ? \`<button class="action-btn orange" onclick="premiumDegistir('\${u.email}',false)">Premium Al</button>\`
