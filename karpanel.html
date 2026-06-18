@@ -1311,7 +1311,7 @@ input[type=number]{-moz-appearance:textfield}
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-inp" type="text" placeholder="Ürün ara..." oninput="araUrun(this.value)"></div>
           <button class="btn-sm" onclick="openKargoModal()">🚚 Kargo Fiyat Gir</button>
-          <button class="btn-sm" onclick="openEtiketAnaliz()" style="background:rgba(99,102,241,.1);color:#6366F1;border-color:rgba(99,102,241,.3)">⭐ Avantajlı Etiket Analizi</button>
+          <button class="btn-sm" onclick="etiketSayfasiAc()" style="background:rgba(99,102,241,.1);color:#6366F1;border-color:rgba(99,102,241,.3)">⭐ Avantajlı Etiket Analizi</button>
           <button class="btn-danger-sm" onclick="tumunuSil()">🗑 Tümünü Sil</button>
         </div>
       </div>
@@ -2704,66 +2704,6 @@ async function iletisimGonder(){
 }
 </script>
 
-<!-- AVANTAJLİ ETİKET ANALİZ MODAL -->
-<div id="etiket-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);z-index:9999;display:none;align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto">
-  <div style="background:#fff;border-radius:20px;width:100%;max-width:900px;margin:auto;box-shadow:0 24px 64px rgba(0,0,0,.2)">
-    <!-- Başlık -->
-    <div style="background:linear-gradient(135deg,#4F46E5,#7C3AED);padding:1.25rem 1.5rem;border-radius:20px 20px 0 0;display:flex;align-items:center;justify-content:space-between">
-      <div>
-        <div style="font-size:16px;font-weight:800;color:#fff">⭐ Avantajlı Etiket Analizi</div>
-        <div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:2px">Trendyol haftalık avantajlı fiyat Excel'ini yükle — kar/zarar otomatik hesaplanır</div>
-      </div>
-      <button onclick="closeEtiketAnaliz()" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:16px;cursor:pointer">✕</button>
-    </div>
-    <!-- Yükleme alanı -->
-    <div id="etiket-upload-area" style="padding:1.5rem;border-bottom:1px solid #F3F4F6">
-      <div style="border:2px dashed #E5E7EB;border-radius:12px;padding:2rem;text-align:center;cursor:pointer;transition:.2s" onclick="document.getElementById('etiket-file-input').click()" onmouseover="this.style.borderColor='#6366F1'" onmouseout="this.style.borderColor='#E5E7EB'">
-        <div style="font-size:32px;margin-bottom:8px">📊</div>
-        <div style="font-size:14px;font-weight:700;color:#374151;margin-bottom:4px">Avantajlı Fiyat Excel'ini Sürükle veya Tıkla</div>
-        <div style="font-size:12px;color:#9CA3AF">Trendyol → Fiyatlandırma → Avantajlı Etiket → Excel ile Güncelle</div>
-      </div>
-      <input type="file" id="etiket-file-input" accept=".xlsx,.xls" style="display:none" onchange="etiketExcelYukle(this)">
-    </div>
-    <!-- Sonuç tablosu -->
-    <div id="etiket-sonuc" style="display:none;padding:1.5rem">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
-        <div>
-          <span style="font-size:14px;font-weight:700;color:#374151">Analiz Sonuçları</span>
-          <span id="etiket-ozet" style="font-size:12px;color:#6B7280;margin-left:8px"></span>
-        </div>
-        <div style="display:flex;gap:6px">
-          <button onclick="etiketFiltrele('hepsi')" id="ef-hepsi" class="etiket-ftab active">Hepsi</button>
-          <button onclick="etiketFiltrele('kar')" id="ef-kar" class="etiket-ftab" style="color:#059669">✅ Karlı</button>
-          <button onclick="etiketFiltrele('zarar')" id="ef-zarar" class="etiket-ftab" style="color:#DC2626">❌ Zararlı</button>
-        </div>
-      </div>
-      <div style="overflow-x:auto;border:1px solid #F3F4F6;border-radius:12px">
-        <table style="width:100%;border-collapse:collapse;font-size:12px">
-          <thead>
-            <tr style="background:#F9FAFB">
-              <th style="padding:10px 12px;text-align:left;color:#6B7280;font-weight:700;font-size:11px;text-transform:uppercase;border-bottom:1px solid #F3F4F6;white-space:nowrap">Ürün</th>
-              <th style="padding:10px 8px;text-align:center;color:#6B7280;font-weight:700;font-size:11px;text-transform:uppercase;border-bottom:1px solid #F3F4F6;white-space:nowrap">Mevcut Fiyat</th>
-              <th style="padding:10px 8px;text-align:center;color:#6B7280;font-weight:700;font-size:11px;text-transform:uppercase;border-bottom:1px solid #F3F4F6;white-space:nowrap;background:rgba(234,179,8,.08)">1⭐ Alt Fiyat</th>
-              <th style="padding:10px 8px;text-align:center;color:#6B7280;font-weight:700;font-size:11px;text-transform:uppercase;border-bottom:1px solid #F3F4F6;white-space:nowrap;background:rgba(234,179,8,.08)">1⭐ Kar/Zarar</th>
-              <th style="padding:10px 8px;text-align:center;color:#6B7280;font-weight:700;font-size:11px;text-transform:uppercase;border-bottom:1px solid #F3F4F6;white-space:nowrap;background:rgba(156,163,175,.08)">2⭐ Alt Fiyat</th>
-              <th style="padding:10px 8px;text-align:center;color:#6B7280;font-weight:700;font-size:11px;text-transform:uppercase;border-bottom:1px solid #F3F4F6;white-space:nowrap;background:rgba(156,163,175,.08)">2⭐ Kar/Zarar</th>
-              <th style="padding:10px 8px;text-align:center;color:#6B7280;font-weight:700;font-size:11px;text-transform:uppercase;border-bottom:1px solid #F3F4F6;white-space:nowrap;background:rgba(99,102,241,.08)">3⭐ Üst Fiyat</th>
-              <th style="padding:10px 8px;text-align:center;color:#6B7280;font-weight:700;font-size:11px;text-transform:uppercase;border-bottom:1px solid #F3F4F6;white-space:nowrap;background:rgba(99,102,241,.08)">3⭐ Kar/Zarar</th>
-              <th style="padding:10px 8px;text-align:center;color:#6B7280;font-weight:700;font-size:11px;text-transform:uppercase;border-bottom:1px solid #F3F4F6;white-space:nowrap">Alış+Kargo</th>
-            </tr>
-          </thead>
-          <tbody id="etiket-tbody"></tbody>
-        </table>
-      </div>
-      <div style="margin-top:10px;font-size:11px;color:#9CA3AF;text-align:center">* Hesaplamalar mevcut komisyon oranı, KDV ve stopaj dahil yapılmaktadır. Alış fiyatı girilmemiş ürünler hesaplanamaz.</div>
-    </div>
-  </div>
-</div>
-
-<style>
-.etiket-ftab{padding:5px 12px;border-radius:20px;border:1.5px solid #E5E7EB;background:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
-.etiket-ftab.active{border-color:#6366F1;background:rgba(99,102,241,.08);color:#6366F1}
-</style>
 
 </body>
 </html>
