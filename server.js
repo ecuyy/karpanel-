@@ -86,7 +86,7 @@ const server = http.createServer(async (req, res) => {
   // robots.txt
   if (parsed.pathname === '/robots.txt') {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end(`User-agent: *\nAllow: /\nSitemap: https://karpanel.onrender.com/sitemap.xml\nDisallow: /api/\nDisallow: /admin`);
+    res.end(`User-agent: *\nAllow: /\nSitemap: https://komisyonhesap.com/sitemap.xml\nDisallow: /api/\nDisallow: /admin`);
     return;
   }
 
@@ -96,10 +96,10 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(200, { 'Content-Type': 'application/xml' });
     res.end(`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://karpanel.onrender.com/</loc><lastmod>${today}</lastmod><priority>1.0</priority></url>
-  <url><loc>https://karpanel.onrender.com/#nasil</loc><lastmod>${today}</lastmod><priority>0.8</priority></url>
-  <url><loc>https://karpanel.onrender.com/#fiyat</loc><lastmod>${today}</lastmod><priority>0.9</priority></url>
-  <url><loc>https://karpanel.onrender.com/#iletisim</loc><lastmod>${today}</lastmod><priority>0.7</priority></url>
+  <url><loc>https://komisyonhesap.com/</loc><lastmod>${today}</lastmod><priority>1.0</priority></url>
+  <url><loc>https://komisyonhesap.com/#nasil</loc><lastmod>${today}</lastmod><priority>0.8</priority></url>
+  <url><loc>https://komisyonhesap.com/#fiyat</loc><lastmod>${today}</lastmod><priority>0.9</priority></url>
+  <url><loc>https://komisyonhesap.com/#iletisim</loc><lastmod>${today}</lastmod><priority>0.7</priority></url>
 </urlset>`);
     return;
   }
