@@ -614,86 +614,95 @@ async function sifirla(){
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ödeme | komisyonhesap</title>
+<title>Güvenli Ödeme | komisyonhesap</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',system-ui,sans-serif;background:#F8F9FA;min-height:100vh;display:flex;flex-direction:column}
-.header{background:#fff;border-bottom:1px solid #E5E7EB;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between}
-.back-btn{display:flex;align-items:center;gap:6px;color:#6B7280;font-size:14px;font-weight:500;cursor:pointer;border:none;background:none;font-family:inherit;text-decoration:none;transition:.15s}
-.back-btn:hover{color:#111}
-.header-logo{font-size:16px;font-weight:800;color:#111}
-.header-logo em{color:#F27A1A;font-style:normal}
-.header-secure{display:flex;align-items:center;gap:6px;font-size:13px;color:#6B7280}
-.main{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem;gap:2rem}
-.left-panel{width:320px;flex-shrink:0}
-.product-card{background:#fff;border:1px solid #E5E7EB;border-radius:16px;padding:1.5rem;margin-bottom:1rem}
-.product-badge{display:inline-flex;align-items:center;gap:6px;background:#FFF3E8;color:#F27A1A;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;margin-bottom:1rem}
-.product-name{font-size:18px;font-weight:800;color:#111;margin-bottom:.25rem}
-.product-desc{font-size:13px;color:#6B7280;margin-bottom:1.25rem}
-.product-price{display:flex;align-items:baseline;gap:4px;margin-bottom:1rem}
-.price-amount{font-size:36px;font-weight:900;color:#111}
-.price-period{font-size:14px;color:#6B7280}
-.feature-list{display:flex;flex-direction:column;gap:8px}
-.feature{display:flex;align-items:center;gap:8px;font-size:13px;color:#374151}
-.feature-icon{width:18px;height:18px;background:#ECFDF5;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0}
-.secure-badges{background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:1rem;display:flex;flex-direction:column;gap:8px}
-.secure-item{display:flex;align-items:center;gap:8px;font-size:12px;color:#6B7280}
-.right-panel{width:480px;flex-shrink:0}
-.checkout-wrap{background:#fff;border:1px solid #E5E7EB;border-radius:16px;overflow:hidden;min-height:400px}
-.checkout-header{padding:1.25rem 1.5rem;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;justify-content:space-between}
-.checkout-title{font-size:15px;font-weight:700;color:#111}
-.checkout-amount{font-size:15px;font-weight:800;color:#F27A1A}
-#iyzipay-checkout-form{padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:linear-gradient(160deg,#F8F9FA 0%,#F1F3F5 100%);min-height:100vh;display:flex;flex-direction:column}
+header{background:#fff;border-bottom:1px solid #E5E7EB;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;box-shadow:0 1px 8px rgba(0,0,0,.06)}
+.logo{font-size:18px;font-weight:900;color:#111;text-decoration:none}
+.logo em{color:#F27A1A;font-style:normal}
+.back-btn{display:flex;align-items:center;gap:6px;color:#6B7280;font-size:13px;font-weight:600;cursor:pointer;border:none;background:rgba(0,0,0,.04);font-family:inherit;text-decoration:none;transition:.15s;padding:8px 14px;border-radius:8px}
+.back-btn:hover{background:rgba(0,0,0,.08);color:#111}
+.secure-badge{display:flex;align-items:center;gap:6px;font-size:12px;color:#6B7280;background:#F0FDF4;padding:6px 12px;border-radius:8px;border:1px solid #D1FAE5}
+.main{flex:1;display:grid;grid-template-columns:380px 1fr;gap:2rem;max-width:980px;margin:2rem auto;padding:0 1.5rem;width:100%;align-items:start}
+/* Sol panel */
+.left{display:flex;flex-direction:column;gap:1rem}
+.plan-card{background:#fff;border:1.5px solid #E5E7EB;border-radius:20px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.plan-top{background:linear-gradient(135deg,#1A1A2E,#16213E);padding:1.5rem;position:relative;overflow:hidden}
+.plan-top::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(242,122,26,.25),transparent 70%)}
+.plan-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(242,122,26,.15);border:1px solid rgba(242,122,26,.3);color:#F27A1A;font-size:10px;font-weight:800;padding:3px 10px;border-radius:20px;margin-bottom:10px;letter-spacing:.05em}
+.plan-name{font-size:17px;font-weight:900;color:#fff;margin-bottom:4px}
+.plan-price{font-size:38px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1}
+.plan-period{font-size:12px;color:rgba(255,255,255,.4);margin-top:4px}
+.plan-body{padding:1.25rem}
+.feature{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #F3F4F6;font-size:13px;color:#374151}
+.feature:last-child{border-bottom:none}
+.feature-icon{width:20px;height:20px;background:#ECFDF5;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#059669;font-weight:900;flex-shrink:0}
+.trust-card{background:#fff;border:1.5px solid #E5E7EB;border-radius:16px;padding:1.25rem;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.trust-item{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:12px;color:#6B7280;border-bottom:1px solid #F9FAFB}
+.trust-item:last-child{border-bottom:none}
+.trust-icon{font-size:16px;flex-shrink:0}
+/* Sağ panel */
+.right{}
+.checkout-card{background:#fff;border:1.5px solid #E5E7EB;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.checkout-header{padding:1.25rem 1.5rem;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;justify-content:space-between;background:#FAFAFA}
+.checkout-title{font-size:14px;font-weight:700;color:#374151;display:flex;align-items:center;gap:6px}
+.checkout-amount{font-size:16px;font-weight:900;color:#F27A1A}
 #iyzipay-checkout-form iframe{width:100%!important;border:none!important}
-.loading-state{padding:3rem;text-align:center;color:#9CA3AF}
-.loading-spinner{width:32px;height:32px;border:3px solid #F3F4F6;border-top-color:#F27A1A;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem}
+.loading-state{padding:4rem 2rem;text-align:center;color:#9CA3AF}
+.loading-spinner{width:36px;height:36px;border:3px solid #F3F4F6;border-top-color:#F27A1A;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem}
+.error-state{padding:2rem;text-align:center;color:#EF4444;font-size:14px}
 @keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:760px){.main{grid-template-columns:1fr}.left{order:2}}
 </style>
 </head>
 <body>
-<div class="header">
-  <a href="https://komisyonhesap.com" class="back-btn">← Geri Dön</a>
-  <div class="header-logo">Kar<em>Panel</em></div>
-  <div class="header-secure">🔒 Güvenli Ödeme</div>
-</div>
+<header>
+  <a href="javascript:history.back()" class="back-btn">← Geri Dön</a>
+  <a href="https://komisyonhesap.com" class="logo">komisyon<em>hesap</em></a>
+  <div class="secure-badge">🔒 256-bit SSL Güvenli</div>
+</header>
 
 <div class="main">
-  <!-- Sol: Ürün Bilgisi -->
-  <div class="left-panel">
-    <div class="product-card">
-      <div class="product-badge">💎 Premium</div>
-      <div class="product-name">komisyonhesap Premium</div>
-      <div class="product-desc">Trendyol ürünlerinizin net karını saniyeler içinde görün</div>
-      <div class="product-price">
-        <span class="price-amount">₺1.500</span>
-        <span class="price-period">/ yıl · KDV dahil</span>
+  <!-- Sol: Plan Bilgisi -->
+  <div class="left">
+    <div class="plan-card">
+      <div class="plan-top">
+        <div class="plan-badge">💎 PREMIUM PLAN</div>
+        <div class="plan-name">komisyonhesap Premium</div>
+        <div class="plan-price">₺1.500</div>
+        <div class="plan-period">/ yıl · KDV dahil · = günde ₺4,10</div>
       </div>
-      <div class="feature-list">
+      <div class="plan-body">
         <div class="feature"><div class="feature-icon">✓</div>Excel ile otomatik ürün yükleme</div>
         <div class="feature"><div class="feature-icon">✓</div>Komisyon + KDV + Stopaj analizi</div>
-        <div class="feature"><div class="feature-icon">✓</div>Ürün görselleri</div>
+        <div class="feature"><div class="feature-icon">✓</div>Ürün görselleri otomatik</div>
         <div class="feature"><div class="feature-icon">✓</div>Sınırsız ürün analizi</div>
+        <div class="feature"><div class="feature-icon">✓</div>Anlaşmalı kargo barem tablosu</div>
+        <div class="feature"><div class="feature-icon">✓</div>1 yıl tüm güncellemeler ücretsiz</div>
       </div>
     </div>
-    <div class="secure-badges">
-      <div class="secure-item">🔒 256-bit SSL şifreleme</div>
-      <div class="secure-item">🛡️ iyzico güvencesiyle ödeme</div>
-      <div class="secure-item">↩️ Sorun yaşarsanız destek garantisi</div>
+    <div class="trust-card">
+      <div class="trust-item"><span class="trust-icon">🔒</span> 256-bit SSL şifreleme ile güvende</div>
+      <div class="trust-item"><span class="trust-icon">🛡️</span> iyzico lisanslı ödeme altyapısı</div>
+      <div class="trust-item"><span class="trust-icon">⚡</span> Ödeme onaylanır onaylanmaz aktif</div>
+      <div class="trust-item"><span class="trust-icon">📧</span> Destek: info@komisyonhesap.com</div>
     </div>
   </div>
 
   <!-- Sağ: iyzico Formu -->
-  <div class="right-panel">
-    <div class="checkout-wrap">
+  <div class="right">
+    <div class="checkout-card">
       <div class="checkout-header">
-        <span class="checkout-title">Ödeme Bilgileri</span>
+        <span class="checkout-title">🔒 Güvenli Ödeme</span>
         <span class="checkout-amount">₺1.500,00</span>
       </div>
       <div id="iyzipay-checkout-form">
         <div class="loading-state">
           <div class="loading-spinner"></div>
-          <div>Ödeme formu yükleniyor...</div>
+          <div style="font-size:14px;font-weight:600;margin-bottom:4px">Ödeme formu hazırlanıyor</div>
+          <div style="font-size:12px">Lütfen bekleyin...</div>
         </div>
       </div>
     </div>
@@ -702,32 +711,45 @@ body{font-family:'Inter',system-ui,sans-serif;background:#F8F9FA;min-height:100v
 
 <scr` + 'ipt>' + `
 const email = decodeURIComponent('${email}');
+// localStorage'dan fatura bilgilerini al
+let faturaData = {};
+try { faturaData = JSON.parse(localStorage.getItem('kp_fatura') || '{}'); } catch(e){}
 
 async function odemeSayfasiYukle(){
   try{
     const r = await fetch('/api/odeme-token', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({email: email, ad: ''})
+      body: JSON.stringify({
+        email: email,
+        ad: faturaData.ad || '',
+        faturaAd: faturaData.ad || '',
+        faturaTc: faturaData.tc || '',
+        faturaVkn: faturaData.vkn || '',
+        faturaVd: faturaData.vd || '',
+        faturaTel: faturaData.tel || '',
+        faturaIl: faturaData.il || '',
+        faturaIlce: faturaData.ilce || '',
+        faturaAdres: faturaData.adres || '',
+        faturaEmail: faturaData.email || email
+      })
     });
     const d = await r.json();
     if(!d.checkoutFormContent) throw new Error(d.errorMessage || d.error || 'Token alinamadi');
-
     const container = document.getElementById('iyzipay-checkout-form');
     container.innerHTML = '';
-
     const scriptEl = document.createElement('script');
     scriptEl.textContent = d.checkoutFormContent.replace(/<[^>]+>/g, '');
     document.body.appendChild(scriptEl);
-
   } catch(e){
     document.getElementById('iyzipay-checkout-form').innerHTML =
-      '<div style="padding:2rem;text-align:center;color:#EF4444">Hata: ' + e.message + '</div>';
+      '<div class="error-state">❌ ' + e.message + '<br><br><button onclick="odemeSayfasiYukle()" style="padding:10px 20px;background:#F27A1A;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700">Tekrar Dene</button></div>';
   }
 }
 
 window.iyziEventSubscribe = function(e){
   if(e && e.status === 'success'){
+    localStorage.removeItem('kp_fatura');
     window.location.href = 'https://komisyonhesap.com?odeme=basarili&email=' + encodeURIComponent(email);
   } else if(e && e.status === 'failure'){
     window.location.href = 'https://komisyonhesap.com?odeme=basarisiz';
@@ -743,7 +765,7 @@ odemeSayfasiYukle();
     return;
   }
 
-  if (parsed.pathname === '/admin' || parsed.pathname === '/admin/login') {
+  if (parsed.pathname === '/admin' || parsed.pathname === '/admin/login' || parsed.pathname === '/panel-giris') {
     const adminHtml = `<!DOCTYPE html>
 <html lang="tr">
 <head>
