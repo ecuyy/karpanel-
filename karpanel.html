@@ -2222,61 +2222,17 @@ async function odemeYap(){
 }
 
 async function openIyzicoOverlay(){
-  const overlay = document.getElementById('iyzico-overlay');
-  const container = document.getElementById('iyzico-overlay-form');
-  if(!overlay||!container) return;
-  overlay.style.display='flex';
-  container.innerHTML='<div style="text-align:center;padding:3rem;color:#6B7280"><div style="width:36px;height:36px;border:3px solid #F3F4F6;border-top-color:#F27A1A;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem"></div>Ödeme formu yükleniyor...</div>';
-
-  try{
-    const r = await fetch(PROXY+'/api/odeme-token',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        email:currentUser.email,
-        ad:currentUser.ad,
-        faturaAd: window._faturaData?.ad||'',
-        faturaTc: window._faturaData?.tc||'',
-        faturaVkn: window._faturaData?.vkn||'',
-        faturaVd: window._faturaData?.vd||'',
-        faturaTel: window._faturaData?.tel||'',
-        faturaIl: window._faturaData?.il||'',
-        faturaIlce: window._faturaData?.ilce||'',
-        faturaAdres: window._faturaData?.adres||'',
-        faturaEmail: window._faturaData?.email||currentUser.email
-      })
-    });
-    const d = await r.json();
-    if(!d.checkoutFormContent) throw new Error(d.errorMessage||d.error||'Token alınamadı');
-
-    container.innerHTML = '';
-    window.iyziEventSubscribe = function(e){
-      if(e && e.status==='success'){
-        currentUser.premium=true;
-        const stored=localStorage.getItem('kp_user')?localStorage:sessionStorage;
-        stored.setItem('kp_user',JSON.stringify(currentUser));
-        closeIyzicoOverlay();
-        applyUser();
-        goApp();
-        toast('Ödeme başarılı! Premium üyeliğiniz aktif. 🎉','success','🎉');
-      } else if(e && e.status==='failure'){
-        toast('Ödeme başarısız. Lütfen tekrar deneyin.','error','❌');
-      }
-    };
-
-    const scriptEl = document.createElement('script');
-    scriptEl.textContent = d.checkoutFormContent.replace(/<[^>]+>/g,'');
-    document.body.appendChild(scriptEl);
-  } catch(e){
-    container.innerHTML='<div style="text-align:center;padding:2rem;color:#EF4444">❌ '+e.message+'</div>';
-  }
+  // Kullanıcıyı localStorage'a kaydet (geri döndüğünde oturum korunsun)
+  localStorage.setItem('kp_user', JSON.stringify(currentUser));
+  // Fatura bilgilerini de sakla
+  if(window._faturaData) localStorage.setItem('kp_fatura', JSON.stringify(window._faturaData));
+  // Ayrı ödeme sayfasına yönlendir
+  window.location.href = PROXY + '/odeme?email=' + encodeURIComponent(currentUser.email);
 }
 
 function closeIyzicoOverlay(){
   const overlay=document.getElementById('iyzico-overlay');
   if(overlay) overlay.style.display='none';
-  // iyzico kalıntılarını temizle
-  document.querySelectorAll('iframe[src*="iyzipay"],iframe[src*="iyzico"]').forEach(el=>el.remove());
 }
 
 function openWelcome(ad){
