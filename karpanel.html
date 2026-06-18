@@ -2035,6 +2035,14 @@ async function kayitOl(){
 // ── ÖDEME ──
 function formatKart(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.replace(/(\d{4})/g,'$1 ').trim();}
 function formatTarih(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2,4);el.value=v;}
+function etiketSayfasiAc(){
+  if(!currentUser||!currentUser.premium){
+    toast('Bu özellik sadece premium üyeler için','error','🔒');return;
+  }
+  localStorage.setItem('kp_etiket_urunler', JSON.stringify(urunler));
+  window.open(PROXY+'/etiket-analiz', '_blank');
+}
+
 async function odemeYap(){
   if(!currentUser||!currentUser.email){toast('Lütfen önce giriş yapın','error','❌');return;}
   // Ödeme sayfasına yönlendir
