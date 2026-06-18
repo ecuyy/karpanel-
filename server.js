@@ -929,7 +929,7 @@ tr:hover td{background:#FAFAFA}
 <scr` + `ipt>
 // Ürün verilerini sessionStorage'dan al
 let urunler = [];
-try { urunler = JSON.parse(sessionStorage.getItem('kp_etiket_urunler')||'[]'); } catch(e){}
+try { urunler = JSON.parse(localStorage.getItem('kp_etiket_urunler')||'[]'); } catch(e){}
 
 let tumVeri = [];
 let aktifFiltre = 'hepsi';
