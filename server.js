@@ -736,7 +736,7 @@ odemeSayfasiYukle();
     return;
   }
 
-  if (parsed.pathname === '/admin') {
+  if (parsed.pathname === '/admin' || parsed.pathname === '/admin/login') {
     const adminHtml = `<!DOCTYPE html>
 <html lang="tr">
 <head>
