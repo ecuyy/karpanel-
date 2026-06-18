@@ -2174,10 +2174,51 @@ async function kayitOl(){
 // ── ÖDEME ──
 function formatKart(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.replace(/(\d{4})/g,'$1 ').trim();}
 function formatTarih(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2,4);el.value=v;}
+function closeFaturaOverlay(){
+  document.getElementById('fatura-overlay').style.display='none';
+}
+
+function faturaDevam(){
+  const ad=document.getElementById('fat-ad').value.trim();
+  const tc=document.getElementById('fat-tc').value.trim();
+  const vkn=document.getElementById('fat-vkn').value.trim();
+  const vd=document.getElementById('fat-vd').value.trim();
+  const tel=document.getElementById('fat-tel').value.trim();
+  const email=document.getElementById('fat-email').value.trim();
+  const il=document.getElementById('fat-il').value.trim();
+  const ilce=document.getElementById('fat-ilce').value.trim();
+  const adres=document.getElementById('fat-adres').value.trim();
+  const hata=document.getElementById('fat-hata');
+
+  if(!ad||!tel||!email||!il||!ilce||!adres){
+    hata.style.display='block';hata.textContent='Lütfen zorunlu alanları (*) doldurun.';return;
+  }
+
+  if(tel.length<10){
+    hata.style.display='block';hata.textContent='Geçerli bir telefon numarası girin.';return;
+  }
+  if(!email.includes('@')){
+    hata.style.display='block';hata.textContent='Geçerli bir e-posta girin.';return;
+  }
+  hata.style.display='none';
+
+  // Fatura bilgilerini kaydet
+  window._faturaData={ad,tc,vkn,vd,tel,email,il,ilce,adres};
+
+  // Fatura overlay kapat, iyzico overlay aç
+  closeFaturaOverlay();
+  openIyzicoOverlay();
+}
+
 async function odemeYap(){
   if(!currentUser||!currentUser.email){toast('Lütfen önce giriş yapın','error','❌');return;}
-  // Ödeme overlay'ini aç
-  openIyzicoOverlay();
+  // Önce fatura bilgilerini al
+  const fatEl=document.getElementById('fatura-overlay');
+  // Mevcut kullanıcı bilgilerini prefill et
+  document.getElementById('fat-ad').value=currentUser.ad||'';
+  document.getElementById('fat-email').value=currentUser.email||'';
+  document.getElementById('fat-hata').style.display='none';
+  if(fatEl) fatEl.style.display='flex';
 }
 
 async function openIyzicoOverlay(){
@@ -2191,7 +2232,19 @@ async function openIyzicoOverlay(){
     const r = await fetch(PROXY+'/api/odeme-token',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({email:currentUser.email, ad:currentUser.ad})
+      body:JSON.stringify({
+        email:currentUser.email,
+        ad:currentUser.ad,
+        faturaAd: window._faturaData?.ad||'',
+        faturaTc: window._faturaData?.tc||'',
+        faturaVkn: window._faturaData?.vkn||'',
+        faturaVd: window._faturaData?.vd||'',
+        faturaTel: window._faturaData?.tel||'',
+        faturaIl: window._faturaData?.il||'',
+        faturaIlce: window._faturaData?.ilce||'',
+        faturaAdres: window._faturaData?.adres||'',
+        faturaEmail: window._faturaData?.email||currentUser.email
+      })
     });
     const d = await r.json();
     if(!d.checkoutFormContent) throw new Error(d.errorMessage||d.error||'Token alınamadı');
@@ -2957,6 +3010,73 @@ async function iletisimGonder(){
 <style>
 @keyframes welcomePop{from{opacity:0;transform:scale(.85) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
 </style>
+
+
+<!-- FATURA BİLGİLERİ OVERLAY -->
+<div id="fatura-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:99997;display:none;align-items:center;justify-content:center;padding:1rem;overflow-y:auto">
+  <div style="background:#fff;border-radius:20px;width:100%;max-width:480px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.3);margin:auto">
+    <!-- Başlık -->
+    <div style="background:linear-gradient(135deg,#1A1A2E,#16213E);padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-size:15px;font-weight:800;color:#fff">🧾 Fatura Bilgileri</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:2px">Yasal zorunluluk nedeniyle gereklidir</div>
+      </div>
+      <button onclick="closeFaturaOverlay()" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.1);border:none;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+    <!-- Form -->
+    <div style="padding:1.5rem">
+      <div style="background:#FFF7ED;border:1px solid rgba(242,122,26,.2);border-radius:10px;padding:10px 14px;margin-bottom:1.25rem;font-size:12px;color:#92400E">
+        ⚠️ Fatura bilgileriniz sadece e-fatura düzenlenmesi amacıyla kullanılır ve güvenle saklanır.
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="grid-column:1/-1">
+          <label style="display:block;font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Ad Soyad *</label>
+          <input id="fat-ad" type="text" placeholder="Ad Soyad" style="width:100%;padding:10px 12px;border:1.5px solid #E5E7EB;border-radius:9px;font-size:13px;font-family:inherit;outline:none;transition:.2s" onfocus="this.style.borderColor='#F27A1A'" onblur="this.style.borderColor='#E5E7EB'">
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">TC Kimlik No</label>
+          <input id="fat-tc" type="text" placeholder="11 haneli TC No" maxlength="11" style="width:100%;padding:10px 12px;border:1.5px solid #E5E7EB;border-radius:9px;font-size:13px;font-family:inherit;outline:none;transition:.2s" onfocus="this.style.borderColor='#F27A1A'" onblur="this.style.borderColor='#E5E7EB'" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Vergi Kimlik No</label>
+          <input id="fat-vkn" type="text" placeholder="Şirket için (opsiyonel)" maxlength="10" style="width:100%;padding:10px 12px;border:1.5px solid #E5E7EB;border-radius:9px;font-size:13px;font-family:inherit;outline:none;transition:.2s" onfocus="this.style.borderColor='#F27A1A'" onblur="this.style.borderColor='#E5E7EB'" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+        </div>
+        <div style="grid-column:1/-1">
+          <label style="display:block;font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Vergi Dairesi</label>
+          <input id="fat-vd" type="text" placeholder="Vergi dairesi adı (şirket için)" style="width:100%;padding:10px 12px;border:1.5px solid #E5E7EB;border-radius:9px;font-size:13px;font-family:inherit;outline:none;transition:.2s" onfocus="this.style.borderColor='#F27A1A'" onblur="this.style.borderColor='#E5E7EB'">
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Telefon No *</label>
+          <input id="fat-tel" type="tel" placeholder="05XX XXX XX XX" maxlength="11" style="width:100%;padding:10px 12px;border:1.5px solid #E5E7EB;border-radius:9px;font-size:13px;font-family:inherit;outline:none;transition:.2s" onfocus="this.style.borderColor='#F27A1A'" onblur="this.style.borderColor='#E5E7EB'" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Fatura E-posta *</label>
+          <input id="fat-email" type="email" placeholder="fatura@email.com" style="width:100%;padding:10px 12px;border:1.5px solid #E5E7EB;border-radius:9px;font-size:13px;font-family:inherit;outline:none;transition:.2s" onfocus="this.style.borderColor='#F27A1A'" onblur="this.style.borderColor='#E5E7EB'">
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">İl *</label>
+          <input id="fat-il" type="text" placeholder="İstanbul" style="width:100%;padding:10px 12px;border:1.5px solid #E5E7EB;border-radius:9px;font-size:13px;font-family:inherit;outline:none;transition:.2s" onfocus="this.style.borderColor='#F27A1A'" onblur="this.style.borderColor='#E5E7EB'">
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">İlçe *</label>
+          <input id="fat-ilce" type="text" placeholder="Kadıköy" style="width:100%;padding:10px 12px;border:1.5px solid #E5E7EB;border-radius:9px;font-size:13px;font-family:inherit;outline:none;transition:.2s" onfocus="this.style.borderColor='#F27A1A'" onblur="this.style.borderColor='#E5E7EB'">
+        </div>
+        <div style="grid-column:1/-1">
+          <label style="display:block;font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">Açık Adres *</label>
+          <textarea id="fat-adres" placeholder="Mahalle, sokak, bina no, daire no..." rows="2" style="width:100%;padding:10px 12px;border:1.5px solid #E5E7EB;border-radius:9px;font-size:13px;font-family:inherit;outline:none;transition:.2s;resize:none" onfocus="this.style.borderColor='#F27A1A'" onblur="this.style.borderColor='#E5E7EB'"></textarea>
+        </div>
+      </div>
+
+      <div id="fat-hata" style="display:none;margin-top:12px;padding:10px 14px;background:#FEF2F2;border-radius:9px;font-size:13px;color:#DC2626"></div>
+
+      <button onclick="faturaDevam()" style="width:100%;margin-top:1.25rem;padding:14px;background:var(--or);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 4px 16px rgba(242,122,26,.3);transition:.2s" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='none'">
+        Ödemeye Geç →
+      </button>
+      <div style="text-align:center;margin-top:10px;font-size:11px;color:#9CA3AF">Bilgileriniz e-fatura düzenlenmesi için kullanılır</div>
+    </div>
+  </div>
+</div>
 
 <!-- İYZİCO OVERLAY (sayfa içi ödeme) -->
 <div id="iyzico-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:99998;display:none;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto">
