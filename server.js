@@ -153,6 +153,13 @@ const server = http.createServer(async (req, res) => {
 
     const baseUrl = process.env.RENDER_EXTERNAL_URL || process.env.BASE_URL || 'https://karpanel.onrender.com';
     const callbackUrl = baseUrl + '/api/odeme-callback?email=' + encodeURIComponent(email);
+    const { faturaAd, faturaTc, faturaVkn, faturaVd, faturaTel, faturaIl, faturaIlce, faturaAdres, faturaEmail } = body;
+    // Fatura bilgilerini DB'ye kaydet
+    if (faturaAd && faturaTc) {
+      await db.collection('users').updateOne({ email }, { $set: {
+        fatura: { ad: faturaAd, tc: faturaTc, vkn: faturaVkn||'', vd: faturaVd||'', tel: faturaTel||'', il: faturaIl, ilce: faturaIlce, adres: faturaAdres, email: faturaEmail || email }
+      }});
+    }
     const adParts = (ad || user.ad || 'Kullanici Kullanici').split(' ');
     const firstName = adParts[0] || 'Kullanici';
     const lastName = adParts.slice(1).join(' ') || 'Kullanici';
@@ -948,6 +955,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
               <th>Kayıt</th>
               <th>Durum</th>
               <th>Üyelik Bitiş</th>
+              <th>Fatura</th>
               <th>İşlemler</th>
             </tr>
           </thead>
@@ -1107,6 +1115,7 @@ function renderTablo(){
       <td style="color:var(--muted)">\${kayit}</td>
       <td>\${badge}</td>
       <td style="\${bitisStyle}">\${bitis}</td>
+      <td style="font-size:12px">${u.fatura ? '✓' : '—'}</td>
       <td><div class="actions">
         \${u.premium
           ? \`<button class="action-btn orange" onclick="premiumDegistir('\${u.email}',false)">Premium Al</button>\`
