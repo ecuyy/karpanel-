@@ -334,6 +334,13 @@ const server = http.createServer(async (req, res) => {
     const body = await getBody(req);
     const { email, urunler } = body;
     if (!email || !db) { res.writeHead(400); res.end(JSON.stringify({ error: 'Hata' })); return; }
+    // Premium kontrolü
+    const userCheck = await db.collection('users').findOne({ email });
+    const isPremium = userCheck && userCheck.premium && userCheck.uyelikBitis && new Date(userCheck.uyelikBitis) > new Date();
+    const isBypass = email === 'info@ecuyy.com';
+    if (!isPremium && !isBypass) {
+      res.writeHead(403); res.end(JSON.stringify({ error: 'Premium üyelik gerekli' })); return;
+    }
     await db.collection('urunler').updateOne(
       { email },
       { $set: { email, urunler, guncelleme: new Date() } },
@@ -348,6 +355,15 @@ const server = http.createServer(async (req, res) => {
   if (parsed.pathname === '/api/urunler/yukle' && req.method === 'GET') {
     const email = parsed.query.email;
     if (!email || !db) { res.writeHead(400); res.end(JSON.stringify({ urunler: [] })); return; }
+    // Premium kontrolü
+    const userCheck = await db.collection('users').findOne({ email });
+    const isPremium = userCheck && userCheck.premium && userCheck.uyelikBitis && new Date(userCheck.uyelikBitis) > new Date();
+    const isBypass = email === 'info@ecuyy.com';
+    if (!isPremium && !isBypass) {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ urunler: [] }));
+      return;
+    }
     const doc = await db.collection('urunler').findOne({ email });
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ urunler: doc ? doc.urunler : [] }));
