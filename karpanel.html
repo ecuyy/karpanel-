@@ -2088,17 +2088,11 @@ function loadUser(){
     if(currentUser.premium && currentUser.uyelikBitis){
       const bitis=new Date(currentUser.uyelikBitis);
       if(bitis < new Date()){
-        // Süresi dolmuş — premium'u kaldır, ürünleri sil
+        // Süresi dolmuş — premium'u kaldır (ürünler DB'de korunur, gösterilmez)
         currentUser.premium=false;
         const stored=localStorage.getItem('kp_user')?localStorage:sessionStorage;
         stored.setItem('kp_user',JSON.stringify(currentUser));
-        // DB'deki ürün listesini de temizle
-        fetch(PROXY+'/api/urunler/sil',{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({email:currentUser.email})
-        }).catch(()=>{});
-        toast('Premium üyeliğinizin süresi doldu. Ürün listeniz temizlendi.','error','⚠️');
+        toast('Premium üyeliğinizin süresi doldu. Yenileyin, ürün listeniz sizi bekliyor.','error','⚠️');
       }
     }
     applyUser();
@@ -2966,6 +2960,8 @@ function saveUrunler(){
 }
 async function loadSavedUrunler(){
   if(!currentUser) return false;
+  // Premium değilse ürün listesi yüklenmesin
+  if(!currentUser.premium){return false;}
   try{
     // Önce MongoDB'den çek
     const r=await fetch(PROXY+'/api/urunler/yukle?email='+encodeURIComponent(currentUser.email));
