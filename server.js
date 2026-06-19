@@ -765,6 +765,7 @@ odemeSayfasiYukle();
     return;
   }
 
+  // ── Avantajlı Etiket Analiz Sayfası ──
   if (parsed.pathname === '/admin' || parsed.pathname === '/admin/login' || parsed.pathname === '/panel-giris') {
     const adminHtml = `<!DOCTYPE html>
 <html lang="tr">
