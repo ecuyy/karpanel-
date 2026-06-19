@@ -2176,12 +2176,15 @@ function eaTazele(){
       return uid===modelUp||ubc===modelUp||umc===modelUp||(uid&&uid.includes(modelUp))||(modelUp&&uid&&modelUp.includes(uid))||(ttl&&ttl.includes(modelUp));
     });
     if(urun){
+      console.log('eaTazele:', u.modelKodu, '-> bulunan id:', urun.id, 'alis:', urun.alis, 'kargo:', urun.kargo, 'kom:', urun.commissionRate);
       u.alis = urun.alis||0;
       // Kargo: kullanıcı etiket sayfasında manuel barem uyguladıysa onu koru, yoksa sistemden al
       if(!u._kargoManuel) u.kargo = urun.kargo||0;
       u.komOran = urun.commissionRate||0;
       u.image = urun.image||'';
       u.eslesme = true;
+    } else {
+      console.log('eaTazele: EŞLEŞMEDİ ->', u.modelKodu);
     }
     u.net1 = u.alis>0 ? eaHesapla(u.f1Alt,u.alis,u.kargo,u.komOran) : null;
     u.net2 = u.alis>0 ? eaHesapla(u.f2Alt,u.alis,u.kargo,u.komOran) : null;
