@@ -2158,6 +2158,35 @@ function etiketSayfasiAc(){
   document.getElementById('normal-urun-gorunum').style.display='none';
   document.getElementById('etiket-analiz-gorunum').style.display='block';
   eaKayitliVeriyiYukle();
+  if(eaTumVeri.length>0){
+    eaTazele();
+    eaIstatistik(); eaRender();
+    eaVeriyiKaydet();
+  }
+}
+
+function eaTazele(){
+  // urunler listesindeki güncel alış/kargo/komisyon/görsel bilgisini eaTumVeri'ye yansıt
+  const temizle = s => String(s||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+  eaTumVeri.forEach(u=>{
+    const modelUp = temizle(u.modelKodu);
+    const urun = urunler.find(x=>{
+      const uid=temizle(x.id), ubc=temizle(x.barcode), umc=temizle(x.modelCode||x.stockCode), ttl=temizle(x.title);
+      if(!modelUp) return false;
+      return uid===modelUp||ubc===modelUp||umc===modelUp||(uid&&uid.includes(modelUp))||(modelUp&&uid&&modelUp.includes(uid))||(ttl&&ttl.includes(modelUp));
+    });
+    if(urun){
+      u.alis = urun.alis||0;
+      // Kargo: kullanıcı etiket sayfasında manuel barem uyguladıysa onu koru, yoksa sistemden al
+      if(!u._kargoManuel) u.kargo = urun.kargo||0;
+      u.komOran = urun.commissionRate||0;
+      u.image = urun.image||'';
+      u.eslesme = true;
+    }
+    u.net1 = u.alis>0 ? eaHesapla(u.f1Alt,u.alis,u.kargo,u.komOran) : null;
+    u.net2 = u.alis>0 ? eaHesapla(u.f2Alt,u.alis,u.kargo,u.komOran) : null;
+    u.net3 = u.alis>0 ? eaHesapla(u.f3Ust,u.alis,u.kargo,u.komOran) : null;
+  });
 }
 
 function eaTemizle(){
@@ -2249,7 +2278,7 @@ function eaKbUygula(){
   if(eaTumVeri.length===0){ toast('Önce Excel yükleyin','error','❌'); return; }
   eaTumVeri.forEach(u=>{
     const kb = eaKbGetKargo(u.f1Alt||u.mevcut||0);
-    if(kb>0) u.kargo = kb;
+    if(kb>0){ u.kargo = kb; u._kargoManuel = true; }
     u.net1 = u.alis>0 ? eaHesapla(u.f1Alt,u.alis,u.kargo,u.komOran) : null;
     u.net2 = u.alis>0 ? eaHesapla(u.f2Alt,u.alis,u.kargo,u.komOran) : null;
     u.net3 = u.alis>0 ? eaHesapla(u.f3Ust,u.alis,u.kargo,u.komOran) : null;
