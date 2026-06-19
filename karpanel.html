@@ -1292,18 +1292,6 @@ input[type=number]{-moz-appearance:textfield}
       </div>
     </div>
 
-    <!-- EXCEL UPLOAD - premium only (eski) -->
-    <div id="excel-upload-section-old" style="display:none;margin-bottom:1.25rem">
-      <div style="background:linear-gradient(135deg,#1A1A1A,#2D2D2D);border-radius:16px;padding:1.5rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap">
-        <div>
-          <div style="font-size:16px;font-weight:800;color:#fff;margin-bottom:4px">📂 Ürünlerinizi Yükleyin</div>
-          <div style="font-size:13px;color:rgba(255,255,255,.5)">Trendyol Partner Panel'den indirdiğiniz Excel dosyasını yükleyin</div>
-        </div>
-        <button class="btn btn-primary" onclick="document.getElementById('csv-upload').click()">📂 Excel Yükle</button>
-        <input type="file" id="csv-upload" accept=".csv,.xlsx,.xls" style="display:none" onchange="csvYukle(this)">
-      </div>
-    </div>
-
     <!-- CONNECT (premium only) -->
     
 
@@ -2152,16 +2140,24 @@ let eaAktifFiltre = 'hepsi';
 let eaKbSecimleri = {0:null, 1:null};
 
 function etiketSayfasiAc(){
-  if(!currentUser||!currentUser.premium){
-    toast('Bu özellik sadece premium üyeler için','error','🔒');return;
-  }
-  document.getElementById('normal-urun-gorunum').style.display='none';
-  document.getElementById('etiket-analiz-gorunum').style.display='block';
-  eaKayitliVeriyiYukle();
-  if(eaTumVeri.length>0){
-    eaTazele();
-    eaIstatistik(); eaRender();
-    eaVeriyiKaydet();
+  try{
+    if(!currentUser||!currentUser.premium){
+      toast('Bu özellik sadece premium üyeler için','error','🔒');return;
+    }
+    const nrm = document.getElementById('normal-urun-gorunum');
+    const eag = document.getElementById('etiket-analiz-gorunum');
+    if(!nrm||!eag){ toast('Sayfa yüklenemedi, lütfen sayfayı yenileyin.','error','❌'); return; }
+    nrm.style.display='none';
+    eag.style.display='block';
+    eaKayitliVeriyiYukle();
+    if(eaTumVeri.length>0){
+      eaTazele();
+      eaIstatistik(); eaRender();
+      eaVeriyiKaydet();
+    }
+  }catch(err){
+    console.error('etiketSayfasiAc hatası:', err);
+    toast('Bir hata oluştu: '+err.message,'error','❌');
   }
 }
 
