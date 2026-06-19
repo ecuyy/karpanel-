@@ -2176,15 +2176,12 @@ function eaTazele(){
       return uid===modelUp||ubc===modelUp||umc===modelUp||(uid&&uid.includes(modelUp))||(modelUp&&uid&&modelUp.includes(uid))||(ttl&&ttl.includes(modelUp));
     });
     if(urun){
-      console.log('eaTazele:', u.modelKodu, '-> bulunan id:', urun.id, 'alis:', urun.alis, 'kargo:', urun.kargo, 'kom:', urun.commissionRate);
       u.alis = urun.alis||0;
       // Kargo: kullanıcı etiket sayfasında manuel barem uyguladıysa onu koru, yoksa sistemden al
       if(!u._kargoManuel) u.kargo = urun.kargo||0;
       u.komOran = urun.commissionRate||0;
       u.image = urun.image||'';
       u.eslesme = true;
-    } else {
-      console.log('eaTazele: EŞLEŞMEDİ ->', u.modelKodu);
     }
     u.net1 = u.alis>0 ? eaHesapla(u.f1Alt,u.alis,u.kargo,u.komOran) : null;
     u.net2 = u.alis>0 ? eaHesapla(u.f2Alt,u.alis,u.kargo,u.komOran) : null;
@@ -2347,8 +2344,10 @@ function eaExcelYukle(input){
         const modelKodu = String(r[H['MODEL KODU']]||'').trim();
         const urunIsmi  = String(r[H['ÜRÜN İSMİ']]||'').trim() || modelKodu;
         const mevcut    = eaParseFiyat(r[H['MÜŞTERİNİN GÖRDÜĞÜ FİYAT']]);
-        const f1Alt     = eaParseFiyat(r[H['1 YILDIZ ALT FİYAT']]);
-        const f2Alt     = eaParseFiyat(r[H['2 YILDIZ ALT FİYAT']]);
+        // Trendyol ekranı her yıldız seviyesinin ÜST sınırını gösteriyor:
+        // Avantajlı = 1 YILDIZ ÜST, Çok Avantajlı = 2 YILDIZ ÜST, Süper Avantajlı = 3 YILDIZ ÜST
+        const f1Alt     = eaParseFiyat(r[H['1 YILDIZ ÜST FİYAT']]);
+        const f2Alt     = eaParseFiyat(r[H['2 YILDIZ ÜST FİYAT']]);
         const f3Ust     = eaParseFiyat(r[H['3 YILDIZ ÜST FİYAT']]);
         const komVar    = String(r[H['KOMİSYON TARİFESİ']]||'').trim()==='Var';
 
@@ -2365,7 +2364,6 @@ function eaExcelYukle(input){
                  (uid && uid.includes(modelUp)) || (modelUp && uid && modelUp.includes(uid)) ||
                  (ttl && ttl.includes(modelUp));
         });
-        if(i===hRow+1) console.log('Debug eşleştirme — Excel model kodu:', modelKodu, '| Sistemdeki ilk ürün id:', urunler[0]?urunler[0].id:'YOK', '| urunler sayısı:', urunler.length);
 
         const alis    = urun ? (urun.alis||0)  : 0;
         const kargo   = urun ? (urun.kargo||0) : 0;
