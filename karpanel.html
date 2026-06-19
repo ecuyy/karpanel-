@@ -1323,7 +1323,7 @@ input[type=number]{-moz-appearance:textfield}
           </div>
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-inp" type="text" placeholder="Ürün ara..." oninput="araUrun(this.value)"></div>
+          <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-inp" type="text" placeholder="Ürün adı veya model kodu ara..." oninput="araUrun(this.value)"></div>
           <button class="btn-sm" onclick="openKargoModal()">🚚 Kargo Fiyat Gir</button>
           <button class="btn-sm" onclick="etiketSayfasiAc()" style="background:rgba(99,102,241,.1);color:#6366F1;border-color:rgba(99,102,241,.3)">⭐ Avantajlı Etiket Analizi</button>
           <button class="btn-danger-sm" onclick="tumunuSil()">🗑 Tümünü Sil</button>
@@ -1517,22 +1517,15 @@ input[type=number]{-moz-appearance:textfield}
             </div>
           </div>
           <div class="prod-table-wrap" style="overflow-x:auto">
-            <table class="ptable" style="min-width:1100px">
+            <table class="ptable" style="min-width:1180px">
               <thead>
                 <tr>
-                  <th style="width:54px">Görsel</th>
-                  <th>Ürün</th>
-                  <th>Mevcut Fiyat</th>
-                  <th>Alış+Kargo</th>
-                  <th style="background:rgba(234,179,8,.06)">1⭐ Alt Fiyat</th>
-                  <th style="background:rgba(234,179,8,.06)">1⭐ Komisyon</th>
-                  <th style="background:rgba(234,179,8,.06)">1⭐ Kar/Zarar</th>
-                  <th style="background:rgba(156,163,175,.06)">2⭐ Alt Fiyat</th>
-                  <th style="background:rgba(156,163,175,.06)">2⭐ Komisyon</th>
-                  <th style="background:rgba(156,163,175,.06)">2⭐ Kar/Zarar</th>
-                  <th style="background:rgba(99,102,241,.06)">3⭐ Üst Fiyat</th>
-                  <th style="background:rgba(99,102,241,.06)">3⭐ Komisyon</th>
-                  <th style="background:rgba(99,102,241,.06)">3⭐ Kar/Zarar</th>
+                  <th style="text-align:left;min-width:220px">Ürün Bilgileri</th>
+                  <th style="min-width:130px">Güncel Fiyat ve<br>Komisyon</th>
+                  <th colspan="1" style="background:rgba(234,179,8,.08);min-width:150px">⭐ Avantajlı<br>Fiyat Aralığı</th>
+                  <th colspan="1" style="background:rgba(156,163,175,.08);min-width:150px">⭐⭐ Çok Avantajlı<br>Fiyat Aralığı</th>
+                  <th colspan="1" style="background:rgba(99,102,241,.08);min-width:150px">⭐⭐⭐ Süper Avantajlı<br>Fiyat Aralığı</th>
+                  <th style="min-width:140px">Alış + Kargo<br><span style="font-weight:400;font-size:9px;color:var(--or)">(Sistemden)</span></th>
                 </tr>
               </thead>
               <tbody id="ea-tbody"></tbody>
@@ -2342,34 +2335,48 @@ function eaRender(){
   if(eaAktifFiltre==='eksik')  liste = liste.filter(u=>u.net1===null);
 
   if(!liste.length){
-    document.getElementById('ea-tbody').innerHTML='<tr><td colspan="13" style="padding:2rem;text-align:center;color:var(--t3)">Bu filtrede ürün bulunamadı</td></tr>';
+    document.getElementById('ea-tbody').innerHTML='<tr><td colspan="6" style="padding:2rem;text-align:center;color:var(--t3)">Bu filtrede ürün bulunamadı</td></tr>';
     return;
   }
 
   document.getElementById('ea-tbody').innerHTML = liste.map(u=>{
-    const komStr = u.komOran>0 ? ('<span class="ea-kom-badge">%'+u.komOran+'</span>') : '<span style="color:#9CA3AF">—</span>';
-    const alisStr = u.alis>0 ? (eaFmtTL(u.alis)+' <span style="color:var(--t3);font-size:11px">+ '+eaFmtTL(u.kargo)+'</span>') : '<span style="color:#F59E0B;font-size:11px">Girilmemiş</span>';
-    const esStr = u.eslesme ? '<span style="color:#059669;font-size:10px">✓ Eşleşti</span>' : '<span style="color:#F59E0B;font-size:10px">⚠ Eşleşmedi</span>';
+    const komStr = u.komOran>0 ? ('<span class="ea-kom-badge">%'+u.komOran+'</span>') : '<span style="color:#9CA3AF;font-size:10px">Komisyon yok</span>';
+    const alisStr = u.alis>0
+      ? ('<div style="font-weight:700;font-size:13px;color:var(--dark)">'+eaFmtTL(u.alis)+'</div><div style="font-size:10px;color:var(--t3);margin-top:2px">+ '+eaFmtTL(u.kargo)+' kargo</div>')
+      : '<span style="color:#F59E0B;font-size:11px;font-weight:600">⚠ Girilmemiş</span>';
+    const esStr = u.eslesme ? '<span style="color:#059669;font-size:10px;font-weight:600">✓ Sistemle eşleşti</span>' : '<span style="color:#F59E0B;font-size:10px;font-weight:600">⚠ Eşleşmedi</span>';
     const imgHtml = u.image
-      ? '<img src="'+u.image+'" style="width:36px;height:36px;border-radius:8px;object-fit:cover;border:1px solid var(--border)">'
-      : '<div style="width:36px;height:36px;border-radius:8px;background:var(--dark);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff">'+(u.urunIsmi.charAt(0)||'?')+'</div>';
+      ? '<img src="'+u.image+'" style="width:48px;height:48px;border-radius:10px;object-fit:cover;border:1px solid var(--border);flex-shrink:0">'
+      : '<div style="width:48px;height:48px;border-radius:10px;background:var(--dark);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0">'+(u.urunIsmi.charAt(0)||'?')+'</div>';
+
+    // Trendyol tarzı yıldız fiyat kutusu - üst kısımda fiyat, altında komisyon, altında bizim kar/zarar
+    const yildizKutu = (fiyat, net, bg) => `
+      <div style="background:${bg};border-radius:10px;padding:10px;text-align:center">
+        <div style="font-size:15px;font-weight:800;color:var(--dark)">${eaFmtTL(fiyat)}</div>
+        <div style="font-size:10px;color:var(--t3);margin:2px 0 6px">ve altı</div>
+        <div style="margin-bottom:6px">${komStr}</div>
+        <div style="padding-top:6px;border-top:1px dashed rgba(0,0,0,.08)">${eaFmtKar(net)}</div>
+      </div>`;
+
     return `<tr>
-      <td>${imgHtml}</td>
-      <td style="max-width:180px">
-        <div style="font-weight:600;color:var(--dark);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${u.urunIsmi}">${u.urunIsmi}</div>
-        <div style="font-size:10px;color:var(--t3);margin-top:2px">${u.modelKodu} · ${esStr}</div>
+      <td style="text-align:left;vertical-align:top;padding-top:14px">
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          ${imgHtml}
+          <div style="min-width:0">
+            <div style="font-weight:700;color:var(--dark);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:170px" title="${u.urunIsmi}">${u.urunIsmi}</div>
+            <div style="font-size:11px;color:var(--t3);margin-top:3px">Model: ${u.modelKodu}</div>
+            <div style="margin-top:4px">${esStr}</div>
+          </div>
+        </div>
       </td>
-      <td style="font-weight:700">${eaFmtTL(u.mevcut)}</td>
-      <td>${alisStr}</td>
-      <td style="background:rgba(234,179,8,.04);font-weight:700;color:#92400E">${eaFmtTL(u.f1Alt)}</td>
-      <td style="background:rgba(234,179,8,.04)">${komStr}</td>
-      <td style="background:rgba(234,179,8,.04)">${eaFmtKar(u.net1)}</td>
-      <td style="background:rgba(156,163,175,.04);font-weight:600;color:var(--t2)">${eaFmtTL(u.f2Alt)}</td>
-      <td style="background:rgba(156,163,175,.04)">${komStr}</td>
-      <td style="background:rgba(156,163,175,.04)">${eaFmtKar(u.net2)}</td>
-      <td style="background:rgba(99,102,241,.04);font-weight:600;color:#6366F1">${eaFmtTL(u.f3Ust)}</td>
-      <td style="background:rgba(99,102,241,.04)">${komStr}</td>
-      <td style="background:rgba(99,102,241,.04)">${eaFmtKar(u.net3)}</td>
+      <td style="vertical-align:top;padding-top:14px">
+        <div style="font-size:11px;color:var(--t3);margin-bottom:2px">Mevcut Satış</div>
+        <div style="font-size:16px;font-weight:800;color:var(--dark)">${eaFmtTL(u.mevcut)}</div>
+      </td>
+      <td style="vertical-align:top;padding-top:14px;background:rgba(234,179,8,.03)">${yildizKutu(u.f1Alt,u.net1,'rgba(234,179,8,.07)')}</td>
+      <td style="vertical-align:top;padding-top:14px;background:rgba(156,163,175,.03)">${yildizKutu(u.f2Alt,u.net2,'rgba(156,163,175,.08)')}</td>
+      <td style="vertical-align:top;padding-top:14px;background:rgba(99,102,241,.03)">${yildizKutu(u.f3Ust,u.net3,'rgba(99,102,241,.07)')}</td>
+      <td style="vertical-align:top;padding-top:14px">${alisStr}</td>
     </tr>`;
   }).join('');
 }
@@ -2552,7 +2559,7 @@ function renderUrunler(page){
     if(filterMode==='eksik')return !hasAlis;
     return true;
   });
-  if(searchQ)list=list.filter(p=>p.title.toLowerCase().includes(searchQ)||(p.categoryName||'').toLowerCase().includes(searchQ));
+  if(searchQ)list=list.filter(p=>p.title.toLowerCase().includes(searchQ)||(p.categoryName||'').toLowerCase().includes(searchQ)||String(p.id||'').toLowerCase().includes(searchQ));
   const total=list.length;
   const totalPages=Math.max(1,Math.ceil(total/_pageSize));
   if(_page>totalPages)_page=1;
