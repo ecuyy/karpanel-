@@ -848,6 +848,18 @@ input[type=number]{-moz-appearance:textfield}
 .ksc-fiyat{font-size:15px;font-weight:800;color:var(--dark)}
 .ksc-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-top:4px;display:inline-block}
 .ksc-badge.en-uygun{background:rgba(16,185,129,.1);color:#059669}
+
+.ea-kbcard{flex:1;min-width:90px;padding:8px 10px;border-right:1px solid var(--border);cursor:pointer;text-align:center;transition:.15s}
+.ea-kbcard:last-child{border-right:none}
+.ea-kbcard:hover{background:rgba(242,122,26,.05)}
+.ea-kbcard.secili{background:rgba(242,122,26,.1);outline:2px solid var(--or);outline-offset:-2px}
+.ea-kbf{font-size:11px;color:var(--t3);font-weight:600;margin-bottom:3px}
+.ea-kbp{font-size:14px;font-weight:800;color:var(--dark)}
+.ea-kbb{font-size:10px;font-weight:700;color:#059669;background:rgba(16,185,129,.1);padding:2px 6px;border-radius:8px;display:inline-block;margin-top:3px}
+.ea-kar-badge{display:inline-block;padding:3px 8px;border-radius:6px;font-weight:700;font-size:12px}
+.ea-kar-ok{background:rgba(16,185,129,.1);color:#059669}
+.ea-kar-bad{background:rgba(239,68,68,.08);color:#DC2626}
+.ea-kom-badge{font-size:10px;color:var(--or);font-weight:700;background:rgba(242,122,26,.08);padding:2px 6px;border-radius:4px}
 </style>
 </head>
 <body>
@@ -1297,6 +1309,8 @@ input[type=number]{-moz-appearance:textfield}
 
     <!-- ÜRÜN LİSTESİ -->
     <div id="urun-section" style="display:none">
+      <!-- NORMAL ÜRÜN GÖRÜNÜMÜ -->
+      <div id="normal-urun-gorunum">
       <div class="toolbar">
         <div class="toolbar-left">
           <span class="tb-title">Ürünlerim</span>
@@ -1423,6 +1437,110 @@ input[type=number]{-moz-appearance:textfield}
           <tbody id="ptbody"></tbody>
         </table>
       </div>
+      </div>
+      <!-- /NORMAL ÜRÜN GÖRÜNÜMÜ -->
+
+      <!-- AVANTAJLI ETİKET ANALİZ GÖRÜNÜMÜ -->
+      <div id="etiket-analiz-gorunum" style="display:none">
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <button class="btn-sm" onclick="etiketGeriDon()" style="background:var(--bg);color:var(--text)">← Ürünlerime Dön</button>
+            <span class="tb-title" style="margin-left:8px">⭐ Avantajlı Etiket Analizi</span>
+          </div>
+        </div>
+
+        <!-- KARGO BAREM (etiket için) -->
+        <div id="ea-kargo-wrap" style="margin-bottom:1rem;background:#fff;border:1.5px solid var(--border);border-radius:14px;overflow:hidden">
+          <div style="padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+            <div style="font-size:13px;font-weight:700;color:var(--dark)">🚚 Anlaşmalı Kargo Fiyatları <span style="font-size:11px;color:var(--t3);font-weight:400">— Firma seçin, hesaplamaya otomatik uygulanır</span><span style="font-size:11px;font-weight:700;color:#059669;background:rgba(16,185,129,.1);padding:2px 8px;border-radius:10px;margin-left:4px">KDV Dahil</span></div>
+            <div id="ea-kb-ozet" style="font-size:12px;color:var(--t3)">Firma seçin</div>
+          </div>
+          <div style="border-bottom:1px solid var(--border)">
+            <div style="padding:6px 16px;background:rgba(242,122,26,.04);font-size:12px;font-weight:700;color:var(--or)">0 – 199,99 TL</div>
+            <div style="display:flex;flex-wrap:wrap">
+              <div class="ea-kbcard" id="ea-kb-0-0" onclick="eaKbSec(0,40.99,'TEX/PTT',0)"><div class="ea-kbf">TEX/PTT</div><div class="ea-kbp">₺40,99</div><div class="ea-kbb">En Uygun</div></div>
+              <div class="ea-kbcard" id="ea-kb-0-1" onclick="eaKbSec(0,51.49,'Aras',1)"><div class="ea-kbf">Aras</div><div class="ea-kbp">₺51,49</div></div>
+              <div class="ea-kbcard" id="ea-kb-0-2" onclick="eaKbSec(0,52.49,'Sürat',2)"><div class="ea-kbf">Sürat</div><div class="ea-kbp">₺52,49</div></div>
+              <div class="ea-kbcard" id="ea-kb-0-3" onclick="eaKbSec(0,61.49,'Kolay Gelsin',3)"><div class="ea-kbf">Kolay Gelsin</div><div class="ea-kbp">₺61,49</div></div>
+              <div class="ea-kbcard" id="ea-kb-0-4" onclick="eaKbSec(0,62.50,'DHL',4)"><div class="ea-kbf">DHL</div><div class="ea-kbp">₺62,50</div></div>
+              <div class="ea-kbcard" id="ea-kb-0-5" onclick="eaKbSec(0,89.50,'YK',5)"><div class="ea-kbf">YK</div><div class="ea-kbp">₺89,50</div></div>
+            </div>
+          </div>
+          <div style="border-bottom:1px solid var(--border)">
+            <div style="padding:6px 16px;background:rgba(242,122,26,.04);font-size:12px;font-weight:700;color:var(--or)">200 – 349,99 TL</div>
+            <div style="display:flex;flex-wrap:wrap">
+              <div class="ea-kbcard" id="ea-kb-1-0" onclick="eaKbSec(1,79.00,'TEX/PTT',0)"><div class="ea-kbf">TEX/PTT</div><div class="ea-kbp">₺79,00</div><div class="ea-kbb">En Uygun</div></div>
+              <div class="ea-kbcard" id="ea-kb-1-1" onclick="eaKbSec(1,88.49,'Aras',1)"><div class="ea-kbf">Aras</div><div class="ea-kbp">₺88,49</div></div>
+              <div class="ea-kbcard" id="ea-kb-1-2" onclick="eaKbSec(1,95.50,'Sürat',2)"><div class="ea-kbf">Sürat</div><div class="ea-kbp">₺95,50</div></div>
+              <div class="ea-kbcard" id="ea-kb-1-3" onclick="eaKbSec(1,98.50,'Kolay Gelsin',3)"><div class="ea-kbf">Kolay Gelsin</div><div class="ea-kbp">₺98,50</div></div>
+              <div class="ea-kbcard" id="ea-kb-1-4" onclick="eaKbSec(1,99.49,'DHL',4)"><div class="ea-kbf">DHL</div><div class="ea-kbp">₺99,49</div></div>
+              <div class="ea-kbcard" id="ea-kb-1-5" onclick="eaKbSec(1,125.50,'YK',5)"><div class="ea-kbf">YK</div><div class="ea-kbp">₺125,50</div></div>
+            </div>
+          </div>
+          <div>
+            <div style="padding:6px 16px;background:rgba(242,122,26,.04);font-size:12px;font-weight:700;color:var(--or)">350 TL ve üzeri</div>
+            <div style="padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <input type="number" id="ea-kb-manuel" placeholder="Manuel kargo fiyatı" min="0" step="0.01" style="padding:7px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;width:200px;font-family:inherit;outline:none">
+            </div>
+          </div>
+          <div style="padding:10px 16px;background:var(--bg);border-top:1px solid var(--border);display:flex;justify-content:flex-end">
+            <button onclick="eaKbUygula()" style="padding:8px 20px;background:var(--or);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">🚚 Uygula</button>
+          </div>
+        </div>
+
+        <!-- Yükleme Alanı -->
+        <div id="ea-upload-area">
+          <label for="ea-file-inp" style="display:block;background:#fff;border:2px dashed var(--border);border-radius:16px;padding:2.5rem;text-align:center;cursor:pointer;transition:.2s;margin-bottom:1.5rem" onmouseover="this.style.borderColor='#6366F1'" onmouseout="this.style.borderColor='var(--border)'">
+            <div style="font-size:40px">📊</div>
+            <h3 style="font-size:16px;font-weight:700;margin:12px 0 6px;color:var(--dark)">Avantajlı Fiyat Excel'ini Yükle</h3>
+            <p style="font-size:13px;color:var(--t3);max-width:480px;margin:0 auto;line-height:1.6">Trendyol → Fiyatlandırma → Avantajlı Etiket → <strong>Excel ile Güncelle</strong> butonundan indirdiğin dosyayı yükle. Mevcut ürün listenden <strong>resim ve alış fiyatı</strong> otomatik gelir.</p>
+            <span style="display:inline-flex;align-items:center;gap:6px;background:#6366F1;color:#fff;border:none;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:700;margin-top:1rem">📂 Dosya Seç</span>
+          </label>
+          <input type="file" id="ea-file-inp" accept=".xlsx,.xls" style="display:none" onchange="eaExcelYukle(this)">
+          <div id="ea-yukle-hata" style="color:var(--red);font-size:13px;margin-top:8px;display:none"></div>
+        </div>
+
+        <!-- Sonuç Alanı -->
+        <div id="ea-sonuc-alan" style="display:none">
+          <div class="toolbar" style="margin-bottom:.75rem">
+            <div class="toolbar-left">
+              <div class="filter-bar">
+                <button class="ftab active" id="ea-f-hepsi" onclick="eaFiltrele('hepsi')">Hepsi</button>
+                <button class="ftab" id="ea-f-kar" onclick="eaFiltrele('kar1')" style="color:#059669">✅ Karlı</button>
+                <button class="ftab" id="ea-f-zarar" onclick="eaFiltrele('zarar1')" style="color:#DC2626">❌ Zararlı</button>
+                <button class="ftab" id="ea-f-eksik" onclick="eaFiltrele('eksik')" style="color:#9CA3AF">⏳ Eksik</button>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <span id="ea-ozet" style="font-size:12px;color:var(--t3);align-self:center"></span>
+              <label for="ea-file-inp" class="btn-sm" style="cursor:pointer">📂 Yeni Excel</label>
+            </div>
+          </div>
+          <div class="prod-table-wrap" style="overflow-x:auto">
+            <table class="ptable" style="min-width:1100px">
+              <thead>
+                <tr>
+                  <th style="width:54px">Görsel</th>
+                  <th>Ürün</th>
+                  <th>Mevcut Fiyat</th>
+                  <th>Alış+Kargo</th>
+                  <th style="background:rgba(234,179,8,.06)">1⭐ Alt Fiyat</th>
+                  <th style="background:rgba(234,179,8,.06)">1⭐ Komisyon</th>
+                  <th style="background:rgba(234,179,8,.06)">1⭐ Kar/Zarar</th>
+                  <th style="background:rgba(156,163,175,.06)">2⭐ Alt Fiyat</th>
+                  <th style="background:rgba(156,163,175,.06)">2⭐ Komisyon</th>
+                  <th style="background:rgba(156,163,175,.06)">2⭐ Kar/Zarar</th>
+                  <th style="background:rgba(99,102,241,.06)">3⭐ Üst Fiyat</th>
+                  <th style="background:rgba(99,102,241,.06)">3⭐ Komisyon</th>
+                  <th style="background:rgba(99,102,241,.06)">3⭐ Kar/Zarar</th>
+                </tr>
+              </thead>
+              <tbody id="ea-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- /AVANTAJLI ETİKET ANALİZ GÖRÜNÜMÜ -->
     </div>
 
     <!-- LOGIN CTA -->
@@ -2035,12 +2153,225 @@ async function kayitOl(){
 // ── ÖDEME ──
 function formatKart(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.replace(/(\d{4})/g,'$1 ').trim();}
 function formatTarih(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.substring(0,2)+'/'+v.substring(2,4);el.value=v;}
+// ── AVANTAJLI ETİKET ANALİZİ (sayfa içi) ──
+let eaTumVeri = [];
+let eaAktifFiltre = 'hepsi';
+let eaKbSecimleri = {0:null, 1:null};
+
 function etiketSayfasiAc(){
   if(!currentUser||!currentUser.premium){
     toast('Bu özellik sadece premium üyeler için','error','🔒');return;
   }
-  localStorage.setItem('kp_etiket_urunler', JSON.stringify(urunler));
-  window.open(PROXY+'/etiket-analiz', '_blank');
+  document.getElementById('normal-urun-gorunum').style.display='none';
+  document.getElementById('etiket-analiz-gorunum').style.display='block';
+}
+
+function etiketGeriDon(){
+  document.getElementById('etiket-analiz-gorunum').style.display='none';
+  document.getElementById('normal-urun-gorunum').style.display='block';
+}
+
+function eaKbSec(barem, fiyat, firma, idx){
+  eaKbSecimleri[barem] = {fiyat, firma};
+  for(let i=0;i<6;i++){
+    const el=document.getElementById('ea-kb-'+barem+'-'+i);
+    if(el) el.classList.remove('secili');
+  }
+  const sel=document.getElementById('ea-kb-'+barem+'-'+idx);
+  if(sel) sel.classList.add('secili');
+  const s0=eaKbSecimleri[0], s1=eaKbSecimleri[1];
+  let txt='';
+  if(s0) txt+='0-199: '+s0.firma;
+  if(s0&&s1) txt+=' | ';
+  if(s1) txt+='200-349: '+s1.firma;
+  const el2=document.getElementById('ea-kb-ozet');
+  if(el2) el2.textContent = txt || 'Firma seçin';
+}
+
+function eaKbGetKargo(satFiyat){
+  const manuel = parseFloat(document.getElementById('ea-kb-manuel').value)||0;
+  if(satFiyat>=350) return manuel>0?manuel:0;
+  if(satFiyat>=200) return eaKbSecimleri[1]?eaKbSecimleri[1].fiyat:0;
+  return eaKbSecimleri[0]?eaKbSecimleri[0].fiyat:0;
+}
+
+function eaKbUygula(){
+  if(eaTumVeri.length===0){ toast('Önce Excel yükleyin','error','❌'); return; }
+  eaTumVeri.forEach(u=>{
+    const kb = eaKbGetKargo(u.f1Alt||u.mevcut||0);
+    if(kb>0) u.kargo = kb;
+    u.net1 = u.alis>0 ? eaHesapla(u.f1Alt,u.alis,u.kargo,u.komOran) : null;
+    u.net2 = u.alis>0 ? eaHesapla(u.f2Alt,u.alis,u.kargo,u.komOran) : null;
+    u.net3 = u.alis>0 ? eaHesapla(u.f3Ust,u.alis,u.kargo,u.komOran) : null;
+  });
+  eaIstatistik(); eaRender();
+  toast('🚚 Kargo uygulandı','success','🚚');
+}
+
+function eaParseFiyat(v){
+  if(v===null||v===undefined||v==='') return 0;
+  return parseFloat(String(v).replace(',','.'))||0;
+}
+
+function eaFmtTL(n){
+  if(!n&&n!==0) return '-';
+  return '₺'+Math.abs(n).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function eaFmtKar(n){
+  if(n===null||n===undefined) return '<span style="color:#9CA3AF;font-size:11px">—</span>';
+  const cls = n>=0?'ea-kar-ok':'ea-kar-bad';
+  const pre = n>=0?'+':'';
+  return '<span class="ea-kar-badge '+cls+'">'+pre+n.toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})+'</span>';
+}
+
+function eaHesapla(satFiyat, alis, kargo, komOran){
+  if(!satFiyat||satFiyat<=0||alis<=0) return null;
+  const kf=1.2, komisyon=satFiyat*(komOran/100), komH=komisyon/kf;
+  const hizmet=13.19, stopaj=komH*0.05;
+  const kdvS=satFiyat-satFiyat/kf, kdvA=alis-alis/kf, kdvK=kargo-kargo/kf;
+  const kdvKom=komisyon-komisyon/kf, kdvHiz=hizmet-hizmet/kf;
+  const odKdv=Math.max(0,kdvS-kdvA-kdvK-kdvKom-kdvHiz);
+  return satFiyat-komisyon-alis-kargo-hizmet-stopaj-odKdv;
+}
+
+function eaExcelYukle(input){
+  const file = input.files[0]; if(!file) return;
+  document.getElementById('ea-yukle-hata').style.display='none';
+  const reader = new FileReader();
+  reader.onload = e => {
+    try{
+      const wb = XLSX.read(new Uint8Array(e.target.result), {type:'array'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, {header:1});
+      let hRow=-1, H={};
+      for(let i=0;i<rows.length;i++){
+        if(rows[i] && rows[i].some(c=>String(c||'').includes('MODEL KODU'))){
+          hRow=i;
+          rows[i].forEach((h,j)=>{ H[String(h||'').trim()]=j; });
+          break;
+        }
+      }
+      if(hRow<0){
+        document.getElementById('ea-yukle-hata').style.display='block';
+        document.getElementById('ea-yukle-hata').textContent='Excel formatı tanınamadı. Trendyol avantajlı fiyat Excel\'i olmalı.';
+        return;
+      }
+
+      eaTumVeri = [];
+      for(let i=hRow+1;i<rows.length;i++){
+        const r = rows[i]; if(!r||!r[H['MODEL KODU']]) continue;
+        const modelKodu = String(r[H['MODEL KODU']]||'').trim();
+        const urunIsmi  = String(r[H['ÜRÜN İSMİ']]||'').trim() || modelKodu;
+        const mevcut    = eaParseFiyat(r[H['MÜŞTERİNİN GÖRDÜĞÜ FİYAT']]);
+        const f1Alt     = eaParseFiyat(r[H['1 YILDIZ ALT FİYAT']]);
+        const f2Alt     = eaParseFiyat(r[H['2 YILDIZ ALT FİYAT']]);
+        const f3Ust     = eaParseFiyat(r[H['3 YILDIZ ÜST FİYAT']]);
+        const komVar    = String(r[H['KOMİSYON TARİFESİ']]||'').trim()==='Var';
+
+        // Sistemdeki ürünle eşleştir (id veya title üzerinden)
+        const modelUp = modelKodu.toUpperCase();
+        const urun = urunler.find(u=>{
+          const uid = String(u.id||'').toUpperCase();
+          const ttl = String(u.title||'').toUpperCase();
+          return uid===modelUp || uid.includes(modelUp) || modelUp.includes(uid) || ttl.includes(modelUp);
+        });
+
+        const alis    = urun ? (urun.alis||0)  : 0;
+        const kargo   = urun ? (urun.kargo||0) : 0;
+        const komOran = urun ? (urun.commissionRate||0) : 0;
+        const image   = urun ? (urun.image||'') : '';
+
+        eaTumVeri.push({
+          modelKodu, urunIsmi, mevcut, f1Alt, f2Alt, f3Ust, komVar,
+          alis, kargo, komOran, image, eslesme: !!urun,
+          net1: alis>0 ? eaHesapla(f1Alt,alis,kargo,komOran) : null,
+          net2: alis>0 ? eaHesapla(f2Alt,alis,kargo,komOran) : null,
+          net3: alis>0 ? eaHesapla(f3Ust,alis,kargo,komOran) : null,
+        });
+      }
+
+      if(eaTumVeri.length===0){
+        document.getElementById('ea-yukle-hata').style.display='block';
+        document.getElementById('ea-yukle-hata').textContent='Hiçbir ürün bulunamadı.';
+        return;
+      }
+
+      document.getElementById('ea-upload-area').style.display='none';
+      document.getElementById('ea-sonuc-alan').style.display='block';
+      eaAktifFiltre='hepsi';
+      eaIstatistik(); eaRender();
+      toast('✅ '+eaTumVeri.length+' ürün analiz edildi','success','⭐');
+    }catch(err){
+      document.getElementById('ea-yukle-hata').style.display='block';
+      document.getElementById('ea-yukle-hata').textContent='Hata: '+err.message;
+    }
+  };
+  reader.readAsArrayBuffer(file);
+  input.value='';
+}
+
+function eaIstatistik(){
+  let kar1=0, zar1=0, eksik=0, eslesme=0;
+  eaTumVeri.forEach(u=>{
+    if(u.net1===null) eksik++;
+    else if(u.net1>0) kar1++;
+    else zar1++;
+    if(u.eslesme) eslesme++;
+  });
+  const el = document.getElementById('ea-ozet');
+  if(el) el.textContent = eaTumVeri.length+' ürün · ✅'+kar1+' · ❌'+zar1+' · ⏳'+eksik+' · 🔗'+eslesme+'/'+eaTumVeri.length+' eşleşti';
+}
+
+function eaFiltrele(tip){
+  eaAktifFiltre = tip;
+  ['hepsi','kar','zarar','eksik'].forEach(t=>{
+    const el=document.getElementById('ea-f-'+t);
+    if(el) el.classList.remove('active');
+  });
+  const map={hepsi:'ea-f-hepsi',kar1:'ea-f-kar',zarar1:'ea-f-zarar',eksik:'ea-f-eksik'};
+  const el=document.getElementById(map[tip]);
+  if(el) el.classList.add('active');
+  eaRender();
+}
+
+function eaRender(){
+  let liste = eaTumVeri;
+  if(eaAktifFiltre==='kar1')   liste = liste.filter(u=>u.net1!==null&&u.net1>0);
+  if(eaAktifFiltre==='zarar1') liste = liste.filter(u=>u.net1!==null&&u.net1<=0);
+  if(eaAktifFiltre==='eksik')  liste = liste.filter(u=>u.net1===null);
+
+  if(!liste.length){
+    document.getElementById('ea-tbody').innerHTML='<tr><td colspan="13" style="padding:2rem;text-align:center;color:var(--t3)">Bu filtrede ürün bulunamadı</td></tr>';
+    return;
+  }
+
+  document.getElementById('ea-tbody').innerHTML = liste.map(u=>{
+    const komStr = u.komOran>0 ? ('<span class="ea-kom-badge">%'+u.komOran+'</span>') : '<span style="color:#9CA3AF">—</span>';
+    const alisStr = u.alis>0 ? (eaFmtTL(u.alis)+' <span style="color:var(--t3);font-size:11px">+ '+eaFmtTL(u.kargo)+'</span>') : '<span style="color:#F59E0B;font-size:11px">Girilmemiş</span>';
+    const esStr = u.eslesme ? '<span style="color:#059669;font-size:10px">✓ Eşleşti</span>' : '<span style="color:#F59E0B;font-size:10px">⚠ Eşleşmedi</span>';
+    const imgHtml = u.image
+      ? '<img src="'+u.image+'" style="width:36px;height:36px;border-radius:8px;object-fit:cover;border:1px solid var(--border)">'
+      : '<div style="width:36px;height:36px;border-radius:8px;background:var(--dark);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff">'+(u.urunIsmi.charAt(0)||'?')+'</div>';
+    return `<tr>
+      <td>${imgHtml}</td>
+      <td style="max-width:180px">
+        <div style="font-weight:600;color:var(--dark);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${u.urunIsmi}">${u.urunIsmi}</div>
+        <div style="font-size:10px;color:var(--t3);margin-top:2px">${u.modelKodu} · ${esStr}</div>
+      </td>
+      <td style="font-weight:700">${eaFmtTL(u.mevcut)}</td>
+      <td>${alisStr}</td>
+      <td style="background:rgba(234,179,8,.04);font-weight:700;color:#92400E">${eaFmtTL(u.f1Alt)}</td>
+      <td style="background:rgba(234,179,8,.04)">${komStr}</td>
+      <td style="background:rgba(234,179,8,.04)">${eaFmtKar(u.net1)}</td>
+      <td style="background:rgba(156,163,175,.04);font-weight:600;color:var(--t2)">${eaFmtTL(u.f2Alt)}</td>
+      <td style="background:rgba(156,163,175,.04)">${komStr}</td>
+      <td style="background:rgba(156,163,175,.04)">${eaFmtKar(u.net2)}</td>
+      <td style="background:rgba(99,102,241,.04);font-weight:600;color:#6366F1">${eaFmtTL(u.f3Ust)}</td>
+      <td style="background:rgba(99,102,241,.04)">${komStr}</td>
+      <td style="background:rgba(99,102,241,.04)">${eaFmtKar(u.net3)}</td>
+    </tr>`;
+  }).join('');
 }
 
 async function odemeYap(){
