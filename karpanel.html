@@ -2244,6 +2244,7 @@ function eaVeriyiKaydet(){
 function etiketGeriDon(){
   document.getElementById('etiket-analiz-gorunum').style.display='none';
   document.getElementById('normal-urun-gorunum').style.display='block';
+  renderUrunler();
 }
 
 function eaKbSec(barem, fiyat, firma, idx){
@@ -2631,7 +2632,7 @@ function csvYukle(input){
       }
       if(parsed.length===0){toast('Ürün bulunamadı.','error','❌');return;}
       urunler=parsed;
-      saveUrunler();
+      saveUrunler(true);
       document.getElementById('urun-section').style.display='block';
       renderUrunler();
       toast(parsed.length+' ürün yüklendi! 🎉','success','✅');
@@ -3031,12 +3032,10 @@ function toast(msg,type,icon){
 }
 
 // ── KAYDET / YÜKLE ──
-function saveUrunler(){
+function saveUrunler(aninda){
   if(!currentUser) return;
   localStorage.setItem('kp_urunler_'+currentUser.email, JSON.stringify(urunler));
-  // MongoDB'ye de kaydet (debounce ile - 2 sn bekle)
-  clearTimeout(window._saveTimer);
-  window._saveTimer=setTimeout(async()=>{
+  const gonder=async()=>{
     try{
       await fetch(PROXY+'/api/urunler/kaydet',{
         method:'POST',
@@ -3044,10 +3043,20 @@ function saveUrunler(){
         body:JSON.stringify({email:currentUser.email,urunler})
       });
     }catch(e){}
-  },2000);
+  };
+  if(aninda){
+    clearTimeout(window._saveTimer);
+    gonder();
+    return;
+  }
+  // MongoDB'ye de kaydet (debounce ile - 2 sn bekle)
+  clearTimeout(window._saveTimer);
+  window._saveTimer=setTimeout(gonder,2000);
 }
 async function loadSavedUrunler(){
   if(!currentUser) return false;
+  // Eğer ekranda zaten ürün varsa (yeni yüklenmiş olabilir), MongoDB'den boş/eski veri gelirse onu ezmeyelim
+  const oncekiUrunSayisi = urunler.length;
   try{
     // Önce MongoDB'den çek
     const r=await fetch(PROXY+'/api/urunler/yukle?email='+encodeURIComponent(currentUser.email));
