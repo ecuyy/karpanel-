@@ -2261,13 +2261,20 @@ function eaExcelYukle(input){
         const f3Ust     = eaParseFiyat(r[H['3 YILDIZ ÜST FİYAT']]);
         const komVar    = String(r[H['KOMİSYON TARİFESİ']]||'').trim()==='Var';
 
-        // Sistemdeki ürünle eşleştir (id veya title üzerinden)
-        const modelUp = modelKodu.toUpperCase();
+        // Sistemdeki ürünle eşleştir (id, barcode, modelCode, title üzerinden - tüm rakam+harf temizlenmiş)
+        const temizle = s => String(s||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+        const modelUp = temizle(modelKodu);
         const urun = urunler.find(u=>{
-          const uid = String(u.id||'').toUpperCase();
-          const ttl = String(u.title||'').toUpperCase();
-          return uid===modelUp || uid.includes(modelUp) || modelUp.includes(uid) || ttl.includes(modelUp);
+          const uid = temizle(u.id);
+          const ubc = temizle(u.barcode);
+          const umc = temizle(u.modelCode || u.stockCode);
+          const ttl = temizle(u.title);
+          if(!modelUp) return false;
+          return uid===modelUp || ubc===modelUp || umc===modelUp ||
+                 (uid && uid.includes(modelUp)) || (modelUp && uid && modelUp.includes(uid)) ||
+                 (ttl && ttl.includes(modelUp));
         });
+        if(i===hRow+1) console.log('Debug eşleştirme — Excel model kodu:', modelKodu, '| Sistemdeki ilk ürün id:', urunler[0]?urunler[0].id:'YOK', '| urunler sayısı:', urunler.length);
 
         const alis    = urun ? (urun.alis||0)  : 0;
         const kargo   = urun ? (urun.kargo||0) : 0;
@@ -2348,12 +2355,19 @@ function eaRender(){
       : '<span style="display:inline-flex;align-items:center;gap:3px;font-size:10px;color:#F59E0B;font-weight:700;background:rgba(245,158,11,.1);padding:2px 7px;border-radius:10px;margin-top:4px">⚠ Alış maliyeti girilmemiş</span>';
 
     // Trendyol tarzı yıldız fiyat kutusu: fiyat / "ve altı" / komisyon, altında bizim kar-zarar rozeti
+    // Kutu arka planı: kar varsa yeşilimsi, zarar varsa kırmızımsı, bilinmiyorsa nötr
     const yildizKutu = (fiyat, net) => {
+      let kutuRengi = 'rgba(14,124,123,.04)'; // varsayılan (maliyet yok)
+      let kenarRengi = 'transparent';
+      if(net!==null){
+        if(net>0){ kutuRengi='rgba(16,185,129,.08)'; kenarRengi='rgba(16,185,129,.25)'; }
+        else { kutuRengi='rgba(239,68,68,.06)'; kenarRengi='rgba(239,68,68,.2)'; }
+      }
       const karRozeti = net===null
-        ? ''
-        : `<div style="margin-top:8px;padding-top:8px;border-top:1px solid #E5E7EB">${eaFmtKar(net)}</div>`;
+        ? '<div style="margin-top:8px;padding-top:8px;border-top:1px solid #E5E7EB;font-size:10px;color:#9CA3AF">Maliyet girilmemiş</div>'
+        : `<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08)">${eaFmtKar(net)}</div>`;
       return `
-      <div style="text-align:center">
+      <div style="text-align:center;background:${kutuRengi};border:1px solid ${kenarRengi};border-radius:10px;padding:10px 8px;margin:-4px">
         <div style="font-size:17px;font-weight:800;color:var(--dark)">${eaFmtTL(fiyat)}</div>
         <div style="font-size:11px;color:var(--t3);margin:2px 0 8px">ve altı</div>
         <div style="font-size:12px;color:var(--t2)">Komisyon<br><span style="font-weight:700;color:var(--or)">%${komStr}</span></div>
@@ -2379,9 +2393,9 @@ function eaRender(){
         <div style="font-size:14px;font-weight:700;color:var(--dark)">${eaFmtTL(u.mevcut)}</div>
         <div style="font-size:11px;color:var(--t3);margin-top:6px">Güncel Komisyon: <span style="color:var(--or);font-weight:700">%${komStr}</span></div>
       </td>
-      <td style="vertical-align:top;padding:14px 10px;background:rgba(14,124,123,.04)">${yildizKutu(u.f1Alt,u.net1)}</td>
-      <td style="vertical-align:top;padding:14px 10px;background:rgba(14,124,123,.04)">${yildizKutu(u.f2Alt,u.net2)}</td>
-      <td style="vertical-align:top;padding:14px 10px;background:rgba(14,124,123,.04)">${yildizKutu(u.f3Ust,u.net3)}</td>
+      <td style="vertical-align:top;padding:14px 10px">${yildizKutu(u.f1Alt,u.net1)}</td>
+      <td style="vertical-align:top;padding:14px 10px">${yildizKutu(u.f2Alt,u.net2)}</td>
+      <td style="vertical-align:top;padding:14px 10px">${yildizKutu(u.f3Ust,u.net3)}</td>
     </tr>`;
   }).join('');
 }
