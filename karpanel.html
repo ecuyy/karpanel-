@@ -2591,22 +2591,38 @@ function csvYukle(input){
       console.log('Kolonlar:',header.join(','));
       const find=(keys)=>header.findIndex(h=>keys.some(k=>h.replace(/\s+/g,'').includes(k.replace(/\s+/g,''))));
       // Trendyol Excel kolon isimleri
-      const titleIdx=find(['ürünadı','ürünbaşlığı','productname','title','ürün adı','model']);
-      const priceIdx=find(["trendyol'dasatılacakfiyat","trendyoldakifiyat","satışfiyatı","saleprice","fiyat","satış fiyatı","listefiyatı","liste fiyatı"]);
+      // ÖNEMLİ: "Ürün Adı" sütunu, "Model Kodu" veya "Piyasa Satış Fiyatı" gibi benzer
+      // kelimeler içeren sütunlarla karışmasın diye en spesifik eşleşmeler önce denenir.
+      const titleIdx=find(['ürünadı','ürünbaşlığı','productname','title']);
+      // Fiyat: önce "Trendyol'da Satılacak Fiyat" aranır (gerçek satış fiyatı budur),
+      // "Piyasa Satış Fiyatı" veya "BuyBox" ile karışmaması için en spesifik anahtar önce gelir.
+      const priceIdx=find(["trendyol'dasatılacakfiyat(kdvdahil)","trendyol'dasatılacakfiyat","trendyoldakifiyat","trendyolsatışfiyatı"]);
       const komIdx=find(['komisyonoranı','komisyon%','commission','komisyon oranı','komisyon']);
       const catIdx=find(['kategoriismi','kategoriadı','category','kategori','kategori ismi','kategori adı']);
-      const barcodeIdx=find(['barkod','barcode','ürünkodu','stok kodu','stok kod','ürün kodu']);
+      const barcodeIdx=find(['barkod','barcode']);
+      const modelKoduIdx=find(['modelkodu','model kodu']);
       // Görsel - birden fazla kolon olabilir, ilkini al
       const img1Idx=header.findIndex(h=>h.includes('görsel')||h.includes('gorsel')||h.includes('resim')||h.includes('image'));
-      if(titleIdx===-1){toast('Ürün adı kolonu bulunamadı. Kolonlar: '+header.slice(0,10).join(', '),'error','❌');return;}
+      let realTitleIdx = titleIdx;
+      if(realTitleIdx===-1){
+        // Geniş arama: 'ürün adı' geçen ama 'model' veya 'kodu' geçmeyen sütun
+        realTitleIdx = header.findIndex(h=>(h.includes('ürün')&&h.includes('ad'))&&!h.includes('model')&&!h.includes('kod'));
+      }
+      let realPriceIdx = priceIdx;
+      if(realPriceIdx===-1){
+        // Geniş arama: 'fiyat' geçen ama 'piyasa' veya 'buybox' geçmeyen sütun
+        realPriceIdx = header.findIndex(h=>h.includes('fiyat')&&!h.includes('piyasa')&&!h.includes('buybox')&&!h.includes('liste'));
+        if(realPriceIdx===-1) realPriceIdx = find(['fiyat']);
+      }
+      if(realTitleIdx===-1){toast('Ürün adı kolonu bulunamadı. Kolonlar: '+header.slice(0,10).join(', '),'error','❌');return;}
       const parsed=[];
       for(let i=1;i<rows.length;i++){
         const cols=rows[i];
         if(!cols||!cols.some(c=>String(c).trim()))continue; // tamamen boş satırı atla
-        const title=String(cols[titleIdx]||'').trim();
+        const title=String(cols[realTitleIdx]||'').trim();
         if(!title)continue; // ürün adı yoksa atla
         // Fiyat - virgül ve nokta dönüşümü
-        const priceRaw=priceIdx>=0?String(cols[priceIdx]||''):'';
+        const priceRaw=realPriceIdx>=0?String(cols[realPriceIdx]||''):'';
         // Fiyat parse: "1.499,90" → 1499.90, "1499.90" → 1499.90, "499,9" → 499.9
         let price=0;
         if(priceRaw){
@@ -2626,9 +2642,10 @@ function csvYukle(input){
         const kom=parseFloat(komRaw.replace(/[^0-9.,]/g,'').replace(',','.'))||0;
         const cat=catIdx>=0?String(cols[catIdx]||'').trim():'';
         const barcode=barcodeIdx>=0?String(cols[barcodeIdx]||'').trim():'';
+        const modelKodu=modelKoduIdx>=0?String(cols[modelKoduIdx]||'').trim():'';
         const img=img1Idx>=0?String(cols[img1Idx]||'').trim():'';
         const uid=barcode||(title.substring(0,10)+i);
-        parsed.push({id:uid,title,salePrice:price,commissionRate:kom,categoryName:cat,image:img,alis:0,kargo:0});
+        parsed.push({id:uid,title,salePrice:price,commissionRate:kom,categoryName:cat,image:img,barcode,modelCode:modelKodu,alis:0,kargo:0});
       }
       if(parsed.length===0){toast('Ürün bulunamadı.','error','❌');return;}
       urunler=parsed;
