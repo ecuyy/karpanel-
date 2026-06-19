@@ -1514,6 +1514,7 @@ input[type=number]{-moz-appearance:textfield}
             <div style="display:flex;gap:8px">
               <span id="ea-ozet" style="font-size:12px;color:var(--t3);align-self:center"></span>
               <label for="ea-file-inp" class="btn-sm" style="cursor:pointer">📂 Yeni Excel</label>
+              <button class="btn-danger-sm" onclick="eaTemizle()">🗑 Temizle</button>
             </div>
           </div>
           <div class="prod-table-wrap" style="overflow-x:auto">
@@ -2156,6 +2157,63 @@ function etiketSayfasiAc(){
   }
   document.getElementById('normal-urun-gorunum').style.display='none';
   document.getElementById('etiket-analiz-gorunum').style.display='block';
+  eaKayitliVeriyiYukle();
+}
+
+function eaTemizle(){
+  if(!confirm('Avantajlı etiket analiz verilerini temizlemek istediğinize emin misiniz?')) return;
+  eaTumVeri=[];
+  eaKbSecimleri={0:null,1:null};
+  if(currentUser) localStorage.removeItem('kp_etiket_'+currentUser.email);
+  document.getElementById('ea-upload-area').style.display='block';
+  document.getElementById('ea-sonuc-alan').style.display='none';
+  document.querySelectorAll('.ea-kbcard').forEach(el=>el.classList.remove('secili'));
+  const el2=document.getElementById('ea-kb-ozet');
+  if(el2) el2.textContent='Firma seçin';
+  toast('Analiz verileri temizlendi','info','🗑');
+}
+
+function eaKayitliVeriyiYukle(){
+  if(!currentUser) return;
+  try{
+    const saved = localStorage.getItem('kp_etiket_'+currentUser.email);
+    if(saved){
+      const parsed = JSON.parse(saved);
+      if(parsed && parsed.veri && parsed.veri.length>0){
+        eaTumVeri = parsed.veri;
+        if(parsed.kbSecimleri) eaKbSecimleri = parsed.kbSecimleri;
+        document.getElementById('ea-upload-area').style.display='none';
+        document.getElementById('ea-sonuc-alan').style.display='block';
+        eaAktifFiltre='hepsi';
+        eaIstatistik(); eaRender();
+        // Kargo barem seçimlerini görsel olarak işaretle
+        [0,1].forEach(barem=>{
+          const sec = eaKbSecimleri[barem];
+          if(!sec) return;
+          const firmaSira=['TEX/PTT','Aras','Sürat','Kolay Gelsin','DHL','YK'];
+          const idx = firmaSira.indexOf(sec.firma);
+          if(idx>=0){
+            const el=document.getElementById('ea-kb-'+barem+'-'+idx);
+            if(el) el.classList.add('secili');
+          }
+        });
+        const s0=eaKbSecimleri[0], s1=eaKbSecimleri[1];
+        let txt='';
+        if(s0) txt+='0-199: '+s0.firma;
+        if(s0&&s1) txt+=' | ';
+        if(s1) txt+='200-349: '+s1.firma;
+        const el2=document.getElementById('ea-kb-ozet');
+        if(el2 && txt) el2.textContent = txt;
+      }
+    }
+  }catch(e){}
+}
+
+function eaVeriyiKaydet(){
+  if(!currentUser) return;
+  try{
+    localStorage.setItem('kp_etiket_'+currentUser.email, JSON.stringify({veri:eaTumVeri, kbSecimleri:eaKbSecimleri, tarih:new Date().toISOString()}));
+  }catch(e){}
 }
 
 function etiketGeriDon(){
@@ -2197,6 +2255,7 @@ function eaKbUygula(){
     u.net3 = u.alis>0 ? eaHesapla(u.f3Ust,u.alis,u.kargo,u.komOran) : null;
   });
   eaIstatistik(); eaRender();
+  eaVeriyiKaydet();
   toast('🚚 Kargo uygulandı','success','🚚');
 }
 
@@ -2300,6 +2359,7 @@ function eaExcelYukle(input){
       document.getElementById('ea-sonuc-alan').style.display='block';
       eaAktifFiltre='hepsi';
       eaIstatistik(); eaRender();
+      eaVeriyiKaydet();
       toast('✅ '+eaTumVeri.length+' ürün analiz edildi','success','⭐');
     }catch(err){
       document.getElementById('ea-yukle-hata').style.display='block';
