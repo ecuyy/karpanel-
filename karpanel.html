@@ -843,13 +843,13 @@ input[type=number]{-moz-appearance:textfield}
 .kbt{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg);color:var(--t2);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
 .kbt.active{border-color:var(--or);background:rgba(242,122,26,.08);color:var(--or)}
 .kbp{display:flex}
-.kargo-secim-card{flex:1;min-width:100px;padding:10px 12px;border-right:1px solid var(--border);cursor:pointer;text-align:center;transition:.15s;position:relative}
+.kargo-secim-card{flex:1;min-width:110px;padding:14px 12px;border-right:1px solid #F3F4F6;cursor:pointer;text-align:center;transition:all .2s;position:relative;background:#fff}
 .kargo-secim-card:last-child{border-right:none}
-.kargo-secim-card:hover{background:rgba(242,122,26,.05)}
-.kargo-secim-card.secili{background:rgba(242,122,26,.08);outline:2px solid var(--or);outline-offset:-2px}
-.ksc-firma{font-size:11px;color:var(--t3);font-weight:600;margin-bottom:4px}
-.ksc-fiyat{font-size:15px;font-weight:800;color:var(--dark)}
-.ksc-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-top:4px;display:inline-block}
+.kargo-secim-card:hover{background:#FFFBF5;transform:translateY(-1px)}
+.kargo-secim-card.secili{background:linear-gradient(135deg,rgba(242,122,26,.08),rgba(255,140,56,.05));outline:2px solid var(--or);outline-offset:-2px;border-radius:0}
+.ksc-firma{font-size:11px;color:#9CA3AF;font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.ksc-fiyat{font-size:16px;font-weight:900;color:#111;letter-spacing:-.5px}
+.ksc-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-top:5px;display:inline-block}
 .ksc-badge.en-uygun{background:rgba(16,185,129,.1);color:#059669}
 
 .ea-kbcard{flex:1;min-width:90px;padding:8px 10px;border-right:1px solid var(--border);cursor:pointer;text-align:center;transition:.15s}
@@ -1320,16 +1320,20 @@ input[type=number]{-moz-appearance:textfield}
         </div>
       </div>
       <!-- KARGO BAREM TABLOSU -->
-      <div id="kargo-barem-wrap" style="margin-bottom:1rem;background:#fff;border:1.5px solid var(--border);border-radius:14px;overflow:hidden">
-        <div style="padding:10px 16px;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-          <div style="font-size:13px;font-weight:700;color:var(--dark)">🚚 Anlaşmalı Kargo Fiyatları <span style="font-size:11px;color:var(--t3);font-weight:400">— Her barem için firma seçin, Uygula'ya basın</span><span style="font-size:11px;font-weight:700;color:#059669;background:rgba(16,185,129,.1);padding:2px 8px;border-radius:10px;margin-left:4px">KDV Dahil</span></div>
+      <div id="kargo-barem-wrap" style="margin-bottom:1.25rem;background:#fff;border:1px solid #E5E7EB;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.05)">
+        <div style="padding:12px 18px;background:#F9FAFB;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:13px;font-weight:700;color:#111">🚚 Anlaşmalı Kargo Fiyatları</span>
+            <span style="font-size:11px;color:#9CA3AF">Her barem için firma seçin, Uygula'ya basın</span>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:#059669;background:rgba(16,185,129,.1);padding:3px 10px;border-radius:20px;border:1px solid rgba(16,185,129,.15)">✓ KDV Dahil</span>
         </div>
 
         <!-- Barem 0: 0-199,99 -->
         <div style="border-bottom:1px solid var(--border)">
-          <div style="padding:8px 16px;background:rgba(242,122,26,.04);display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-            <span style="font-size:12px;font-weight:700;color:var(--or);min-width:110px">0 – 199,99 TL</span>
-            <span style="font-size:11px;color:var(--t3)">Satış fiyatı bu aralıktaki ürünlere uygulanır</span>
+          <div style="padding:8px 18px;background:rgba(242,122,26,.03);border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:10px">
+            <span style="font-size:12px;font-weight:800;color:var(--or);background:rgba(242,122,26,.1);padding:3px 10px;border-radius:20px">0 – 199,99 TL</span>
+            <span style="font-size:11px;color:#9CA3AF">Satış fiyatı bu aralıktaki ürünlere uygulanır</span>
           </div>
           <div style="display:flex;flex-wrap:wrap;gap:0">
             <div class="kargo-secim-card" id="ksc-0-0" onclick="kargoSecim(0,40.99,'TEX/PTT',0)">
@@ -1362,9 +1366,9 @@ input[type=number]{-moz-appearance:textfield}
 
         <!-- Barem 1: 200-349,99 -->
         <div style="border-bottom:1px solid var(--border)">
-          <div style="padding:8px 16px;background:rgba(242,122,26,.04);display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-            <span style="font-size:12px;font-weight:700;color:var(--or);min-width:110px">200 – 349,99 TL</span>
-            <span style="font-size:11px;color:var(--t3)">Satış fiyatı bu aralıktaki ürünlere uygulanır</span>
+          <div style="padding:8px 18px;background:rgba(242,122,26,.03);border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:10px">
+            <span style="font-size:12px;font-weight:800;color:var(--or);background:rgba(242,122,26,.1);padding:3px 10px;border-radius:20px">200 – 349,99 TL</span>
+            <span style="font-size:11px;color:#9CA3AF">Satış fiyatı bu aralıktaki ürünlere uygulanır</span>
           </div>
           <div style="display:flex;flex-wrap:wrap;gap:0">
             <div class="kargo-secim-card" id="ksc-1-0" onclick="kargoSecim(1,79.00,'TEX/PTT',0)">
@@ -1397,9 +1401,9 @@ input[type=number]{-moz-appearance:textfield}
 
         <!-- Barem 2: 350+ -->
         <div>
-          <div style="padding:8px 16px;background:rgba(242,122,26,.04);display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-            <span style="font-size:12px;font-weight:700;color:var(--or);min-width:110px">350 TL ve üzeri</span>
-            <span style="font-size:11px;color:var(--t3)">Kargo maliyetini manuel girin</span>
+          <div style="padding:8px 18px;background:rgba(242,122,26,.03);border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:10px">
+            <span style="font-size:12px;font-weight:800;color:var(--or);background:rgba(242,122,26,.1);padding:3px 10px;border-radius:20px">350 TL ve üzeri</span>
+            <span style="font-size:11px;color:#9CA3AF">Kargo maliyetini manuel girin</span>
           </div>
           <div style="padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
             <input type="number" id="kargo-manuel-input" placeholder="ör: 120" min="0" step="0.01"
@@ -1410,9 +1414,9 @@ input[type=number]{-moz-appearance:textfield}
         </div>
 
         <!-- Uygula Butonu -->
-        <div style="padding:10px 16px;background:var(--bg);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-          <span id="kargo-secim-ozet" style="font-size:12px;color:var(--t3)">Firma seçin ve Uygula'ya basın</span>
-          <button onclick="kargoBaremUygula()" style="padding:8px 20px;background:var(--or);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">🚚 Uygula</button>
+        <div style="padding:12px 18px;background:#F9FAFB;border-top:1px solid #E5E7EB;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <span id="kargo-secim-ozet" style="font-size:12px;color:#9CA3AF">Firma seçin ve Uygula'ya basın</span>
+          <button onclick="kargoBaremUygula()" style="padding:9px 24px;background:var(--or);color:#fff;border:none;border-radius:50px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 4px 14px rgba(242,122,26,.3);transition:.2s" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 20px rgba(242,122,26,.4)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 14px rgba(242,122,26,.3)'">🚚 Uygula</button>
         </div>
       </div>
 
