@@ -1303,8 +1303,10 @@ input[type=number]{-moz-appearance:textfield}
     <div id="urun-section" style="display:none">
       <!-- NORMAL ÜRÜN GÖRÜNÜMÜ -->
       <div id="normal-urun-gorunum">
-      <div class="toolbar">
-        <div class="toolbar-left">
+      <!-- Toolbar -->
+      <div style="margin-bottom:1.25rem">
+        <!-- Üst satır: başlık + filtreler -->
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap">
           <span class="tb-title">Ürünlerim</span>
           <span class="count-badge" id="urun-count">0 ürün</span>
           <div class="filter-bar">
@@ -1314,11 +1316,21 @@ input[type=number]{-moz-appearance:textfield}
             <button class="ftab" onclick="setFilter('eksik',this)">⏳ Eksik</button>
           </div>
         </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-inp" type="text" placeholder="Ürün adı veya model kodu ara..." oninput="araUrun(this.value)"></div>
-          <button class="btn-sm" onclick="openKargoModal()">🚚 Kargo Fiyat Gir</button>
-          <button class="btn-sm" onclick="etiketSayfasiAc()" style="background:rgba(99,102,241,.1);color:#6366F1;border-color:rgba(99,102,241,.3)">⭐ Avantajlı Etiket Analizi</button>
-          <button class="btn-danger-sm" onclick="tumunuSil()">🗑 Tümünü Sil</button>
+        <!-- Alt satır: arama + aksiyon butonları -->
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <div class="search-wrap" style="flex:1;min-width:200px;max-width:320px">
+            <span class="search-icon">🔍</span>
+            <input class="search-inp" style="width:100%" type="text" placeholder="Ürün adı veya model kodu ara..." oninput="araUrun(this.value)">
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-left:auto">
+            <button class="btn-sm" onclick="openKargoModal()">🚚 Kargo Fiyat Gir</button>
+            <button class="btn-sm" onclick="etiketSayfasiAc()" style="background:rgba(99,102,241,.08);color:#6366F1;border-color:rgba(99,102,241,.25)">⭐ Avantajlı Etiket</button>
+            <button class="btn-danger-sm" onclick="tumunuSil()">🗑 Sil</button>
+          </div>
+        </div>
+        <!-- KDV uyarısı -->
+        <div style="margin-top:8px;font-size:11px;color:var(--or);font-weight:600;display:flex;align-items:center;gap:5px">
+          <span>⚠️</span> Alış fiyatı ve kargo maliyetlerini <strong>KDV Dahil</strong> olarak girin
         </div>
       </div>
       <!-- KARGO BAREM TABLOSU -->
@@ -1429,7 +1441,7 @@ input[type=number]{-moz-appearance:textfield}
       </div>
       <div class="prod-table-wrap">
         <table class="ptable">
-          <thead><tr><th style="width:36px"><input type="checkbox" class="row-cb" id="cb-all" onchange="tumSecToggle(this)"></th><th>Görsel</th><th>Ürün</th><th>Satış Fiyatı ✏️</th><th>Komisyon ✏️</th><th>Alış Fiyatı</th><th>Kargo</th><th>Net Kar</th><th>Marj</th><th>İşlem</th></tr></thead>
+          <thead><tr><th style="width:36px"><input type="checkbox" class="row-cb" id="cb-all" onchange="tumSecToggle(this)"></th><th>Görsel</th><th>Ürün</th><th>Satış Fiyatı ✏️</th><th>Komisyon ✏️</th><th>Alış Fiyatı<br><span style="font-size:9px;font-weight:600;color:var(--or);text-transform:uppercase;letter-spacing:.04em">KDV Dahil</span></th><th>Kargo<br><span style="font-size:9px;font-weight:600;color:var(--or);text-transform:uppercase;letter-spacing:.04em">KDV Dahil</span></th><th>Net Kar</th><th>Marj</th><th>İşlem</th></tr></thead>
           <tbody id="ptbody"></tbody>
         </table>
       </div>
