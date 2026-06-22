@@ -314,37 +314,39 @@ nav{
 }
 .hero-tag span{background:var(--or);color:#fff;padding:2px 8px;border-radius:20px;font-size:10px}
 .hero h1{
-  font-size:clamp(36px,5.5vw,72px);
+  font-size:clamp(42px,6vw,82px);
   font-weight:900;color:var(--dark);
-  letter-spacing:-2.5px;line-height:1.05;
-  margin-bottom:1.25rem;max-width:800px;
+  letter-spacing:-3px;line-height:1.04;
+  margin-bottom:1.5rem;max-width:860px;
 }
 .hero-sub{
-  font-size:17px;color:var(--t2);line-height:1.65;
-  max-width:480px;margin:0 auto 2.5rem;
+  font-size:18px;color:#555;line-height:1.7;
+  max-width:520px;margin:0 auto 2.5rem;font-weight:400;
 }
 .hero-btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
 .btn-hero-dark{
-  background:var(--dark);color:#fff;border:none;
-  padding:15px 28px;border-radius:var(--r4);
-  font-size:15px;font-weight:700;cursor:pointer;
+  background:#111;color:#fff;border:none;
+  padding:16px 32px;border-radius:50px;
+  font-size:16px;font-weight:700;cursor:pointer;
   font-family:'Inter',sans-serif;transition:all .2s;
   display:flex;align-items:center;gap:8px;
+  letter-spacing:-.3px;
 }
-.btn-hero-dark:hover{background:var(--dark2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.btn-hero-dark:hover{background:#222;transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,.25)}
 .btn-hero-outline{
-  background:#fff;color:var(--dark);border:2px solid var(--border2);
-  padding:14px 28px;border-radius:var(--r4);
-  font-size:15px;font-weight:700;cursor:pointer;
+  background:#fff;color:#111;border:1.5px solid #ddd;
+  padding:15px 28px;border-radius:50px;
+  font-size:16px;font-weight:600;cursor:pointer;
   font-family:'Inter',sans-serif;transition:all .2s;
+  letter-spacing:-.2px;
 }
-.btn-hero-outline:hover{border-color:var(--dark);transform:translateY(-2px)}
+.btn-hero-outline:hover{border-color:#111;transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.1)}
 .hero-stats{
-  display:flex;justify-content:center;gap:3rem;margin-top:4rem;
-  flex-wrap:wrap;
+  display:flex;justify-content:center;gap:2.5rem;margin-top:3.5rem;
+  flex-wrap:wrap;padding-top:2rem;border-top:1px solid rgba(0,0,0,.06);max-width:520px;margin-left:auto;margin-right:auto;
 }
-.hero-stat-val{font-size:28px;font-weight:900;color:var(--dark);letter-spacing:-1px}
-.hero-stat-label{font-size:12px;color:var(--t3);margin-top:2px;font-weight:500}
+.hero-stat-val{font-size:26px;font-weight:900;color:var(--dark);letter-spacing:-1px}
+.hero-stat-label{font-size:12px;color:#999;margin-top:3px;font-weight:500}
 
 /* ── HOW IT WORKS ── */
 .how-section{
@@ -897,7 +899,7 @@ input[type=number]{-moz-appearance:textfield}
   <div class="hero-blob2"></div>
   <div>
     <div class="hero-tag"><span>YENİ</span> Trendyol Satıcıları İçin</div>
-    <h1>Kar mı ediyorsun,<br>zarar mı?</h1>
+    <h1>Kar mı ediyorsun,<br><em style="font-style:normal;color:var(--or);background:linear-gradient(135deg,#F27A1A,#FF8C38);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">zarar mı?</em></h1>
     <p class="hero-sub">Komisyon, KDV, stopaj dahil gerçek karını saniyeler içinde gör. Excel yükle, alış fiyatı gir, karını öğren.</p>
     <div class="hero-btns">
       <button class="btn-hero-dark" onclick="goApp()">Hemen Başla ↗</button>
