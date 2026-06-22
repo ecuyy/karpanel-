@@ -2183,6 +2183,9 @@ function etiketSayfasiAc(){
     if(!nrm||!eag){ toast('Sayfa yüklenemedi, lütfen sayfayı yenileyin.','error','❌'); return; }
     nrm.style.display='none';
     eag.style.display='block';
+    // Ürün yükleme alanını gizle (etiket analizinde gerekmez)
+    const excelSec=document.getElementById('excel-upload-section');
+    if(excelSec) excelSec.style.display='none';
     eaKayitliVeriyiYukle();
     if(eaTumVeri.length>0){
       eaTazele();
@@ -2278,6 +2281,9 @@ function eaVeriyiKaydet(){
 function etiketGeriDon(){
   document.getElementById('etiket-analiz-gorunum').style.display='none';
   document.getElementById('normal-urun-gorunum').style.display='block';
+  // Ürün yükleme alanını geri göster
+  const excelSec=document.getElementById('excel-upload-section');
+  if(excelSec && currentUser && currentUser.premium) excelSec.style.display='block';
   renderUrunler();
 }
 
