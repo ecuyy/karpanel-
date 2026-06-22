@@ -2183,9 +2183,11 @@ function etiketSayfasiAc(){
     if(!nrm||!eag){ toast('Sayfa yüklenemedi, lütfen sayfayı yenileyin.','error','❌'); return; }
     nrm.style.display='none';
     eag.style.display='block';
-    // Ürün yükleme alanını gizle (etiket analizinde gerekmez)
+    // Ürün yükleme ve kargo barem alanını gizle (etiket analizinde gerekmez)
     const excelSec=document.getElementById('excel-upload-section');
     if(excelSec) excelSec.style.display='none';
+    const kargoWrap=document.getElementById('kargo-barem-wrap');
+    if(kargoWrap) kargoWrap.style.display='none';
     eaKayitliVeriyiYukle();
     if(eaTumVeri.length>0){
       eaTazele();
@@ -2284,6 +2286,8 @@ function etiketGeriDon(){
   // Ürün yükleme alanını geri göster
   const excelSec=document.getElementById('excel-upload-section');
   if(excelSec && currentUser && currentUser.premium) excelSec.style.display='block';
+  const kargoWrap=document.getElementById('kargo-barem-wrap');
+  if(kargoWrap) kargoWrap.style.display='block';
   renderUrunler();
 }
 
