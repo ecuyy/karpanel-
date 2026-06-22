@@ -1485,15 +1485,33 @@ input[type=number]{-moz-appearance:textfield}
               <button class="btn-danger-sm" onclick="eaTemizle()">🗑 Temizle</button>
             </div>
           </div>
-          <div class="prod-table-wrap" style="overflow-x:auto">
-            <table class="ptable" style="min-width:1080px">
+          <div style="overflow-x:auto;border-radius:16px;border:1px solid #E5E7EB;box-shadow:0 2px 12px rgba(0,0,0,.05)">
+            <table class="ptable" style="min-width:1080px;border-radius:16px;overflow:hidden">
               <thead>
                 <tr>
-                  <th style="text-align:left;min-width:240px;background:#F9FAFB">Ürün Bilgileri</th>
-                  <th style="min-width:140px;background:#F9FAFB">Güncel Fiyat ve<br>Komisyon</th>
-                  <th style="background:#0E7C7B;color:#fff;min-width:150px">Avantajlı Fiyat<br>Aralığı</th>
-                  <th style="background:#0E7C7B;color:#fff;min-width:150px">Çok Avantajlı Fiyat<br>Aralığı</th>
-                  <th style="background:#0E7C7B;color:#fff;min-width:150px">Süper Avantajlı Fiyat<br>Aralığı</th>
+                  <th style="text-align:left;min-width:240px;background:#F9FAFB;border-bottom:2px solid #E5E7EB;font-size:11px;color:#6B7280;padding:14px 16px">ÜRÜN BİLGİLERİ</th>
+                  <th style="min-width:140px;background:#F9FAFB;border-bottom:2px solid #E5E7EB;font-size:11px;color:#6B7280;padding:14px 10px">GÜNCEL FİYAT<br>& KOMİSYON</th>
+                  <th style="min-width:160px;background:linear-gradient(135deg,#F27A1A,#FF8C38);border-bottom:2px solid rgba(0,0,0,.08);padding:14px 10px">
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+                      <span style="font-size:16px">⭐</span>
+                      <span style="font-size:11px;font-weight:800;color:#fff;letter-spacing:.05em">AVANTAJLİ</span>
+                      <span style="font-size:10px;color:rgba(255,255,255,.7);font-weight:500">Fiyat Aralığı</span>
+                    </div>
+                  </th>
+                  <th style="min-width:160px;background:linear-gradient(135deg,#6366F1,#8B5CF6);border-bottom:2px solid rgba(0,0,0,.08);padding:14px 10px">
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+                      <span style="font-size:16px">⭐⭐</span>
+                      <span style="font-size:11px;font-weight:800;color:#fff;letter-spacing:.05em">ÇOK AVANTAJLİ</span>
+                      <span style="font-size:10px;color:rgba(255,255,255,.7);font-weight:500">Fiyat Aralığı</span>
+                    </div>
+                  </th>
+                  <th style="min-width:160px;background:linear-gradient(135deg,#059669,#10B981);border-bottom:2px solid rgba(0,0,0,.08);padding:14px 10px">
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+                      <span style="font-size:16px">⭐⭐⭐</span>
+                      <span style="font-size:11px;font-weight:800;color:#fff;letter-spacing:.05em">SÜPER AVANTAJLİ</span>
+                      <span style="font-size:10px;color:rgba(255,255,255,.7);font-weight:500">Fiyat Aralığı</span>
+                    </div>
+                  </th>
                 </tr>
               </thead>
               <tbody id="ea-tbody"></tbody>
