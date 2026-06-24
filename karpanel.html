@@ -625,7 +625,7 @@ input[type=checkbox].row-cb{width:16px;height:16px;cursor:pointer;accent-color:v
 }
 .detay-btn:hover{background:#222;transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.22)}
 .tinput{
-  width:76px;padding:6px 8px;
+  width:64px;padding:6px 7px;
   border:1.5px solid #E8EAED;border-radius:50px;
   font-size:12px;font-weight:700;color:#111;
   background:#fff;font-family:'Inter',sans-serif;transition:all .2s;
@@ -2869,11 +2869,11 @@ function renderUrunler(page){
     const marjStr=hasAlis&&marj!==null?'%'+marj.toFixed(1):'—';
     const marjColor=!hasAlis?'var(--t3)':marj>=15?'var(--green)':marj>=0?'var(--yellow)':'var(--red)';
     const satisInput=isDemo
-      ?`<input class="tinput" type="text" style="width:95px;opacity:.55;cursor:not-allowed" value="${fmtSP(p.salePrice)}" readonly title="Demo modda düzenlenemez">`
-      :`<input class="tinput" type="text" style="width:95px" value="${fmtSP(p.salePrice)}" onfocus="this.value=p.salePrice||''" onblur="this.value=fmtSP(this.value)" onchange="updUrun('${p.id}','salePrice',parseTR(this.value))" title="Satış fiyatını düzenleyebilirsiniz">`;
+      ?`<input class="tinput" type="text" style="width:78px;opacity:.55;cursor:not-allowed" value="${fmtSP(p.salePrice)}" readonly title="Demo modda düzenlenemez">`
+      :`<input class="tinput" type="text" style="width:78px" value="${fmtSP(p.salePrice)}" onfocus="this.value=p.salePrice||''" onblur="this.value=fmtSP(this.value)" onchange="updUrun('${p.id}','salePrice',parseTR(this.value))" title="Satış fiyatını düzenleyebilirsiniz">`;
     const komInput=isDemo
-      ?`<input class="tinput" type="number" style="width:68px;opacity:.55;cursor:not-allowed" value="${(p.commissionRate||0).toFixed(2)}" readonly title="Demo modda düzenlenemez">`
-      :`<input class="tinput" type="number" style="width:68px" min="0" max="100" step="0.01" value="${(p.commissionRate||0).toFixed(2)}" onchange="updUrun('${p.id}','commissionRate',this.value)" title="Komisyon oranını düzenleyebilirsiniz">`;
+      ?`<input class="tinput" type="number" style="width:56px;opacity:.55;cursor:not-allowed" value="${(p.commissionRate||0).toFixed(2)}" readonly title="Demo modda düzenlenemez">`
+      :`<input class="tinput" type="number" style="width:56px" min="0" max="100" step="0.01" value="${(p.commissionRate||0).toFixed(2)}" onchange="updUrun('${p.id}','commissionRate',this.value)" title="Komisyon oranını düzenleyebilirsiniz">`;
     const marjBadge = !hasAlis
       ? '<span style="color:#9CA3AF;font-size:12px">—</span>'
       : marj>=15
