@@ -1470,19 +1470,25 @@ input[type=number]{-moz-appearance:textfield}
 
         <!-- Sonuç Alanı -->
         <div id="ea-sonuc-alan" style="display:none">
-          <div class="toolbar" style="margin-bottom:.75rem">
-            <div class="toolbar-left">
+          <div style="margin-bottom:.75rem">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
               <div class="filter-bar">
                 <button class="ftab active" id="ea-f-hepsi" onclick="eaFiltrele('hepsi')">Hepsi</button>
                 <button class="ftab" id="ea-f-kar" onclick="eaFiltrele('kar1')" style="color:#059669">✅ Karlı</button>
                 <button class="ftab" id="ea-f-zarar" onclick="eaFiltrele('zarar1')" style="color:#DC2626">❌ Zararlı</button>
                 <button class="ftab" id="ea-f-eksik" onclick="eaFiltrele('eksik')" style="color:#9CA3AF">⏳ Eksik</button>
               </div>
+              <span id="ea-ozet" style="font-size:12px;color:var(--t3)"></span>
             </div>
-            <div style="display:flex;gap:8px">
-              <span id="ea-ozet" style="font-size:12px;color:var(--t3);align-self:center"></span>
-              <label for="ea-file-inp" class="btn-sm" style="cursor:pointer">📂 Yeni Excel</label>
-              <button class="btn-danger-sm" onclick="eaTemizle()">🗑 Temizle</button>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <div class="search-wrap" style="flex:1;min-width:200px;max-width:320px">
+                <span class="search-icon">🔍</span>
+                <input class="search-inp" style="width:100%" type="text" id="ea-search" placeholder="Ürün adı veya model kodu ara..." oninput="eaAra(this.value)">
+              </div>
+              <div style="display:flex;gap:6px;margin-left:auto">
+                <label for="ea-file-inp" class="btn-sm" style="cursor:pointer">📂 Yeni Excel</label>
+                <button class="btn-danger-sm" onclick="eaTemizle()">🗑 Temizle</button>
+              </div>
             </div>
           </div>
           <div style="overflow-x:auto;border-radius:16px;border:1px solid #E5E7EB;box-shadow:0 2px 12px rgba(0,0,0,.05)">
@@ -2431,6 +2437,12 @@ function eaIstatistik(){
   if(el) el.textContent = eaTumVeri.length+' ürün · ✅'+kar1+' · ❌'+zar1+' · ⏳'+eksik+' · 🔗'+eslesme+'/'+eaTumVeri.length+' eşleşti';
 }
 
+let eaSearchQ = '';
+function eaAra(q){
+  eaSearchQ = q.toLowerCase().trim();
+  eaRender();
+}
+
 function eaFiltrele(tip){
   eaAktifFiltre = tip;
   ['hepsi','kar','zarar','eksik'].forEach(t=>{
@@ -2448,6 +2460,10 @@ function eaRender(){
   if(eaAktifFiltre==='kar1')   liste = liste.filter(u=>u.net1!==null&&u.net1>0);
   if(eaAktifFiltre==='zarar1') liste = liste.filter(u=>u.net1!==null&&u.net1<=0);
   if(eaAktifFiltre==='eksik')  liste = liste.filter(u=>u.net1===null);
+  if(eaSearchQ) liste = liste.filter(u=>
+    (u.urunIsmi||'').toLowerCase().includes(eaSearchQ) ||
+    (u.modelKodu||'').toLowerCase().includes(eaSearchQ)
+  );
 
   if(!liste.length){
     document.getElementById('ea-tbody').innerHTML='<tr><td colspan="5" style="padding:2rem;text-align:center;color:var(--t3)">Bu filtrede ürün bulunamadı</td></tr>';
