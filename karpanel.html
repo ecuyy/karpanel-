@@ -2103,7 +2103,7 @@ async function girisYap(){
   const email=document.getElementById('giris-email').value.trim();
   const sifre=document.getElementById('giris-sifre').value;
   if(!email||!sifre){showAuthError('E-posta ve şifre gerekli');return;}
-  showAuthError('Bağlanılıyor...');
+  showAuthError('');
   try{
     const r=await fetchWithRetry(PROXY+'/api/giris',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,sifre})});
     const d=await r.json();
@@ -2129,7 +2129,7 @@ async function kayitOl(){
   const sifre=document.getElementById('kayit-sifre').value;
   if(!ad||!email||!sifre){showAuthError('Tüm alanları doldurun');return;}
   if(sifre.length<6){showAuthError('Şifre en az 6 karakter olmalı');return;}
-  showAuthError('Kayıt yapılıyor...');
+  showAuthError('');
   try{
     const r=await fetchWithRetry(PROXY+'/api/kayit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ad,email,sifre})});
     const d=await r.json();
@@ -2554,7 +2554,7 @@ async function urunleriCek(){
   if(!sid||!key||!sec){toast('Tüm alanları doldurun.','error','⚠️');return;}
   const btn=document.getElementById('btn-cek');
   btn.innerHTML='<span class="spin"></span>';btn.disabled=true;
-  setStatus('loading','Bağlanılıyor...','');
+  setStatus('loading','','');
   try{
     await fetch(PROXY+'/health',{signal:AbortSignal.timeout(3000)});
     const r=await fetch(`${PROXY}/api/urunler?sellerId=${encodeURIComponent(sid)}&apiKey=${encodeURIComponent(key)}&apiSecret=${encodeURIComponent(sec)}&page=0&size=50`);
@@ -2680,7 +2680,18 @@ function csvYukle(input){
         const modelKodu=modelKoduIdx>=0?String(cols[modelKoduIdx]||'').trim():'';
         const img=img1Idx>=0?String(cols[img1Idx]||'').trim():'';
         const uid=barcode||(title.substring(0,10)+i);
-        parsed.push({id:uid,title,salePrice:price,commissionRate:kom,categoryName:cat,image:img,barcode,modelCode:modelKodu,alis:0,kargo:0});
+        // Aynı ürün daha önce varsa alış/kargo bilgisini koru
+        const eskiUrun = urunler.find(u=>
+          (uid && u.id === uid) ||
+          (barcode && u.barcode === barcode) ||
+          (modelKodu && u.modelCode === modelKodu)
+        );
+        parsed.push({
+          id:uid, title, salePrice:price, commissionRate:kom,
+          categoryName:cat, image:img, barcode, modelCode:modelKodu,
+          alis: eskiUrun ? (eskiUrun.alis||0) : 0,
+          kargo: eskiUrun ? (eskiUrun.kargo||0) : 0
+        });
       }
       if(parsed.length===0){toast('Ürün bulunamadı.','error','❌');return;}
       urunler=parsed;
