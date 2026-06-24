@@ -1527,7 +1527,6 @@ input[type=number]{-moz-appearance:textfield}
             <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center">KARGO<br><span style="font-size:9px;font-weight:500;color:#B0B7C3;text-transform:none;letter-spacing:0">(₺)</span></th>
             <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center">NET KÂR<br><span style="font-size:9px;font-weight:500;color:#B0B7C3;text-transform:none;letter-spacing:0">(₺)</span></th>
             <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;min-width:90px">MARJ</th>
-            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center;white-space:nowrap">DURUM</th>
             <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center;white-space:nowrap">İŞLEM</th>
           </tr></thead>
           <tbody id="ptbody"></tbody>
@@ -2856,7 +2855,7 @@ function renderUrunler(page){
   })();
   const tbody=document.getElementById('ptbody');
   if(!list.length){
-    tbody.innerHTML=`<tr><td colspan="10"><div class="empty"><span class="empty-emoji">🔍</span><div class="empty-title">Ürün bulunamadı</div><div class="empty-sub">Filtreyi değiştirin.</div></div></td></tr>`;
+    tbody.innerHTML=`<tr><td colspan="9"><div class="empty"><span class="empty-emoji">🔍</span><div class="empty-title">Ürün bulunamadı</div><div class="empty-sub">Filtreyi değiştirin.</div></div></td></tr>`;
     renderPagination(0,0);
     return;
   }
@@ -2909,16 +2908,6 @@ function renderUrunler(page){
             <div style="height:100%;width:${hasAlis&&marj!==null?Math.min(Math.max(marj,0),100)+'%':'0%'};background:${!hasAlis?'#E5E7EB':marj>=15?'#16A34A':marj>=0?'#F59E0B':'#DC2626'};border-radius:3px;transition:width .4s"></div>
           </div>
         </div>
-      </td>
-      <td style="padding:8px 8px;text-align:center">
-        ${!hasAlis
-          ? '<span style="display:inline-flex;align-items:center;padding:4px 10px;background:#F3F4F6;color:#9CA3AF;border-radius:50px;font-size:11px;font-weight:700;border:1px solid #E5E7EB;white-space:nowrap">Veri Gir</span>'
-          : net>=0 && marj>=15
-            ? '<span style="display:inline-flex;align-items:center;padding:4px 10px;background:rgba(16,185,129,.1);color:#059669;border-radius:50px;font-size:11px;font-weight:700;border:1px solid rgba(16,185,129,.2);white-space:nowrap">✓ Karlı</span>'
-            : net>=0 && marj>=0
-              ? '<span style="display:inline-flex;align-items:center;padding:4px 10px;background:rgba(245,158,11,.08);color:#D97706;border-radius:50px;font-size:11px;font-weight:700;border:1px solid rgba(245,158,11,.2);white-space:nowrap">~ Düşük Marj</span>'
-              : '<span style="display:inline-flex;align-items:center;padding:4px 10px;background:rgba(239,68,68,.08);color:#DC2626;border-radius:50px;font-size:11px;font-weight:700;border:1px solid rgba(239,68,68,.15);white-space:nowrap">✕ Kontrol Et</span>'
-        }
       </td>
       <td style="padding:8px 8px;text-align:center;white-space:nowrap">
         <button class="detay-btn" onclick="openModal('${p.id}')">📊 Ayrıntılı Hes.</button>
