@@ -210,7 +210,7 @@
   --sh2:0 8px 40px rgba(0,0,0,.12);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{overflow-x:hidden;max-width:100vw}
+html,body{overflow-x:auto;max-width:100vw}
 html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;background:var(--white);color:var(--text);-webkit-font-smoothing:antialiased}
 
@@ -573,7 +573,8 @@ input[type=checkbox].row-cb{width:16px;height:16px;cursor:pointer;accent-color:v
 .sel-bar.show{display:flex}
 
 /* PRODUCT TABLE */
-.prod-table-wrap{background:#fff;border:1px solid #E5E7EB;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.07)}
+.prod-table-wrap{background:#fff;border:1px solid #E5E7EB;border-radius:20px;overflow-x:auto;box-shadow:0 4px 24px rgba(0,0,0,.07)}
+.prod-table-wrap table{min-width:1000px}
 .ptable{width:100%;border-collapse:collapse;font-size:13px}
 .ptable thead tr{background:transparent}
 .ptable th{
@@ -624,9 +625,9 @@ input[type=checkbox].row-cb{width:16px;height:16px;cursor:pointer;accent-color:v
 }
 .detay-btn:hover{background:#222;transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.22)}
 .tinput{
-  width:90px;padding:8px 12px;
+  width:76px;padding:6px 8px;
   border:1.5px solid #E8EAED;border-radius:50px;
-  font-size:13px;font-weight:700;color:#111;
+  font-size:12px;font-weight:700;color:#111;
   background:#fff;font-family:'Inter',sans-serif;transition:all .2s;
   text-align:right;box-shadow:0 1px 3px rgba(0,0,0,.05);
 }
@@ -1519,15 +1520,15 @@ input[type=number]{-moz-appearance:textfield}
         <table class="ptable">
           <thead><tr>
             <th style="width:36px;background:#F8F9FB;border-bottom:1.5px solid #EDEEF1"><input type="checkbox" class="row-cb" id="cb-all" onchange="tumSecToggle(this)"></th>
-            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;min-width:260px">ÜRÜN</th>
-            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center">SATIŞ FİYATI <span style="font-size:10px;color:var(--or);cursor:pointer" title="Düzenleyebilirsiniz">✏️</span><br><span style="font-size:9px;font-weight:500;color:#B0B7C3;text-transform:none;letter-spacing:0">(₺)</span></th>
-            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center">KOMİSYON <span style="font-size:10px;color:var(--or);cursor:pointer" title="Düzenleyebilirsiniz">✏️</span><br><span style="font-size:9px;font-weight:500;color:#B0B7C3;text-transform:none;letter-spacing:0">(₺)</span></th>
-            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center">ALIŞ FİYATI <span style="font-size:10px;color:var(--or);cursor:pointer">✏️</span><br><span style="font-size:9px;font-weight:600;color:var(--or);text-transform:uppercase;letter-spacing:.04em">(₺)</span></th>
+            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;min-width:220px">ÜRÜN</th>
+            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center;white-space:nowrap">SATIŞ FİYATI ✏️<br><span style="font-size:9px;font-weight:500;color:#B0B7C3;text-transform:none;letter-spacing:0">(₺)</span></th>
+            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center;white-space:nowrap">KOMİSYON ✏️<br><span style="font-size:9px;font-weight:500;color:#B0B7C3;text-transform:none;letter-spacing:0">(₺)</span></th>
+            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center;white-space:nowrap">ALIŞ FİYATI ✏️<br><span style="font-size:9px;font-weight:600;color:var(--or);text-transform:uppercase;letter-spacing:.04em">(₺)</span></th>
             <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center">KARGO<br><span style="font-size:9px;font-weight:500;color:#B0B7C3;text-transform:none;letter-spacing:0">(₺)</span></th>
             <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center">NET KÂR<br><span style="font-size:9px;font-weight:500;color:#B0B7C3;text-transform:none;letter-spacing:0">(₺)</span></th>
-            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;min-width:100px">MARJ</th>
-            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center">DURUM</th>
-            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center">İŞLEM</th>
+            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;min-width:90px">MARJ</th>
+            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center;white-space:nowrap">DURUM</th>
+            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center;white-space:nowrap">İŞLEM</th>
           </tr></thead>
           <tbody id="ptbody"></tbody>
         </table>
@@ -2882,26 +2883,26 @@ function renderUrunler(page){
           : `<span style="display:inline-flex;align-items:center;padding:4px 10px;background:rgba(239,68,68,.08);color:#DC2626;border-radius:50px;font-size:12px;font-weight:800;border:1px solid rgba(239,68,68,.15)">${marjStr}</span>`;
     return`<tr style="transition:background .15s">
       <td class="cb-wrap" style="padding:0 8px;width:36px"><input type="checkbox" class="row-cb" data-id="${p.id}" onchange="satirSec(this)"></td>
-      <td style="padding:10px 14px">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="position:relative;flex-shrink:0">${imgHtml}${phHtml}</div>
+      <td style="padding:10px 12px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="flex-shrink:0">${imgHtml}${phHtml}</div>
           <div>
             <div class="prod-name" title="${p.title}">${p.title}</div>
             <div class="prod-cat">${p.categoryName||'—'}</div>
           </div>
         </div>
       </td>
-      <td style="padding:10px 12px;text-align:center">${satisInput}</td>
-      <td style="padding:10px 12px;text-align:center">
+      <td style="padding:8px 8px;text-align:center">${satisInput}</td>
+      <td style="padding:8px 8px;text-align:center">
         <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
           ${komInput}
           <span style="font-size:10px;color:var(--or);font-weight:700">${fmt(komisyon)}</span>
         </div>
       </td>
-      <td style="padding:10px 12px;text-align:center"><input class="tinput" type="number" placeholder="Girin" min="0" step="0.01" value="${p.alis||''}" onchange="updUrun('${p.id}','alis',this.value)"></td>
-      <td style="padding:10px 12px;text-align:center"><input class="tinput" type="number" placeholder="Girin" min="0" step="0.01" value="${p.kargo||''}" onchange="updUrun('${p.id}','kargo',this.value)"></td>
-      <td style="padding:10px 12px;text-align:center">${karBadge}</td>
-      <td style="padding:10px 14px;min-width:100px">
+      <td style="padding:8px 8px;text-align:center"><input class="tinput" type="number" placeholder="Girin" min="0" step="0.01" value="${p.alis||''}" onchange="updUrun('${p.id}','alis',this.value)"></td>
+      <td style="padding:8px 8px;text-align:center"><input class="tinput" type="number" placeholder="Girin" min="0" step="0.01" value="${p.kargo||''}" onchange="updUrun('${p.id}','kargo',this.value)"></td>
+      <td style="padding:8px 8px;text-align:center">${karBadge}</td>
+      <td style="padding:8px 10px;min-width:90px">
         <div style="display:flex;flex-direction:column;gap:4px">
           <span style="font-size:12px;font-weight:800;color:${marjColor}">${marjStr}</span>
           <div style="height:5px;background:#F0F0F3;border-radius:3px;overflow:hidden">
@@ -2909,25 +2910,18 @@ function renderUrunler(page){
           </div>
         </div>
       </td>
-      <td style="padding:10px 12px;text-align:center">
+      <td style="padding:8px 8px;text-align:center">
         ${!hasAlis
-          ? '<span style="display:inline-flex;align-items:center;padding:4px 12px;background:#F3F4F6;color:#9CA3AF;border-radius:50px;font-size:11px;font-weight:700;border:1px solid #E5E7EB">Veri Gir</span>'
+          ? '<span style="display:inline-flex;align-items:center;padding:4px 10px;background:#F3F4F6;color:#9CA3AF;border-radius:50px;font-size:11px;font-weight:700;border:1px solid #E5E7EB;white-space:nowrap">Veri Gir</span>'
           : net>=0 && marj>=15
-            ? '<span style="display:inline-flex;align-items:center;padding:4px 12px;background:rgba(16,185,129,.1);color:#059669;border-radius:50px;font-size:11px;font-weight:700;border:1px solid rgba(16,185,129,.2)">✓ Karlı</span>'
+            ? '<span style="display:inline-flex;align-items:center;padding:4px 10px;background:rgba(16,185,129,.1);color:#059669;border-radius:50px;font-size:11px;font-weight:700;border:1px solid rgba(16,185,129,.2);white-space:nowrap">✓ Karlı</span>'
             : net>=0 && marj>=0
-              ? '<span style="display:inline-flex;align-items:center;padding:4px 12px;background:rgba(245,158,11,.08);color:#D97706;border-radius:50px;font-size:11px;font-weight:700;border:1px solid rgba(245,158,11,.2)">~ Düşük Marj</span>'
-              : '<span style="display:inline-flex;align-items:center;padding:4px 12px;background:rgba(239,68,68,.08);color:#DC2626;border-radius:50px;font-size:11px;font-weight:700;border:1px solid rgba(239,68,68,.15)">✕ Kontrol Et</span>'
+              ? '<span style="display:inline-flex;align-items:center;padding:4px 10px;background:rgba(245,158,11,.08);color:#D97706;border-radius:50px;font-size:11px;font-weight:700;border:1px solid rgba(245,158,11,.2);white-space:nowrap">~ Düşük Marj</span>'
+              : '<span style="display:inline-flex;align-items:center;padding:4px 10px;background:rgba(239,68,68,.08);color:#DC2626;border-radius:50px;font-size:11px;font-weight:700;border:1px solid rgba(239,68,68,.15);white-space:nowrap">✕ Kontrol Et</span>'
         }
       </td>
-      <td style="padding:10px 10px;text-align:center">
-        <div style="display:flex;align-items:center;justify-content:center;gap:4px">
-          <button class="detay-btn" onclick="openModal('${p.id}')">Detayları Gör</button>
-          <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'" style="width:30px;height:30px;border:1.5px solid #E5E7EB;border-radius:50%;background:#fff;cursor:pointer;font-size:16px;color:#9CA3AF;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;line-height:1" title="Seçenekler">⋮</button>
-          <div style="display:none;position:absolute;right:10px;background:#fff;border:1px solid #E5E7EB;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:100;min-width:140px;padding:4px 0">
-            <button onclick="openModal('${p.id}');this.closest('div[style*=absolute]').style.display='none'" style="width:100%;padding:9px 14px;border:none;background:none;text-align:left;font-size:13px;font-weight:600;color:#111;cursor:pointer;font-family:inherit" onmouseover="this.style.background='#F9FAFB'" onmouseout="this.style.background='none'">📊 Detaylı Hesap</button>
-            <button onclick="satirUrunSil('${p.id}');this.closest('div[style*=absolute]').style.display='none'" style="width:100%;padding:9px 14px;border:none;background:none;text-align:left;font-size:13px;font-weight:600;color:#DC2626;cursor:pointer;font-family:inherit" onmouseover="this.style.background='#FFF5F5'" onmouseout="this.style.background='none'">🗑 Sil</button>
-          </div>
-        </div>
+      <td style="padding:8px 8px;text-align:center;white-space:nowrap">
+        <button class="detay-btn" onclick="openModal('${p.id}')">📊 Ayrıntılı Hes.</button>
       </td>
     </tr>`;
   }).join('');
