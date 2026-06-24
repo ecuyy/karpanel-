@@ -573,47 +573,64 @@ input[type=checkbox].row-cb{width:16px;height:16px;cursor:pointer;accent-color:v
 .sel-bar.show{display:flex}
 
 /* PRODUCT TABLE */
-.prod-table-wrap{background:#fff;border:1px solid #E5E7EB;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.06)}
+.prod-table-wrap{background:#fff;border:1px solid #E5E7EB;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.07)}
 .ptable{width:100%;border-collapse:collapse;font-size:13px}
+.ptable thead tr{background:transparent}
 .ptable th{
-  padding:12px 14px;text-align:left;background:#F9FAFB;
-  color:#6B7280;font-size:10px;font-weight:700;
-  text-transform:uppercase;letter-spacing:.07em;
-  border-bottom:2px solid #E5E7EB;white-space:nowrap;
+  padding:13px 14px;text-align:left;
+  background:#F8F9FB;
+  color:#9CA3AF;font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.08em;
+  border-bottom:1.5px solid #EDEEF1;white-space:nowrap;
 }
-.ptable td{padding:12px 14px;border-bottom:1px solid #F3F4F6;vertical-align:middle}
+.ptable th.th-satis{
+  background:linear-gradient(135deg,#1A1A2E 0%,#2D2D4E 100%);
+  color:rgba(255,255,255,.9);border-bottom:none;
+}
+.ptable th.th-komisyon{
+  background:linear-gradient(135deg,#F27A1A 0%,#FF9A40 100%);
+  color:rgba(255,255,255,.95);border-bottom:none;
+}
+.ptable th.th-alis{
+  background:#F8F9FB;color:#9CA3AF;
+}
+.ptable th.th-kargo{
+  background:#F8F9FB;color:#9CA3AF;
+}
+.ptable td{padding:11px 14px;border-bottom:1px solid #F3F4F6;vertical-align:middle}
 .ptable tr:last-child td{border-bottom:none}
-.ptable tr:hover td{background:#FAFBFF;transition:background .15s}
-.prod-img{width:48px;height:48px;border-radius:12px;object-fit:cover;border:1px solid #E5E7EB;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+.ptable tbody tr:hover td{background:#FAFBFF;transition:background .15s}
+.prod-img{width:52px;height:52px;border-radius:14px;object-fit:cover;border:1.5px solid #F0F0F3;box-shadow:0 2px 8px rgba(0,0,0,.08)}
 .prod-img-ph{
-  width:48px;height:48px;border-radius:12px;
-  background:linear-gradient(135deg,#1A1A2E,#16213E);display:flex;align-items:center;
-  justify-content:center;font-size:16px;font-weight:800;color:#fff;flex-shrink:0;
+  width:52px;height:52px;border-radius:14px;
+  background:linear-gradient(135deg,#1A1A2E,#2D2D4E);display:flex;align-items:center;
+  justify-content:center;font-size:18px;font-weight:800;color:#fff;flex-shrink:0;
 }
-.prod-name{font-weight:700;color:#111;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}
-.prod-cat{font-size:11px;color:#9CA3AF;margin-top:3px}
+.prod-name{font-weight:700;color:#111;max-width:210px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13.5px;letter-spacing:-.1px}
+.prod-cat{font-size:11px;color:#B0B7C3;margin-top:4px;font-weight:500}
 .price-val{font-weight:800;color:#111;font-size:14px}
 .kom-pill{display:inline-flex;background:rgba(242,122,26,.08);color:var(--or);font-size:11px;font-weight:800;padding:3px 10px;border-radius:50px;border:1px solid rgba(242,122,26,.15)}
-.kar-badge{display:inline-flex;font-size:12px;font-weight:800;padding:5px 12px;border-radius:50px}
+.kar-badge{display:inline-flex;font-size:13px;font-weight:800;padding:6px 14px;border-radius:50px;letter-spacing:-.2px}
 .kb-good{background:rgba(16,185,129,.1);color:#059669;border:1px solid rgba(16,185,129,.2)}
 .kb-bad{background:rgba(239,68,68,.08);color:#DC2626;border:1px solid rgba(239,68,68,.15)}
 .kb-neutral{background:#F3F4F6;color:#9CA3AF}
 .detay-btn{
-  padding:8px 14px;border:none;border-radius:50px;
+  padding:9px 15px;border:none;border-radius:50px;
   font-size:12px;font-weight:700;cursor:pointer;
   color:#fff;background:#111;
   font-family:'Inter',sans-serif;transition:all .2s;
   display:flex;align-items:center;gap:5px;white-space:nowrap;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
 }
-.detay-btn:hover{background:#333;transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.detay-btn:hover{background:#222;transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.22)}
 .tinput{
-  width:90px;padding:7px 10px;
-  border:1.5px solid #E5E7EB;border-radius:50px;
-  font-size:12px;font-weight:600;color:#111;
+  width:90px;padding:8px 12px;
+  border:1.5px solid #E8EAED;border-radius:50px;
+  font-size:13px;font-weight:700;color:#111;
   background:#fff;font-family:'Inter',sans-serif;transition:all .2s;
-  text-align:right;
+  text-align:right;box-shadow:0 1px 3px rgba(0,0,0,.05);
 }
-.tinput:focus{outline:none;border-color:var(--or);background:#FFFBF5;box-shadow:0 0 0 3px rgba(242,122,26,.08)}
+.tinput:focus{outline:none;border-color:var(--or);background:#FFFBF5;box-shadow:0 0 0 3px rgba(242,122,26,.1)}
 .empty{text-align:center;padding:5rem 2rem;color:var(--t3)}
 .empty-emoji{font-size:48px;opacity:.25;display:block;margin-bottom:1rem}
 .empty-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:.5rem}
@@ -1305,35 +1322,92 @@ input[type=number]{-moz-appearance:textfield}
     <div id="urun-section" style="display:none">
       <!-- NORMAL ÜRÜN GÖRÜNÜMÜ -->
       <div id="normal-urun-gorunum">
-      <!-- Toolbar -->
-      <div style="margin-bottom:1.25rem">
-        <!-- Üst satır: başlık + filtreler -->
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap">
-          <span class="tb-title">Ürünlerim</span>
-          <span class="count-badge" id="urun-count">0 ürün</span>
-          <div class="filter-bar">
-            <button class="ftab active" onclick="setFilter('hepsi',this)">Hepsi</button>
-            <button class="ftab" onclick="setFilter('karli',this)">✅ Karlı</button>
-            <button class="ftab" onclick="setFilter('zarari',this)">❌ Zararlı</button>
-            <button class="ftab" onclick="setFilter('eksik',this)">⏳ Eksik</button>
+
+      <!-- ── DASHBOARD BAŞLIK ── -->
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:1.5rem;flex-wrap:wrap">
+        <div>
+          <h2 style="font-size:22px;font-weight:900;color:#111;letter-spacing:-.5px;margin:0 0 4px">Ürün Karlılık Analizi</h2>
+          <p style="font-size:13px;color:#9CA3AF;margin:0">Ürün performansınızı ve kârlılığınızı anlık olarak takip edin.</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button onclick="openKargoModal()" style="display:flex;align-items:center;gap:6px;padding:9px 16px;border:1.5px solid #E5E7EB;border-radius:50px;font-size:13px;font-weight:600;color:#555;background:#fff;cursor:pointer;font-family:inherit;transition:.2s" onmouseover="this.style.borderColor='var(--or)';this.style.color='var(--or)'" onmouseout="this.style.borderColor='#E5E7EB';this.style.color='#555'">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            Kargo Fiyatı
+          </button>
+          <button onclick="etiketSayfasiAc()" style="display:flex;align-items:center;gap:6px;padding:9px 16px;border:1.5px solid rgba(99,102,241,.3);border-radius:50px;font-size:13px;font-weight:600;color:#6366F1;background:rgba(99,102,241,.06);cursor:pointer;font-family:inherit;transition:.2s">⭐ Avantajlı Etiket</button>
+          <button onclick="tumunuSil()" style="display:flex;align-items:center;gap:6px;padding:9px 16px;border:1.5px solid rgba(239,68,68,.2);border-radius:50px;font-size:13px;font-weight:600;color:#DC2626;background:rgba(239,68,68,.05);cursor:pointer;font-family:inherit;transition:.2s">🗑 Sil</button>
+        </div>
+      </div>
+
+      <!-- ── STAT KARTLARI ── -->
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:1.5rem" id="stat-cards">
+        <div style="background:#fff;border:1px solid #F0F0F3;border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 10px rgba(0,0,0,.04)">
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(242,122,26,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px">📦</div>
+          <div>
+            <div style="font-size:11px;color:#9CA3AF;font-weight:600;margin-bottom:3px">Toplam Ürün</div>
+            <div id="stat-toplam" style="font-size:24px;font-weight:900;color:#111;letter-spacing:-.5px;line-height:1">0</div>
+            <div style="font-size:11px;color:#9CA3AF;margin-top:2px">Aktif satışta</div>
           </div>
         </div>
-        <!-- Alt satır: arama + aksiyon butonları -->
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-          <div class="search-wrap" style="flex:1;min-width:200px;max-width:320px">
-            <span class="search-icon">🔍</span>
-            <input class="search-inp" style="width:100%" type="text" placeholder="Ürün adı veya model kodu ara..." oninput="araUrun(this.value)">
-          </div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-left:auto">
-            <button class="btn-sm" onclick="openKargoModal()">🚚 Kargo Fiyat Gir</button>
-            <button class="btn-sm" onclick="etiketSayfasiAc()" style="background:rgba(99,102,241,.08);color:#6366F1;border-color:rgba(99,102,241,.25)">⭐ Avantajlı Etiket</button>
-            <button class="btn-danger-sm" onclick="tumunuSil()">🗑 Sil</button>
+        <div style="background:#fff;border:1px solid #F0F0F3;border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 10px rgba(0,0,0,.04)">
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(16,185,129,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px">📈</div>
+          <div>
+            <div style="font-size:11px;color:#9CA3AF;font-weight:600;margin-bottom:3px">Karlı Ürün</div>
+            <div id="stat-karli" style="font-size:24px;font-weight:900;color:#059669;letter-spacing:-.5px;line-height:1">0</div>
+            <div id="stat-karli-pct" style="font-size:11px;color:#9CA3AF;margin-top:2px">—</div>
           </div>
         </div>
-        <!-- KDV uyarısı -->
-        <div style="margin-top:8px;font-size:11px;color:var(--or);font-weight:600;display:flex;align-items:center;gap:5px">
-          <span>⚠️</span> Alış fiyatı ve kargo maliyetlerini <strong>KDV Dahil</strong> olarak girin
+        <div style="background:#fff;border:1px solid #F0F0F3;border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 10px rgba(0,0,0,.04)">
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(239,68,68,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px">📉</div>
+          <div>
+            <div style="font-size:11px;color:#9CA3AF;font-weight:600;margin-bottom:3px">Zarar Eden</div>
+            <div id="stat-zarar" style="font-size:24px;font-weight:900;color:#DC2626;letter-spacing:-.5px;line-height:1">0</div>
+            <div id="stat-zarar-pct" style="font-size:11px;color:#9CA3AF;margin-top:2px">—</div>
+          </div>
         </div>
+        <div style="background:#fff;border:1px solid #F0F0F3;border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 10px rgba(0,0,0,.04)">
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(245,158,11,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px">%</div>
+          <div>
+            <div style="font-size:11px;color:#9CA3AF;font-weight:600;margin-bottom:3px">Ortalama Marj</div>
+            <div id="stat-marj" style="font-size:24px;font-weight:900;color:#D97706;letter-spacing:-.5px;line-height:1">—</div>
+            <div style="font-size:11px;color:#9CA3AF;margin-top:2px">Tüm ürünler ortalaması</div>
+          </div>
+        </div>
+        <div style="background:#fff;border:1px solid #F0F0F3;border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 10px rgba(0,0,0,.04)">
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(99,102,241,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px">💰</div>
+          <div>
+            <div style="font-size:11px;color:#9CA3AF;font-weight:600;margin-bottom:3px">Tahmini Net Kâr</div>
+            <div id="stat-netkar" style="font-size:18px;font-weight:900;color:#6366F1;letter-spacing:-.5px;line-height:1">—</div>
+            <div style="font-size:11px;color:#9CA3AF;margin-top:2px">Toplam net kâr</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── FİLTRE + ARAMA ÇUBUĞU ── -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap">
+        <div class="search-wrap" style="flex:1;min-width:200px;max-width:300px">
+          <span class="search-icon">🔍</span>
+          <input class="search-inp" style="width:100%" type="text" placeholder="Ürün adı, kategori veya SKU ara..." oninput="araUrun(this.value)">
+        </div>
+        <div class="filter-bar">
+          <button class="ftab active" onclick="setFilter('hepsi',this)" style="font-size:12px;font-weight:700">Tümü</button>
+          <button class="ftab" onclick="setFilter('karli',this)" style="font-size:12px;font-weight:700;display:flex;align-items:center;gap:5px"><span style="width:7px;height:7px;border-radius:50%;background:#059669;display:inline-block"></span> Karlı</button>
+          <button class="ftab" onclick="setFilter('zarari',this)" style="font-size:12px;font-weight:700;display:flex;align-items:center;gap:5px"><span style="width:7px;height:7px;border-radius:50%;background:#DC2626;display:inline-block"></span> Zarar Eden</button>
+          <button class="ftab" onclick="setFilter('eksik',this)" style="font-size:12px;font-weight:700;display:flex;align-items:center;gap:5px"><span style="width:7px;height:7px;border-radius:50%;background:#F59E0B;display:inline-block"></span> Düşük Marj</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-left:auto">
+          <select id="sort-select" onchange="sortUrunler(this.value)" style="padding:8px 14px;border:1.5px solid #E5E7EB;border-radius:50px;font-size:12px;font-weight:600;color:#555;background:#fff;cursor:pointer;font-family:inherit;outline:none;appearance:none;padding-right:32px;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%239898A8' d='M6 8L1 3h10z'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 12px center">
+            <option value="default">Net Kâr (Yüksekten Düşüğe)</option>
+            <option value="marj-desc">Marj (Yüksekten Düşüğe)</option>
+            <option value="satis-desc">Satış Fiyatı (Yüksek)</option>
+            <option value="satis-asc">Satış Fiyatı (Düşük)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- KDV uyarısı -->
+      <div style="margin-bottom:10px;font-size:11px;color:var(--or);font-weight:600;display:flex;align-items:center;gap:5px">
+        <span>⚠️</span> Alış fiyatı ve kargo maliyetlerini <strong>KDV Dahil</strong> olarak girin
       </div>
       <!-- KARGO BAREM TABLOSU -->
       <div id="kargo-barem-wrap" style="margin-bottom:1.25rem;background:#fff;border:1px solid #E5E7EB;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.05)">
@@ -1443,7 +1517,18 @@ input[type=number]{-moz-appearance:textfield}
       </div>
       <div class="prod-table-wrap">
         <table class="ptable">
-          <thead><tr><th style="width:36px"><input type="checkbox" class="row-cb" id="cb-all" onchange="tumSecToggle(this)"></th><th>Görsel</th><th>Ürün</th><th>Satış Fiyatı ✏️</th><th>Komisyon ✏️</th><th>Alış Fiyatı<br><span style="font-size:9px;font-weight:600;color:var(--or);text-transform:uppercase;letter-spacing:.04em">KDV Dahil</span></th><th>Kargo<br><span style="font-size:9px;font-weight:600;color:var(--or);text-transform:uppercase;letter-spacing:.04em">KDV Dahil</span></th><th>Net Kar</th><th>Marj</th><th>İşlem</th></tr></thead>
+          <thead><tr>
+            <th style="width:36px;background:#F8F9FB;border-bottom:1.5px solid #EDEEF1"><input type="checkbox" class="row-cb" id="cb-all" onchange="tumSecToggle(this)"></th>
+            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;min-width:260px">ÜRÜN</th>
+            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center">SATIŞ FİYATI <span style="font-size:10px;color:var(--or);cursor:pointer" title="Düzenleyebilirsiniz">✏️</span><br><span style="font-size:9px;font-weight:500;color:#B0B7C3;text-transform:none;letter-spacing:0">(₺)</span></th>
+            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center">KOMİSYON <span style="font-size:10px;color:var(--or);cursor:pointer" title="Düzenleyebilirsiniz">✏️</span><br><span style="font-size:9px;font-weight:500;color:#B0B7C3;text-transform:none;letter-spacing:0">(₺)</span></th>
+            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center">ALIŞ FİYATI <span style="font-size:10px;color:var(--or);cursor:pointer">✏️</span><br><span style="font-size:9px;font-weight:600;color:var(--or);text-transform:uppercase;letter-spacing:.04em">(₺)</span></th>
+            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center">KARGO<br><span style="font-size:9px;font-weight:500;color:#B0B7C3;text-transform:none;letter-spacing:0">(₺)</span></th>
+            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center">NET KÂR<br><span style="font-size:9px;font-weight:500;color:#B0B7C3;text-transform:none;letter-spacing:0">(₺)</span></th>
+            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;min-width:100px">MARJ</th>
+            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center">DURUM</th>
+            <th style="background:#F8F9FB;border-bottom:1.5px solid #EDEEF1;text-align:center">İŞLEM</th>
+          </tr></thead>
           <tbody id="ptbody"></tbody>
         </table>
       </div>
@@ -2751,7 +2836,23 @@ function renderUrunler(page){
   const totalPages=Math.max(1,Math.ceil(total/_pageSize));
   if(_page>totalPages)_page=1;
   const pageList=list.slice((_page-1)*_pageSize,_page*_pageSize);
-  document.getElementById('urun-count').textContent=total+' ürün';
+  document.getElementById('urun-count')&&(document.getElementById('urun-count').textContent=total+' ürün');
+  // Stat kartlarını güncelle
+  (function(){
+    const all=urunler;
+    const withAlis=all.filter(p=>calcKar(p).hasAlis);
+    const karlilar=withAlis.filter(p=>calcKar(p).net>=0);
+    const zararlılar=withAlis.filter(p=>calcKar(p).net<0);
+    const toplam=all.length;
+    const totalNet=withAlis.reduce((s,p)=>s+calcKar(p).net,0);
+    const marjOrtalama=withAlis.length?withAlis.reduce((s,p)=>s+(calcKar(p).marj||0),0)/withAlis.length:null;
+    const el=id=>document.getElementById(id);
+    if(el('stat-toplam'))el('stat-toplam').textContent=toplam;
+    if(el('stat-karli')){el('stat-karli').textContent=karlilar.length;el('stat-karli-pct').textContent=toplam?'%'+Math.round(karlilar.length/toplam*100)+' oranında':'—';}
+    if(el('stat-zarar')){el('stat-zarar').textContent=zararlılar.length;el('stat-zarar-pct').textContent=toplam?'%'+Math.round(zararlılar.length/toplam*100)+' oranında':'—';}
+    if(el('stat-marj'))el('stat-marj').textContent=marjOrtalama!==null?'%'+marjOrtalama.toFixed(1):'—';
+    if(el('stat-netkar'))el('stat-netkar').textContent=withAlis.length?fmt(totalNet):'—';
+  })();
   const tbody=document.getElementById('ptbody');
   if(!list.length){
     tbody.innerHTML=`<tr><td colspan="10"><div class="empty"><span class="empty-emoji">🔍</span><div class="empty-title">Ürün bulunamadı</div><div class="empty-sub">Filtreyi değiştirin.</div></div></td></tr>`;
@@ -2781,26 +2882,52 @@ function renderUrunler(page){
           : `<span style="display:inline-flex;align-items:center;padding:4px 10px;background:rgba(239,68,68,.08);color:#DC2626;border-radius:50px;font-size:12px;font-weight:800;border:1px solid rgba(239,68,68,.15)">${marjStr}</span>`;
     return`<tr style="transition:background .15s">
       <td class="cb-wrap" style="padding:0 8px;width:36px"><input type="checkbox" class="row-cb" data-id="${p.id}" onchange="satirSec(this)"></td>
-      <td style="width:62px;padding:10px 8px">
-        <div style="display:flex;align-items:center">${imgHtml}${phHtml}</div>
-      </td>
-      <td style="padding:10px 12px">
-        <div class="prod-name" title="${p.title}">${p.title}</div>
-        <div class="prod-cat">${p.categoryName||'—'}</div>
-      </td>
-      <td style="padding:10px 10px">${satisInput}</td>
-      <td style="padding:10px 10px">
-        <div style="display:flex;flex-direction:column;gap:4px">
-          ${komInput}
-          <span style="font-size:10px;color:var(--or);font-weight:700;padding-left:2px">${fmt(komisyon)}</span>
+      <td style="padding:10px 14px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="position:relative;flex-shrink:0">${imgHtml}${phHtml}</div>
+          <div>
+            <div class="prod-name" title="${p.title}">${p.title}</div>
+            <div class="prod-cat">${p.categoryName||'—'}</div>
+          </div>
         </div>
       </td>
-      <td style="padding:10px 10px"><input class="tinput" type="number" placeholder="Girin" min="0" step="0.01" value="${p.alis||''}" onchange="updUrun('${p.id}','alis',this.value)"></td>
-      <td style="padding:10px 10px"><input class="tinput" type="number" placeholder="Girin" min="0" step="0.01" value="${p.kargo||''}" onchange="updUrun('${p.id}','kargo',this.value)"></td>
-      <td style="padding:10px 10px">${karBadge}</td>
-      <td style="padding:10px 10px">${marjBadge}</td>
-      <td style="padding:10px 8px;text-align:right">
-        <button class="detay-btn" onclick="openModal('${p.id}')">📊 Ayrıntılı</button>
+      <td style="padding:10px 12px;text-align:center">${satisInput}</td>
+      <td style="padding:10px 12px;text-align:center">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+          ${komInput}
+          <span style="font-size:10px;color:var(--or);font-weight:700">${fmt(komisyon)}</span>
+        </div>
+      </td>
+      <td style="padding:10px 12px;text-align:center"><input class="tinput" type="number" placeholder="Girin" min="0" step="0.01" value="${p.alis||''}" onchange="updUrun('${p.id}','alis',this.value)"></td>
+      <td style="padding:10px 12px;text-align:center"><input class="tinput" type="number" placeholder="Girin" min="0" step="0.01" value="${p.kargo||''}" onchange="updUrun('${p.id}','kargo',this.value)"></td>
+      <td style="padding:10px 12px;text-align:center">${karBadge}</td>
+      <td style="padding:10px 14px;min-width:100px">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <span style="font-size:12px;font-weight:800;color:${marjColor}">${marjStr}</span>
+          <div style="height:5px;background:#F0F0F3;border-radius:3px;overflow:hidden">
+            <div style="height:100%;width:${hasAlis&&marj!==null?Math.min(Math.max(marj,0),100)+'%':'0%'};background:${!hasAlis?'#E5E7EB':marj>=15?'#16A34A':marj>=0?'#F59E0B':'#DC2626'};border-radius:3px;transition:width .4s"></div>
+          </div>
+        </div>
+      </td>
+      <td style="padding:10px 12px;text-align:center">
+        ${!hasAlis
+          ? '<span style="display:inline-flex;align-items:center;padding:4px 12px;background:#F3F4F6;color:#9CA3AF;border-radius:50px;font-size:11px;font-weight:700;border:1px solid #E5E7EB">Veri Gir</span>'
+          : net>=0 && marj>=15
+            ? '<span style="display:inline-flex;align-items:center;padding:4px 12px;background:rgba(16,185,129,.1);color:#059669;border-radius:50px;font-size:11px;font-weight:700;border:1px solid rgba(16,185,129,.2)">✓ Karlı</span>'
+            : net>=0 && marj>=0
+              ? '<span style="display:inline-flex;align-items:center;padding:4px 12px;background:rgba(245,158,11,.08);color:#D97706;border-radius:50px;font-size:11px;font-weight:700;border:1px solid rgba(245,158,11,.2)">~ Düşük Marj</span>'
+              : '<span style="display:inline-flex;align-items:center;padding:4px 12px;background:rgba(239,68,68,.08);color:#DC2626;border-radius:50px;font-size:11px;font-weight:700;border:1px solid rgba(239,68,68,.15)">✕ Kontrol Et</span>'
+        }
+      </td>
+      <td style="padding:10px 10px;text-align:center">
+        <div style="display:flex;align-items:center;justify-content:center;gap:4px">
+          <button class="detay-btn" onclick="openModal('${p.id}')">Detayları Gör</button>
+          <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'" style="width:30px;height:30px;border:1.5px solid #E5E7EB;border-radius:50%;background:#fff;cursor:pointer;font-size:16px;color:#9CA3AF;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;line-height:1" title="Seçenekler">⋮</button>
+          <div style="display:none;position:absolute;right:10px;background:#fff;border:1px solid #E5E7EB;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:100;min-width:140px;padding:4px 0">
+            <button onclick="openModal('${p.id}');this.closest('div[style*=absolute]').style.display='none'" style="width:100%;padding:9px 14px;border:none;background:none;text-align:left;font-size:13px;font-weight:600;color:#111;cursor:pointer;font-family:inherit" onmouseover="this.style.background='#F9FAFB'" onmouseout="this.style.background='none'">📊 Detaylı Hesap</button>
+            <button onclick="satirUrunSil('${p.id}');this.closest('div[style*=absolute]').style.display='none'" style="width:100%;padding:9px 14px;border:none;background:none;text-align:left;font-size:13px;font-weight:600;color:#DC2626;cursor:pointer;font-family:inherit" onmouseover="this.style.background='#FFF5F5'" onmouseout="this.style.background='none'">🗑 Sil</button>
+          </div>
+        </div>
       </td>
     </tr>`;
   }).join('');
@@ -2834,6 +2961,20 @@ function renderPagination(totalPages,total){
 function updUrun(id,field,val){const p=urunler.find(x=>String(x.id)===String(id));if(p){p[field]=parseFloat(val)||0;saveUrunler();renderUrunler();}}
 function setFilter(f,el){filterMode=f;document.querySelectorAll('.filter-bar .ftab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderUrunler();}
 function araUrun(q){searchQ=q.toLowerCase();renderUrunler();}
+function satirUrunSil(id){
+  if(!confirm('Bu ürünü silmek istediğinizden emin misiniz?'))return;
+  urunler=urunler.filter(p=>String(p.id)!==String(id));
+  saveUrunler();renderUrunler();
+}
+let _sortMode='default';
+function sortUrunler(mode){
+  _sortMode=mode;
+  if(mode==='marj-desc')urunler.sort((a,b)=>(calcKar(b).marj||0)-(calcKar(a).marj||0));
+  else if(mode==='satis-desc')urunler.sort((a,b)=>b.salePrice-a.salePrice);
+  else if(mode==='satis-asc')urunler.sort((a,b)=>a.salePrice-b.salePrice);
+  else urunler.sort((a,b)=>calcKar(b).net-calcKar(a).net);
+  renderUrunler();
+}
 // ── Kargo Barem Fonksiyonları ──
 // barem0: {fiyat, firma}, barem1: {fiyat, firma}
 const kargoSecimleri = {0: null, 1: null};
