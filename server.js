@@ -68,6 +68,21 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // robots.txt
+  if (parsed.pathname === '/robots.txt') {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('User-agent: *\nAllow: /\nSitemap: https://komisyonhesap.com/sitemap.xml');
+    return;
+  }
+
+  // sitemap.xml
+  if (parsed.pathname === '/sitemap.xml') {
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://komisyonhesap.com/</loc><lastmod>${new Date().toISOString().split('T')[0]}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url></urlset>`;
+    res.writeHead(200, { 'Content-Type': 'application/xml' });
+    res.end(sitemap);
+    return;
+  }
+
   // Health check
   if (parsed.pathname === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
