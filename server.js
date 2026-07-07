@@ -98,12 +98,6 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // robots.txt
-  if (parsed.pathname === '/robots.txt') {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end(`User-agent: *\nAllow: /\nSitemap: https://komisyonhesap.com/sitemap.xml\nDisallow: /api/\nDisallow: /admin`);
-    return;
-  }
 
   // sitemap.xml
   if (parsed.pathname === '/sitemap.xml') {
