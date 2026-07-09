@@ -928,11 +928,11 @@ input[type=number]{-moz-appearance:textfield}
         <a class="nav-link" href="#iletisim" onclick="if(document.getElementById('app-section').style.display==='block'){goHome();setTimeout(()=>{document.getElementById('iletisim').scrollIntoView({behavior:'smooth'})},350)}return true;">İletişim</a>
       </div>
       <div id="nav-premium" style="display:none;align-items:center;gap:4px">
-        <a class="nav-link" href="#" onclick="uyeOlVeyaOde();setTimeout(()=>switchTab('ai'),100);return false;" style="display:flex;align-items:center;gap:6px">
+        <a class="nav-link" href="#" onclick="goApp();switchTab('ai');return false;" style="display:flex;align-items:center;gap:6px">
           ✨ AI Araçlar
           <span style="background:linear-gradient(135deg,#F27A1A,#FF9A3C);color:#fff;font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px">YENİ</span>
         </a>
-        <a class="nav-link" href="#" onclick="etiketSayfasiAc();return false;">⭐ Avantajlı Etiket</a>
+        <a class="nav-link" href="#" onclick="goApp();switchTab('urunler');etiketSayfasiAc();return false;">⭐ Avantajlı Etiket</a>
         <a class="nav-link" href="#iletisim" onclick="if(document.getElementById('app-section').style.display==='block'){goHome();setTimeout(()=>{document.getElementById('iletisim').scrollIntoView({behavior:'smooth'})},350)}return true;">İletişim</a>
       </div>
     </div>
