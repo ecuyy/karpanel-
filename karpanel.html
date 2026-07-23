@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build: v2.7 -->
+<!-- build: v2.8 -->
 <html lang="tr" prefix="og: https://ogp.me/ns#">
 <head>
 <meta charset="UTF-8">
@@ -2064,6 +2064,53 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
 @media(max-width:1400px){.kp-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:760px){.kp-grid{grid-template-columns:repeat(2,1fr)}.kp-val{font-size:26px}}
 
+
+/* ══ Genel Bakış kartları: belirgin + gerçek cam ══ */
+.kp-card{
+  background:linear-gradient(165deg,rgba(255,255,255,.78),rgba(255,255,255,.5));
+  backdrop-filter:blur(18px) saturate(1.25);
+  -webkit-backdrop-filter:blur(18px) saturate(1.25);
+  border:1px solid rgba(255,255,255,.75);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.9) inset,
+    0 2px 6px rgba(20,17,14,.05),
+    0 26px 50px -30px rgba(20,17,14,.45);
+}
+.kp-card::before{opacity:.85;filter:blur(2px)}
+.kp-card::after{height:3.5px;opacity:.85}
+.kp-lbl{color:#6E6A66;font-weight:700}
+.kp-val{color:var(--c)}
+.kp-sub{color:#8E8981}
+.kp-ic{
+  background:var(--cbg);color:var(--c);
+  border:1px solid rgba(255,255,255,.7);
+  box-shadow:0 6px 14px -8px rgba(20,17,14,.5);
+}
+.kp-card:hover{
+  border-color:rgba(255,255,255,.95);
+  box-shadow:0 1px 0 rgba(255,255,255,.95) inset,0 4px 10px rgba(20,17,14,.06),0 34px 60px -28px rgba(20,17,14,.5);
+}
+
+/* veri yokken: soluk değil, sadece nötr */
+.kp-grid.bos .kp-card{background:linear-gradient(165deg,rgba(255,255,255,.7),rgba(255,255,255,.44))}
+.kp-grid.bos .kp-val{color:#9E988F}
+.kp-grid.bos .kp-card::after{opacity:.4}
+.kp-grid.bos .kp-card::before{opacity:.5}
+.kp-grid.bos .kp-ic{opacity:.9}
+.kp-grid.bos .kp-card:hover{transform:translateY(-3px)}
+
+/* uyari seridindeki Trendyol yolu */
+.kd-notice-path{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:10px}
+.kd-notice-path span{
+  display:inline-flex;align-items:center;
+  background:rgba(255,255,255,.85);border:1px solid rgba(242,122,26,.28);
+  color:#A8551A;font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:8px;white-space:nowrap;
+}
+.kd-notice-path .kd-sep{font-style:normal;color:#D6A97E;font-size:13px;font-weight:800}
+.kd-notice{align-items:flex-start}
+.kd-notice-ic{margin-top:2px}
+.kd-notice-b{align-self:center}
+
 </style>
 </head>
 <body>
@@ -2491,7 +2538,7 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
         <button type="button" class="kd-item" data-v="destek" onclick="event.__kd=1;kdGo('destek')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.4"/><path d="m6 6 3.6 3.6M14.4 14.4 18 18M18 6l-3.6 3.6M9.6 14.4 6 18"/></svg></span><span class="kd-l">Destek Talebi</span></button>
     </nav>
 
-    <div class="kd-ver">komisyonhesap panel <b>v2.7</b></div>
+    <div class="kd-ver">komisyonhesap panel <b>v2.8</b></div>
     <div class="kd-side-foot">
       <button type="button" class="kd-mini" onclick="goHome();window.scrollTo({top:0,behavior:'smooth'})"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z"/><path d="M9.5 20.5v-6h5v6"/></svg> Ana sayfa</button>
       <button type="button" class="kd-mini kd-mini-out" onclick="logout()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3"/><path d="M15 16.5 19.5 12 15 7.5M19.5 12H9"/></svg> Çıkış</button>
@@ -2512,6 +2559,7 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
       <div class="kd-notice-txt">
         <div class="kd-notice-t" id="kd-notice-t"></div>
         <div class="kd-notice-s" id="kd-notice-s"></div>
+        <div class="kd-notice-path" id="kd-notice-path" style="display:none"></div>
       </div>
       <button class="kd-notice-b" id="kd-notice-b" style="display:none"></button>
     </div>
@@ -4803,7 +4851,7 @@ async function iletisimGonder(){
 }
 
 // ══ DASHBOARD KABUGU (gorunum yonetimi) ══
-try{console.log('%ckomisyonhesap panel v2.7','color:#F27A1A;font-weight:700');}catch(e){}
+try{console.log('%ckomisyonhesap panel v2.8','color:#F27A1A;font-weight:700');}catch(e){}
 function kdMeta(v){
   var M={
     urunler:['K\u00e2r Hesaplamalar\u0131m','\u00dcr\u00fcnlerinizin net k\u00e2r\u0131n\u0131 tek ekranda takip edin.'],
@@ -4870,10 +4918,13 @@ function kdGo(v){
   } else if(v==='etiket'||v==='eayukle'){
     if(us) us.style.display='block';
     etiketSayfasiAc();
+    var ua=document.getElementById('ea-upload-area'), sa=document.getElementById('ea-sonuc-alan');
     if(v==='eayukle'){
-      var ua=document.getElementById('ea-upload-area'), sa=document.getElementById('ea-sonuc-alan');
       if(ua) ua.style.display='block';
       if(sa) sa.style.display='none';
+    } else {
+      // Analiz gorunumu: dosya sec karti gosterilmez, yerine yol tarifli uyari cikar
+      if(ua) ua.style.display='none';
     }
   } else {
     if(us) us.style.display='none';
@@ -4887,9 +4938,15 @@ function kdGo(v){
   } else if(!prem && (v==='yukle'||v==='etiket'||v==='eayukle')){
     kdNotice(true,'Premium \u00fcyelik gerekli','Bu b\u00f6l\u00fcm premium \u00fcyelere \u00f6zeldir. Y\u0131ll\u0131k plana ge\u00e7erek hemen kullanmaya ba\u015flayabilirsiniz.','Premium\'a ge\u00e7',function(){uyeOlVeyaOde();});
   } else if(v==='etiket' && !(typeof eaTumVeri!=='undefined' && eaTumVeri && eaTumVeri.length)){
-    kdNotice(true,'Avantajl\u0131 etiket verisi yok','Tablonun olu\u015fmas\u0131 i\u00e7in Y\u00fckleme alan\u0131ndan avantajl\u0131 etiket Excel dosyan\u0131z\u0131 y\u00fckleyin.','Avantajl\u0131 Etiket Y\u00fckle',function(){kdGo('eayukle');});
+    kdNotice(true,'Avantajl\u0131 etiket verisi yok',
+      'A\u015fa\u011f\u0131daki yoldan indirdi\u011finiz dosyay\u0131 Y\u00fckleme alan\u0131ndan y\u00fckleyin. Mevcut \u00fcr\u00fcn listenizden resim ve al\u0131\u015f fiyat\u0131 otomatik gelir.',
+      'Avantajl\u0131 Etiket Y\u00fckle',function(){kdGo('eayukle');},
+      ['Trendyol','Fiyatland\u0131rma','Avantajl\u0131 Etiket','Excel ile G\u00fcncelle']);
   } else if(v==='urunler' && !varUrun){
-    kdNotice(true,'Hen\u00fcz \u00fcr\u00fcn y\u00fcklenmedi','K\u00e2r tablosunun olu\u015fmas\u0131 i\u00e7in \u00f6nce Trendyol Excel dosyan\u0131z\u0131 y\u00fckleyin.','\u00dcr\u00fcn Y\u00fckle',function(){kdGo('yukle');});
+    kdNotice(true,'Hen\u00fcz \u00fcr\u00fcn y\u00fcklenmedi',
+      'A\u015fa\u011f\u0131daki yoldan indirdi\u011finiz dosyay\u0131 Y\u00fckleme alan\u0131ndan y\u00fckleyin. Mevcut \u00fcr\u00fcn listenizden resim ve al\u0131\u015f fiyat\u0131 otomatik gelir.',
+      '\u00dcr\u00fcn Y\u00fckle',function(){kdGo('yukle');},
+      ['Trendyol','\u00dcr\u00fcnler','\u00dcr\u00fcn Listesi','Aktif \u00dcr\u00fcnler','Excel ile \u0130ndir']);
   } else {
     kdNotice(false);
   }
@@ -4950,15 +5007,25 @@ function kdPanelDoldur(){
 
 
 // ══ Panel bilgi seridi ══
-function kdNotice(show,title,text,btnTxt,act){
+function kdNotice(show,title,text,btnTxt,act,path){
   var n=document.getElementById('kd-notice'); if(!n) return;
   if(!show){ n.style.display='none'; return; }
   n.style.display='flex';
   var a=document.getElementById('kd-notice-t'), b=document.getElementById('kd-notice-s'),
-      c=document.getElementById('kd-notice-b');
+      c=document.getElementById('kd-notice-b'), p=document.getElementById('kd-notice-path');
   if(a) a.textContent=title||'';
   if(b) b.textContent=text||'';
   if(c){ if(btnTxt){ c.style.display='inline-flex'; c.textContent=btnTxt; c.onclick=act||null; } else c.style.display='none'; }
+  if(p){
+    if(path&&path.length){
+      var h='';
+      for(var i=0;i<path.length;i++){
+        if(i) h+='<i class="kd-sep">\u203a</i>';
+        h+='<span>'+kdEsc(path[i])+'</span>';
+      }
+      p.innerHTML=h; p.style.display='flex';
+    } else { p.style.display='none'; p.innerHTML=''; }
+  }
 }
 function kdEsc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];}); }
 function kdListele(){
