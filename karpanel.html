@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build: v2.5 -->
+<!-- build: v2.7 -->
 <html lang="tr" prefix="og: https://ogp.me/ns#">
 <head>
 <meta charset="UTF-8">
@@ -2011,6 +2011,59 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
 }
 .kdash-side .kd-item{pointer-events:auto!important}
 
+
+/* ══ GENEL BAKIŞ — sadeleştirilmiş & modern ══ */
+.kp-empty{
+  display:flex;align-items:center;gap:13px;flex-wrap:wrap;
+  padding:15px 18px;border-radius:15px;margin-bottom:18px;
+  background:linear-gradient(100deg,rgba(242,122,26,.09),rgba(242,122,26,.03));
+  border:1px solid rgba(242,122,26,.2);
+}
+.kp-empty-ic{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:11px;background:rgba(242,122,26,.13);color:#C2610C;flex-shrink:0}
+.kp-empty-t{flex:1;min-width:180px;font-size:13.5px;font-weight:600;color:#8A6A45;text-align:left}
+.kp-empty-b{
+  display:inline-flex;align-items:center;padding:10px 20px;border:none;border-radius:11px;
+  background:#F27A1A;color:#fff;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;
+  box-shadow:0 10px 22px -10px rgba(242,122,26,.85);transition:transform .2s,background .2s;
+}
+.kp-empty-b:hover{background:#FF8A2E;transform:translateY(-2px)}
+
+.kp-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px}
+.kp-card{
+  --c:#14110E;--cbg:rgba(20,17,14,.06);
+  position:relative;overflow:hidden;padding:20px;border-radius:20px;
+  background:linear-gradient(170deg,rgba(255,255,255,.92),rgba(255,255,255,.7));
+  border:1px solid rgba(20,17,14,.07);
+  box-shadow:0 1px 2px rgba(20,17,14,.03),0 20px 42px -34px rgba(20,17,14,.4);
+  transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s,border-color .25s;
+}
+.kp-card::before{
+  content:"";position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;
+  background:var(--cbg);opacity:.55;transition:transform .35s cubic-bezier(.2,.7,.2,1);
+}
+.kp-card::after{content:"";position:absolute;left:20px;right:20px;bottom:0;height:3px;border-radius:3px 3px 0 0;background:var(--c);opacity:.55}
+.kp-card:hover{transform:translateY(-4px);border-color:rgba(20,17,14,.12);box-shadow:0 28px 54px -30px rgba(20,17,14,.5)}
+.kp-card:hover::before{transform:scale(1.25)}
+.kp-ic{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:13px;background:var(--cbg);color:var(--c);margin-bottom:16px}
+.kp-lbl{position:relative;z-index:1;font-size:11.5px;font-weight:700;color:#8A8A96;letter-spacing:.01em}
+.kp-val{
+  position:relative;z-index:1;font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:32px;font-weight:800;letter-spacing:-1.4px;color:var(--c);
+  line-height:1.02;margin-top:6px;font-variant-numeric:tabular-nums;
+}
+.kp-sub{position:relative;z-index:1;font-size:11px;color:#A6A6B2;margin-top:6px}
+
+/* veri yokken */
+.kp-grid.bos .kp-card{background:rgba(255,255,255,.55)}
+.kp-grid.bos .kp-val{color:#CFC8BF}
+.kp-grid.bos .kp-card::after{opacity:.14}
+.kp-grid.bos .kp-card::before{opacity:.25}
+.kp-grid.bos .kp-ic{opacity:.5}
+.kp-grid.bos .kp-card:hover{transform:none;box-shadow:0 1px 2px rgba(20,17,14,.03)}
+
+@media(max-width:1400px){.kp-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.kp-grid{grid-template-columns:repeat(2,1fr)}.kp-val{font-size:26px}}
+
 </style>
 </head>
 <body>
@@ -2426,19 +2479,19 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
 
     <nav class="kd-nav">
       <div class="kd-group">Genel</div>
-        <button type="button" class="kd-item" data-v="panel" onclick="kdGo('panel')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg></span><span class="kd-l">Genel Bakış</span></button>
+        <button type="button" class="kd-item" data-v="panel" onclick="event.__kd=1;kdGo('panel')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg></span><span class="kd-l">Genel Bakış</span></button>
       <div class="kd-group">Analiz</div>
-        <button type="button" class="kd-item" data-v="urunler" onclick="kdGo('urunler')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M12 20V4M19 20v-7"/></svg></span><span class="kd-l">Kâr Hesaplamalarım</span></button>
-        <button type="button" class="kd-item" data-v="etiket" onclick="kdGo('etiket')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11.2V5.4A1.9 1.9 0 0 1 5.4 3.5h5.8a1.9 1.9 0 0 1 1.34.55l7.4 7.4a1.9 1.9 0 0 1 0 2.7l-5.8 5.8a1.9 1.9 0 0 1-2.7 0l-7.4-7.4a1.9 1.9 0 0 1-.55-1.34z"/><path d="M7.6 7.6h.01"/></svg></span><span class="kd-l">Avantajlı Etiket</span></button>
+        <button type="button" class="kd-item" data-v="urunler" onclick="event.__kd=1;kdGo('urunler')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M12 20V4M19 20v-7"/></svg></span><span class="kd-l">Kâr Hesaplamalarım</span></button>
+        <button type="button" class="kd-item" data-v="etiket" onclick="event.__kd=1;kdGo('etiket')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11.2V5.4A1.9 1.9 0 0 1 5.4 3.5h5.8a1.9 1.9 0 0 1 1.34.55l7.4 7.4a1.9 1.9 0 0 1 0 2.7l-5.8 5.8a1.9 1.9 0 0 1-2.7 0l-7.4-7.4a1.9 1.9 0 0 1-.55-1.34z"/><path d="M7.6 7.6h.01"/></svg></span><span class="kd-l">Avantajlı Etiket</span></button>
       <div class="kd-group">Yükleme</div>
-        <button type="button" class="kd-item" data-v="yukle" onclick="kdGo('yukle')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15.5V4M7.5 8.5 12 4l4.5 4.5"/><path d="M4 15v3.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V15"/></svg></span><span class="kd-l">Ürün Yükle</span></button>
-        <button type="button" class="kd-item" data-v="eayukle" onclick="kdGo('eayukle')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11V5.6A1.6 1.6 0 0 1 5.6 4H11"/><path d="M20 13v5.4A1.6 1.6 0 0 1 18.4 20H13"/><path d="M15 4h5v5"/><path d="M20 4l-7 7"/><path d="M4 15v5h5"/><path d="M4 20l7-7"/></svg></span><span class="kd-l">Avantajlı Etiket Yükle</span></button>
+        <button type="button" class="kd-item" data-v="yukle" onclick="event.__kd=1;kdGo('yukle')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15.5V4M7.5 8.5 12 4l4.5 4.5"/><path d="M4 15v3.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V15"/></svg></span><span class="kd-l">Ürün Yükle</span></button>
+        <button type="button" class="kd-item" data-v="eayukle" onclick="event.__kd=1;kdGo('eayukle')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11V5.6A1.6 1.6 0 0 1 5.6 4H11"/><path d="M20 13v5.4A1.6 1.6 0 0 1 18.4 20H13"/><path d="M15 4h5v5"/><path d="M20 4l-7 7"/><path d="M4 15v5h5"/><path d="M4 20l7-7"/></svg></span><span class="kd-l">Avantajlı Etiket Yükle</span></button>
       <div class="kd-group">Hesabım</div>
-        <button type="button" class="kd-item" data-v="uyelik" onclick="kdGo('uyelik')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.8" y="5.5" width="18.4" height="13" rx="2.6"/><path d="M2.8 9.8h18.4M6.5 14.6h3"/></svg></span><span class="kd-l">Üyeliğim</span></button>
-        <button type="button" class="kd-item" data-v="destek" onclick="kdGo('destek')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.4"/><path d="m6 6 3.6 3.6M14.4 14.4 18 18M18 6l-3.6 3.6M9.6 14.4 6 18"/></svg></span><span class="kd-l">Destek Talebi</span></button>
+        <button type="button" class="kd-item" data-v="uyelik" onclick="event.__kd=1;kdGo('uyelik')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.8" y="5.5" width="18.4" height="13" rx="2.6"/><path d="M2.8 9.8h18.4M6.5 14.6h3"/></svg></span><span class="kd-l">Üyeliğim</span></button>
+        <button type="button" class="kd-item" data-v="destek" onclick="event.__kd=1;kdGo('destek')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.4"/><path d="m6 6 3.6 3.6M14.4 14.4 18 18M18 6l-3.6 3.6M9.6 14.4 6 18"/></svg></span><span class="kd-l">Destek Talebi</span></button>
     </nav>
 
-    <div class="kd-ver">komisyonhesap panel <b>v2.5</b></div>
+    <div class="kd-ver">komisyonhesap panel <b>v2.7</b></div>
     <div class="kd-side-foot">
       <button type="button" class="kd-mini" onclick="goHome();window.scrollTo({top:0,behavior:'smooth'})"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z"/><path d="M9.5 20.5v-6h5v6"/></svg> Ana sayfa</button>
       <button type="button" class="kd-mini kd-mini-out" onclick="logout()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3"/><path d="M15 16.5 19.5 12 15 7.5M19.5 12H9"/></svg> Çıkış</button>
@@ -2865,14 +2918,11 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
     <!-- ══ GENEL BAKIŞ ══ -->
     <div id="kd-panel" class="kd-view" style="display:none">
 
-      <div class="kp-hello">
-        <div>
-          <div class="kp-hi" id="kp-welcome">Hoş geldin</div>
-          <div class="kp-hi-s">İşte mağazanın güncel kârlılık özeti.</div>
-        </div>
-        <span class="kp-live"><i></i>Premium üyelik aktif</span>
+      <div id="kp-empty" class="kp-empty">
+        <span class="kp-empty-ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.01"/></svg></span>
+        <span class="kp-empty-t">Ürünleriniz henüz yüklenmedi — Yükleme alanından ürünlerinizi yükleyin.</span>
+        <button class="kp-empty-b" onclick="kdGo('yukle')">Ürün Yükle</button>
       </div>
-
       <div class="kp-grid bos" id="kp-grid">
           <div class="kp-card" style="--c:#14110E;--cbg:rgba(242,122,26,.10)">
             <span class="kp-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v8a2 2 0 0 1-1 1.73l-7 4a2 2 0 0 1-2 0l-7-4A2 2 0 0 1 3 16V8a2 2 0 0 1 1-1.73l7-4a2 2 0 0 1 2 0l7 4A2 2 0 0 1 21 8z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></svg></span>
@@ -2906,11 +2956,6 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
           </div>
       </div>
 
-      <div id="kp-empty" class="kp-empty">
-        <span class="kp-empty-t">Henüz ürün yüklenmedi — rakamlar Excel dosyanızı yüklediğinizde dolar.</span>
-        <button class="kp-empty-b" onclick="kdGo('yukle')">Ürün Yükle</button>
-      </div>
-
       <div class="kp-lists" id="kp-lists" style="display:none">
         <div class="kd-card kp-list">
           <div class="kp-list-h"><span class="kp-list-ic p"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16l6-6 4 4 6-8"/><path d="M20 6h-4M20 6v4"/></svg></span>En çok kazandıranlar</div>
@@ -2922,23 +2967,6 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
         </div>
       </div>
 
-      <div class="kp-quick">
-        <button type="button" class="kp-q" onclick="kdGo('urunler')">
-          <span class="kp-q-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M12 20V4M19 20v-7"/></svg></span>
-          <span><b>Kâr Hesaplamalarım</b><i>Ürün bazında net kâr tablosu</i></span>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6.5l5.5 5.5L13 17.5"/></svg>
-        </button>
-        <button type="button" class="kp-q" onclick="kdGo('etiket')">
-          <span class="kp-q-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11.2V5.4A1.9 1.9 0 0 1 5.4 3.5h5.8a1.9 1.9 0 0 1 1.34.55l7.4 7.4a1.9 1.9 0 0 1 0 2.7l-5.8 5.8a1.9 1.9 0 0 1-2.7 0l-7.4-7.4a1.9 1.9 0 0 1-.55-1.34z"/><path d="M7.6 7.6h.01"/></svg></span>
-          <span><b>Avantajlı Etiket</b><i>Etiket fiyatlarının kâra etkisi</i></span>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6.5l5.5 5.5L13 17.5"/></svg>
-        </button>
-        <button type="button" class="kp-q" onclick="kdGo('uyelik')">
-          <span class="kp-q-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.8" y="5.5" width="18.4" height="13" rx="2.6"/><path d="M2.8 9.8h18.4M6.5 14.6h3"/></svg></span>
-          <span><b>Üyeliğim</b><i>Plan, fatura ve güvenlik</i></span>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6.5l5.5 5.5L13 17.5"/></svg>
-        </button>
-      </div>
     </div>
 
     <!-- ══ DESTEK TALEBİ ══ -->
@@ -4775,7 +4803,7 @@ async function iletisimGonder(){
 }
 
 // ══ DASHBOARD KABUGU (gorunum yonetimi) ══
-try{console.log('%ckomisyonhesap panel v2.5','color:#F27A1A;font-weight:700');}catch(e){}
+try{console.log('%ckomisyonhesap panel v2.7','color:#F27A1A;font-weight:700');}catch(e){}
 function kdMeta(v){
   var M={
     urunler:['K\u00e2r Hesaplamalar\u0131m','\u00dcr\u00fcnlerinizin net k\u00e2r\u0131n\u0131 tek ekranda takip edin.'],
@@ -4819,8 +4847,12 @@ function kdGo(v){
   }
   var meta=kdMeta(v);
   var tt=document.getElementById('kd-title'),ss=document.getElementById('kd-sub');
-  if(tt) tt.textContent=meta[0];
+  if(tt) tt.textContent=(v==='panel'&&currentUser&&currentUser.ad)
+        ? ('Ho\u015f geldin, '+String(currentUser.ad).split(' ')[0]) : meta[0];
   if(ss) ss.textContent=meta[1];
+  var topr=document.getElementById('kd-top-r');
+  if(topr) topr.innerHTML=(v==='panel'&&currentUser&&currentUser.premium)
+        ? '<span class="kp-live"><i></i>Premium \u00fcyelik aktif</span>' : '';
 
   kdShow('kd-panel',v==='panel');
   kdShow('kd-destek',v==='destek');
@@ -4858,8 +4890,6 @@ function kdGo(v){
     kdNotice(true,'Avantajl\u0131 etiket verisi yok','Tablonun olu\u015fmas\u0131 i\u00e7in Y\u00fckleme alan\u0131ndan avantajl\u0131 etiket Excel dosyan\u0131z\u0131 y\u00fckleyin.','Avantajl\u0131 Etiket Y\u00fckle',function(){kdGo('eayukle');});
   } else if(v==='urunler' && !varUrun){
     kdNotice(true,'Hen\u00fcz \u00fcr\u00fcn y\u00fcklenmedi','K\u00e2r tablosunun olu\u015fmas\u0131 i\u00e7in \u00f6nce Trendyol Excel dosyan\u0131z\u0131 y\u00fckleyin.','\u00dcr\u00fcn Y\u00fckle',function(){kdGo('yukle');});
-  } else if(v==='panel' && !varUrun){
-    kdNotice(true,'\u00dcr\u00fcn verisi bekleniyor','Excel dosyan\u0131z\u0131 y\u00fckledi\u011finizde rakamlar ve listeler burada olu\u015facak.','\u00dcr\u00fcn Y\u00fckle',function(){kdGo('yukle');});
   } else {
     kdNotice(false);
   }
@@ -4910,8 +4940,6 @@ function kdPanelDoldur(){
   if(gr){ gr.style.display='grid'; gr.classList.toggle('bos',!has); }
   var em=document.getElementById('kp-empty');
   if(em) em.style.display=has?'none':'flex';
-  var w=document.getElementById('kp-welcome');
-  if(w) w.textContent=currentUser?('Ho\u015f geldin, '+String(currentUser.ad).split(' ')[0]):'Ho\u015f geldin';
   var fm=document.getElementById('ku-fat-mail');
   if(fm&&currentUser) fm.textContent=currentUser.email;
   var fa=document.getElementById('ku-fat-ad');
@@ -4962,6 +4990,28 @@ function kdListele(){
   if(a) a.innerHTML=draw(top);
   if(b) b.innerHTML=draw(bot);
 }
+
+
+// ══ Kenar cubugu tiklamalari icin yedek (delege) dinleyici ══
+// Satir ici onclick calismazsa (CSP, DOM yenilenmesi vb.) bu devreye girer.
+(function(){
+  function bagla(){
+    document.addEventListener('click', function(ev){
+      var el=ev.target;
+      var b=null;
+      while(el&&el!==document){
+        if(el.classList&&el.classList.contains('kd-item')&&el.getAttribute&&el.getAttribute('data-v')){b=el;break;}
+        el=el.parentNode;
+      }
+      if(!b) return;
+      if(ev.__kd) return;              // satir ici onclick zaten calisti
+      ev.preventDefault();
+      try{ kdGo(b.getAttribute('data-v')); }catch(e){ console.error('kdGo hatasi:',e); }
+    }, false);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bagla);
+  else bagla();
+})();
 
 </script>
 
