@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- build: v2.4 -->
+<!-- build: v2.5 -->
 <html lang="tr" prefix="og: https://ogp.me/ns#">
 <head>
 <meta charset="UTF-8">
@@ -235,7 +235,8 @@ html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;background:var(--white);color:var(--text);-webkit-font-smoothing:antialiased}
 
 /* ── NAV ── */
-nav{
+/* SADECE sayfa ust menusu — 'body >' olmazsa kenar cubugundaki <nav> da etkilenir */
+body > nav{
   position:sticky;top:16px;z-index:200;
   padding:0 2rem;
   pointer-events:none;
@@ -1998,6 +1999,18 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
 .kd-ver{text-align:center;font-size:10px;color:#C3BCB3;font-weight:600;letter-spacing:.04em;padding:10px 0 4px}
 .kd-ver b{color:#A8A29E;font-weight:800}
 
+
+/* Kenar cubugu menusu: ust menu kurallarindan tamamen bagimsiz olsun */
+.kdash-side nav.kd-nav,
+.kdash-side .kd-nav{
+  pointer-events:auto!important;
+  position:static!important;
+  top:auto!important;
+  z-index:auto!important;
+  padding:0!important;
+}
+.kdash-side .kd-item{pointer-events:auto!important}
+
 </style>
 </head>
 <body>
@@ -2425,7 +2438,7 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
         <button type="button" class="kd-item" data-v="destek" onclick="kdGo('destek')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.4"/><path d="m6 6 3.6 3.6M14.4 14.4 18 18M18 6l-3.6 3.6M9.6 14.4 6 18"/></svg></span><span class="kd-l">Destek Talebi</span></button>
     </nav>
 
-    <div class="kd-ver">komisyonhesap panel <b>v2.4</b></div>
+    <div class="kd-ver">komisyonhesap panel <b>v2.5</b></div>
     <div class="kd-side-foot">
       <button type="button" class="kd-mini" onclick="goHome();window.scrollTo({top:0,behavior:'smooth'})"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z"/><path d="M9.5 20.5v-6h5v6"/></svg> Ana sayfa</button>
       <button type="button" class="kd-mini kd-mini-out" onclick="logout()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3"/><path d="M15 16.5 19.5 12 15 7.5M19.5 12H9"/></svg> Çıkış</button>
@@ -4762,7 +4775,7 @@ async function iletisimGonder(){
 }
 
 // ══ DASHBOARD KABUGU (gorunum yonetimi) ══
-try{console.log('%ckomisyonhesap panel v2.4','color:#F27A1A;font-weight:700');}catch(e){}
+try{console.log('%ckomisyonhesap panel v2.5','color:#F27A1A;font-weight:700');}catch(e){}
 function kdMeta(v){
   var M={
     urunler:['K\u00e2r Hesaplamalar\u0131m','\u00dcr\u00fcnlerinizin net k\u00e2r\u0131n\u0131 tek ekranda takip edin.'],
