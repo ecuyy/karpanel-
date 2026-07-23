@@ -1625,6 +1625,164 @@ footer.kft::before{
   .kauth-title{font-size:20px}
 }
 
+
+/* ══════════════════════════════════════════════════════════
+   DASHBOARD KABUĞU — premium / cam
+   ══════════════════════════════════════════════════════════ */
+body.app-mode .nav-center{display:none}
+body.app-mode nav{top:12px}
+body.app-mode{background:linear-gradient(180deg,#FAF8F5 0%,#FBFAF8 40%,#F7F5F1 100%)}
+
+.kdash-wrap{display:grid;grid-template-columns:250px minmax(0,1fr);gap:22px;align-items:start}
+
+/* ── kenar çubuğu ── */
+.kdash-side{
+  position:sticky;top:92px;
+  display:flex;flex-direction:column;gap:16px;
+  padding:16px 14px;border-radius:20px;
+  background:rgba(255,255,255,.62);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(20,17,14,.07);
+  box-shadow:0 1px 2px rgba(20,17,14,.03),0 22px 46px -32px rgba(20,17,14,.34);
+}
+.kd-user{display:flex;align-items:center;gap:11px;padding:9px 8px 15px;border-bottom:1px solid rgba(20,17,14,.06)}
+.kd-av{
+  width:40px;height:40px;border-radius:13px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(140deg,#F27A1A,#DD5F08);color:#fff;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;
+  box-shadow:0 8px 18px -7px rgba(242,122,26,.75);
+}
+.kd-uinfo{min-width:0}
+.kd-uname{font-size:14px;font-weight:800;color:#14110E;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kd-uplan{font-size:11.5px;color:#A8A29E;margin-top:2px;font-weight:600}
+.kd-uplan.pro{color:#C2610C}
+.kd-uplan.pro::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#F27A1A;margin-right:6px;vertical-align:middle}
+
+.kd-nav{display:flex;flex-direction:column;gap:3px}
+.kd-group{
+  font-size:9.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+  color:#BDB6AE;padding:12px 10px 6px;
+}
+.kd-item{
+  position:relative;display:flex;align-items:center;gap:11px;width:100%;
+  padding:10px 11px;border:none;border-radius:11px;background:transparent;
+  font-family:inherit;font-size:13.5px;font-weight:600;color:#57534E;
+  cursor:pointer;text-align:left;transition:background .18s,color .18s,transform .18s;
+}
+.kd-item::before{
+  content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:3px;height:0;border-radius:0 3px 3px 0;background:#F27A1A;transition:height .22s cubic-bezier(.2,.7,.2,1);
+}
+.kd-item:hover{background:rgba(20,17,14,.04);color:#14110E}
+.kd-item.on{background:rgba(242,122,26,.09);color:#14110E;font-weight:700}
+.kd-item.on::before{height:20px}
+.kd-i{display:flex;align-items:center;color:#A8A29E;flex-shrink:0;transition:color .18s}
+.kd-item:hover .kd-i{color:#57534E}
+.kd-item.on .kd-i{color:#F27A1A}
+.kd-l{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kd-lock{display:flex;align-items:center;color:#CFC8BF;flex-shrink:0}
+.kd-item.on .kd-lock{color:#E0A97A}
+
+.kd-home{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:4px;padding:11px;border:1px solid rgba(20,17,14,.08);border-radius:12px;
+  background:rgba(255,255,255,.6);color:#8A8378;
+  font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:.18s;
+}
+.kd-home:hover{background:#fff;border-color:rgba(20,17,14,.18);color:#14110E}
+
+/* ── içerik ── */
+.kdash-main{min-width:0}
+.kd-top{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;
+  padding:4px 2px 20px;margin-bottom:4px;
+}
+.kd-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:27px;font-weight:800;letter-spacing:-1px;color:#14110E;margin:0}
+.kd-sub{font-size:13.5px;color:#8A8378;margin:6px 0 0}
+
+.kd-view{animation:kdIn .38s cubic-bezier(.2,.7,.2,1)}
+@keyframes kdIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+.kd-card{
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(20,17,14,.08);border-radius:20px;padding:24px;
+  box-shadow:0 1px 2px rgba(20,17,14,.03),0 22px 44px -32px rgba(20,17,14,.3);
+}
+.kd-card-h{display:flex;align-items:flex-start;gap:13px;margin-bottom:22px}
+.kd-card-ic{
+  width:42px;height:42px;border-radius:13px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(242,122,26,.1);color:#C2610C;
+}
+.kd-card-t{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:#14110E;letter-spacing:-.35px}
+.kd-card-s{font-size:12.5px;color:#A8A29E;margin-top:3px}
+
+.kd-form{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.kd-f{display:flex;flex-direction:column;gap:7px}
+.kd-f-full{grid-column:1/-1}
+.kd-lbl{font-size:10.5px;font-weight:800;color:#A8A29E;letter-spacing:.08em;text-transform:uppercase}
+.kd-inp{
+  padding:12px 14px;border:1.5px solid rgba(20,17,14,.1);border-radius:12px;
+  background:rgba(251,250,248,.9);font-family:inherit;font-size:14px;font-weight:500;color:#14110E;
+  outline:none;resize:vertical;transition:.18s;width:100%;
+}
+.kd-inp::placeholder{color:#BFB9B1}
+.kd-inp:focus{border-color:#F27A1A;background:#fff;box-shadow:0 0 0 3.5px rgba(242,122,26,.11)}
+.kd-form-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  margin-top:20px;padding-top:18px;border-top:1px solid rgba(20,17,14,.07);
+}
+.kd-hint{font-size:11.5px;color:#A8A29E}
+.kd-btn{
+  display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border:none;border-radius:12px;
+  background:linear-gradient(180deg,#2A2520,#14110E);color:#fff;
+  font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;
+  box-shadow:0 10px 24px -12px rgba(20,17,14,.7);transition:transform .2s,box-shadow .2s,background .2s;
+}
+.kd-btn:hover{background:linear-gradient(180deg,#3A342E,#1E1A16);transform:translateY(-2px)}
+.kd-btn-ghost{
+  background:rgba(255,255,255,.7);color:#14110E;border:1px solid rgba(20,17,14,.1);
+  box-shadow:none;margin-top:18px;width:100%;justify-content:center;
+}
+.kd-btn-ghost:hover{background:#fff;border-color:rgba(20,17,14,.22)}
+.kd-btn-or{background:#F27A1A;box-shadow:0 12px 26px -12px rgba(242,122,26,.8);width:100%;justify-content:center;margin-top:20px}
+.kd-btn-or:hover{background:#FF8A2E}
+
+.kd-grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.kd-plan-box{display:flex;flex-direction:column;gap:1px;background:rgba(20,17,14,.06);border-radius:14px;overflow:hidden}
+.kd-plan-row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.85);padding:13px 15px;font-size:13px}
+.kd-plan-row span{color:#8A8378;font-weight:500}
+.kd-plan-row b{color:#14110E;font-weight:700;text-align:right;word-break:break-all}
+
+.kd-card-pro{
+  position:relative;overflow:hidden;color:#fff;border-color:transparent;
+  background:radial-gradient(420px 220px at 100% 0%,rgba(242,122,26,.24),transparent 62%),linear-gradient(160deg,#221A14,#14100C);
+}
+.kd-card-pro::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:32px 32px}
+.kd-pro-badge{position:relative;display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#F9A15A;background:rgba(242,122,26,.15);border:1px solid rgba(242,122,26,.3);padding:5px 12px;border-radius:100px}
+.kd-pro-t{position:relative;font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;letter-spacing:-.5px;margin:14px 0 16px}
+.kd-pro-list{position:relative;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.kd-pro-list li{display:flex;align-items:center;gap:9px;font-size:13px;color:rgba(255,255,255,.72)}
+.kd-pro-list svg{color:#34D399;flex-shrink:0}
+
+@media(max-width:1080px){
+  .kdash-wrap{grid-template-columns:1fr;gap:16px}
+  .kdash-side{position:static;flex-direction:row;flex-wrap:wrap;align-items:center;gap:10px;padding:12px}
+  .kd-user{border-bottom:none;padding:0 10px 0 4px;border-right:1px solid rgba(20,17,14,.07);margin-right:4px}
+  .kd-nav{flex-direction:row;flex-wrap:wrap;flex:1}
+  .kd-group{display:none}
+  .kd-item{width:auto}
+  .kd-item::before{display:none}
+  .kd-home{margin-top:0}
+  .kd-grid2,.kd-form{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .kd-title{font-size:22px}
+  .kd-card{padding:18px}
+}
+
 </style>
 </head>
 <body>
@@ -2023,13 +2181,45 @@ footer.kft::before{
 </div>
 
 <!-- APP BÖLÜMÜ -->
-<div style="max-width:1160px;margin:0 auto;padding:3rem 1.5rem 4rem" id="app-section" style="display:none">
+<div style="max-width:1560px;margin:0 auto;padding:24px 24px 64px;display:none" id="app-section">
+<div class="kdash-wrap">
 
-  <!-- TABS -->
-  <div style="display:flex;gap:6px;padding-bottom:1rem;border-bottom:1.5px solid var(--border);margin-bottom:1.5rem">
-    
-    
-  </div>
+  <aside class="kdash-side">
+    <div class="kd-user">
+      <div class="kd-av" id="kd-av">U</div>
+      <div class="kd-uinfo">
+        <div class="kd-uname" id="kd-name">Misafir</div>
+        <div class="kd-uplan" id="kd-plan">Demo modu</div>
+      </div>
+    </div>
+
+    <nav class="kd-nav">
+      <div class="kd-group">Analiz</div>
+        <button type="button" class="kd-item on" data-v="urunler" aria-current="page" onclick="kdGo('urunler')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M12 20V4M19 20v-7"/></svg></span><span class="kd-l">Kâr Hesaplamalarım</span></button>
+        <button type="button" class="kd-item" data-v="etiket" onclick="kdGo('etiket')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11.2V5.4A1.9 1.9 0 0 1 5.4 3.5h5.8a1.9 1.9 0 0 1 1.34.55l7.4 7.4a1.9 1.9 0 0 1 0 2.7l-5.8 5.8a1.9 1.9 0 0 1-2.7 0l-7.4-7.4a1.9 1.9 0 0 1-.55-1.34z"/><path d="M7.6 7.6h.01"/></svg></span><span class="kd-l">Avantajlı Etiket</span><span class="kd-lock"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.8" width="14" height="8.7" rx="2.2"/><path d="M8.2 10.8V7.9a3.8 3.8 0 0 1 7.6 0v2.9"/></svg></span></button>
+
+      <div class="kd-group">Ürünler</div>
+        <button type="button" class="kd-item" data-v="yukle" onclick="kdGo('yukle')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15.5V4M7.5 8.5 12 4l4.5 4.5"/><path d="M4 15v3.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V15"/></svg></span><span class="kd-l">Ürün Yükle</span></button>
+
+      <div class="kd-group">Hesabım</div>
+        <button type="button" class="kd-item" data-v="uyelik" onclick="kdGo('uyelik')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.8" y="5.5" width="18.4" height="13" rx="2.6"/><path d="M2.8 9.8h18.4M6.5 14.6h3"/></svg></span><span class="kd-l">Üyeliğim</span></button>
+        <button type="button" class="kd-item" data-v="hesap" onclick="kdGo('hesap')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 20a7.2 7.2 0 0 1 14.4 0"/></svg></span><span class="kd-l">Hesap Bilgilerim</span></button>
+        <button type="button" class="kd-item" data-v="destek" onclick="kdGo('destek')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.4"/><path d="m6 6 3.6 3.6M14.4 14.4 18 18M18 6l-3.6 3.6M9.6 14.4 6 18"/></svg></span><span class="kd-l">Destek Talebi</span></button>
+    </nav>
+
+    <button type="button" class="kd-home" onclick="goHome();window.scrollTo({top:0,behavior:'smooth'})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z"/><path d="M9.5 20.5v-6h5v6"/></svg> Ana sayfaya dön</button>
+  </aside>
+
+  <main class="kdash-main">
+    <header class="kd-top">
+      <div>
+        <h1 class="kd-title" id="kd-title">Kâr Hesaplamalarım</h1>
+        <p class="kd-sub" id="kd-sub">Ürünlerinizin net kârını tek ekranda takip edin.</p>
+      </div>
+      <div class="kd-top-r" id="kd-top-r"></div>
+    </header>
+
+
 
   <!-- TAB: ÜRÜNLER -->
   <div id="app-urunler" class="page active">
@@ -2426,6 +2616,65 @@ footer.kft::before{
 
   <!-- TAB: HESAP -->
   
+
+    <!-- ══ DESTEK TALEBİ ══ -->
+    <div id="kd-destek" class="kd-view" style="display:none">
+      <div class="kd-card kd-card-form">
+        <div class="kd-card-h">
+          <span class="kd-card-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.4"/><path d="m6 6 3.6 3.6M14.4 14.4 18 18M18 6l-3.6 3.6M9.6 14.4 6 18"/></svg></span>
+          <div>
+            <div class="kd-card-t">Destek talebi oluştur</div>
+            <div class="kd-card-s">Sorununuzu yazın, en kısa sürede dönüş yapalım.</div>
+          </div>
+        </div>
+        <div class="kd-form">
+          <div class="kd-f"><label class="kd-lbl" for="sup-ad">Ad Soyad</label><input class="kd-inp" id="sup-ad" placeholder="Adınız Soyadınız"></div>
+          <div class="kd-f"><label class="kd-lbl" for="sup-email">E-posta</label><input class="kd-inp" id="sup-email" type="email" placeholder="ornek@email.com"></div>
+          <div class="kd-f kd-f-full"><label class="kd-lbl" for="sup-msg">Talebiniz</label><textarea class="kd-inp" id="sup-msg" rows="5" placeholder="Yaşadığınız sorunu mümkün olduğunca detaylı anlatın."></textarea></div>
+        </div>
+        <div class="kd-form-foot">
+          <span class="kd-hint">Yanıt, hesabınıza tanımlı e-posta adresine gönderilir.</span>
+          <button class="kd-btn" id="sup-btn" onclick="destekGonder()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3 10.5 13.5M21 3l-6.8 18-3.7-7.5L3 9.8z"/></svg> Talebi Gönder</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ÜYELİĞİM ══ -->
+    <div id="kd-uyelik" class="kd-view" style="display:none">
+      <div class="kd-grid2">
+        <div class="kd-card">
+          <div class="kd-card-h">
+            <span class="kd-card-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.8" y="5.5" width="18.4" height="13" rx="2.6"/><path d="M2.8 9.8h18.4M6.5 14.6h3"/></svg></span>
+            <div>
+              <div class="kd-card-t">Üyelik durumu</div>
+              <div class="kd-card-s" id="kd-uy-sub">Plan bilgileriniz</div>
+            </div>
+          </div>
+          <div class="kd-plan-box" id="kd-plan-box">
+            <div class="kd-plan-row"><span>Plan</span><b id="kd-uy-plan">—</b></div>
+            <div class="kd-plan-row"><span>Hesap</span><b id="kd-uy-mail">—</b></div>
+            <div class="kd-plan-row"><span>Durum</span><b id="kd-uy-durum">—</b></div>
+          </div>
+          <button class="kd-btn kd-btn-ghost" onclick="openHesabim()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.2" r="3.6"/><path d="M4.8 20a7.2 7.2 0 0 1 14.4 0"/></svg> Hesap ayrıntıları</button>
+        </div>
+
+        <div class="kd-card kd-card-pro">
+          <div class="kd-pro-badge"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l1.9 4.9 4.9 1.9-4.9 1.9L12 17.1l-1.9-4.9-4.9-1.9 4.9-1.9z"/></svg> Premium</div>
+          <div class="kd-pro-t">Tüm modüller tek pakette</div>
+          <ul class="kd-pro-list">
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L19.5 6.5"/></svg> Sınırsız ürün analizi</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L19.5 6.5"/></svg> Excel ile toplu aktarım</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L19.5 6.5"/></svg> Anlaşmalı kargo barem tablosu</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L19.5 6.5"/></svg> Avantajlı Etiket analizi</li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L19.5 6.5"/></svg> Öncelikli destek</li>
+          </ul>
+          <button class="kd-btn kd-btn-or" id="kd-pro-btn" onclick="uyeOlVeyaOde()">Premium'a geç</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
 </div>
 
 <!-- İLETİŞİM -->
@@ -2819,13 +3068,16 @@ function calcKar(p){
 
 // ── NAVIGATION ──
 function goApp(){
+  document.body.classList.add('app-mode');
   document.getElementById('hero').style.display='none';
   document.querySelectorAll('.how-section,.pricing-section,footer').forEach(e=>e.style.display='none');
   document.getElementById('app-section').style.display='block';
   document.getElementById('nav-dashboard-btn').style.display='none';
+  if(typeof kdSyncUser==='function'){try{kdSyncUser();}catch(e){}}
   window.scrollTo(0,0);
 }
 function goHome(){
+  document.body.classList.remove('app-mode');
   document.getElementById('hero').style.display='flex';
   document.querySelectorAll('.how-section,.pricing-section,footer').forEach(e=>e.style.display='');
   document.getElementById('app-section').style.display='none';
@@ -4220,6 +4472,86 @@ async function iletisimGonder(){
     if(btn){btn.disabled=false;btn.textContent='Mesaj Gönder →';}
   }
 }
+
+// ══ DASHBOARD KABUGU (gorunum yonetimi) ══
+const KD_META={
+  urunler:['K\u00e2r Hesaplamalar\u0131m','\u00dcr\u00fcnlerinizin net k\u00e2r\u0131n\u0131 tek ekranda takip edin.'],
+  yukle:['\u00dcr\u00fcn Y\u00fckle','Trendyol Excel dosyan\u0131z\u0131 y\u00fckleyin, veriler otomatik gelsin.'],
+  etiket:['Avantajl\u0131 Etiket Analizi','Avantajl\u0131 etiket fiyatlar\u0131n\u0131n k\u00e2r\u0131n\u0131za etkisini g\u00f6r\u00fcn.'],
+  uyelik:['\u00dcyeli\u011fim','Plan\u0131n\u0131z\u0131 ve hesap durumunuzu g\u00f6r\u00fcnt\u00fcleyin.'],
+  destek:['Destek Talebi','Bir sorun mu var? Do\u011frudan bize yaz\u0131n.']
+};
+function kdShow(id,on){var x=document.getElementById(id); if(x) x.style.display=on?'block':'none';}
+function kdSyncUser(){
+  var av=document.getElementById('kd-av'),nm=document.getElementById('kd-name'),pl=document.getElementById('kd-plan');
+  var prem=!!(currentUser&&currentUser.premium);
+  if(av) av.textContent=currentUser?currentUser.ad.charAt(0).toUpperCase():'?';
+  if(nm) nm.textContent=currentUser?currentUser.ad:'Misafir';
+  if(pl){pl.textContent=currentUser?(prem?'Premium \u00fcye':'\u00dccretsiz hesap'):'Demo modu';pl.className='kd-uplan'+(prem?' pro':'');}
+  var m=document.getElementById('kd-uy-mail'),p=document.getElementById('kd-uy-plan'),d=document.getElementById('kd-uy-durum');
+  if(m) m.textContent=currentUser?currentUser.email:'\u2014';
+  if(p) p.textContent=prem?'Premium \u00b7 Y\u0131ll\u0131k':(currentUser?'\u00dccretsiz':'Giri\u015f yap\u0131lmad\u0131');
+  if(d) d.textContent=prem?'Aktif':(currentUser?'Y\u00fckseltme bekliyor':'\u2014');
+  var pb=document.getElementById('kd-pro-btn');
+  if(pb) pb.style.display=prem?'none':'inline-flex';
+  var sa=document.getElementById('sup-ad'),se=document.getElementById('sup-email');
+  if(sa&&!sa.value&&currentUser) sa.value=currentUser.ad;
+  if(se&&!se.value&&currentUser) se.value=currentUser.email;
+}
+function kdGo(v){
+  var prem=!!(currentUser&&currentUser.premium);
+  if(v==='hesap'){ if(currentUser){openHesabim();} else {openAuth('giris');} return; }
+  if(v==='etiket'&&!prem){ toast('Bu \u00f6zellik sadece premium \u00fcyeler i\u00e7in','error','\ud83d\udd12'); return; }
+  var items=document.querySelectorAll('.kd-item[data-v]');
+  for(var i=0;i<items.length;i++){
+    var on=items[i].getAttribute('data-v')===v;
+    items[i].classList.toggle('on',on);
+    items[i].setAttribute('aria-current',on?'page':'false');
+  }
+  var meta=KD_META[v]||KD_META.urunler;
+  var tt=document.getElementById('kd-title'),ss=document.getElementById('kd-sub');
+  if(tt) tt.textContent=meta[0];
+  if(ss) ss.textContent=meta[1];
+
+  kdShow('kd-destek',v==='destek');
+  kdShow('kd-uyelik',v==='uyelik');
+  kdShow('excel-upload-section',v==='yukle'&&prem);
+  var us=document.getElementById('urun-section');
+  var nrm=document.getElementById('normal-urun-gorunum');
+  var eag=document.getElementById('etiket-analiz-gorunum');
+  if(v==='urunler'){
+    if(us) us.style.display=(urunler&&urunler.length)?'block':'none';
+    if(nrm) nrm.style.display='block';
+    if(eag) eag.style.display='none';
+    var kw=document.getElementById('kargo-barem-wrap'); if(kw) kw.style.display='block';
+  } else if(v==='etiket'){
+    if(us) us.style.display='block';
+    etiketSayfasiAc();
+  } else {
+    if(us) us.style.display='none';
+  }
+  kdShow('login-cta', v==='yukle' && !prem);
+  kdSyncUser();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+async function destekGonder(){
+  var ad=(document.getElementById('sup-ad')||{}).value||'';
+  var email=(document.getElementById('sup-email')||{}).value||'';
+  var msg=(document.getElementById('sup-msg')||{}).value||'';
+  ad=ad.trim(); email=email.trim(); msg=msg.trim();
+  if(!ad||!email||!msg){toast('L\u00fctfen t\u00fcm alanlar\u0131 doldurun.','error','\u26a0\ufe0f');return;}
+  var btn=document.getElementById('sup-btn');
+  if(btn){btn.disabled=true;btn.style.opacity='.6';}
+  try{
+    var r=await fetch(PROXY+'/api/iletisim',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ad:ad,email:email,msg:msg})});
+    var d=await r.json();
+    if(!r.ok) throw new Error(d.error||'Hata');
+    var mm=document.getElementById('sup-msg'); if(mm) mm.value='';
+    toast('Destek talebiniz iletildi.','success','\u2705');
+  }catch(e){ toast('G\u00f6nderilemedi. L\u00fctfen tekrar deneyin.','error','\u274c'); }
+  finally{ if(btn){btn.disabled=false;btn.style.opacity='1';} }
+}
+
 </script>
 
 
