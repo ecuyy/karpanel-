@@ -1949,6 +1949,50 @@ body.app-mode .nav-inner{justify-content:flex-start}
 }
 .kp-empty-b:hover{background:#FF8A2E;transform:translateY(-2px)}
 
+
+/* bilgi / uyari seridi */
+.kd-notice{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:18px 20px;border-radius:16px;margin-bottom:20px;
+  background:rgba(242,122,26,.06);border:1px solid rgba(242,122,26,.2);
+}
+.kd-notice-ic{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:13px;background:rgba(242,122,26,.12);color:#C2610C;flex-shrink:0}
+.kd-notice-txt{flex:1;min-width:180px}
+.kd-notice-t{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;color:#14110E;letter-spacing:-.25px}
+.kd-notice-s{font-size:13px;color:#8A6A45;margin-top:3px;line-height:1.5}
+.kd-notice-b{
+  display:inline-flex;align-items:center;gap:7px;padding:12px 22px;border:none;border-radius:12px;
+  background:#F27A1A;color:#fff;font-family:inherit;font-size:13.5px;font-weight:800;cursor:pointer;
+  box-shadow:0 10px 24px -10px rgba(242,122,26,.8);transition:transform .2s,background .2s;
+}
+.kd-notice-b:hover{background:#FF8A2E;transform:translateY(-2px)}
+
+/* panel listeleri */
+.kp-lists{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.kp-list{padding:18px 20px}
+.kp-list-h{display:flex;align-items:center;gap:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:800;color:#14110E;letter-spacing:-.25px;padding-bottom:14px;border-bottom:1px solid rgba(20,17,14,.06);margin-bottom:6px}
+.kp-list-ic{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:10px;flex-shrink:0}
+.kp-list-ic.p{background:rgba(16,185,129,.1);color:#0E8A5B}
+.kp-list-ic.n{background:rgba(239,68,68,.09);color:#DC2626}
+.kp-l-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid rgba(20,17,14,.045)}
+.kp-l-row:last-child{border-bottom:none}
+.kp-l-img{width:38px;height:38px;border-radius:11px;background:linear-gradient(140deg,#F1ECE4,#E4DACC);flex-shrink:0;overflow:hidden;display:block}
+.kp-l-img img{width:100%;height:100%;object-fit:cover;display:block}
+.kp-l-n{flex:1;min-width:0;font-size:13.5px;font-weight:600;color:#14110E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kp-l-v{font-family:'Plus Jakarta Sans',sans-serif;font-size:14.5px;font-weight:800;letter-spacing:-.3px;font-variant-numeric:tabular-nums;flex-shrink:0}
+.kp-l-v.p{color:#0E8A5B}
+.kp-l-v.n{color:#DC2626}
+.kp-l-empty{padding:22px 0;text-align:center;font-size:12.5px;color:#A8A29E}
+
+/* fatura adresi */
+.ku-adres{display:flex;align-items:flex-start;gap:12px;margin-top:14px;padding:14px 16px;border-radius:14px;background:rgba(20,17,14,.03);border:1px solid rgba(20,17,14,.06)}
+.ku-adres-ic{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:10px;background:rgba(242,122,26,.1);color:#C2610C;flex-shrink:0}
+.ku-adres-t{font-size:12.5px;font-weight:800;color:#14110E}
+.ku-adres-s{font-size:12px;color:#8A8378;margin-top:3px;line-height:1.55}
+select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%239898A8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+
+@media(max-width:900px){.kp-lists{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -2390,6 +2434,15 @@ body.app-mode .nav-inner{justify-content:flex-start}
       </div>
       <div class="kd-top-r" id="kd-top-r"></div>
     </header>
+
+    <div id="kd-notice" class="kd-notice" style="display:none">
+      <span class="kd-notice-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.01"/></svg></span>
+      <div class="kd-notice-txt">
+        <div class="kd-notice-t" id="kd-notice-t"></div>
+        <div class="kd-notice-s" id="kd-notice-s"></div>
+      </div>
+      <button class="kd-notice-b" id="kd-notice-b" style="display:none"></button>
+    </div>
 
 
 
@@ -2839,6 +2892,17 @@ body.app-mode .nav-inner{justify-content:flex-start}
         <button class="kp-empty-b" onclick="kdGo('yukle')">Ürün Yükle</button>
       </div>
 
+      <div class="kp-lists" id="kp-lists" style="display:none">
+        <div class="kd-card kp-list">
+          <div class="kp-list-h"><span class="kp-list-ic p"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16l6-6 4 4 6-8"/><path d="M20 6h-4M20 6v4"/></svg></span>En çok kazandıranlar</div>
+          <div id="kp-top"></div>
+        </div>
+        <div class="kd-card kp-list">
+          <div class="kp-list-h"><span class="kp-list-ic n"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8l6 6 4-4 6 8"/><path d="M20 18h-4M20 18v-4"/></svg></span>Zarar edenler</div>
+          <div id="kp-bot"></div>
+        </div>
+      </div>
+
       <div class="kp-quick">
         <button type="button" class="kp-q" onclick="kdGo('urunler')">
           <span class="kp-q-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M12 20V4M19 20v-7"/></svg></span>
@@ -2869,6 +2933,10 @@ body.app-mode .nav-inner{justify-content:flex-start}
           </div>
         </div>
         <div class="kd-form">
+          <div class="kd-f"><label class="kd-lbl" for="sup-konu">Destek konusu</label><select class="kd-inp" id="sup-konu">
+            <option>Teknik sorun</option><option>Ödeme ve fatura</option><option>Ürün yükleme</option>
+            <option>Avantajlı etiket</option><option>Üyelik / iptal</option><option>Öneri</option><option>Diğer</option>
+          </select></div>
           <div class="kd-f"><label class="kd-lbl" for="sup-ad">Ad Soyad</label><input class="kd-inp" id="sup-ad" placeholder="Adınız Soyadınız"></div>
           <div class="kd-f"><label class="kd-lbl" for="sup-email">E-posta</label><input class="kd-inp" id="sup-email" type="email" placeholder="ornek@email.com"></div>
           <div class="kd-f kd-f-full"><label class="kd-lbl" for="sup-msg">Talebiniz</label><textarea class="kd-inp" id="sup-msg" rows="5" placeholder="Yaşadığınız sorunu mümkün olduğunca detaylı anlatın."></textarea></div>
@@ -2912,6 +2980,15 @@ body.app-mode .nav-inner{justify-content:flex-start}
             <div class="kd-plan-row"><span>Tutar</span><b>₺1.500 <small>KDV dâhil</small></b></div>
             <div class="kd-plan-row"><span>Ödeme yöntemi</span><b>iyzico</b></div>
             <div class="kd-plan-row"><span>Fatura e-postası</span><b id="ku-fat-mail">—</b></div>
+            <div class="kd-plan-row"><span>Fatura adı</span><b id="ku-fat-ad">—</b></div>
+            <div class="kd-plan-row"><span>Yenileme tarihi</span><b id="ku-fat-bitis">—</b></div>
+          </div>
+          <div class="ku-adres">
+            <span class="ku-adres-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></span>
+            <div>
+              <div class="ku-adres-t">Fatura adresi</div>
+              <div class="ku-adres-s" id="ku-fat-adres">Kayıtlı fatura adresi bulunmuyor. Eklemek veya değiştirmek için destek talebi oluşturun.</div>
+            </div>
           </div>
           <p class="kd-hint" style="margin-top:14px">Fatura talebi ve bilgi değişikliği için destek talebi oluşturabilirsiniz.</p>
           <button class="kd-btn kd-btn-ghost" onclick="kdGo('destek')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.4"/><path d="m6 6 3.6 3.6M14.4 14.4 18 18M18 6l-3.6 3.6M9.6 14.4 6 18"/></svg> Fatura talebi oluştur</button>
@@ -3337,7 +3414,7 @@ function showGuestUI(){
   document.getElementById('auth-btns').style.display='flex';
   document.getElementById('user-pill').style.display='none';
   document.getElementById('nav-dashboard-btn').style.display='none';
-  document.getElementById('connect-section').style.display='none';
+  var _cs=document.getElementById('connect-section'); if(_cs) _cs.style.display='none';
   const excelSec=document.getElementById('excel-upload-section');if(excelSec)excelSec.style.display='none';
   document.getElementById('login-cta').style.display='block';
   const lcGuest2=document.getElementById('lc-guest');
@@ -4714,7 +4791,6 @@ function kdSyncUser(){
 }
 function kdGo(v){
   var prem=!!(currentUser&&currentUser.premium);
-  if((v==='etiket'||v==='eayukle')&&!prem){ toast('Bu \u00f6zellik sadece premium \u00fcyeler i\u00e7in','error','\ud83d\udd12'); return; }
   var items=document.querySelectorAll('.kd-item[data-v]');
   for(var i=0;i<items.length;i++){
     var on=items[i].getAttribute('data-v')===v;
@@ -4730,6 +4806,7 @@ function kdGo(v){
   kdShow('kd-destek',v==='destek');
   kdShow('kd-uyelik',v==='uyelik');
   kdShow('excel-upload-section',v==='yukle'&&prem);
+  var _ea=document.getElementById('etiket-analiz-gorunum');
   var us=document.getElementById('urun-section');
   var nrm=document.getElementById('normal-urun-gorunum');
   var eag=document.getElementById('etiket-analiz-gorunum');
@@ -4749,8 +4826,23 @@ function kdGo(v){
   } else {
     if(us) us.style.display='none';
   }
-  kdShow('login-cta', v==='yukle' && !prem);
-  if(v==='panel'&&typeof kdPanelDoldur==='function') kdPanelDoldur();
+  kdShow('login-cta',false);
+
+  // \u2500\u2500 bo\u015f / kilitli durumlar\u0131 a\u00e7\u0131k\u00e7a bildir \u2500\u2500
+  var varUrun=(typeof urunler!=='undefined'&&urunler&&urunler.length>0);
+  if(!currentUser && (v==='yukle'||v==='etiket'||v==='eayukle'||v==='uyelik')){
+    kdNotice(true,'Giri\u015f yapman\u0131z gerekiyor','Bu b\u00f6l\u00fcm\u00fc kullanmak i\u00e7in hesab\u0131n\u0131za giri\u015f yap\u0131n.','Giri\u015f Yap',function(){openAuth('giris');});
+  } else if(!prem && (v==='yukle'||v==='etiket'||v==='eayukle')){
+    kdNotice(true,'Premium \u00fcyelik gerekli','Bu b\u00f6l\u00fcm premium \u00fcyelere \u00f6zeldir. Y\u0131ll\u0131k plana ge\u00e7erek hemen kullanmaya ba\u015flayabilirsiniz.','Premium\'a ge\u00e7',function(){uyeOlVeyaOde();});
+  } else if(v==='urunler' && !varUrun){
+    kdNotice(true,'Hen\u00fcz \u00fcr\u00fcn y\u00fcklenmedi','K\u00e2r tablosunun olu\u015fmas\u0131 i\u00e7in \u00f6nce Trendyol Excel dosyan\u0131z\u0131 y\u00fckleyin.','\u00dcr\u00fcn Y\u00fckle',function(){kdGo('yukle');});
+  } else if(v==='panel' && !varUrun){
+    kdNotice(true,'\u00dcr\u00fcn verisi bekleniyor','Excel dosyan\u0131z\u0131 y\u00fckledi\u011finizde rakamlar ve listeler burada olu\u015facak.','\u00dcr\u00fcn Y\u00fckle',function(){kdGo('yukle');});
+  } else {
+    kdNotice(false);
+  }
+
+  if(v==='panel'&&typeof kdPanelDoldur==='function'){ kdPanelDoldur(); kdListele(); }
   if(v==='uyelik'&&typeof kdUyelikDoldur==='function'){ kdUyelikDoldur(); kdPanelDoldur(); }
   kdSyncUser();
   window.scrollTo({top:0,behavior:'smooth'});
@@ -4761,6 +4853,8 @@ async function destekGonder(){
   var msg=(document.getElementById('sup-msg')||{}).value||'';
   ad=ad.trim(); email=email.trim(); msg=msg.trim();
   if(!ad||!email||!msg){toast('L\u00fctfen t\u00fcm alanlar\u0131 doldurun.','error','\u26a0\ufe0f');return;}
+  var kn=document.getElementById('sup-konu');
+  if(kn&&kn.value) msg='[Destek konusu: '+kn.value+']\n\n'+msg;
   var btn=document.getElementById('sup-btn');
   if(btn){btn.disabled=true;btn.style.opacity='.6';}
   try{
@@ -4798,6 +4892,53 @@ function kdPanelDoldur(){
   if(w) w.textContent=currentUser?('Ho\u015f geldin, '+String(currentUser.ad).split(' ')[0]):'Ho\u015f geldin';
   var fm=document.getElementById('ku-fat-mail');
   if(fm&&currentUser) fm.textContent=currentUser.email;
+  var fa=document.getElementById('ku-fat-ad');
+  if(fa&&currentUser) fa.textContent=currentUser.ad;
+  var fb=document.getElementById('ku-fat-bitis'), hb=document.getElementById('hm-bitis');
+  if(fb) fb.textContent=(hb&&hb.textContent)?hb.textContent:'\u2014';
+}
+
+
+// ══ Panel bilgi seridi ══
+function kdNotice(show,title,text,btnTxt,act){
+  var n=document.getElementById('kd-notice'); if(!n) return;
+  if(!show){ n.style.display='none'; return; }
+  n.style.display='flex';
+  var a=document.getElementById('kd-notice-t'), b=document.getElementById('kd-notice-s'),
+      c=document.getElementById('kd-notice-b');
+  if(a) a.textContent=title||'';
+  if(b) b.textContent=text||'';
+  if(c){ if(btnTxt){ c.style.display='inline-flex'; c.textContent=btnTxt; c.onclick=act||null; } else c.style.display='none'; }
+}
+function kdEsc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];}); }
+function kdListele(){
+  var wrap=document.getElementById('kp-lists'); if(!wrap) return;
+  var has=(typeof urunler!=='undefined'&&urunler&&urunler.length>0);
+  wrap.style.display=has?'grid':'none';
+  if(!has) return;
+  var rows=[];
+  for(var i=0;i<urunler.length;i++){
+    var c=calcKar(urunler[i]);
+    if(c.hasAlis) rows.push({p:urunler[i],net:c.net,marj:c.marj});
+  }
+  rows.sort(function(a,b){return b.net-a.net;});
+  var top=rows.filter(function(r){return r.net>=0;}).slice(0,5);
+  var bot=rows.filter(function(r){return r.net<0;}).sort(function(a,b){return a.net-b.net;}).slice(0,5);
+  var draw=function(list){
+    if(!list.length) return '<div class="kp-l-empty">Kay\u0131t yok</div>';
+    var h='';
+    for(var j=0;j<list.length;j++){
+      var r=list[j], img=r.p.image?'<img src="'+kdEsc(r.p.image)+'" alt="">':'';
+      h+='<div class="kp-l-row"><span class="kp-l-img">'+img+'</span>'+
+         '<span class="kp-l-n">'+kdEsc(r.p.name||'-')+'</span>'+
+         '<span class="kp-l-v '+(r.net>=0?'p':'n')+'">'+(r.net>=0?'+':'\u2212')+'\u20ba'+
+         Math.abs(r.net).toFixed(2)+'</span></div>';
+    }
+    return h;
+  };
+  var a=document.getElementById('kp-top'), b=document.getElementById('kp-bot');
+  if(a) a.innerHTML=draw(top);
+  if(b) b.innerHTML=draw(bot);
 }
 
 </script>
