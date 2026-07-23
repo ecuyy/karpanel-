@@ -1996,8 +1996,6 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
 @media(max-width:900px){.kp-lists{grid-template-columns:1fr}}
 
 
-.kd-ver{text-align:center;font-size:10px;color:#C3BCB3;font-weight:600;letter-spacing:.04em;padding:10px 0 4px}
-.kd-ver b{color:#A8A29E;font-weight:800}
 
 
 /* Kenar cubugu menusu: ust menu kurallarindan tamamen bagimsiz olsun */
@@ -2110,6 +2108,25 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
 .kd-notice{align-items:flex-start}
 .kd-notice-ic{margin-top:2px}
 .kd-notice-b{align-self:center}
+
+
+/* maliyet hafızası kutusu */
+.kd-mem{
+  display:flex;align-items:center;gap:13px;flex-wrap:wrap;
+  padding:14px 18px;border-radius:15px;margin-bottom:16px;
+  background:linear-gradient(100deg,rgba(16,185,129,.08),rgba(16,185,129,.03));
+  border:1px solid rgba(16,185,129,.22);
+}
+.kd-mem-ic{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:11px;background:rgba(16,185,129,.14);color:#0E8A5B;flex-shrink:0}
+.kd-mem-txt{flex:1;min-width:200px;display:flex;flex-direction:column;gap:2px}
+.kd-mem-txt b{font-size:13.5px;font-weight:800;color:#0B6E49}
+.kd-mem-txt span{font-size:12px;color:#5C8574}
+.kd-mem-b{
+  padding:9px 16px;border:1px solid rgba(16,185,129,.3);border-radius:10px;
+  background:rgba(255,255,255,.75);color:#0E8A5B;
+  font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;transition:.18s;
+}
+.kd-mem-b:hover{background:#fff;border-color:rgba(220,38,38,.35);color:#DC2626}
 
 </style>
 </head>
@@ -2538,7 +2555,6 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
         <button type="button" class="kd-item" data-v="destek" onclick="event.__kd=1;kdGo('destek')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.4"/><path d="m6 6 3.6 3.6M14.4 14.4 18 18M18 6l-3.6 3.6M9.6 14.4 6 18"/></svg></span><span class="kd-l">Destek Talebi</span></button>
     </nav>
 
-    <div class="kd-ver">komisyonhesap panel <b>v2.8</b></div>
     <div class="kd-side-foot">
       <button type="button" class="kd-mini" onclick="goHome();window.scrollTo({top:0,behavior:'smooth'})"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z"/><path d="M9.5 20.5v-6h5v6"/></svg> Ana sayfa</button>
       <button type="button" class="kd-mini kd-mini-out" onclick="logout()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3"/><path d="M15 16.5 19.5 12 15 7.5M19.5 12H9"/></svg> Çıkış</button>
@@ -2863,12 +2879,6 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
 
       <!-- AVANTAJLI ETİKET ANALİZ GÖRÜNÜMÜ -->
       <div id="etiket-analiz-gorunum" style="display:none">
-        <div class="toolbar">
-          <div class="toolbar-left">
-            <button class="btn-sm" onclick="etiketGeriDon()" style="background:var(--bg);color:var(--text)">← Ürünlerime Dön</button>
-            <span class="tb-title" style="margin-left:8px">⭐ Avantajlı Etiket Analizi</span>
-          </div>
-        </div>
         <!-- Yükleme Alanı -->
         <div id="ea-upload-area">
           <label for="ea-file-inp" style="display:block;background:#fff;border:2px dashed var(--border);border-radius:16px;padding:2.5rem;text-align:center;cursor:pointer;transition:.2s;margin-bottom:1.5rem" onmouseover="this.style.borderColor='#6366F1'" onmouseout="this.style.borderColor='var(--border)'">
@@ -2962,6 +2972,16 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
   <!-- TAB: HESAP -->
   
 
+
+    <!-- ══ MALİYET HAFIZASI KUTUSU ══ -->
+    <div id="kd-mem" class="kd-mem" style="display:none">
+      <span class="kd-mem-ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l2.5 1.5"/><circle cx="12" cy="12" r="8.5"/></svg></span>
+      <div class="kd-mem-txt">
+        <b><span id="kd-mem-say">0</span> ürünün alış/kargo maliyeti hafızada</b>
+        <span>Excel'i silip yeniden yüklerseniz bu maliyetler otomatik geri gelir.</span>
+      </div>
+      <button class="kd-mem-b" onclick="maliyetHafizaTemizle()">Hafızayı temizle</button>
+    </div>
 
     <!-- ══ GENEL BAKIŞ ══ -->
     <div id="kd-panel" class="kd-view" style="display:none">
@@ -4188,6 +4208,7 @@ function csvYukle(input){
       }
       if(realTitleIdx===-1){toast('Ürün adı kolonu bulunamadı. Kolonlar: '+header.slice(0,10).join(', '),'error','❌');return;}
       const parsed=[];
+      var _maliyetHafiza=(typeof maliyetHafizaOku==='function')?maliyetHafizaOku():{}, _geriYuklenen=0;
       for(let i=1;i<rows.length;i++){
         const cols=rows[i];
         if(!cols||!cols.some(c=>String(c).trim()))continue; // tamamen boş satırı atla
@@ -4223,19 +4244,28 @@ function csvYukle(input){
           (barcode && u.barcode === barcode) ||
           (modelKodu && u.modelCode === modelKodu)
         );
-        parsed.push({
+        var yeniUrun={
           id:uid, title, salePrice:price, commissionRate:kom,
           categoryName:cat, image:img, barcode, modelCode:modelKodu,
           alis: eskiUrun ? (eskiUrun.alis||0) : 0,
           kargo: eskiUrun ? (eskiUrun.kargo||0) : 0
-        });
+        };
+        // Listede yoksa maliyet hafizasindan geri getir
+        if(!yeniUrun.alis && !yeniUrun.kargo){
+          var hm=maliyetBul(yeniUrun,_maliyetHafiza);
+          if(hm && ((hm.alis||0)>0 || (hm.kargo||0)>0)){
+            yeniUrun.alis=hm.alis||0; yeniUrun.kargo=hm.kargo||0; _geriYuklenen++;
+          }
+        }
+        parsed.push(yeniUrun);
       }
       if(parsed.length===0){toast('Ürün bulunamadı.','error','❌');return;}
       urunler=parsed;
       saveUrunler(true);
       document.getElementById('urun-section').style.display='block';
       renderUrunler();
-      toast(parsed.length+' ürün yüklendi! 🎉','success','✅');
+      toast(parsed.length+' ürün yüklendi'+(_geriYuklenen?' · '+_geriYuklenen+' ürünün maliyeti geri yüklendi':''),'success','✅');
+      try{ maliyetSayacGuncelle(); }catch(e){}
       document.getElementById('urun-section').scrollIntoView({behavior:'smooth'});
     }catch(err){toast('Dosya hatası: '+err.message,'error','❌');}
   };
@@ -4720,6 +4750,7 @@ function toast(msg,type,icon){
 function saveUrunler(aninda){
   if(!currentUser) return;
   localStorage.setItem('kp_urunler_'+currentUser.email, JSON.stringify(urunler));
+  try{ maliyetKaydet(); }catch(e){}
   const gonder=async()=>{
     try{
       await fetch(PROXY+'/api/urunler/kaydet',{
@@ -4903,6 +4934,8 @@ function kdGo(v){
         ? '<span class="kp-live"><i></i>Premium \u00fcyelik aktif</span>' : '';
 
   kdShow('kd-panel',v==='panel');
+  if(v==='yukle'){ try{ maliyetSayacGuncelle(); }catch(e){} }
+  else { var _mm=document.getElementById('kd-mem'); if(_mm) _mm.style.display='none'; }
   kdShow('kd-destek',v==='destek');
   kdShow('kd-uyelik',v==='uyelik');
   kdShow('excel-upload-section',v==='yukle'&&prem);
@@ -5079,6 +5112,59 @@ function kdListele(){
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bagla);
   else bagla();
 })();
+
+
+// ══ MALIYET HAFIZASI ══════════════════════════════════════════
+// Alis/kargo maliyetleri urunlerden bagimsiz saklanir; kullanici
+// urunleri silip Excel'i yeniden yuklese de maliyetler geri gelir.
+function maliyetAnahtar(u){
+  var k=[];
+  if(u.barcode)   k.push('bc:'+String(u.barcode).trim());
+  if(u.modelCode) k.push('mc:'+String(u.modelCode).trim());
+  if(u.id)        k.push('id:'+String(u.id).trim());
+  return k;
+}
+function maliyetHafizaOku(){
+  if(!currentUser) return {};
+  try{ return JSON.parse(localStorage.getItem('kp_maliyet_'+currentUser.email)||'{}')||{}; }
+  catch(e){ return {}; }
+}
+function maliyetKaydet(){
+  if(!currentUser || !urunler || !urunler.length) return;
+  try{
+    var m=maliyetHafizaOku(), degisti=false;
+    for(var i=0;i<urunler.length;i++){
+      var u=urunler[i];
+      var a=parseFloat(u.alis)||0, kg=parseFloat(u.kargo)||0;
+      if(a<=0 && kg<=0) continue;
+      var ks=maliyetAnahtar(u);
+      for(var j=0;j<ks.length;j++){ m[ks[j]]={alis:a,kargo:kg,t:Date.now()}; degisti=true; }
+    }
+    if(degisti) localStorage.setItem('kp_maliyet_'+currentUser.email,JSON.stringify(m));
+  }catch(e){}
+}
+function maliyetBul(u,m){
+  m=m||maliyetHafizaOku();
+  var ks=maliyetAnahtar(u);
+  for(var j=0;j<ks.length;j++){ if(m[ks[j]]) return m[ks[j]]; }
+  return null;
+}
+function maliyetHafizaTemizle(){
+  if(!currentUser) return;
+  if(!confirm('Kay\u0131tl\u0131 al\u0131\u015f ve kargo maliyeti haf\u0131zas\u0131 silinsin mi?\n\nBundan sonra Excel y\u00fckledi\u011finizde maliyetler otomatik gelmez.')) return;
+  try{ localStorage.removeItem('kp_maliyet_'+currentUser.email); }catch(e){}
+  maliyetSayacGuncelle();
+  toast('Maliyet haf\u0131zas\u0131 temizlendi','info','\u2705');
+}
+function maliyetSayacGuncelle(){
+  var el=document.getElementById('kd-mem-say'); if(!el) return;
+  var m=maliyetHafizaOku(), bc=0;
+  for(var k in m){ if(k.indexOf('bc:')===0) bc++; }
+  if(!bc){ for(var k2 in m){ bc++; } }
+  el.textContent=bc;
+  var box=document.getElementById('kd-mem');
+  if(box) box.style.display=bc?'flex':'none';
+}
 
 </script>
 
