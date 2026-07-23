@@ -1629,15 +1629,14 @@ footer.kft::before{
 /* ══════════════════════════════════════════════════════════
    DASHBOARD KABUĞU — premium / cam
    ══════════════════════════════════════════════════════════ */
-body.app-mode .nav-center{display:none}
-body.app-mode nav{top:12px}
+body.app-mode nav{display:none}
 body.app-mode{background:linear-gradient(180deg,#FAF8F5 0%,#FBFAF8 40%,#F7F5F1 100%)}
 
 .kdash-wrap{display:grid;grid-template-columns:250px minmax(0,1fr);gap:22px;align-items:start}
 
 /* ── kenar çubuğu ── */
 .kdash-side{
-  position:sticky;top:92px;
+  position:sticky;top:24px;
   display:flex;flex-direction:column;gap:16px;
   padding:16px 14px;border-radius:20px;
   background:rgba(255,255,255,.62);
@@ -1926,6 +1925,26 @@ body.app-mode .nav-inner{justify-content:flex-start}
   .kp-val{font-size:24px}
   .ku-dates{grid-template-columns:1fr}
 }
+
+
+/* veri yokken: kartlar durur, rakamlar solar */
+.kp-grid.bos .kp-val{color:#C9C1B6}
+.kp-grid.bos .kp-card{box-shadow:0 1px 2px rgba(20,17,14,.03)}
+.kp-grid.bos .kp-card::after{opacity:.18}
+.kp-grid.bos .kp-ic{opacity:.55}
+.kp-empty{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  padding:16px 20px;border-radius:14px;margin-bottom:20px;
+  background:rgba(242,122,26,.05);border:1px solid rgba(242,122,26,.18);
+  text-align:left;
+}
+.kp-empty-t{font-size:13px;color:#8A6A45;font-weight:600}
+.kp-empty-b{
+  display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border:none;border-radius:11px;
+  background:#F27A1A;color:#fff;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;
+  box-shadow:0 10px 22px -10px rgba(242,122,26,.8);transition:transform .2s,background .2s;
+}
+.kp-empty-b:hover{background:#FF8A2E;transform:translateY(-2px)}
 
 </style>
 </head>
@@ -2325,7 +2344,7 @@ body.app-mode .nav-inner{justify-content:flex-start}
 </div>
 
 <!-- APP BÖLÜMÜ -->
-<div style="max-width:1560px;margin:0 auto;padding:24px 24px 64px;display:none" id="app-section">
+<div style="max-width:1560px;margin:0 auto;padding:32px 24px 64px;display:none" id="app-section">
 <div class="kdash-wrap">
 
   <aside class="kdash-side">
@@ -2779,7 +2798,7 @@ body.app-mode .nav-inner{justify-content:flex-start}
         <span class="kp-live"><i></i>Premium üyelik aktif</span>
       </div>
 
-      <div class="kp-grid" id="kp-grid" style="display:none">
+      <div class="kp-grid bos" id="kp-grid">
           <div class="kp-card" style="--c:#14110E;--cbg:rgba(242,122,26,.10)">
             <span class="kp-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v8a2 2 0 0 1-1 1.73l-7 4a2 2 0 0 1-2 0l-7-4A2 2 0 0 1 3 16V8a2 2 0 0 1 1-1.73l7-4a2 2 0 0 1 2 0l7 4A2 2 0 0 1 21 8z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></svg></span>
             <div class="kp-lbl">Toplam Ürün</div>
@@ -2813,10 +2832,8 @@ body.app-mode .nav-inner{justify-content:flex-start}
       </div>
 
       <div id="kp-empty" class="kp-empty">
-        <span class="kp-empty-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v8a2 2 0 0 1-1 1.73l-7 4a2 2 0 0 1-2 0l-7-4A2 2 0 0 1 3 16V8a2 2 0 0 1 1-1.73l7-4a2 2 0 0 1 2 0l7 4A2 2 0 0 1 21 8z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></svg></span>
-        <div class="kp-empty-t">Henüz ürün yüklenmedi</div>
-        <div class="kp-empty-s">Trendyol Excel dosyanızı yükleyin, kârlılık özetiniz burada oluşsun.</div>
-        <button class="kd-btn" onclick="kdGo('yukle')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15.5V4M7.5 8.5 12 4l4.5 4.5"/><path d="M4 15v3.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V15"/></svg> Ürün Yükle</button>
+        <span class="kp-empty-t">Henüz ürün yüklenmedi — rakamlar Excel dosyanızı yüklediğinizde dolar.</span>
+        <button class="kp-empty-b" onclick="kdGo('yukle')">Ürün Yükle</button>
       </div>
 
       <div class="kp-quick">
@@ -4590,6 +4607,7 @@ async function loadSavedUrunler(){
 // ── INIT ──
 function populateKatDropdown(){
   const sel=document.getElementById('h-kat');
+  if(!sel) return;   // alan sayfada yoksa sessizce cik (script'in durmasini onler)
   const g={};
   KOMISYONLAR.forEach(k=>{if(!g[k.k])g[k.k]=[];g[k.k].push(k)});
   Object.keys(g).forEach(gr=>{
@@ -4658,15 +4676,18 @@ async function iletisimGonder(){
 }
 
 // ══ DASHBOARD KABUGU (gorunum yonetimi) ══
-const KD_META={
-  urunler:['K\u00e2r Hesaplamalar\u0131m','\u00dcr\u00fcnlerinizin net k\u00e2r\u0131n\u0131 tek ekranda takip edin.'],
-  yukle:['\u00dcr\u00fcn Y\u00fckle','Trendyol Excel dosyan\u0131z\u0131 y\u00fckleyin, veriler otomatik gelsin.'],
-  etiket:['Avantajl\u0131 Etiket Analizi','Avantajl\u0131 etiket fiyatlar\u0131n\u0131n k\u00e2r\u0131n\u0131za etkisini g\u00f6r\u00fcn.'],
-  uyelik:['\u00dcyeli\u011fim','Plan\u0131n\u0131z\u0131 ve hesap durumunuzu g\u00f6r\u00fcnt\u00fcleyin.'],
-  destek:['Destek Talebi','Bir sorun mu var? Do\u011frudan bize yaz\u0131n.'],
-  panel:['Genel Bak\u0131\u015f','Ma\u011fazan\u0131z\u0131n k\u00e2rl\u0131l\u0131k \u00f6zeti.'],
-  eayukle:['Avantajl\u0131 Etiket Y\u00fckle','Avantajl\u0131 etiket Excel dosyan\u0131z\u0131 y\u00fckleyin.']
-};
+function kdMeta(v){
+  var M={
+    urunler:['K\u00e2r Hesaplamalar\u0131m','\u00dcr\u00fcnlerinizin net k\u00e2r\u0131n\u0131 tek ekranda takip edin.'],
+    yukle:['\u00dcr\u00fcn Y\u00fckle','Trendyol Excel dosyan\u0131z\u0131 y\u00fckleyin, veriler otomatik gelsin.'],
+    etiket:['Avantajl\u0131 Etiket Analizi','Avantajl\u0131 etiket fiyatlar\u0131n\u0131n k\u00e2r\u0131n\u0131za etkisini g\u00f6r\u00fcn.'],
+    uyelik:['\u00dcyeli\u011fim','Plan\u0131n\u0131z\u0131, faturan\u0131z\u0131 ve g\u00fcvenlik ayarlar\u0131n\u0131z\u0131 y\u00f6netin.'],
+    destek:['Destek Talebi','Bir sorun mu var? Do\u011frudan bize yaz\u0131n.'],
+    panel:['Genel Bak\u0131\u015f','Ma\u011fazan\u0131z\u0131n k\u00e2rl\u0131l\u0131k \u00f6zeti.'],
+    eayukle:['Avantajl\u0131 Etiket Y\u00fckle','Avantajl\u0131 etiket Excel dosyan\u0131z\u0131 y\u00fckleyin.']
+  };
+  return M[v]||M.urunler;
+}
 function kdShow(id,on){var x=document.getElementById(id); if(x) x.style.display=on?'block':'none';}
 function kdSyncUser(){
   var av=document.getElementById('kd-av'),nm=document.getElementById('kd-name'),pl=document.getElementById('kd-plan');
@@ -4697,7 +4718,7 @@ function kdGo(v){
     items[i].classList.toggle('on',on);
     items[i].setAttribute('aria-current',on?'page':'false');
   }
-  var meta=KD_META[v]||KD_META.urunler;
+  var meta=kdMeta(v);
   var tt=document.getElementById('kd-title'),ss=document.getElementById('kd-sub');
   if(tt) tt.textContent=meta[0];
   if(ss) ss.textContent=meta[1];
@@ -4753,16 +4774,23 @@ async function destekGonder(){
 // ══ Uyelik + panel yardimcilari ══
 function openHesabim(){ if(!currentUser)return; kdGo('uyelik'); }
 function kdPanelDoldur(){
+  var has=(typeof urunler!=='undefined'&&urunler&&urunler.length>0);
   var g=function(id){var x=document.getElementById(id);return x?x.textContent:'\u2014';};
   var s=function(id,v){var x=document.getElementById(id);if(x)x.textContent=v;};
-  s('kp-toplam',g('stat-toplam')); s('kp-karli',g('stat-karli'));
-  s('kp-zarar',g('stat-zarar'));  s('kp-marj',g('stat-marj'));
-  s('kp-net',g('stat-netkar'));
-  s('kp-karli-s',g('stat-karli-pct')); s('kp-zarar-s',g('stat-zarar-pct'));
-  var has=(typeof urunler!=='undefined'&&urunler&&urunler.length>0);
-  var gr=document.getElementById('kp-grid'), em=document.getElementById('kp-empty');
-  if(gr) gr.style.display=has?'grid':'none';
-  if(em) em.style.display=has?'none':'block';
+  s('kp-toplam',has?g('stat-toplam'):'\u2014');
+  s('kp-karli', has?g('stat-karli') :'\u2014');
+  s('kp-zarar', has?g('stat-zarar') :'\u2014');
+  s('kp-marj',  has?g('stat-marj')  :'\u2014');
+  s('kp-net',   has?g('stat-netkar'):'\u2014');
+  s('kp-karli-s',has?g('stat-karli-pct'):'Veri bekleniyor');
+  s('kp-zarar-s',has?g('stat-zarar-pct'):'Veri bekleniyor');
+  s('kp-toplam-s',has?'Aktif sat\u0131\u015fta':'Veri bekleniyor');
+  s('kp-marj-s', has?'T\u00fcm \u00fcr\u00fcnler':'Veri bekleniyor');
+  s('kp-net-s',  has?'Toplam':'Veri bekleniyor');
+  var gr=document.getElementById('kp-grid');
+  if(gr){ gr.style.display='grid'; gr.classList.toggle('bos',!has); }
+  var em=document.getElementById('kp-empty');
+  if(em) em.style.display=has?'none':'flex';
   var w=document.getElementById('kp-welcome');
   if(w) w.textContent=currentUser?('Ho\u015f geldin, '+String(currentUser.ad).split(' ')[0]):'Ho\u015f geldin';
   var fm=document.getElementById('ku-fat-mail');
