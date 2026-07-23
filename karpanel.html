@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- build: v2.4 -->
 <html lang="tr" prefix="og: https://ogp.me/ns#">
 <head>
 <meta charset="UTF-8">
@@ -1993,6 +1994,10 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
 
 @media(max-width:900px){.kp-lists{grid-template-columns:1fr}}
 
+
+.kd-ver{text-align:center;font-size:10px;color:#C3BCB3;font-weight:600;letter-spacing:.04em;padding:10px 0 4px}
+.kd-ver b{color:#A8A29E;font-weight:800}
+
 </style>
 </head>
 <body>
@@ -2420,6 +2425,7 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
         <button type="button" class="kd-item" data-v="destek" onclick="kdGo('destek')"><span class="kd-i"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.4"/><path d="m6 6 3.6 3.6M14.4 14.4 18 18M18 6l-3.6 3.6M9.6 14.4 6 18"/></svg></span><span class="kd-l">Destek Talebi</span></button>
     </nav>
 
+    <div class="kd-ver">komisyonhesap panel <b>v2.4</b></div>
     <div class="kd-side-foot">
       <button type="button" class="kd-mini" onclick="goHome();window.scrollTo({top:0,behavior:'smooth'})"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z"/><path d="M9.5 20.5v-6h5v6"/></svg> Ana sayfa</button>
       <button type="button" class="kd-mini kd-mini-out" onclick="logout()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3"/><path d="M15 16.5 19.5 12 15 7.5M19.5 12H9"/></svg> Çıkış</button>
@@ -4756,6 +4762,7 @@ async function iletisimGonder(){
 }
 
 // ══ DASHBOARD KABUGU (gorunum yonetimi) ══
+try{console.log('%ckomisyonhesap panel v2.4','color:#F27A1A;font-weight:700');}catch(e){}
 function kdMeta(v){
   var M={
     urunler:['K\u00e2r Hesaplamalar\u0131m','\u00dcr\u00fcnlerinizin net k\u00e2r\u0131n\u0131 tek ekranda takip edin.'],
@@ -4834,6 +4841,8 @@ function kdGo(v){
     kdNotice(true,'Giri\u015f yapman\u0131z gerekiyor','Bu b\u00f6l\u00fcm\u00fc kullanmak i\u00e7in hesab\u0131n\u0131za giri\u015f yap\u0131n.','Giri\u015f Yap',function(){openAuth('giris');});
   } else if(!prem && (v==='yukle'||v==='etiket'||v==='eayukle')){
     kdNotice(true,'Premium \u00fcyelik gerekli','Bu b\u00f6l\u00fcm premium \u00fcyelere \u00f6zeldir. Y\u0131ll\u0131k plana ge\u00e7erek hemen kullanmaya ba\u015flayabilirsiniz.','Premium\'a ge\u00e7',function(){uyeOlVeyaOde();});
+  } else if(v==='etiket' && !(typeof eaTumVeri!=='undefined' && eaTumVeri && eaTumVeri.length)){
+    kdNotice(true,'Avantajl\u0131 etiket verisi yok','Tablonun olu\u015fmas\u0131 i\u00e7in Y\u00fckleme alan\u0131ndan avantajl\u0131 etiket Excel dosyan\u0131z\u0131 y\u00fckleyin.','Avantajl\u0131 Etiket Y\u00fckle',function(){kdGo('eayukle');});
   } else if(v==='urunler' && !varUrun){
     kdNotice(true,'Hen\u00fcz \u00fcr\u00fcn y\u00fcklenmedi','K\u00e2r tablosunun olu\u015fmas\u0131 i\u00e7in \u00f6nce Trendyol Excel dosyan\u0131z\u0131 y\u00fckleyin.','\u00dcr\u00fcn Y\u00fckle',function(){kdGo('yukle');});
   } else if(v==='panel' && !varUrun){
