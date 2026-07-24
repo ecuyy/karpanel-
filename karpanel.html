@@ -2757,6 +2757,30 @@ body.app-mode .kbx-foot{
 }
 body.app-mode .kbx-apply{border-radius:12px}
 
+/* ── tablo ince ayarlar (v3) ── */
+/* görseller biraz büyüdü */
+body.app-mode .pt-img .prod-img,body.app-mode .pt-img .prod-img-ph{width:60px;height:60px;border-radius:15px}
+/* başlıktaki turuncu noktalar kalktı + modern tipografi */
+body.app-mode .ptable thead .kth .dot{display:none}
+body.app-mode .ptable thead .kth-sub{margin-top:2px;letter-spacing:.02em}
+body.app-mode .ptable thead .kth{
+  font-size:10.5px;font-weight:700;letter-spacing:.13em;color:rgba(255,255,255,.66);
+}
+body.app-mode .ptable thead .kth-key{color:#FF9A42;font-weight:800}
+/* ürün adı kolonunu daralt → satış fiyatına yakınlaştır */
+body.app-mode .ptable thead .kth:nth-child(2){min-width:210px!important}
+body.app-mode .pt-info .prod-name{max-width:200px}
+/* satır hover: yumuşak şeffaf cam görünüm */
+body.app-mode .pt-row:hover>td{background:rgba(20,17,14,.028);backdrop-filter:saturate(1.1)}
+body.app-mode .pt-row:has(.kb-bad):hover>td{background:rgba(239,68,68,.035)}
+/* komisyon / marj sayıları modernize */
+body.app-mode .pt-kom-tl{
+  font-size:11px;font-weight:800;color:#C2610C;background:rgba(242,122,26,.09);
+  border:1px solid rgba(242,122,26,.16);border-radius:7px;padding:3px 9px;letter-spacing:-.2px;
+}
+body.app-mode .pt-c input.tinput{font-weight:800;letter-spacing:-.2px}
+body.app-mode .kar-badge{font-size:15px;font-weight:800;letter-spacing:-.4px}
+
 @media(max-width:1080px){
   body.app-mode .kdash-side{position:static;flex-direction:row;flex-wrap:wrap;align-items:center}
 }
