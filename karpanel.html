@@ -2128,6 +2128,103 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
 }
 .kd-mem-b:hover{background:#fff;border-color:rgba(220,38,38,.35);color:#DC2626}
 
+
+/* Panelde 'Ana sayfa' butonu gosterilmez — çıkış tam genişlik */
+.kd-side-foot .kd-gizli{display:none}
+.kd-side-foot .kd-mini-out{flex:1 1 100%}
+
+
+/* ══════════════════════════════════════════════════════════
+   KULLANICI KARTI — premium
+   ══════════════════════════════════════════════════════════ */
+.kd-hero{
+  position:relative;overflow:hidden;border-radius:18px;
+  padding:18px 17px 16px;margin-bottom:8px;isolation:isolate;
+  background:
+    radial-gradient(340px 170px at 108% -12%,rgba(255,150,60,.34),transparent 62%),
+    radial-gradient(240px 200px at -20% 120%,rgba(120,70,30,.28),transparent 66%),
+    linear-gradient(158deg,#2A2019 0%,#1A1410 45%,#0E0B08 100%);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.09) inset,
+    0 0 0 1px rgba(255,255,255,.05),
+    0 18px 34px -20px rgba(0,0,0,.9);
+}
+/* ince doku */
+.kd-hero::after{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:
+    linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);
+  background-size:22px 22px;
+  -webkit-mask-image:radial-gradient(120% 100% at 100% 0%,#000,transparent 72%);
+          mask-image:radial-gradient(120% 100% at 100% 0%,#000,transparent 72%);
+}
+/* usten gecen yumusak parlama */
+.kd-hero-sheen{
+  position:absolute;top:-60%;left:-30%;width:55%;height:220%;z-index:1;pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.10),transparent);
+  transform:rotate(12deg);
+  animation:kdSheen 7s ease-in-out infinite;
+}
+@keyframes kdSheen{0%,72%{left:-40%}88%,100%{left:130%}}
+@media (prefers-reduced-motion:reduce){.kd-hero-sheen{animation:none;opacity:0}}
+
+.kd-hero-top{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+
+/* avatar + halka */
+.kd-av-ring{
+  position:relative;display:inline-flex;padding:2px;border-radius:15px;flex-shrink:0;
+  background:linear-gradient(150deg,rgba(255,178,102,.95),rgba(242,122,26,.35) 45%,rgba(255,255,255,.12));
+  box-shadow:0 8px 20px -8px rgba(242,122,26,.85);
+}
+.kd-hero .kd-av{
+  width:40px;height:40px;border-radius:13px;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(150deg,#FF9440,#E2620A 60%,#C24F04);
+  color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;
+  box-shadow:0 1px 0 rgba(255,255,255,.35) inset;
+  text-shadow:0 1px 2px rgba(0,0,0,.25);
+}
+
+/* premium rozeti */
+.kd-pro{
+  position:relative;display:inline-flex;align-items:center;gap:6px;
+  font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 11px;border-radius:100px;white-space:nowrap;
+  color:#FFD9AE;
+  background:linear-gradient(160deg,rgba(255,166,77,.26),rgba(242,122,26,.10));
+  border:1px solid rgba(255,178,102,.42);
+  box-shadow:0 1px 0 rgba(255,255,255,.14) inset,0 4px 12px -6px rgba(242,122,26,.7);
+}
+.kd-pro::before{content:"";width:5px;height:5px;border-radius:50%;background:#FFB067;box-shadow:0 0 8px rgba(255,176,103,.95)}
+.kd-pro.free{color:rgba(255,255,255,.55);background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);box-shadow:none}
+.kd-pro.free::before{background:rgba(255,255,255,.4);box-shadow:none}
+
+.kd-hero .kd-uname{
+  position:relative;z-index:2;font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:15.5px;font-weight:800;color:#fff;letter-spacing:-.35px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.kd-umail{
+  position:relative;z-index:2;font-size:11px;color:rgba(255,255,255,.42);
+  margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.01em;
+}
+.kd-hero-line{position:relative;z-index:2;height:1px;margin:14px 0 11px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent)}
+.kd-hero-meta{position:relative;z-index:2;display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px}
+.kd-hero-lbl{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.32)}
+.kd-hero-note{font-size:11.5px;color:#FFC79A;font-weight:700;letter-spacing:-.1px}
+.kd-hero-bar{
+  position:relative;z-index:2;height:5px;border-radius:5px;overflow:hidden;
+  background:rgba(255,255,255,.09);box-shadow:0 1px 0 rgba(255,255,255,.06) inset;
+}
+.kd-hero-bar i{
+  display:block;height:100%;border-radius:5px;
+  background:linear-gradient(90deg,#E2620A,#FF9440 60%,#FFC48A);
+  box-shadow:0 0 12px rgba(255,148,64,.65);
+  transition:width .8s cubic-bezier(.2,.7,.2,1);
+}
+
 </style>
 </head>
 <body>
@@ -2531,14 +2628,19 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
 
   <aside class="kdash-side">
     <div class="kd-hero">
+      <span class="kd-hero-sheen"></span>
       <div class="kd-hero-top">
-        <div class="kd-av" id="kd-av">U</div>
+        <span class="kd-av-ring"><span class="kd-av" id="kd-av">U</span></span>
         <span class="kd-pro" id="kd-plan">Premium</span>
       </div>
       <div class="kd-uname" id="kd-name">Misafir</div>
       <div class="kd-umail" id="kd-mail">—</div>
+      <div class="kd-hero-line"></div>
+      <div class="kd-hero-meta">
+        <span class="kd-hero-lbl">Üyelik</span>
+        <span class="kd-hero-note" id="kd-hero-note">—</span>
+      </div>
       <div class="kd-hero-bar"><i id="kd-hero-fill" style="width:0%"></i></div>
-      <div class="kd-hero-note" id="kd-hero-note">Üyelik durumu</div>
     </div>
 
     <nav class="kd-nav">
@@ -2556,7 +2658,7 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
     </nav>
 
     <div class="kd-side-foot">
-      <button type="button" class="kd-mini" onclick="goHome();window.scrollTo({top:0,behavior:'smooth'})"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z"/><path d="M9.5 20.5v-6h5v6"/></svg> Ana sayfa</button>
+      <button type="button" class="kd-mini kd-gizli" onclick="goHome();window.scrollTo({top:0,behavior:'smooth'})"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z"/><path d="M9.5 20.5v-6h5v6"/></svg> Ana sayfa</button>
       <button type="button" class="kd-mini kd-mini-out" onclick="logout()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3"/><path d="M15 16.5 19.5 12 15 7.5M19.5 12H9"/></svg> Çıkış</button>
     </div>
   </aside>
@@ -3588,6 +3690,7 @@ async function sifreDegistir(){
 }
 function logout(){
   localStorage.removeItem('kp_user');
+  sessionStorage.removeItem('kp_user');   // 'Beni hatirla' isaretsizken oturum burada tutuluyor
   const excelSec=document.getElementById('excel-upload-section');if(excelSec)excelSec.style.display='none';
   currentUser=null; urunler=[];
   document.getElementById('urun-section').style.display='none';
