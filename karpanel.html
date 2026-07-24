@@ -2421,6 +2421,54 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
   .pt-code{max-width:170px}
 }
 
+
+/* ══ Liste kartları: taşmayı kesin engelle ══ */
+.kp-lists{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:14px;margin-bottom:20px;align-items:start;
+}
+.kp-list{min-width:0;overflow:hidden}
+.kp-list-h{min-width:0}
+.kp-l-row{display:flex;align-items:center;gap:12px;min-width:0;max-width:100%}
+.kp-l-img{flex:0 0 auto}
+.kp-l-n{
+  flex:1 1 0%;min-width:0;max-width:100%;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font-size:13.5px;font-weight:600;color:#14110E;
+}
+.kp-l-v{flex:0 0 auto;white-space:nowrap;font-variant-numeric:tabular-nums}
+@media(max-width:900px){.kp-lists{grid-template-columns:minmax(0,1fr)}}
+
+
+/* ══ Genel taşma koruması ══
+   1fr sutunlar varsayilan olarak icerikten kucuk olamaz (min-width:auto).
+   Uzun urun adlari / e-postalar bu yuzden kartlari ekran disina tasiyabiliyor.
+   Panel ve landing izgaralarinda sutunlarin kucuebilmesini garantiye aliyoruz. */
+.kstat-grid,.kbx-cards,.kd-form,.kd-grid2,.ku-grid,
+.kpr-groups,.kpr-trust,.kft-cols,.khm-contact-in,
+.khm-hero-cols,.khm-hiw-cols,.kp-lists,.kp-grid{
+  grid-auto-columns:minmax(0,1fr);
+}
+.kstat-grid>*,.kbx-cards>*,.kd-form>*,.kd-grid2>*,.ku-grid>*,
+.kpr-groups>*,.kpr-trust>*,.kft-cols>*,.khm-contact-in>*,
+.khm-hero-cols>*,.khm-hiw-cols>*,.kp-lists>*,.kp-grid>*,
+.kdash-main>*{
+  min-width:0;
+}
+.ku-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.kd-grid2{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.kd-form{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.kstat-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
+.kbx-cards{grid-template-columns:repeat(6,minmax(0,1fr))}
+/* uzun e-posta / metinler kutuyu kirmasin */
+.kd-plan-row b,.ku-mail,.kd-umail,.kft-desc{min-width:0;overflow-wrap:anywhere}
+@media(max-width:1100px){.ku-grid,.kd-grid2,.kd-form{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:980px){.kbx-cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:560px){.kbx-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:1100px){.kstat-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:680px){.kstat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 </style>
 </head>
 <body>
@@ -5370,8 +5418,8 @@ function kdListele(){
       var r=list[j], img=r.p.image?'<img src="'+kdEsc(r.p.image)+'" alt="">':'';
       h+='<div class="kp-l-row"><span class="kp-l-img">'+img+'</span>'+
          '<span class="kp-l-n">'+kdEsc(r.p.title||r.p.name||'\u0130simsiz \u00fcr\u00fcn')+'</span>'+
-         '<span class="kp-l-v '+(r.net>=0?'p':'n')+'">'+(r.net>=0?'+':'\u2212')+'\u20ba'+
-         Math.abs(r.net).toFixed(2)+'</span></div>';
+         '<span class="kp-l-v '+(r.net>=0?'p':'n')+'">'+(r.net>=0?'+':'\u2212')+
+         fmt(Math.abs(r.net))+'</span></div>';
     }
     return h;
   };
