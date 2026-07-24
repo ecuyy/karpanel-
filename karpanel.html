@@ -2931,7 +2931,16 @@ body.app-mode .kp-lg b{margin-left:auto;color:#14110E;font-weight:800;font-varia
 .hero.khm .khm-fb2{border-left:3px solid #E0453F}
 
 /* ══ HERO — tam dashboard mockup (referans) ══ */
-.hero.khm .khm-stage{perspective:1800px}
+.hero.khm .khm-hero-wrap{max-width:1480px;padding:66px 56px 40px}
+.hero.khm .khm-hero-cols{grid-template-columns:1fr 1.14fr;gap:64px}
+.hero.khm h1{font-size:clamp(46px,6vw,82px)}
+.hero.khm .khm-lead{max-width:560px}
+.hero.khm .khm-stage{perspective:2000px}
+.hero.khm .hero-dash{width:820px}
+@media(max-width:1360px){
+  .hero.khm .hero-dash{width:100%}
+  .hero.khm .khm-hero-cols{gap:48px}
+}
 .hero.khm .hero-dash{
   position:relative;width:680px;max-width:100%;border-radius:20px;overflow:hidden;
   background:linear-gradient(158deg,#221A13,#15110D);border:1px solid rgba(255,255,255,.09);
