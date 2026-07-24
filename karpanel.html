@@ -2809,86 +2809,87 @@ body.app-mode #kd-destek .kd-inp:focus{border-color:var(--or);background:#fff;bo
 body.app-mode #kd-destek .kd-lbl{color:#8A8378;font-size:11px}
 body.app-mode #kd-destek .kd-btn{border-radius:13px;padding:13px 26px}
 
-/* ══════ KÂR TABLOSU — koyu premium, "Excel" hissini kaldıran tasarım ══════ */
+/* ══════ KÂR TABLOSU — kırık beyaz, okunaklı, modern ══════ */
 body.app-mode .prod-table-wrap{
-  background:linear-gradient(180deg,#201911,#161210);
-  border:1px solid rgba(255,255,255,.08);border-radius:22px;overflow-x:auto;
-  box-shadow:0 2px 4px rgba(0,0,0,.3),0 40px 80px -46px rgba(0,0,0,.85);
+  background:#FDFCFB;
+  border:1px solid rgba(20,17,14,.08);border-radius:22px;overflow-x:auto;
+  box-shadow:0 1px 2px rgba(20,17,14,.04),0 22px 48px -34px rgba(20,17,14,.32);
 }
 body.app-mode .prod-table-wrap .ptable thead .kth{
-  background:transparent;padding:18px 16px 14px;
-  color:rgba(255,255,255,.5);font-size:10px;font-weight:700;letter-spacing:.14em;
-  border-bottom:1px solid rgba(255,255,255,.08);
+  background:#F6F3EE;padding:16px 16px;
+  color:#8A8378;font-size:10px;font-weight:800;letter-spacing:.11em;
+  border-bottom:1px solid rgba(20,17,14,.07);
 }
-body.app-mode .prod-table-wrap .ptable thead .kth-sub{color:rgba(255,255,255,.34)}
-body.app-mode .prod-table-wrap .ptable thead .kth-key{color:#FF9A42}
+body.app-mode .prod-table-wrap .ptable thead .kth-sub{color:#B4ADA3}
+body.app-mode .prod-table-wrap .ptable thead .kth-key{color:#C2610C}
 body.app-mode .prod-table-wrap .ptable thead .kth-cb input{accent-color:#F27A1A}
 /* ferah, kenarsız satırlar */
 body.app-mode .prod-table-wrap .pt-row>td{
-  border-bottom:1px solid rgba(255,255,255,.055);padding:17px 16px;background:transparent;
+  border-bottom:1px solid rgba(20,17,14,.06);padding:16px;background:transparent;
 }
 body.app-mode .prod-table-wrap .pt-row:last-child>td{border-bottom:none}
-body.app-mode .prod-table-wrap .pt-row:hover>td{background:rgba(255,255,255,.04)}
-body.app-mode .prod-table-wrap .pt-row:has(.kb-bad){background:rgba(239,68,68,.05)}
-body.app-mode .prod-table-wrap .pt-row:has(.kb-bad):hover>td{background:rgba(239,68,68,.08)}
-body.app-mode .prod-table-wrap .pt-row:has(.kb-good)>td:first-child::before{background:linear-gradient(180deg,#34D399,#0EA96B)}
+body.app-mode .prod-table-wrap .pt-row:hover>td{background:rgba(242,122,26,.045)}
+body.app-mode .prod-table-wrap .pt-row:has(.kb-bad){background:rgba(239,68,68,.03)}
+body.app-mode .prod-table-wrap .pt-row:has(.kb-bad):hover>td{background:rgba(239,68,68,.055)}
+body.app-mode .prod-table-wrap .pt-row:has(.kb-good)>td:first-child::before{background:linear-gradient(180deg,#22C58A,#0E9E63)}
 body.app-mode .prod-table-wrap .pt-row:has(.kb-bad)>td:first-child::before{background:linear-gradient(180deg,#FB7A75,#E0453F)}
 /* ürün adı / kod */
-body.app-mode .prod-table-wrap .pt-info .prod-name{color:#F4EFE8;font-weight:700}
-body.app-mode .prod-table-wrap .pt-code{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.08);color:rgba(255,255,255,.5)}
+body.app-mode .prod-table-wrap .pt-info .prod-name{color:#14110E;font-weight:800}
+body.app-mode .prod-table-wrap .pt-code{background:rgba(20,17,14,.045);border-color:rgba(20,17,14,.07);color:#8A8378}
 body.app-mode .prod-table-wrap .pt-code::before{content:none}
 body.app-mode .prod-table-wrap .pt-img .prod-img,body.app-mode .prod-table-wrap .pt-img .prod-img-ph{
-  width:56px;height:56px;box-shadow:0 6px 16px -8px rgba(0,0,0,.7)
+  width:56px;height:56px;box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 8px 18px -10px rgba(20,17,14,.4)
 }
-/* kenarsız/şeffaf girişler — sadece odaklanınca kutu görünür */
+/* kenarsız girişler — sadece odaklanınca kutu; düz okunur değerler */
 body.app-mode .prod-table-wrap .tinput{
-  background:transparent;border-color:transparent;color:#F0EAE2;box-shadow:none;
+  background:transparent;border-color:transparent;color:#14110E;box-shadow:none;font-weight:800;
 }
-body.app-mode .prod-table-wrap .tinput::placeholder{color:rgba(255,255,255,.3)}
-body.app-mode .prod-table-wrap .tinput:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.14)}
-body.app-mode .prod-table-wrap .tinput:focus{background:rgba(255,255,255,.07);border-color:var(--or);box-shadow:0 0 0 3px rgba(242,122,26,.2)}
-body.app-mode .prod-table-wrap .tinput-key{background:rgba(242,122,26,.11);border-color:rgba(242,122,26,.32)}
-body.app-mode .prod-table-wrap .pt-kom-tl{background:rgba(242,122,26,.15);border:1px solid rgba(242,122,26,.28);color:#FF9A42}
+body.app-mode .prod-table-wrap .tinput::placeholder{color:#BFB9B1;font-weight:500}
+body.app-mode .prod-table-wrap .tinput:hover{background:#fff;border-color:rgba(20,17,14,.14)}
+body.app-mode .prod-table-wrap .tinput:focus{background:#fff;border-color:var(--or);box-shadow:0 0 0 3px rgba(242,122,26,.14)}
+body.app-mode .prod-table-wrap .tinput-key{background:rgba(242,122,26,.08);border-color:rgba(242,122,26,.3)}
+body.app-mode .prod-table-wrap .pt-kom-tl{background:rgba(242,122,26,.09);border:1px solid rgba(242,122,26,.18);color:#C2610C}
 /* net kâr: kutu değil, kalın renkli değer */
 body.app-mode .prod-table-wrap .kar-badge{background:transparent;border-color:transparent;min-width:auto;padding:6px 8px;font-size:15.5px}
-body.app-mode .prod-table-wrap .kb-good{color:#3DDC97}
-body.app-mode .prod-table-wrap .kb-bad{color:#FB8A85}
-body.app-mode .prod-table-wrap .kb-neutral{background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.18);color:rgba(255,255,255,.45);padding:6px 12px;border-radius:9px}
-/* ayrıntı butonu → koyu zemine uygun cam buton */
+body.app-mode .prod-table-wrap .kb-good{color:#0A7A4E}
+body.app-mode .prod-table-wrap .kb-bad{color:#C0271F}
+body.app-mode .prod-table-wrap .kb-neutral{background:rgba(20,17,14,.04);border:1px dashed rgba(20,17,14,.16);color:#A8A29E;padding:6px 12px;border-radius:9px}
+/* ayrıntı butonu → koyu premium buton */
 body.app-mode .prod-table-wrap .detay-btn{
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);color:#F0EAE2;box-shadow:none;
+  background:linear-gradient(180deg,#2A2520,#14110E);border:none;color:#fff;
+  box-shadow:0 1px 0 rgba(255,255,255,.12) inset,0 8px 18px -10px rgba(20,17,14,.6);
 }
-body.app-mode .prod-table-wrap .detay-btn:hover{background:#F27A1A;border-color:transparent;color:#fff;box-shadow:0 10px 22px -10px rgba(242,122,26,.8)}
+body.app-mode .prod-table-wrap .detay-btn:hover{background:linear-gradient(180deg,#3A342E,#1E1A16);box-shadow:0 12px 24px -10px rgba(20,17,14,.7)}
 body.app-mode .prod-table-wrap input[type=checkbox].row-cb{accent-color:#F27A1A}
-/* boş durum koyu uyumlu */
-body.app-mode .prod-table-wrap .empty{color:rgba(255,255,255,.6)}
-body.app-mode .prod-table-wrap .empty-ic{color:rgba(255,255,255,.2)}
+body.app-mode .prod-table-wrap .empty{color:#8A8378}
+body.app-mode .prod-table-wrap .empty-ic{color:#D6CFC5}
 
-/* ══ GENEL BAKIŞ GRAFİKLERİ — koyu premium ══ */
+/* ══ GENEL BAKIŞ GRAFİKLERİ — şeffaf beyaz kartlar ══ */
 body.app-mode .kp-charts{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:20px}
 body.app-mode .kp-chart{
-  background:linear-gradient(180deg,#201911,#161210);border:1px solid rgba(255,255,255,.08);
-  border-radius:20px;padding:22px 24px;box-shadow:0 24px 52px -34px rgba(0,0,0,.85);
+  background:rgba(255,255,255,.72);border:1px solid rgba(20,17,14,.08);
+  border-radius:20px;padding:22px 24px;
+  box-shadow:0 1px 2px rgba(20,17,14,.04),0 22px 44px -32px rgba(20,17,14,.34);
 }
 body.app-mode .kp-chart-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:22px}
-body.app-mode .kp-chart-h>span:first-child{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;color:#F4EFE8;letter-spacing:-.3px}
-body.app-mode .kp-chart-sub{font-size:11px;color:rgba(255,255,255,.4)}
+body.app-mode .kp-chart-h>span:first-child{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;color:#14110E;letter-spacing:-.3px}
+body.app-mode .kp-chart-sub{font-size:11px;color:#A6A6B2}
 body.app-mode .kp-bars{display:flex;align-items:flex-end;gap:9px;height:176px}
 body.app-mode .kp-bar{flex:1;display:flex;align-items:flex-end;justify-content:center;height:100%;min-width:0}
 body.app-mode .kp-bar-fill{width:100%;max-width:38px;border-radius:9px 9px 3px 3px;transition:height .55s cubic-bezier(.2,.7,.2,1)}
-body.app-mode .kp-bar.p .kp-bar-fill{background:linear-gradient(180deg,#3DDC97,#0E9E63)}
+body.app-mode .kp-bar.p .kp-bar-fill{background:linear-gradient(180deg,#22C58A,#0E9E63)}
 body.app-mode .kp-bar.n .kp-bar-fill{background:linear-gradient(180deg,#FB7A75,#DA3C36)}
-body.app-mode .kp-chart-empty{color:rgba(255,255,255,.4);font-size:13px;display:flex;align-items:center;justify-content:center;height:150px;width:100%}
+body.app-mode .kp-chart-empty{color:#A6A6B2;font-size:13px;display:flex;align-items:center;justify-content:center;height:150px;width:100%}
 body.app-mode .kp-donut-wrap{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
 body.app-mode .kp-donut{
-  width:132px;height:132px;border-radius:50%;flex-shrink:0;background:#2A2119;
+  width:132px;height:132px;border-radius:50%;flex-shrink:0;background:#ECE7DF;
   -webkit-mask:radial-gradient(circle 43px at 50% 50%,transparent 43px,#000 44px);
   mask:radial-gradient(circle 43px at 50% 50%,transparent 43px,#000 44px);
 }
 body.app-mode .kp-legend{display:flex;flex-direction:column;gap:13px;flex:1;min-width:150px}
-body.app-mode .kp-lg{display:flex;align-items:center;gap:9px;font-size:13px;color:rgba(255,255,255,.68)}
+body.app-mode .kp-lg{display:flex;align-items:center;gap:9px;font-size:13px;color:#57534E}
 body.app-mode .kp-lg-d{width:11px;height:11px;border-radius:3px;flex-shrink:0}
-body.app-mode .kp-lg b{margin-left:auto;color:#F4EFE8;font-weight:800;font-variant-numeric:tabular-nums}
+body.app-mode .kp-lg b{margin-left:auto;color:#14110E;font-weight:800;font-variant-numeric:tabular-nums}
 @media(max-width:900px){body.app-mode .kp-charts{grid-template-columns:1fr}}
 
 /* ══════ ANASAYFA HERO — koyu premium (referans) ══════ */
