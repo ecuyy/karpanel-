@@ -2225,6 +2225,202 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
   transition:width .8s cubic-bezier(.2,.7,.2,1);
 }
 
+
+/* ══════════════════════════════════════════════════════════
+   GENEL BAKIŞ KARTLARI — ortalanmış, premium
+   ══════════════════════════════════════════════════════════ */
+.kp-grid{
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:16px;margin-bottom:22px;
+}
+.kp-card{
+  --c:#14110E;--cbg:rgba(20,17,14,.06);
+  position:relative;overflow:hidden;isolation:isolate;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:26px 18px 22px;border-radius:22px;
+  background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(255,255,255,.66));
+  backdrop-filter:blur(20px) saturate(1.3);-webkit-backdrop-filter:blur(20px) saturate(1.3);
+  border:1px solid rgba(255,255,255,.85);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.95) inset,
+    0 1px 2px rgba(20,17,14,.04),
+    0 20px 44px -30px rgba(20,17,14,.42);
+  transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s,border-color .3s;
+}
+/* ikonun arkasından yükselen yumuşak renk hale */
+.kp-card::before{
+  content:"";position:absolute;top:-46px;left:50%;transform:translateX(-50%);
+  width:190px;height:150px;border-radius:50%;z-index:-1;
+  background:var(--cbg);filter:blur(26px);opacity:.9;
+  transition:opacity .3s,transform .3s cubic-bezier(.2,.7,.2,1);
+}
+/* üst kenarda ince ışık çizgisi */
+.kp-card::after{
+  content:"";position:absolute;top:0;left:22%;right:22%;height:2px;border-radius:0 0 3px 3px;
+  background:linear-gradient(90deg,transparent,var(--c),transparent);opacity:.6;
+}
+.kp-card:hover{
+  transform:translateY(-5px);
+  border-color:rgba(255,255,255,1);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,1) inset,
+    0 2px 6px rgba(20,17,14,.05),
+    0 34px 62px -30px rgba(20,17,14,.5);
+}
+.kp-card:hover::before{opacity:1;transform:translateX(-50%) translateY(6px) scale(1.06)}
+
+.kp-ic{
+  display:flex;align-items:center;justify-content:center;
+  width:52px;height:52px;border-radius:17px;margin:0 0 16px;
+  background:linear-gradient(160deg,rgba(255,255,255,.9),rgba(255,255,255,.45));
+  border:1px solid rgba(255,255,255,.95);
+  color:var(--c);
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 8px 18px -10px rgba(20,17,14,.5);
+}
+.kp-lbl{
+  font-size:10.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+  color:#9A948C;
+}
+.kp-val{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:34px;font-weight:800;letter-spacing:-1.6px;line-height:1.04;
+  color:var(--c);margin-top:9px;font-variant-numeric:tabular-nums;
+}
+.kp-sub{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11.5px;color:#A29C94;margin-top:9px;font-weight:600;
+}
+.kp-sub::before{
+  content:"";width:5px;height:5px;border-radius:50%;background:var(--c);opacity:.45;
+}
+
+/* veri yokken */
+.kp-grid.bos .kp-card{background:linear-gradient(180deg,rgba(255,255,255,.8),rgba(255,255,255,.55))}
+.kp-grid.bos .kp-card::before{opacity:.4}
+.kp-grid.bos .kp-card::after{opacity:.2}
+.kp-grid.bos .kp-val{color:#B8B2A9;letter-spacing:-.5px}
+.kp-grid.bos .kp-ic{color:#B8B2A9}
+.kp-grid.bos .kp-sub::before{opacity:.25}
+.kp-grid.bos .kp-card:hover{transform:translateY(-3px)}
+
+@media(max-width:1500px){.kp-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:900px){.kp-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.kp-grid{grid-template-columns:1fr}.kp-val{font-size:30px}}
+
+/* liste kartları kartlarla uyumlu olsun */
+.kp-list{border-radius:22px}
+.kp-l-img{width:42px;height:42px;border-radius:12px;border:1px solid rgba(20,17,14,.06)}
+.kp-l-n{font-size:13.5px;font-weight:650}
+
+
+/* ══════════════════════════════════════════════════════════
+   ÜRÜN KÂR TABLOSU — şeffaf / premium
+   ══════════════════════════════════════════════════════════ */
+.prod-table-wrap{
+  background:linear-gradient(180deg,rgba(255,255,255,.86),rgba(255,255,255,.62));
+  backdrop-filter:blur(20px) saturate(1.25);-webkit-backdrop-filter:blur(20px) saturate(1.25);
+  border:1px solid rgba(255,255,255,.85);
+  border-radius:22px;
+  box-shadow:0 1px 0 rgba(255,255,255,.95) inset,0 1px 2px rgba(20,17,14,.04),0 26px 54px -34px rgba(20,17,14,.44);
+}
+.prod-table-wrap table{min-width:1240px}
+
+/* başlık */
+.kth{
+  background:linear-gradient(180deg,rgba(252,251,249,.94),rgba(250,249,246,.7));
+  border-bottom:1px solid rgba(20,17,14,.08);
+  color:#9A948C;font-size:10px;letter-spacing:.12em;padding:16px 16px;
+  position:sticky;top:0;z-index:2;backdrop-filter:blur(10px);
+}
+.kth-sub{color:#BEB7AE;font-size:9.5px;letter-spacing:.02em}
+
+/* satırlar */
+.pt-row{transition:background .18s}
+.pt-row:hover>td{background:rgba(242,122,26,.045)}
+.ptable td{
+  padding:14px 16px;border-bottom:1px solid rgba(20,17,14,.05);
+  vertical-align:middle;background:transparent;
+}
+.pt-cb{width:44px;padding-left:16px!important;padding-right:0!important}
+.pt-c{text-align:center}
+.pt-act{white-space:nowrap}
+
+/* ürün hücresi */
+.pt-prod{display:flex;align-items:center;gap:14px;min-width:0}
+.pt-img{display:block;flex-shrink:0;position:relative}
+.pt-img .prod-img,.pt-img .prod-img-ph{
+  width:54px;height:54px;border-radius:15px;
+  border:1px solid rgba(20,17,14,.07);
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 6px 14px -8px rgba(20,17,14,.4);
+  object-fit:cover;
+}
+.pt-info{display:flex;flex-direction:column;gap:6px;min-width:0}
+.pt-info .prod-name{
+  display:block;font-size:14.5px;font-weight:700;color:#14110E;letter-spacing:-.2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px;
+}
+.pt-code{
+  display:inline-flex;align-items:center;align-self:flex-start;gap:5px;
+  font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  font-size:11px;font-weight:600;letter-spacing:.02em;color:#8A8378;
+  background:rgba(20,17,14,.045);border:1px solid rgba(20,17,14,.06);
+  padding:3px 9px;border-radius:7px;max-width:220px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.pt-code::before{content:"#";color:#C3BCB3;font-weight:700}
+
+/* girdiler */
+.tinput{
+  border:1px solid rgba(20,17,14,.1);border-radius:11px;
+  background:rgba(255,255,255,.75);padding:10px 12px;
+  font-size:14px;font-weight:700;color:#14110E;text-align:center;
+  font-variant-numeric:tabular-nums;transition:.18s;
+}
+.tinput::placeholder{color:#C3BCB3;font-weight:500}
+.tinput:hover{border-color:rgba(20,17,14,.2);background:#fff}
+.tinput:focus{outline:none;border-color:var(--or);background:#fff;box-shadow:0 0 0 3.5px rgba(242,122,26,.12)}
+/* alış fiyatı = ana girdi */
+.tinput-key{
+  width:104px;border-color:rgba(242,122,26,.3);
+  background:linear-gradient(180deg,rgba(255,247,238,.9),rgba(255,255,255,.7));
+}
+.tinput-key:hover{border-color:rgba(242,122,26,.5)}
+
+/* komisyon */
+.pt-kom{display:inline-flex;flex-direction:column;align-items:center;gap:5px}
+.pt-kom-tl{
+  font-size:10.5px;font-weight:800;color:#C2610C;
+  background:rgba(242,122,26,.08);border-radius:6px;padding:2px 8px;
+  font-variant-numeric:tabular-nums;
+}
+
+/* net kâr rozeti */
+.kar-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:96px;padding:9px 14px;border-radius:11px;
+  font-size:14px;font-weight:800;letter-spacing:-.3px;
+  font-variant-numeric:tabular-nums;border:1px solid transparent;
+}
+.kb-good{background:rgba(16,185,129,.1);color:#0B7A52;border-color:rgba(16,185,129,.22)}
+.kb-bad{background:rgba(239,68,68,.08);color:#C62B26;border-color:rgba(239,68,68,.2)}
+.kb-neutral{background:rgba(20,17,14,.04);color:#A8A29E;border-color:rgba(20,17,14,.07);font-weight:600;font-size:12.5px}
+
+/* ayrıntı butonu */
+.detay-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  background:linear-gradient(180deg,#2A2520,#14110E);color:#fff;
+  border:none;border-radius:11px;padding:10px 16px;
+  font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;
+  box-shadow:0 1px 0 rgba(255,255,255,.12) inset,0 8px 18px -10px rgba(20,17,14,.7);
+  transition:transform .18s,box-shadow .18s,background .18s;
+}
+.detay-btn:hover{background:linear-gradient(180deg,#3A342E,#1E1A16);transform:translateY(-1.5px);box-shadow:0 1px 0 rgba(255,255,255,.12) inset,0 12px 24px -10px rgba(20,17,14,.8)}
+
+@media(max-width:1300px){
+  .pt-info .prod-name{max-width:180px}
+  .pt-code{max-width:170px}
+}
+
 </style>
 </head>
 <body>
@@ -2964,13 +3160,13 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
         <table class="ptable">
           <thead><tr>
             <th class="kth kth-cb"><input type="checkbox" class="row-cb" id="cb-all" onchange="tumSecToggle(this)"></th>
-            <th class="kth" style="min-width:220px">Ürün</th>
+            <th class="kth" style="min-width:280px">Ürün <span class="kth-sub">adı ve model kodu</span></th>
             <th class="kth kth-c">Satış Fiyatı<span class="kth-sub"><i class="dot"></i>₺</span></th>
             <th class="kth kth-c">Komisyon<span class="kth-sub"><i class="dot"></i>₺</span></th>
             <th class="kth kth-c kth-key">Alış Fiyatı<span class="kth-sub"><i class="dot"></i>₺</span></th>
             <th class="kth kth-c">Kargo<span class="kth-sub"><i class="dot"></i>₺</span></th>
             <th class="kth kth-c">Net Kâr<span class="kth-sub">₺</span></th>
-            <th class="kth" style="min-width:96px">Marj</th>
+            <th class="kth kth-c" style="min-width:96px">Marj</th>
             <th class="kth kth-c">İşlem</th>
           </tr></thead>
           <tbody id="ptbody"></tbody>
@@ -4435,11 +4631,11 @@ function renderUrunler(page){
     const marjStr=hasAlis&&marj!==null?'%'+marj.toFixed(1):'—';
     const marjColor=!hasAlis?'var(--t3)':marj>=15?'var(--green)':marj>=0?'var(--yellow)':'var(--red)';
     const satisInput=isDemo
-      ?`<input class="tinput" type="text" style="width:78px;opacity:.55;cursor:not-allowed" value="${fmtSP(p.salePrice)}" readonly title="Demo modda düzenlenemez">`
-      :`<input class="tinput" type="text" style="width:78px" value="${fmtSP(p.salePrice)}" onfocus="this.value=p.salePrice||''" onblur="this.value=fmtSP(this.value)" onchange="updUrun('${p.id}','salePrice',parseTR(this.value))" title="Satış fiyatını düzenleyebilirsiniz">`;
+      ?`<input class="tinput" type="text" style="width:108px;opacity:.55;cursor:not-allowed" value="${fmtSP(p.salePrice)}" readonly title="Demo modda düzenlenemez">`
+      :`<input class="tinput" type="text" style="width:108px" value="${fmtSP(p.salePrice)}" onfocus="this.value=p.salePrice||''" onblur="this.value=fmtSP(this.value)" onchange="updUrun('${p.id}','salePrice',parseTR(this.value))" title="Satış fiyatını düzenleyebilirsiniz">`;
     const komInput=isDemo
-      ?`<input class="tinput" type="number" style="width:56px;opacity:.55;cursor:not-allowed" value="${(p.commissionRate||0).toFixed(2)}" readonly title="Demo modda düzenlenemez">`
-      :`<input class="tinput" type="number" style="width:56px" min="0" max="100" step="0.01" value="${(p.commissionRate||0).toFixed(2)}" onchange="updUrun('${p.id}','commissionRate',this.value)" title="Komisyon oranını düzenleyebilirsiniz">`;
+      ?`<input class="tinput" type="number" style="width:74px;opacity:.55;cursor:not-allowed" value="${(p.commissionRate||0).toFixed(2)}" readonly title="Demo modda düzenlenemez">`
+      :`<input class="tinput" type="number" style="width:74px" min="0" max="100" step="0.01" value="${(p.commissionRate||0).toFixed(2)}" onchange="updUrun('${p.id}','commissionRate',this.value)" title="Komisyon oranını düzenleyebilirsiniz">`;
     const marjBadge = !hasAlis
       ? '<span style="color:#9CA3AF;font-size:12px">—</span>'
       : marj>=15
@@ -4447,37 +4643,27 @@ function renderUrunler(page){
         : marj>=0
           ? `<span style="display:inline-flex;align-items:center;padding:4px 10px;background:rgba(245,158,11,.08);color:#D97706;border-radius:50px;font-size:12px;font-weight:800;border:1px solid rgba(245,158,11,.2)">${marjStr}</span>`
           : `<span style="display:inline-flex;align-items:center;padding:4px 10px;background:rgba(239,68,68,.08);color:#DC2626;border-radius:50px;font-size:12px;font-weight:800;border:1px solid rgba(239,68,68,.15)">${marjStr}</span>`;
-    return`<tr style="transition:background .15s">
-      <td class="cb-wrap" style="padding:0 8px;width:36px"><input type="checkbox" class="row-cb" data-id="${p.id}" onchange="satirSec(this)"></td>
-      <td style="padding:10px 12px">
-        <div style="display:flex;align-items:center;gap:10px">
-          <div style="flex-shrink:0">${imgHtml}${phHtml}</div>
-          <div>
-            <div class="prod-name" title="${p.title}">${p.title}</div>
-            <div class="prod-cat">${p.categoryName||'—'}</div>
-          </div>
+    return`<tr class="pt-row">
+      <td class="pt-cb"><input type="checkbox" class="row-cb" data-id="${p.id}" onchange="satirSec(this)"></td>
+      <td class="pt-prod-cell">
+        <div class="pt-prod">
+          <span class="pt-img">${imgHtml}${phHtml}</span>
+          <span class="pt-info">
+            <span class="prod-name" title="${p.title}">${p.title}</span>
+            <span class="pt-code" title="Model kodu">${p.modelCode||p.barcode||'\u2014'}</span>
+          </span>
         </div>
       </td>
-      <td style="padding:8px 8px;text-align:center">${satisInput}</td>
-      <td style="padding:8px 8px;text-align:center">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
-          ${komInput}
-          <span style="font-size:10px;color:var(--or);font-weight:700">${fmt(komisyon)}</span>
-        </div>
+      <td class="pt-c">${satisInput}</td>
+      <td class="pt-c">
+        <span class="pt-kom">${komInput}<span class="pt-kom-tl">${fmt(komisyon)}</span></span>
       </td>
-      <td style="padding:8px 8px;text-align:center"><input class="tinput" type="number" placeholder="Girin" min="0" step="0.01" value="${p.alis||''}" onchange="updUrun('${p.id}','alis',this.value)"></td>
-      <td style="padding:8px 8px;text-align:center"><input class="tinput" type="number" placeholder="Girin" min="0" step="0.01" value="${p.kargo||''}" onchange="updUrun('${p.id}','kargo',this.value)"></td>
-      <td style="padding:8px 8px;text-align:center">${karBadge}</td>
-      <td style="padding:8px 10px;min-width:90px">
-        <div style="display:flex;flex-direction:column;gap:4px">
-          <span style="font-size:12px;font-weight:800;color:${marjColor}">${marjStr}</span>
-          <div style="height:5px;background:#F0F0F3;border-radius:3px;overflow:hidden">
-            <div style="height:100%;width:${hasAlis&&marj!==null?Math.min(Math.max(marj,0),100)+'%':'0%'};background:${!hasAlis?'#E5E7EB':marj>=15?'#16A34A':marj>=0?'#F59E0B':'#DC2626'};border-radius:3px;transition:width .4s"></div>
-          </div>
-        </div>
-      </td>
-      <td style="padding:8px 8px;text-align:center;white-space:nowrap">
-        <button class="detay-btn" onclick="openModal('${p.id}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>Ayrıntılı Hes.</button>
+      <td class="pt-c"><input class="tinput tinput-key" type="number" placeholder="Girin" min="0" step="0.01" value="${p.alis||''}" onchange="updUrun('${p.id}','alis',this.value)"></td>
+      <td class="pt-c"><input class="tinput" type="number" placeholder="Girin" min="0" step="0.01" value="${p.kargo||''}" onchange="updUrun('${p.id}','kargo',this.value)"></td>
+      <td class="pt-c">${karBadge}</td>
+      <td class="pt-c">${marjBadge}</td>
+      <td class="pt-c pt-act">
+        <button class="detay-btn" onclick="openModal('${p.id}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>Ayr\u0131nt\u0131</button>
       </td>
     </tr>`;
   }).join('');
@@ -5183,7 +5369,7 @@ function kdListele(){
     for(var j=0;j<list.length;j++){
       var r=list[j], img=r.p.image?'<img src="'+kdEsc(r.p.image)+'" alt="">':'';
       h+='<div class="kp-l-row"><span class="kp-l-img">'+img+'</span>'+
-         '<span class="kp-l-n">'+kdEsc(r.p.name||'-')+'</span>'+
+         '<span class="kp-l-n">'+kdEsc(r.p.title||r.p.name||'\u0130simsiz \u00fcr\u00fcn')+'</span>'+
          '<span class="kp-l-v '+(r.net>=0?'p':'n')+'">'+(r.net>=0?'+':'\u2212')+'\u20ba'+
          Math.abs(r.net).toFixed(2)+'</span></div>';
     }
