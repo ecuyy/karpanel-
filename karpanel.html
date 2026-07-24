@@ -2469,6 +2469,66 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
 @media(max-width:1100px){.kstat-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:680px){.kstat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
+
+/* ══════════════════════════════════════════════════════════
+   BİLGİ KARTI — adım adım yol tarifi
+   ══════════════════════════════════════════════════════════ */
+.kd-notice{
+  display:block;padding:20px 22px;border-radius:20px;margin-bottom:20px;
+  background:linear-gradient(150deg,rgba(255,255,255,.9),rgba(255,247,238,.75));
+  backdrop-filter:blur(18px) saturate(1.2);-webkit-backdrop-filter:blur(18px) saturate(1.2);
+  border:1px solid rgba(242,122,26,.24);
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 1px 2px rgba(20,17,14,.04),0 22px 46px -32px rgba(180,90,20,.5);
+}
+.kd-notice-head{display:flex;align-items:flex-start;gap:15px;flex-wrap:wrap}
+.kd-notice-ic{
+  display:flex;align-items:center;justify-content:center;
+  width:46px;height:46px;border-radius:15px;flex-shrink:0;margin-top:0;
+  background:linear-gradient(160deg,rgba(255,255,255,.95),rgba(255,236,214,.9));
+  border:1px solid rgba(242,122,26,.24);color:#C2610C;
+  box-shadow:0 1px 0 rgba(255,255,255,.95) inset,0 8px 18px -10px rgba(242,122,26,.7);
+}
+.kd-notice-txt{flex:1 1 260px;min-width:0}
+.kd-notice-t{font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:#14110E;letter-spacing:-.35px}
+.kd-notice-s{font-size:13.5px;color:#7A6A5A;margin-top:5px;line-height:1.6}
+.kd-notice-b{
+  align-self:center;flex-shrink:0;
+  display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border:none;border-radius:13px;
+  background:linear-gradient(180deg,#FF8C2E,#E2620A);color:#fff;
+  font-family:inherit;font-size:13.5px;font-weight:800;cursor:pointer;
+  box-shadow:0 1px 0 rgba(255,255,255,.25) inset,0 12px 26px -12px rgba(242,122,26,.9);
+  transition:transform .2s cubic-bezier(.2,.7,.2,1),box-shadow .2s,filter .2s;
+}
+.kd-notice-b:hover{transform:translateY(-2px);filter:brightness(1.06);box-shadow:0 1px 0 rgba(255,255,255,.25) inset,0 18px 34px -14px rgba(242,122,26,1)}
+
+/* yol tarifi */
+.kd-notice-path{margin-top:18px;padding-top:16px;border-top:1px dashed rgba(242,122,26,.28)}
+.kd-path-lbl{
+  display:block;font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  color:#B08A63;margin-bottom:11px;
+}
+.kd-path-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.kd-step{
+  display:inline-flex;align-items:center;gap:9px;
+  background:rgba(255,255,255,.95);border:1px solid rgba(242,122,26,.26);
+  color:#7A4A18;font-size:13px;font-weight:700;letter-spacing:-.1px;
+  padding:9px 15px 9px 9px;border-radius:12px;white-space:nowrap;
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 5px 12px -8px rgba(180,90,20,.6);
+}
+.kd-step i{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:22px;height:22px;border-radius:8px;flex-shrink:0;
+  background:linear-gradient(160deg,#FF9440,#E2620A);color:#fff;
+  font-style:normal;font-size:11.5px;font-weight:800;
+  box-shadow:0 3px 8px -3px rgba(242,122,26,.9);
+}
+.kd-notice-path .kd-sep{font-style:normal;color:#D9A87C;font-size:15px;font-weight:800;line-height:1}
+
+@media(max-width:720px){
+  .kd-notice-b{width:100%;justify-content:center;margin-top:12px}
+  .kd-step{font-size:12px;padding:8px 12px 8px 8px}
+}
+
 </style>
 </head>
 <body>
@@ -2917,13 +2977,15 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
     </header>
 
     <div id="kd-notice" class="kd-notice" style="display:none">
+      <div class="kd-notice-head">
       <span class="kd-notice-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.01"/></svg></span>
       <div class="kd-notice-txt">
         <div class="kd-notice-t" id="kd-notice-t"></div>
         <div class="kd-notice-s" id="kd-notice-s"></div>
-        <div class="kd-notice-path" id="kd-notice-path" style="display:none"></div>
       </div>
       <button class="kd-notice-b" id="kd-notice-b" style="display:none"></button>
+      </div>
+      <div class="kd-notice-path" id="kd-notice-path" style="display:none"></div>
     </div>
 
 
@@ -5311,12 +5373,12 @@ function kdGo(v){
     kdNotice(true,'Avantajl\u0131 etiket verisi yok',
       'A\u015fa\u011f\u0131daki yoldan indirdi\u011finiz dosyay\u0131 Y\u00fckleme alan\u0131ndan y\u00fckleyin. Mevcut \u00fcr\u00fcn listenizden resim ve al\u0131\u015f fiyat\u0131 otomatik gelir.',
       'Avantajl\u0131 Etiket Y\u00fckle',function(){kdGo('eayukle');},
-      ['Trendyol','Fiyatland\u0131rma','Avantajl\u0131 Etiket','Excel ile G\u00fcncelle']);
+      ['Trendyol Panel','Promosyon & Fiyat','Avantaj etiketi','Excel ile G\u00fcncelle']);
   } else if(v==='urunler' && !varUrun){
     kdNotice(true,'Hen\u00fcz \u00fcr\u00fcn y\u00fcklenmedi',
       'A\u015fa\u011f\u0131daki yoldan indirdi\u011finiz dosyay\u0131 Y\u00fckleme alan\u0131ndan y\u00fckleyin. Mevcut \u00fcr\u00fcn listenizden resim ve al\u0131\u015f fiyat\u0131 otomatik gelir.',
       '\u00dcr\u00fcn Y\u00fckle',function(){kdGo('yukle');},
-      ['Trendyol','\u00dcr\u00fcnler','\u00dcr\u00fcn Listesi','Aktif \u00dcr\u00fcnler','Excel ile \u0130ndir']);
+      ['Trendyol Panel','\u00dcr\u00fcnler','\u00dcr\u00fcnler Listesi','Aktif \u00dcr\u00fcnler','Excel ile \u0130ndir']);
   } else {
     kdNotice(false);
   }
@@ -5388,12 +5450,12 @@ function kdNotice(show,title,text,btnTxt,act,path){
   if(c){ if(btnTxt){ c.style.display='inline-flex'; c.textContent=btnTxt; c.onclick=act||null; } else c.style.display='none'; }
   if(p){
     if(path&&path.length){
-      var h='';
+      var h='<span class="kd-path-lbl">Dosyay\u0131 nereden indireceksiniz?</span><span class="kd-path-row">';
       for(var i=0;i<path.length;i++){
-        if(i) h+='<i class="kd-sep">\u203a</i>';
-        h+='<span>'+kdEsc(path[i])+'</span>';
+        if(i) h+='<i class="kd-sep">\u2192</i>';
+        h+='<span class="kd-step"><i>'+(i+1)+'</i>'+kdEsc(path[i])+'</span>';
       }
-      p.innerHTML=h; p.style.display='flex';
+      p.innerHTML=h+'</span>'; p.style.display='block';
     } else { p.style.display='none'; p.innerHTML=''; }
   }
 }
