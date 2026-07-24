@@ -2781,6 +2781,182 @@ body.app-mode .pt-kom-tl{
 body.app-mode .pt-c input.tinput{font-weight:800;letter-spacing:-.2px}
 body.app-mode .kar-badge{font-size:15px;font-weight:800;letter-spacing:-.4px}
 
+/* ══ ÜYELİĞİM & DESTEK TALEBİ — premium/modern ══ */
+body.app-mode #kd-uyelik .kd-card,body.app-mode #kd-destek .kd-card{
+  background:#fff;border:1px solid rgba(20,17,14,.07);border-radius:22px;padding:26px;
+  box-shadow:0 1px 2px rgba(20,17,14,.04),0 24px 48px -34px rgba(20,17,14,.4);
+}
+body.app-mode .ku-av{width:56px;height:56px;border-radius:18px;box-shadow:0 12px 26px -10px rgba(242,122,26,.7)}
+body.app-mode .ku-name{font-size:20px;letter-spacing:-.6px}
+body.app-mode .ku-durum{background:rgba(16,185,129,.12);color:#0B7A52;box-shadow:0 1px 0 rgba(255,255,255,.6) inset}
+/* tarih kutucukları */
+body.app-mode .ku-dates{background:rgba(20,17,14,.06);border-radius:16px;gap:1.5px}
+body.app-mode .ku-d{background:#fff;padding:16px 18px;transition:background .18s}
+body.app-mode .ku-d:hover{background:#FCFAF7}
+body.app-mode .ku-d b{font-size:16px}
+body.app-mode .ku-bar{height:8px;border-radius:8px}
+/* fatura / plan satırları */
+body.app-mode .kd-plan-box{background:rgba(20,17,14,.06);border-radius:16px;gap:1.5px}
+body.app-mode .kd-plan-row{padding:15px 17px;transition:background .18s}
+body.app-mode .kd-plan-row:hover{background:#FCFAF7}
+/* destek formu */
+body.app-mode #kd-destek .kd-card-ic{width:46px;height:46px;border-radius:14px;background:rgba(242,122,26,.12);color:#C2610C}
+body.app-mode #kd-destek .kd-inp{
+  border:1.5px solid rgba(20,17,14,.1);border-radius:13px;background:#FCFBFA;padding:13px 15px;font-size:14px;
+}
+body.app-mode #kd-destek .kd-inp:hover{border-color:rgba(20,17,14,.2)}
+body.app-mode #kd-destek .kd-inp:focus{border-color:var(--or);background:#fff;box-shadow:0 0 0 3.5px rgba(242,122,26,.12)}
+body.app-mode #kd-destek .kd-lbl{color:#8A8378;font-size:11px}
+body.app-mode #kd-destek .kd-btn{border-radius:13px;padding:13px 26px}
+
+/* ══════ KÂR TABLOSU — koyu premium, "Excel" hissini kaldıran tasarım ══════ */
+body.app-mode .prod-table-wrap{
+  background:linear-gradient(180deg,#201911,#161210);
+  border:1px solid rgba(255,255,255,.08);border-radius:22px;overflow-x:auto;
+  box-shadow:0 2px 4px rgba(0,0,0,.3),0 40px 80px -46px rgba(0,0,0,.85);
+}
+body.app-mode .prod-table-wrap .ptable thead .kth{
+  background:transparent;padding:18px 16px 14px;
+  color:rgba(255,255,255,.5);font-size:10px;font-weight:700;letter-spacing:.14em;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+body.app-mode .prod-table-wrap .ptable thead .kth-sub{color:rgba(255,255,255,.34)}
+body.app-mode .prod-table-wrap .ptable thead .kth-key{color:#FF9A42}
+body.app-mode .prod-table-wrap .ptable thead .kth-cb input{accent-color:#F27A1A}
+/* ferah, kenarsız satırlar */
+body.app-mode .prod-table-wrap .pt-row>td{
+  border-bottom:1px solid rgba(255,255,255,.055);padding:17px 16px;background:transparent;
+}
+body.app-mode .prod-table-wrap .pt-row:last-child>td{border-bottom:none}
+body.app-mode .prod-table-wrap .pt-row:hover>td{background:rgba(255,255,255,.04)}
+body.app-mode .prod-table-wrap .pt-row:has(.kb-bad){background:rgba(239,68,68,.05)}
+body.app-mode .prod-table-wrap .pt-row:has(.kb-bad):hover>td{background:rgba(239,68,68,.08)}
+body.app-mode .prod-table-wrap .pt-row:has(.kb-good)>td:first-child::before{background:linear-gradient(180deg,#34D399,#0EA96B)}
+body.app-mode .prod-table-wrap .pt-row:has(.kb-bad)>td:first-child::before{background:linear-gradient(180deg,#FB7A75,#E0453F)}
+/* ürün adı / kod */
+body.app-mode .prod-table-wrap .pt-info .prod-name{color:#F4EFE8;font-weight:700}
+body.app-mode .prod-table-wrap .pt-code{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.08);color:rgba(255,255,255,.5)}
+body.app-mode .prod-table-wrap .pt-code::before{content:none}
+body.app-mode .prod-table-wrap .pt-img .prod-img,body.app-mode .prod-table-wrap .pt-img .prod-img-ph{
+  width:56px;height:56px;box-shadow:0 6px 16px -8px rgba(0,0,0,.7)
+}
+/* kenarsız/şeffaf girişler — sadece odaklanınca kutu görünür */
+body.app-mode .prod-table-wrap .tinput{
+  background:transparent;border-color:transparent;color:#F0EAE2;box-shadow:none;
+}
+body.app-mode .prod-table-wrap .tinput::placeholder{color:rgba(255,255,255,.3)}
+body.app-mode .prod-table-wrap .tinput:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.14)}
+body.app-mode .prod-table-wrap .tinput:focus{background:rgba(255,255,255,.07);border-color:var(--or);box-shadow:0 0 0 3px rgba(242,122,26,.2)}
+body.app-mode .prod-table-wrap .tinput-key{background:rgba(242,122,26,.11);border-color:rgba(242,122,26,.32)}
+body.app-mode .prod-table-wrap .pt-kom-tl{background:rgba(242,122,26,.15);border:1px solid rgba(242,122,26,.28);color:#FF9A42}
+/* net kâr: kutu değil, kalın renkli değer */
+body.app-mode .prod-table-wrap .kar-badge{background:transparent;border-color:transparent;min-width:auto;padding:6px 8px;font-size:15.5px}
+body.app-mode .prod-table-wrap .kb-good{color:#3DDC97}
+body.app-mode .prod-table-wrap .kb-bad{color:#FB8A85}
+body.app-mode .prod-table-wrap .kb-neutral{background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.18);color:rgba(255,255,255,.45);padding:6px 12px;border-radius:9px}
+/* ayrıntı butonu → koyu zemine uygun cam buton */
+body.app-mode .prod-table-wrap .detay-btn{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);color:#F0EAE2;box-shadow:none;
+}
+body.app-mode .prod-table-wrap .detay-btn:hover{background:#F27A1A;border-color:transparent;color:#fff;box-shadow:0 10px 22px -10px rgba(242,122,26,.8)}
+body.app-mode .prod-table-wrap input[type=checkbox].row-cb{accent-color:#F27A1A}
+/* boş durum koyu uyumlu */
+body.app-mode .prod-table-wrap .empty{color:rgba(255,255,255,.6)}
+body.app-mode .prod-table-wrap .empty-ic{color:rgba(255,255,255,.2)}
+
+/* ══ GENEL BAKIŞ GRAFİKLERİ — koyu premium ══ */
+body.app-mode .kp-charts{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:20px}
+body.app-mode .kp-chart{
+  background:linear-gradient(180deg,#201911,#161210);border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;padding:22px 24px;box-shadow:0 24px 52px -34px rgba(0,0,0,.85);
+}
+body.app-mode .kp-chart-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:22px}
+body.app-mode .kp-chart-h>span:first-child{font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:800;color:#F4EFE8;letter-spacing:-.3px}
+body.app-mode .kp-chart-sub{font-size:11px;color:rgba(255,255,255,.4)}
+body.app-mode .kp-bars{display:flex;align-items:flex-end;gap:9px;height:176px}
+body.app-mode .kp-bar{flex:1;display:flex;align-items:flex-end;justify-content:center;height:100%;min-width:0}
+body.app-mode .kp-bar-fill{width:100%;max-width:38px;border-radius:9px 9px 3px 3px;transition:height .55s cubic-bezier(.2,.7,.2,1)}
+body.app-mode .kp-bar.p .kp-bar-fill{background:linear-gradient(180deg,#3DDC97,#0E9E63)}
+body.app-mode .kp-bar.n .kp-bar-fill{background:linear-gradient(180deg,#FB7A75,#DA3C36)}
+body.app-mode .kp-chart-empty{color:rgba(255,255,255,.4);font-size:13px;display:flex;align-items:center;justify-content:center;height:150px;width:100%}
+body.app-mode .kp-donut-wrap{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+body.app-mode .kp-donut{
+  width:132px;height:132px;border-radius:50%;flex-shrink:0;background:#2A2119;
+  -webkit-mask:radial-gradient(circle 43px at 50% 50%,transparent 43px,#000 44px);
+  mask:radial-gradient(circle 43px at 50% 50%,transparent 43px,#000 44px);
+}
+body.app-mode .kp-legend{display:flex;flex-direction:column;gap:13px;flex:1;min-width:150px}
+body.app-mode .kp-lg{display:flex;align-items:center;gap:9px;font-size:13px;color:rgba(255,255,255,.68)}
+body.app-mode .kp-lg-d{width:11px;height:11px;border-radius:3px;flex-shrink:0}
+body.app-mode .kp-lg b{margin-left:auto;color:#F4EFE8;font-weight:800;font-variant-numeric:tabular-nums}
+@media(max-width:900px){body.app-mode .kp-charts{grid-template-columns:1fr}}
+
+/* ══════ ANASAYFA HERO — koyu premium (referans) ══════ */
+.hero.khm{
+  background:
+    radial-gradient(920px 540px at 80% 6%,rgba(242,122,26,.24),transparent 58%),
+    radial-gradient(680px 480px at 8% 96%,rgba(242,122,26,.09),transparent 60%),
+    linear-gradient(160deg,#1C1611 0%,#14100C 55%,#0F0C09 100%)!important;
+}
+.hero.khm .khm-hero-grid{
+  background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+}
+.hero.khm .khm-badge{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12);color:rgba(255,255,255,.82);box-shadow:none}
+.hero.khm h1{color:#F7F3EE}
+.hero.khm .khm-lead{color:rgba(255,255,255,.66)}
+.hero.khm .khm-lead strong{color:#fff!important}
+.hero.khm .khm-ticks span{color:rgba(255,255,255,.72)}
+.hero.khm .khm-btn-gh{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.16);color:#F7F3EE}
+.hero.khm .khm-btn-gh:hover{border-color:rgba(255,255,255,.42);color:#fff}
+.hero.khm .khm-note{color:rgba(255,255,255,.5)}
+.hero.khm .khm-note strong{color:rgba(255,255,255,.78)!important}
+.hero.khm .khm-rule{background:rgba(255,255,255,.1)}
+.hero.khm .khm-avs .st{border-color:#1C1611}
+.hero.khm .khm-avs > div:nth-child(2) > div:first-child{color:#F7F3EE!important}
+.hero.khm .khm-avs > div:nth-child(2) > div:last-child{color:rgba(255,255,255,.5)!important}
+.hero.khm .khm-incl{border-top-color:rgba(255,255,255,.1)}
+.hero.khm .khm-incl > div:first-child{color:rgba(255,255,255,.5)!important}
+.hero.khm .khm-incl span{color:rgba(255,255,255,.72)}
+/* mockup kart koyu */
+.hero.khm .dashcard{
+  background:linear-gradient(162deg,#241C15,#17120E);
+  border:1px solid rgba(255,255,255,.09);color:#F4EFE8;
+  box-shadow:0 44px 96px -44px rgba(0,0,0,.9),0 0 0 1px rgba(242,122,26,.06) inset;
+}
+.hero.khm .khm-fbadge{
+  background:linear-gradient(160deg,#271E16,#191410);border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 22px 48px rgba(0,0,0,.6);
+}
+.hero.khm .khm-fb2{border-left:3px solid #E0453F}
+
+/* ══ HERO — tam dashboard mockup (referans) ══ */
+.hero.khm .khm-stage{perspective:1800px}
+.hero.khm .hero-dash{
+  position:relative;width:680px;max-width:100%;border-radius:20px;overflow:hidden;
+  background:linear-gradient(158deg,#221A13,#15110D);border:1px solid rgba(255,255,255,.09);
+  box-shadow:0 58px 120px -44px rgba(0,0,0,.92),0 0 0 1px rgba(242,122,26,.06) inset;
+  transform:rotateY(-15deg) rotateX(5deg);transform-origin:center left;
+  animation:heroDashFloat 8s ease-in-out infinite;will-change:transform;
+}
+@keyframes heroDashFloat{0%,100%{transform:rotateY(-15deg) rotateX(5deg) translateY(0)}50%{transform:rotateY(-12.5deg) rotateX(4deg) translateY(-14px)}}
+.hero.khm .hero-dash:hover{animation-play-state:paused}
+.hero.khm .hd-donut{
+  width:98px;height:98px;border-radius:50%;flex-shrink:0;
+  -webkit-mask:radial-gradient(circle 31px at 50% 50%,transparent 31px,#000 32px);
+  mask:radial-gradient(circle 31px at 50% 50%,transparent 31px,#000 32px);
+}
+.hero.khm .hero-alert{
+  position:absolute;right:-26px;bottom:8%;width:212px;padding:16px 17px;border-radius:16px;z-index:3;
+  background:linear-gradient(160deg,#2A1714,#181110);border:1px solid rgba(251,107,102,.3);
+  box-shadow:0 28px 56px rgba(0,0,0,.62);animation:khmFloatB 6.5s ease-in-out infinite;
+}
+.hero.khm .hd-bar{flex:1;min-width:0;display:flex;align-items:flex-end;justify-content:center;height:100%}
+.hero.khm .hd-bar span{width:100%;max-width:11px;border-radius:3px 3px 1px 1px}
+@media(max-width:1024px){
+  .hero.khm .hero-dash{width:100%;transform:none;animation:none}
+  .hero.khm .hero-alert{position:static;width:100%;margin-top:14px;animation:none}
+}
+
 @media(max-width:1080px){
   body.app-mode .kdash-side{position:static;flex-direction:row;flex-wrap:wrap;align-items:center}
 }
@@ -2866,52 +3042,62 @@ body.app-mode .kar-badge{font-size:15px;font-weight:800;letter-spacing:-.4px}
         </div>
       </div>
 
-      <!-- SAĞ: dashboard mockup -->
+      <!-- SAĞ: tam dashboard mockup (referans) -->
       <div class="khm-stage">
-        <div class="dashcard" id="khm-dashcard">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-            <div style="display:flex;align-items:center;gap:11px">
-              <span style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#F27A1A,#E0640C);display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:19px">k</span>
-              <div style="font-size:15px;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif">Ürün Kârlılık Özeti</div>
+        <div class="hero-dash" id="khm-dashcard">
+          <div style="display:grid;grid-template-columns:134px 1fr">
+            <aside style="background:rgba(0,0,0,.22);border-right:1px solid rgba(255,255,255,.06);padding:15px 11px;display:flex;flex-direction:column;gap:13px">
+              <div style="display:flex;align-items:center;gap:7px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;font-weight:800;color:#F4EFE8"><span style="width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,#F27A1A,#E0640C);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px">k</span>komisyon<span style="color:#FF9A42">hesap</span></div>
+              <div style="display:flex;flex-direction:column;gap:2px;font-size:10.5px;font-weight:600">
+                <span style="display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:9px;background:linear-gradient(120deg,rgba(242,122,26,.2),rgba(242,122,26,.06));color:#fff;box-shadow:0 0 0 1px rgba(242,122,26,.26) inset"><span style="width:6px;height:6px;border-radius:2px;background:#FF9A42"></span>Genel Bakış</span>
+                <span style="display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:9px;color:rgba(255,255,255,.52)"><span style="width:6px;height:6px;border-radius:2px;background:rgba(255,255,255,.28)"></span>Ürün Analizi</span>
+                <span style="display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:9px;color:rgba(255,255,255,.52)"><span style="width:6px;height:6px;border-radius:2px;background:rgba(255,255,255,.28)"></span>Zararlı<b style="margin-left:auto;font-size:8.5px;background:rgba(251,107,102,.2);color:#FB6B66;padding:1px 6px;border-radius:20px">47</b></span>
+                <span style="display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:9px;color:rgba(255,255,255,.52)"><span style="width:6px;height:6px;border-radius:2px;background:rgba(255,255,255,.28)"></span>Kârlı<b style="margin-left:auto;font-size:8.5px;background:rgba(52,211,153,.16);color:#34D399;padding:1px 6px;border-radius:20px">96</b></span>
+                <span style="display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:9px;color:rgba(255,255,255,.52)"><span style="width:6px;height:6px;border-radius:2px;background:rgba(255,255,255,.28)"></span>Tüm Ürünler<b style="margin-left:auto;font-size:8.5px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);padding:1px 6px;border-radius:20px">2.416</b></span>
+              </div>
+            </aside>
+            <div style="padding:16px 17px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:800;color:#F4EFE8">Genel Bakış</div>
+                <span style="display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:600;color:rgba(255,255,255,.6);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);padding:5px 10px;border-radius:8px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg>Son 7 Gün ▾</span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:11px">
+                <div style="border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);border-radius:11px;padding:10px 11px"><div style="font-size:8.5px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.04em;text-transform:uppercase">Toplam Ürün</div><div style="display:flex;align-items:flex-end;justify-content:space-between;gap:4px;margin-top:5px"><div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#F4EFE8;letter-spacing:-.5px">2.416</div></div></div>
+                <div style="border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);border-radius:11px;padding:10px 11px"><div style="font-size:8.5px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.04em;text-transform:uppercase">Kârlı Ürün</div><div style="display:flex;align-items:flex-end;justify-content:space-between;gap:4px;margin-top:5px"><div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#F4EFE8;letter-spacing:-.5px">1.268</div><div style="font-size:9px;font-weight:700;color:#F4EFE8">%52,5</div></div></div>
+                <div style="border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);border-radius:11px;padding:10px 11px"><div style="font-size:8.5px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.04em;text-transform:uppercase">Zararlı Ürün</div><div style="display:flex;align-items:flex-end;justify-content:space-between;gap:4px;margin-top:5px"><div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#F4EFE8;letter-spacing:-.5px">47</div><div style="font-size:9px;font-weight:700;color:#F4EFE8">%1,9</div></div></div>
+                <div style="border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);border-radius:11px;padding:10px 11px"><div style="font-size:8.5px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.04em;text-transform:uppercase">Net Kâr</div><div style="display:flex;align-items:flex-end;justify-content:space-between;gap:4px;margin-top:5px"><div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#34D399;letter-spacing:-.5px">₺312.420</div><svg width="34" height="18" viewBox="0 0 34 18" fill="none"><path d="M1 15 L7 11 L13 13 L19 6 L25 8 L33 1" stroke="#34D399" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:10px;margin-bottom:10px">
+                <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:13px;padding:12px 13px">
+                  <div style="font-size:10.5px;font-weight:700;color:rgba(255,255,255,.5);margin-bottom:11px">Kâr Performansı</div>
+                  <div style="display:flex;align-items:flex-end;gap:5px;height:78px"><div class="hd-bar"><span style="height:38%;background:linear-gradient(180deg,#3DDC97,#0E9E63)"></span></div><div class="hd-bar"><span style="height:60%;background:linear-gradient(180deg,#3DDC97,#0E9E63)"></span></div><div class="hd-bar"><span style="height:52%;background:linear-gradient(180deg,#FB7A75,#DA3C36)"></span></div><div class="hd-bar"><span style="height:74%;background:linear-gradient(180deg,#3DDC97,#0E9E63)"></span></div><div class="hd-bar"><span style="height:44%;background:linear-gradient(180deg,#3DDC97,#0E9E63)"></span></div><div class="hd-bar"><span style="height:88%;background:linear-gradient(180deg,#3DDC97,#0E9E63)"></span></div><div class="hd-bar"><span style="height:58%;background:linear-gradient(180deg,#FB7A75,#DA3C36)"></span></div><div class="hd-bar"><span style="height:36%;background:linear-gradient(180deg,#FB7A75,#DA3C36)"></span></div><div class="hd-bar"><span style="height:70%;background:linear-gradient(180deg,#3DDC97,#0E9E63)"></span></div><div class="hd-bar"><span style="height:50%;background:linear-gradient(180deg,#3DDC97,#0E9E63)"></span></div><div class="hd-bar"><span style="height:82%;background:linear-gradient(180deg,#3DDC97,#0E9E63)"></span></div><div class="hd-bar"><span style="height:64%;background:linear-gradient(180deg,#FB7A75,#DA3C36)"></span></div></div>
+                </div>
+                <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:13px;padding:12px 13px">
+                  <div style="font-size:10.5px;font-weight:700;color:rgba(255,255,255,.5);margin-bottom:10px">Kâr Dağılımı</div>
+                  <div style="display:flex;align-items:center;gap:12px">
+                    <div class="hd-donut" style="background:conic-gradient(#34D399 0deg 189deg,#FB6B66 189deg 196deg,#E0A94A 196deg 360deg)"></div>
+                    <div style="display:flex;flex-direction:column;gap:7px;font-size:9.5px;color:rgba(255,255,255,.62)">
+                      <span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:2px;background:#34D399"></span>Kârlı <b style="color:#F4EFE8;margin-left:2px">%52,5</b></span>
+                      <span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:2px;background:#FB6B66"></span>Zararlı <b style="color:#F4EFE8;margin-left:2px">%1,9</b></span>
+                      <span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:2px;background:#E0A94A"></span>Başa baş <b style="color:#F4EFE8;margin-left:2px">%45,6</b></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:13px;padding:11px 13px">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px"><div style="font-size:10.5px;font-weight:700;color:rgba(255,255,255,.5)">Son Zararlı Ürünler</div><span style="font-size:9.5px;font-weight:700;color:#FF9A42">Tümünü Gör →</span></div>
+                <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center;padding:8px 2px;border-top:1px solid rgba(255,255,255,.05);font-size:11px"><span style="color:#EDE7DF;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Kablosuz Hoparlör</span><span style="color:rgba(255,255,255,.55);text-align:right;min-width:52px">₺1.199</span><span style="color:#FB6B66;font-weight:800;text-align:right;min-width:52px">−₺47,20</span><span style="color:#FB6B66;font-weight:700;text-align:right;min-width:40px">−%8,7</span></div>
+                <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center;padding:8px 2px;border-top:1px solid rgba(255,255,255,.05);font-size:11px"><span style="color:#EDE7DF;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Şarjlı Matkap</span><span style="color:rgba(255,255,255,.55);text-align:right;min-width:52px">₺1.999</span><span style="color:#FB6B66;font-weight:800;text-align:right;min-width:52px">−₺38,15</span><span style="color:#FB6B66;font-weight:700;text-align:right;min-width:40px">−%6,2</span></div>
+                <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center;padding:8px 2px;border-top:1px solid rgba(255,255,255,.05);font-size:11px"><span style="color:#EDE7DF;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Telefon Kılıfı</span><span style="color:rgba(255,255,255,.55);text-align:right;min-width:52px">₺199,90</span><span style="color:#FB6B66;font-weight:800;text-align:right;min-width:52px">−₺5,30</span><span style="color:#FB6B66;font-weight:700;text-align:right;min-width:40px">−%2,6</span></div>
+              </div>
             </div>
-            <span style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#16A34A;background:#EAF7EE;border:1px solid #CFEBD6;padding:5px 11px;border-radius:100px"><span style="width:6px;height:6px;border-radius:50%;background:#16A34A"></span>Excel yüklendi</span>
-          </div>
-
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
-            <div style="border:1px solid #EFE7DC;border-radius:13px;padding:12px 13px"><div style="font-size:10px;font-weight:700;color:#A8A29E;letter-spacing:.05em;text-transform:uppercase">Toplam Ürün</div><div style="font-size:24px;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;margin-top:5px">128</div></div>
-            <div style="border:1px solid #EFE7DC;border-radius:13px;padding:12px 13px"><div style="font-size:10px;font-weight:700;color:#A8A29E;letter-spacing:.05em;text-transform:uppercase">Kârlı Ürün</div><div style="font-size:24px;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;margin-top:5px;color:#16A34A">96</div></div>
-            <div style="border:1px solid #EFE7DC;border-radius:13px;padding:12px 13px"><div style="font-size:10px;font-weight:700;color:#A8A29E;letter-spacing:.05em;text-transform:uppercase">Ort. Kâr Marjı</div><div style="font-size:24px;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;margin-top:5px;color:#F27A1A">%21,4</div></div>
-          </div>
-
-          <div style="background:#F7F4EF;border:1px solid #EFE7DC;border-radius:15px;padding:15px 16px;margin-bottom:14px">
-            <div style="font-size:11px;font-weight:600;color:#A8A29E">Son ürünlerin kâr görünümü</div>
-            <div style="font-size:20px;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;margin:3px 0 14px">₺18.420 <span style="font-size:13px;color:#57534E;font-weight:600">net kâr</span></div>
-            <div style="display:flex;align-items:flex-end;gap:9px;height:76px">
-              <div class="kbar" style="flex:1;height:42%;background:#F9C89B;border-radius:6px 6px 0 0"></div>
-              <div class="kbar" style="flex:1;height:58%;background:#F7B983;border-radius:6px 6px 0 0"></div>
-              <div class="kbar" style="flex:1;height:48%;background:#F9C89B;border-radius:6px 6px 0 0"></div>
-              <div class="kbar" style="flex:1;height:74%;background:#F27A1A;border-radius:6px 6px 0 0"></div>
-              <div class="kbar" style="flex:1;height:52%;background:#F7B983;border-radius:6px 6px 0 0"></div>
-              <div class="kbar" style="flex:1;height:92%;background:#F27A1A;border-radius:6px 6px 0 0"></div>
-              <div class="kbar" style="flex:1;height:64%;background:#F7B983;border-radius:6px 6px 0 0"></div>
-            </div>
-          </div>
-
-          <div>
-            <div style="display:grid;grid-template-columns:1fr auto auto;gap:14px;padding:0 4px 9px;font-size:10px;font-weight:700;color:#A8A29E;letter-spacing:.05em;text-transform:uppercase;border-bottom:1px solid #F1ECE4"><span>Ürün</span><span style="text-align:right;min-width:64px">Satış</span><span style="text-align:right;min-width:64px">Net Kâr</span></div>
-            <div style="display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;padding:11px 4px;border-bottom:1px solid #F6F1EA"><span style="display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#F0EAE1,#E7DFD4)"></span><span style="font-size:13.5px;font-weight:600">Bluetooth Kulaklık</span></span><span style="text-align:right;font-size:13px;color:#57534E;font-weight:600">₺1.499</span><span style="text-align:right;font-size:14px;font-weight:800;color:#16A34A">+₺312</span></div>
-            <div style="display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;padding:11px 4px;border-bottom:1px solid #F6F1EA"><span style="display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#F0EAE1,#E7DFD4)"></span><span style="font-size:13.5px;font-weight:600">Solar Aplik</span></span><span style="text-align:right;font-size:13px;color:#57534E;font-weight:600">₺699</span><span style="text-align:right;font-size:14px;font-weight:800;color:#16A34A">+₺128</span></div>
-            <div style="display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;padding:11px 4px"><span style="display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#F0EAE1,#E7DFD4)"></span><span style="font-size:13.5px;font-weight:600">Deri Çanta</span></span><span style="text-align:right;font-size:13px;color:#57534E;font-weight:600">₺649</span><span style="text-align:right;font-size:14px;font-weight:800;color:#DC2626">−₺47</span></div>
           </div>
         </div>
-
-        <div class="khm-fbadge khm-fb1">
-          <div style="font-size:9.5px;font-weight:700;color:#A8A29E;letter-spacing:.05em;text-transform:uppercase">Net Kâr</div>
-          <div style="font-size:18px;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;color:#16A34A">+₺312,40 <span style="font-size:11px;color:#A8A29E;font-weight:600">Bugün</span></div>
-        </div>
-        <div class="khm-fbadge khm-fb2">
-          <div style="font-size:9.5px;font-weight:700;color:#DC2626;letter-spacing:.05em;text-transform:uppercase">Zarar Uyarısı</div>
-          <div style="font-size:18px;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;color:#DC2626">−₺47,20</div>
+        <div class="hero-alert">
+          <div style="display:flex;align-items:center;gap:7px;font-size:12px;font-weight:800;color:#FB6B66"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2.5 20h19z"/><path d="M12 10v4.5M12 17.5v.01"/></svg>47 ürün zarar ettiriyor!</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:10px">Toplam zarar</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:21px;font-weight:800;color:#FB6B66;letter-spacing:-.5px;margin-top:2px">−₺47.210,80</div>
+          <button style="margin-top:12px;width:100%;padding:9px;border:none;border-radius:10px;background:#F27A1A;color:#fff;font-family:inherit;font-size:11.5px;font-weight:800;cursor:pointer">Zararlı Ürünleri Gör →</button>
         </div>
       </div>
     </div>
@@ -3685,6 +3871,20 @@ body.app-mode .kar-badge{font-size:15px;font-weight:800;letter-spacing:-.4px}
             <div class="kp-val" id="kp-net">—</div>
             <div class="kp-sub" id="kp-net-s">Toplam</div>
           </div>
+      </div>
+
+      <div class="kp-charts" id="kp-charts" style="display:none">
+        <div class="kd-card kp-chart">
+          <div class="kp-chart-h"><span>Kâr Performansı</span><span class="kp-chart-sub">En çok kazandıran / kaybettiren ürünler</span></div>
+          <div class="kp-bars" id="kpc-bars"></div>
+        </div>
+        <div class="kd-card kp-chart">
+          <div class="kp-chart-h"><span>Kâr Dağılımı</span></div>
+          <div class="kp-donut-wrap">
+            <div class="kp-donut" id="kpc-donut"></div>
+            <div class="kp-legend" id="kpc-legend"></div>
+          </div>
+        </div>
       </div>
 
       <div class="kp-lists" id="kp-lists" style="display:none">
@@ -5719,6 +5919,7 @@ function kdListele(){
   var wrap=document.getElementById('kp-lists'); if(!wrap) return;
   var has=(typeof urunler!=='undefined'&&urunler&&urunler.length>0);
   wrap.style.display=has?'grid':'none';
+  try{kpCharts();}catch(e){}
   if(!has) return;
   var rows=[];
   for(var i=0;i<urunler.length;i++){
@@ -5743,6 +5944,34 @@ function kdListele(){
   var a=document.getElementById('kp-top'), b=document.getElementById('kp-bot');
   if(a) a.innerHTML=draw(top);
   if(b) b.innerHTML=draw(bot);
+}
+
+function kpCharts(){
+  var el=document.getElementById('kp-charts'); if(!el) return;
+  var has=(typeof urunler!=='undefined'&&urunler&&urunler.length>0);
+  el.style.display=has?'grid':'none';
+  if(!has) return;
+  var withA=[],karli=0,zarar=0,bekleyen=0;
+  for(var i=0;i<urunler.length;i++){var c=calcKar(urunler[i]);
+    if(c.hasAlis){withA.push({t:urunler[i].title||urunler[i].name||'\u2014',net:c.net});if(c.net>=0)karli++;else zarar++;}
+    else bekleyen++;
+  }
+  var srt=withA.slice().sort(function(x,y){return y.net-x.net;}).slice(0,9);
+  var maxAbs=1; srt.forEach(function(r){maxAbs=Math.max(maxAbs,Math.abs(r.net));});
+  var bars='';
+  if(!srt.length){bars='<div class="kp-chart-empty">Al\u0131\u015f fiyat\u0131 girilen \u00fcr\u00fcn yok</div>';}
+  else{srt.forEach(function(r){var h=Math.max(7,Math.round(Math.abs(r.net)/maxAbs*100));
+    bars+='<div class="kp-bar '+(r.net>=0?'p':'n')+'" title="'+kdEsc(r.t)+': '+(r.net>=0?'+':'\u2212')+fmt(Math.abs(r.net))+'"><span class="kp-bar-fill" style="height:'+h+'%"></span></div>';});}
+  var bl=document.getElementById('kpc-bars'); if(bl)bl.innerHTML=bars;
+  var tot=(karli+zarar+bekleyen)||1;
+  var a1=karli/tot*360, a2=(karli+zarar)/tot*360;
+  var d=document.getElementById('kpc-donut');
+  if(d)d.style.background='conic-gradient(#34D399 0deg '+a1+'deg,#FB5B55 '+a1+'deg '+a2+'deg,#E0A94A '+a2+'deg 360deg)';
+  var lg=document.getElementById('kpc-legend');
+  if(lg)lg.innerHTML=
+    '<div class="kp-lg"><span class="kp-lg-d" style="background:#34D399"></span>K\u00e2rl\u0131 \u00fcr\u00fcn<b>'+karli+'</b></div>'+
+    '<div class="kp-lg"><span class="kp-lg-d" style="background:#FB5B55"></span>Zararl\u0131 \u00fcr\u00fcn<b>'+zarar+'</b></div>'+
+    '<div class="kp-lg"><span class="kp-lg-d" style="background:#E0A94A"></span>Al\u0131\u015f bekleyen<b>'+bekleyen+'</b></div>';
 }
 
 
