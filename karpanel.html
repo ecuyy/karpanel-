@@ -2952,6 +2952,46 @@ body.app-mode .kp-lg b{margin-left:auto;color:#F4EFE8;font-weight:800;font-varia
 }
 .hero.khm .hd-bar{flex:1;min-width:0;display:flex;align-items:flex-end;justify-content:center;height:100%}
 .hero.khm .hd-bar span{width:100%;max-width:11px;border-radius:3px 3px 1px 1px}
+
+/* ── HERO mockup premium efektleri ── */
+.hero.khm .hero-dash{transition:transform .55s cubic-bezier(.2,.7,.2,1)}
+.hero.khm .hero-dash:hover{animation-play-state:paused;transform:rotateY(-6deg) rotateX(2deg) translateY(-6px)}
+/* arkada nabız gibi turuncu ışıma */
+.hero.khm .khm-stage::before{
+  content:"";position:absolute;inset:-10% 0% -12% 6%;z-index:-1;border-radius:44px;
+  background:radial-gradient(closest-side,rgba(242,122,26,.32),transparent 72%);
+  filter:blur(36px);animation:hdGlow 5.5s ease-in-out infinite;pointer-events:none;
+}
+@keyframes hdGlow{0%,100%{opacity:.6;transform:scale(.96)}50%{opacity:1;transform:scale(1.04)}}
+/* tablo satırları sırayla canlanır (canlı veri hissi) */
+.hero.khm .hd-trow{position:relative}
+.hero.khm .hd-trow::before{
+  content:"";position:absolute;inset:0;border-radius:6px;pointer-events:none;opacity:0;
+  background:linear-gradient(90deg,rgba(242,122,26,.16),rgba(242,122,26,.03) 55%,transparent 78%);
+  box-shadow:inset 2px 0 0 #FF9A42;animation:hdRowScan 4.8s ease-in-out infinite;
+}
+.hero.khm .hd-trow:nth-child(2)::before{animation-delay:0s}
+.hero.khm .hd-trow:nth-child(3)::before{animation-delay:.5s}
+.hero.khm .hd-trow:nth-child(4)::before{animation-delay:1s}
+@keyframes hdRowScan{0%{opacity:0}5%{opacity:1}17%{opacity:0}100%{opacity:0}}
+/* yükselişte büyüyen çubuklar */
+.hero.khm .hd-bar span{transform-origin:bottom;animation:hdBarGrow .9s cubic-bezier(.2,.8,.2,1) both}
+.hero.khm .hd-bar:nth-child(1) span{animation-delay:.05s}
+.hero.khm .hd-bar:nth-child(2) span{animation-delay:.11s}
+.hero.khm .hd-bar:nth-child(3) span{animation-delay:.17s}
+.hero.khm .hd-bar:nth-child(4) span{animation-delay:.23s}
+.hero.khm .hd-bar:nth-child(5) span{animation-delay:.29s}
+.hero.khm .hd-bar:nth-child(6) span{animation-delay:.35s}
+.hero.khm .hd-bar:nth-child(7) span{animation-delay:.41s}
+.hero.khm .hd-bar:nth-child(8) span{animation-delay:.47s}
+.hero.khm .hd-bar:nth-child(9) span{animation-delay:.53s}
+.hero.khm .hd-bar:nth-child(10) span{animation-delay:.59s}
+.hero.khm .hd-bar:nth-child(11) span{animation-delay:.65s}
+.hero.khm .hd-bar:nth-child(12) span{animation-delay:.71s}
+@keyframes hdBarGrow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@media(prefers-reduced-motion:reduce){
+  .hero.khm .hero-dash,.hero.khm .khm-stage::before,.hero.khm .hd-trow::before,.hero.khm .hd-bar span{animation:none!important}
+}
 @media(max-width:1024px){
   .hero.khm .hero-dash{width:100%;transform:none;animation:none}
   .hero.khm .hero-alert{position:static;width:100%;margin-top:14px;animation:none}
@@ -3086,9 +3126,9 @@ body.app-mode .kp-lg b{margin-left:auto;color:#F4EFE8;font-weight:800;font-varia
               </div>
               <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:13px;padding:11px 13px">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px"><div style="font-size:10.5px;font-weight:700;color:rgba(255,255,255,.5)">Son Zararlı Ürünler</div><span style="font-size:9.5px;font-weight:700;color:#FF9A42">Tümünü Gör →</span></div>
-                <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center;padding:8px 2px;border-top:1px solid rgba(255,255,255,.05);font-size:11px"><span style="color:#EDE7DF;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Kablosuz Hoparlör</span><span style="color:rgba(255,255,255,.55);text-align:right;min-width:52px">₺1.199</span><span style="color:#FB6B66;font-weight:800;text-align:right;min-width:52px">−₺47,20</span><span style="color:#FB6B66;font-weight:700;text-align:right;min-width:40px">−%8,7</span></div>
-                <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center;padding:8px 2px;border-top:1px solid rgba(255,255,255,.05);font-size:11px"><span style="color:#EDE7DF;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Şarjlı Matkap</span><span style="color:rgba(255,255,255,.55);text-align:right;min-width:52px">₺1.999</span><span style="color:#FB6B66;font-weight:800;text-align:right;min-width:52px">−₺38,15</span><span style="color:#FB6B66;font-weight:700;text-align:right;min-width:40px">−%6,2</span></div>
-                <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center;padding:8px 2px;border-top:1px solid rgba(255,255,255,.05);font-size:11px"><span style="color:#EDE7DF;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Telefon Kılıfı</span><span style="color:rgba(255,255,255,.55);text-align:right;min-width:52px">₺199,90</span><span style="color:#FB6B66;font-weight:800;text-align:right;min-width:52px">−₺5,30</span><span style="color:#FB6B66;font-weight:700;text-align:right;min-width:40px">−%2,6</span></div>
+                <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center;padding:8px 2px;border-top:1px solid rgba(255,255,255,.05);font-size:11px" class="hd-trow"><span style="color:#EDE7DF;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Kablosuz Hoparlör</span><span style="color:rgba(255,255,255,.55);text-align:right;min-width:52px">₺1.199</span><span style="color:#FB6B66;font-weight:800;text-align:right;min-width:52px">−₺47,20</span><span style="color:#FB6B66;font-weight:700;text-align:right;min-width:40px">−%8,7</span></div>
+                <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center;padding:8px 2px;border-top:1px solid rgba(255,255,255,.05);font-size:11px" class="hd-trow"><span style="color:#EDE7DF;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Şarjlı Matkap</span><span style="color:rgba(255,255,255,.55);text-align:right;min-width:52px">₺1.999</span><span style="color:#FB6B66;font-weight:800;text-align:right;min-width:52px">−₺38,15</span><span style="color:#FB6B66;font-weight:700;text-align:right;min-width:40px">−%6,2</span></div>
+                <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center;padding:8px 2px;border-top:1px solid rgba(255,255,255,.05);font-size:11px" class="hd-trow"><span style="color:#EDE7DF;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Telefon Kılıfı</span><span style="color:rgba(255,255,255,.55);text-align:right;min-width:52px">₺199,90</span><span style="color:#FB6B66;font-weight:800;text-align:right;min-width:52px">−₺5,30</span><span style="color:#FB6B66;font-weight:700;text-align:right;min-width:40px">−%2,6</span></div>
               </div>
             </div>
           </div>
