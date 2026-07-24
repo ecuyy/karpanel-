@@ -2529,6 +2529,181 @@ select.kd-inp{cursor:pointer;appearance:none;-webkit-appearance:none;background-
   .kd-step{font-size:12px;padding:8px 12px 8px 8px}
 }
 
+/* ══════════════════════════════════════════════════════════════════
+   ✦ PREMIUM PANEL 2.9 — giriş sonrası yeniden tasarım (override katmanı)
+   Yalnızca body.app-mode altında; tüm ID/class/JS aynen korunur.
+   ══════════════════════════════════════════════════════════════════ */
+body.app-mode{
+  background:
+    radial-gradient(1100px 520px at 88% -8%,rgba(242,122,26,.06),transparent 60%),
+    linear-gradient(180deg,#F5F2EC 0%,#F3EFE9 100%)!important;
+}
+body.app-mode #app-section{padding-top:26px}
+body.app-mode .kdash-wrap{gap:26px}
+
+/* ── premium sayfa başlığı ── */
+body.app-mode .kd-top{
+  padding:2px 4px 22px;position:relative;
+  border-bottom:1px solid rgba(20,17,14,.07);margin-bottom:22px;
+}
+body.app-mode .kd-title{
+  font-size:29px;letter-spacing:-1.1px;
+  background:linear-gradient(180deg,#241C15,#14110E);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+body.app-mode .kd-sub{color:#96897B;font-size:14px;margin-top:7px}
+
+/* ══ KENAR ÇUBUĞU — koyu premium cam ══ */
+body.app-mode .kdash-side{
+  position:sticky;top:22px;gap:14px;padding:16px 13px;border-radius:24px;
+  background:
+    radial-gradient(360px 200px at 100% -4%,rgba(242,122,26,.16),transparent 62%),
+    linear-gradient(168deg,#211A14 0%,#171310 58%,#120F0C 100%);
+  border:1px solid rgba(255,255,255,.07);
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+  box-shadow:0 2px 4px rgba(20,17,14,.2),0 34px 60px -34px rgba(20,17,14,.85),0 0 0 1px rgba(20,17,14,.4);
+}
+body.app-mode .kdash-side::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);
+  background-size:30px 30px;
+}
+body.app-mode .kd-hero{
+  border:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(300px 150px at 100% 0%,rgba(242,122,26,.34),transparent 66%),
+    linear-gradient(158deg,#2C2219,#1A140F);
+  box-shadow:0 16px 34px -18px rgba(0,0,0,.85),0 0 0 1px rgba(242,122,26,.08) inset;
+}
+body.app-mode .kd-nav{gap:4px}
+body.app-mode .kd-group{color:rgba(255,255,255,.32);padding:14px 12px 6px}
+body.app-mode .kd-item{
+  color:rgba(255,255,255,.6);border-radius:13px;padding:11px 12px;font-weight:600;
+}
+body.app-mode .kd-item::before{background:linear-gradient(180deg,#FF9A42,#F27A1A)}
+body.app-mode .kd-item:hover{background:rgba(255,255,255,.055);color:#fff}
+body.app-mode .kd-item:hover .kd-i{color:rgba(255,255,255,.85)}
+body.app-mode .kd-item.on{
+  background:linear-gradient(120deg,rgba(242,122,26,.2),rgba(242,122,26,.08));
+  color:#fff;box-shadow:0 0 0 1px rgba(242,122,26,.28) inset;
+}
+body.app-mode .kd-item.on::before{height:22px}
+body.app-mode .kd-i{color:rgba(255,255,255,.42)}
+body.app-mode .kd-item.on .kd-i{color:#FF9A42}
+body.app-mode .kd-side-foot{gap:8px;margin-top:4px}
+body.app-mode .kd-side-foot .kd-mini{
+  background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);color:rgba(255,255,255,.72);
+}
+body.app-mode .kd-side-foot .kd-mini:hover{background:rgba(255,255,255,.11);border-color:rgba(255,255,255,.2);color:#fff}
+body.app-mode .kd-side-foot .kd-mini-out:hover{background:rgba(239,68,68,.16);border-color:rgba(239,68,68,.4);color:#FF6B6B}
+
+/* ══ STAT KARTLARI — premium, katmanlı ══ */
+body.app-mode .kstat-grid{gap:13px}
+body.app-mode .kstat{
+  padding:17px 18px;border-radius:19px;gap:14px;
+  background:#fff;border:1px solid rgba(20,17,14,.07);
+  box-shadow:0 1px 2px rgba(20,17,14,.04),0 18px 38px -30px rgba(20,17,14,.4);
+}
+body.app-mode .kstat-ic{width:44px;height:44px;border-radius:14px}
+body.app-mode .kstat-val{font-size:25px}
+body.app-mode button.kstat:hover{transform:translateY(-3px);box-shadow:0 26px 48px -28px rgba(20,17,14,.5)}
+body.app-mode button.kstat.on{box-shadow:0 0 0 1.6px var(--c) inset,0 22px 44px -26px rgba(20,17,14,.5)}
+
+/* ══ GENEL BAKIŞ KARTLARI ══ */
+body.app-mode .kp-card{
+  background:#fff;border:1px solid rgba(20,17,14,.07);border-radius:20px;
+  box-shadow:0 1px 2px rgba(20,17,14,.04),0 22px 44px -32px rgba(20,17,14,.4);
+}
+body.app-mode .kp-val{font-size:31px}
+
+/* ══════ KAR HESAPLAMA TABLOSU — tamamen yenilendi ══════ */
+body.app-mode .prod-table-wrap{
+  background:#fff;border:1px solid rgba(20,17,14,.07);border-radius:22px;overflow-x:auto;
+  box-shadow:
+    0 1px 2px rgba(20,17,14,.04),
+    0 18px 40px -28px rgba(20,17,14,.34),
+    0 60px 90px -70px rgba(20,17,14,.5);
+}
+/* koyu, premium başlık şeridi */
+body.app-mode .ptable thead .kth{
+  background:linear-gradient(180deg,#241C15,#17120E);
+  color:rgba(255,255,255,.6);border-bottom:none;
+  padding:16px 16px;font-size:10px;letter-spacing:.1em;
+}
+body.app-mode .ptable thead .kth-sub{color:rgba(255,255,255,.4)}
+body.app-mode .ptable thead .kth .dot{background:#FF9A42;opacity:.95}
+body.app-mode .ptable thead .kth-key{color:#FF9A42}
+body.app-mode .ptable thead .kth-key .kth-sub{color:#FF9A42;opacity:.9}
+body.app-mode .ptable thead .kth-cb input{accent-color:#F27A1A}
+body.app-mode .ptable thead tr>th:first-child{border-top-left-radius:22px}
+body.app-mode .ptable thead tr>th:last-child{border-top-right-radius:22px}
+
+/* satırlar: net kâr/zarar durumuna göre aksan (JS'siz, :has ile) */
+body.app-mode .pt-row>td{border-bottom:1px solid rgba(20,17,14,.055);padding:16px}
+body.app-mode .pt-row:last-child>td{border-bottom:none}
+body.app-mode .pt-row>td:first-child{position:relative}
+body.app-mode .pt-row:has(.kb-good)>td:first-child::before,
+body.app-mode .pt-row:has(.kb-bad)>td:first-child::before{
+  content:"";position:absolute;left:0;top:8px;bottom:8px;width:3.5px;border-radius:0 4px 4px 0;
+}
+body.app-mode .pt-row:has(.kb-good)>td:first-child::before{background:linear-gradient(180deg,#22C58A,#0EA96B)}
+body.app-mode .pt-row:has(.kb-bad)>td:first-child::before{background:linear-gradient(180deg,#FB6B66,#E0453F)}
+body.app-mode .pt-row:has(.kb-bad){background:rgba(239,68,68,.018)}
+body.app-mode .pt-row:hover>td{background:rgba(242,122,26,.05)}
+body.app-mode .pt-row:has(.kb-bad):hover>td{background:rgba(239,68,68,.04)}
+
+/* ürün adı + kod */
+body.app-mode .pt-img .prod-img,body.app-mode .pt-img .prod-img-ph{
+  width:52px;height:52px;border-radius:14px;
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 8px 18px -10px rgba(20,17,14,.5);
+}
+body.app-mode .pt-info .prod-name{font-size:14.5px;font-weight:800;letter-spacing:-.25px}
+
+/* girdiler */
+body.app-mode .tinput{border-radius:11px;padding:10px 12px;background:#FCFBFA;border-color:rgba(20,17,14,.1)}
+body.app-mode .tinput:hover{background:#fff}
+body.app-mode .tinput-key{
+  border-color:rgba(242,122,26,.42);
+  background:linear-gradient(180deg,#FFF6EC,#FFFDFB);
+  box-shadow:0 0 0 3px rgba(242,122,26,.07);
+}
+body.app-mode .tinput-key:focus{box-shadow:0 0 0 3.5px rgba(242,122,26,.16)}
+body.app-mode .pt-kom-tl{background:rgba(242,122,26,.1);color:#C2610C}
+
+/* net kâr rozeti — premium */
+body.app-mode .kar-badge{
+  min-width:106px;padding:11px 16px;border-radius:13px;font-size:14.5px;letter-spacing:-.3px;
+}
+body.app-mode .kb-good{
+  background:linear-gradient(180deg,rgba(16,185,129,.16),rgba(16,185,129,.07));
+  color:#0A7048;border-color:rgba(16,185,129,.3);
+  box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 6px 16px -10px rgba(16,185,129,.6);
+}
+body.app-mode .kb-bad{
+  background:linear-gradient(180deg,rgba(239,68,68,.14),rgba(239,68,68,.06));
+  color:#C0271F;border-color:rgba(239,68,68,.28);
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 6px 16px -10px rgba(239,68,68,.5);
+}
+body.app-mode .kb-neutral{background:rgba(20,17,14,.045);border:1px dashed rgba(20,17,14,.14);color:#A8A29E}
+
+/* ayrıntı butonu */
+body.app-mode .detay-btn{border-radius:12px;padding:11px 17px}
+
+/* arama + sıralama alanı */
+body.app-mode .search-inp,body.app-mode .ksort{background:#fff;border-color:rgba(20,17,14,.09)}
+
+/* üst aksiyon butonları */
+body.app-mode .kact{background:#fff;border-color:rgba(20,17,14,.09)}
+
+/* kargo barem kutusu + bilgi şeritleri: beyaz zemine oturt */
+body.app-mode .kbx{background:#fff;box-shadow:0 1px 2px rgba(20,17,14,.04),0 20px 42px -30px rgba(20,17,14,.34)}
+body.app-mode .kbx .kargo-secim-card{background:#FCFBFA}
+body.app-mode .kd-card{background:#fff}
+
+@media(max-width:1080px){
+  body.app-mode .kdash-side{position:static;flex-direction:row;flex-wrap:wrap;align-items:center}
+}
+
 </style>
 </head>
 <body>
