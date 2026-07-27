@@ -146,8 +146,25 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(401, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'E-posta veya şifre hatalı' })); return;
     }
+    // Premium süresi dolduysa otomatik düşür
+    let effPremium = user.premium;
+    if (effPremium && user.uyelikBitis && new Date(user.uyelikBitis) < new Date()) {
+      effPremium = false;
+      try { await db.collection('users').updateOne({ email }, { $set: { premium: false } }); } catch (e) {}
+    }
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true, user: { ad: user.ad, email: user.email, premium: user.premium, odemeTarihi: user.odemeTarihi, uyelikBitis: user.uyelikBitis } }));
+    res.end(JSON.stringify({ ok: true, user: { ad: user.ad, email: user.email, premium: effPremium, odemeTarihi: user.odemeTarihi, uyelikBitis: user.uyelikBitis, fatura: user.fatura || null } }));
+    return;
+  }
+
+  // Fatura bilgilerini kaydet
+  if (parsed.pathname === '/api/fatura/kaydet' && req.method === 'POST') {
+    const body = await getBody(req);
+    const { email, fatura } = body;
+    if (!db || !email) { res.writeHead(400, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'Geçersiz istek' })); return; }
+    try { await db.collection('users').updateOne({ email }, { $set: { fatura: fatura || {} } }); } catch (e) {}
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true }));
     return;
   }
 
