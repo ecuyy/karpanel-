@@ -4442,6 +4442,7 @@ function calcKar(p){
 
 // ── NAVIGATION ──
 function goApp(){
+  try{ localStorage.setItem('kp_inapp','1'); }catch(e){}
   document.body.classList.add('app-mode');
   document.getElementById('hero').style.display='none';
   document.querySelectorAll('.how-section,.pricing-section,footer').forEach(e=>e.style.display='none');
@@ -4452,6 +4453,7 @@ function goApp(){
   window.scrollTo(0,0);
 }
 function goHome(){
+  try{ localStorage.setItem('kp_inapp','0'); }catch(e){}
   document.body.classList.remove('app-mode');
   document.getElementById('hero').style.display='flex';
   document.querySelectorAll('.how-section,.pricing-section,footer').forEach(e=>e.style.display='');
@@ -4476,14 +4478,14 @@ function loadUser(){
       try{ if(localStorage.getItem('kp_user')) localStorage.setItem('kp_user',JSON.stringify(currentUser));
            if(sessionStorage.getItem('kp_user')) sessionStorage.setItem('kp_user',JSON.stringify(currentUser)); }catch(e){}
     }
-    if(currentUser.premium && !premiumAktif(currentUser)){
-      currentUser.premium=false;
-      try{ if(localStorage.getItem('kp_user')) localStorage.setItem('kp_user',JSON.stringify(currentUser));
-           if(sessionStorage.getItem('kp_user')) sessionStorage.setItem('kp_user',JSON.stringify(currentUser)); }catch(e){}
-    }
     applyUser();
     if(currentUser && !currentUser.premium){
       setTimeout(function(){var o=document.getElementById('pay-overlay');if(o)o.classList.add('open');},500);
+    } else if(currentUser && localStorage.getItem('kp_inapp')==='1'){
+      // Sayfa yenilendiğinde uygulama görünümünü ve son sekmeyi geri yükle
+      goApp();
+      var _lv=localStorage.getItem('kp_lastview')||'panel';
+      if(typeof kdGo==='function'){ try{ kdGo(_lv); }catch(e){} }
     }
   }
   else{showGuestUI();}
@@ -4579,6 +4581,7 @@ async function sifreDegistir(){
   toast('Şifre güncellendi! ✓','success','✅');
 }
 function logout(){
+  try{ localStorage.setItem('kp_inapp','0'); localStorage.removeItem('kp_lastview'); }catch(e){}
   localStorage.removeItem('kp_user');
   sessionStorage.removeItem('kp_user');   // 'Beni hatirla' isaretsizken oturum burada tutuluyor
   const excelSec=document.getElementById('excel-upload-section');if(excelSec)excelSec.style.display='none';
@@ -5900,6 +5903,7 @@ function kdSyncUser(){
   if(se&&!se.value&&currentUser) se.value=currentUser.email;
 }
 function kdGo(v){
+  try{ localStorage.setItem('kp_lastview',v); }catch(e){}
   var prem=!!(currentUser&&currentUser.premium);
   var items=document.querySelectorAll('.kd-item[data-v]');
   for(var i=0;i<items.length;i++){
