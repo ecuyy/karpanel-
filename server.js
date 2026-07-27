@@ -179,7 +179,7 @@ const server = http.createServer(async (req, res) => {
 
     const reqProto = (req.headers['x-forwarded-proto'] || '').split(',')[0].trim() || 'https';
     const reqHost = req.headers.host;
-    const baseUrl = process.env.RENDER_EXTERNAL_URL || process.env.BASE_URL || (reqHost ? reqProto + '://' + reqHost : 'https://komisyonhesap.com');
+    const baseUrl = (reqHost ? reqProto + '://' + reqHost : null) || process.env.BASE_URL || process.env.RENDER_EXTERNAL_URL || 'https://komisyonhesap.com';
     const callbackUrl = baseUrl + '/api/odeme-callback?email=' + encodeURIComponent(email);
     const { faturaAd, faturaTc, faturaVkn, faturaVd, faturaTel, faturaIl, faturaIlce, faturaAdres, faturaEmail } = body;
     // Fatura bilgilerini DB'ye kaydet
