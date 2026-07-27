@@ -4407,6 +4407,20 @@ const DEMO=[
 ];
 
 const PREMIUM_EMAILS=['info@ecuyy.com'];
+// Premium 1 yıl sonra otomatik biter. uyelikBitis yoksa odemeTarihi+1yıl baz alınır.
+function premiumBitis(u){
+  if(!u) return null;
+  if(u.uyelikBitis) return new Date(u.uyelikBitis);
+  if(u.odemeTarihi){ var b=new Date(u.odemeTarihi); b.setFullYear(b.getFullYear()+1); return b; }
+  return null;
+}
+function premiumAktif(u){
+  if(!u) return false;
+  if(PREMIUM_EMAILS.includes(u.email)) return true;   // site sahibi daima aktif
+  var b=premiumBitis(u);
+  if(!b) return true;                                  // tarih bilgisi yoksa aktif say
+  return Date.now() < b.getTime();
+}
 const PROXY=window.location.hostname==='localhost'?'http://localhost:3001':window.location.origin;
 
 let urunler=[], filterMode='hepsi', searchQ='', kargoTipi='satici', modalUrun=null, currentUser=null;
@@ -4454,7 +4468,24 @@ function showAppTab(name,el){
 // ── USER ──
 function loadUser(){
   const u=localStorage.getItem('kp_user')||sessionStorage.getItem('kp_user');
-  if(u){currentUser=JSON.parse(u);applyUser();}
+  if(u){
+    currentUser=JSON.parse(u);
+    // Üyelik süresi dolduysa otomatik premium'u kaldır
+    if(currentUser.premium && !premiumAktif(currentUser)){
+      currentUser.premium=false;
+      try{ if(localStorage.getItem('kp_user')) localStorage.setItem('kp_user',JSON.stringify(currentUser));
+           if(sessionStorage.getItem('kp_user')) sessionStorage.setItem('kp_user',JSON.stringify(currentUser)); }catch(e){}
+    }
+    if(currentUser.premium && !premiumAktif(currentUser)){
+      currentUser.premium=false;
+      try{ if(localStorage.getItem('kp_user')) localStorage.setItem('kp_user',JSON.stringify(currentUser));
+           if(sessionStorage.getItem('kp_user')) sessionStorage.setItem('kp_user',JSON.stringify(currentUser)); }catch(e){}
+    }
+    applyUser();
+    if(currentUser && !currentUser.premium){
+      setTimeout(function(){var o=document.getElementById('pay-overlay');if(o)o.classList.add('open');},500);
+    }
+  }
   else{showGuestUI();}
 }
 function applyUser(){
@@ -4609,8 +4640,8 @@ async function girisYap(){
     const r=await fetchWithRetry(PROXY+'/api/giris',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,sifre})});
     const d=await r.json();
     if(!r.ok){showAuthError(d.error||'Giriş başarısız');return;}
-    const isPremium=d.user.premium||PREMIUM_EMAILS.includes(email);
-    currentUser={ad:d.user.ad,email:d.user.email,premium:isPremium,odemeTarihi:d.user.odemeTarihi,uyelikBitis:d.user.uyelikBitis};
+    const isPremium=PREMIUM_EMAILS.includes(email)||((d.user.premium||false)&&premiumAktif(d.user));
+    currentUser={ad:d.user.ad,email:d.user.email,premium:isPremium,odemeTarihi:d.user.odemeTarihi,uyelikBitis:d.user.uyelikBitis,fatura:d.user.fatura||null};
     const hatirla=document.getElementById('beni-hatirla');
     if(hatirla&&hatirla.checked){
       localStorage.setItem('kp_user',JSON.stringify(currentUser));
@@ -6100,6 +6131,7 @@ function faturaAnahtar(){ return 'kp_fatura_'+((currentUser&&currentUser.email)|
 function faturaYukle(){
   var d={};
   try{ d=JSON.parse(localStorage.getItem(faturaAnahtar())||'{}')||{}; }catch(e){}
+  if((!d||!d.unvan&&!d.vkn&&!d.mail)&&currentUser&&currentUser.fatura){ d=currentUser.fatura; }
   var g=function(id){return document.getElementById(id);};
   if(g('fat-unvan')) g('fat-unvan').value=d.unvan||((currentUser&&currentUser.ad)||'');
   if(g('fat-vkn'))   g('fat-vkn').value=d.vkn||'';
