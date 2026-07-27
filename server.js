@@ -177,7 +177,9 @@ const server = http.createServer(async (req, res) => {
     const user = await db.collection('users').findOne({ email });
     if (!user) { res.writeHead(404); res.end(JSON.stringify({ error: 'Kullanıcı bulunamadı' })); return; }
 
-    const baseUrl = process.env.RENDER_EXTERNAL_URL || process.env.BASE_URL || 'https://karpanel.onrender.com';
+    const reqProto = (req.headers['x-forwarded-proto'] || '').split(',')[0].trim() || 'https';
+    const reqHost = req.headers.host;
+    const baseUrl = process.env.RENDER_EXTERNAL_URL || process.env.BASE_URL || (reqHost ? reqProto + '://' + reqHost : 'https://komisyonhesap.com');
     const callbackUrl = baseUrl + '/api/odeme-callback?email=' + encodeURIComponent(email);
     const { faturaAd, faturaTc, faturaVkn, faturaVd, faturaTel, faturaIl, faturaIlce, faturaAdres, faturaEmail } = body;
     // Fatura bilgilerini DB'ye kaydet
