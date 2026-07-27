@@ -2803,6 +2803,11 @@ body.app-mode .ku-d:hover{background:#FCFAF7}
 body.app-mode .ku-d b{font-size:16px}
 body.app-mode .ku-bar{height:8px;border-radius:8px}
 /* fatura / plan satırları */
+body.app-mode .ku-fat-form{margin-top:16px;padding-top:18px;border-top:1px solid rgba(20,17,14,.08)}
+body.app-mode .ku-fat-head{font-size:13px;font-weight:800;color:#14110E;margin-bottom:14px;letter-spacing:-.2px}
+body.app-mode .kd-f2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+body.app-mode textarea.kd-inp{resize:vertical;min-height:52px;font-family:inherit;line-height:1.5}
+@media(max-width:520px){body.app-mode .kd-f2{grid-template-columns:1fr}}
 body.app-mode .kd-plan-box{background:rgba(20,17,14,.06);border-radius:16px;gap:1.5px}
 body.app-mode .kd-plan-row{padding:15px 17px;transition:background .18s}
 body.app-mode .kd-plan-row:hover{background:#FCFAF7}
@@ -2823,9 +2828,9 @@ body.app-mode .prod-table-wrap{
   box-shadow:0 1px 2px rgba(20,17,14,.04),0 22px 48px -34px rgba(20,17,14,.32);
 }
 body.app-mode .prod-table-wrap .ptable thead .kth{
-  background:#F6F3EE;padding:16px 16px;
-  color:#8A8378;font-size:10px;font-weight:800;letter-spacing:.11em;
-  border-bottom:1px solid rgba(20,17,14,.07);
+  background:linear-gradient(180deg,#FFF3E7,#FDEAD6);padding:17px 16px;
+  color:#9A5A16;font-size:10.5px;font-weight:800;letter-spacing:.12em;
+  border-bottom:2px solid rgba(242,122,26,.35);
 }
 body.app-mode .prod-table-wrap .ptable thead .kth-sub{color:#B4ADA3}
 body.app-mode .prod-table-wrap .ptable thead .kth-key{color:#C2610C}
@@ -3793,11 +3798,11 @@ body.app-mode .kp-lg b{margin-left:auto;color:#14110E;font-weight:800;font-varia
           <thead><tr>
             <th class="kth kth-cb"><input type="checkbox" class="row-cb" id="cb-all" onchange="tumSecToggle(this)"></th>
             <th class="kth" style="min-width:280px">Ürün <span class="kth-sub">adı ve model kodu</span></th>
-            <th class="kth kth-c">Satış Fiyatı<span class="kth-sub"><i class="dot"></i>₺</span></th>
-            <th class="kth kth-c">Komisyon<span class="kth-sub"><i class="dot"></i>₺</span></th>
-            <th class="kth kth-c kth-key">Alış Fiyatı<span class="kth-sub"><i class="dot"></i>₺</span></th>
-            <th class="kth kth-c">Kargo<span class="kth-sub"><i class="dot"></i>₺</span></th>
-            <th class="kth kth-c">Net Kâr<span class="kth-sub">₺</span></th>
+            <th class="kth kth-c">Satış Fiyatı</th>
+            <th class="kth kth-c">Komisyon</th>
+            <th class="kth kth-c kth-key">Alış Fiyatı</th>
+            <th class="kth kth-c">Kargo</th>
+            <th class="kth kth-c">Net Kâr</th>
             <th class="kth kth-c" style="min-width:96px">Marj</th>
             <th class="kth kth-c">İşlem</th>
           </tr></thead>
@@ -4037,20 +4042,32 @@ body.app-mode .kp-lg b{margin-left:auto;color:#14110E;font-weight:800;font-varia
           <div class="kd-plan-box">
             <div class="kd-plan-row"><span>Plan</span><b>komisyonhesap Premium · Yıllık</b></div>
             <div class="kd-plan-row"><span>Tutar</span><b>₺1.500 <small>KDV dâhil</small></b></div>
-            <div class="kd-plan-row"><span>Ödeme yöntemi</span><b>iyzico</b></div>
-            <div class="kd-plan-row"><span>Fatura e-postası</span><b id="ku-fat-mail">—</b></div>
-            <div class="kd-plan-row"><span>Fatura adı</span><b id="ku-fat-ad">—</b></div>
             <div class="kd-plan-row"><span>Yenileme tarihi</span><b id="ku-fat-bitis">—</b></div>
           </div>
-          <div class="ku-adres">
-            <span class="ku-adres-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></span>
-            <div>
-              <div class="ku-adres-t">Fatura adresi</div>
-              <div class="ku-adres-s" id="ku-fat-adres">Kayıtlı fatura adresi bulunmuyor. Eklemek veya değiştirmek için destek talebi oluşturun.</div>
+
+          <div class="ku-fat-form">
+            <div class="ku-fat-head">Fatura bilgileriniz</div>
+            <div class="kd-form">
+              <div class="kd-f"><label class="kd-lbl" for="fat-unvan">Fatura ünvanı / Ad Soyad</label><input class="kd-inp" id="fat-unvan" placeholder="Ör. Ecuyy Ticaret Ltd. Şti."></div>
+              <div class="kd-f2">
+                <div class="kd-f"><label class="kd-lbl" for="fat-vkn">Vergi / TC Kimlik No</label><input class="kd-inp" id="fat-vkn" inputmode="numeric" placeholder="10–11 haneli"></div>
+                <div class="kd-f"><label class="kd-lbl" for="fat-vd">Vergi dairesi</label><input class="kd-inp" id="fat-vd" placeholder="Ör. Beşiktaş"></div>
+              </div>
+              <div class="kd-f2">
+                <div class="kd-f"><label class="kd-lbl" for="fat-tel">Telefon</label><input class="kd-inp" id="fat-tel" inputmode="tel" placeholder="05__ ___ __ __"></div>
+                <div class="kd-f"><label class="kd-lbl" for="fat-mail">Fatura e-postası</label><input class="kd-inp" id="fat-mail" type="email" placeholder="fatura@ornek.com"></div>
+              </div>
+              <div class="kd-f2">
+                <div class="kd-f"><label class="kd-lbl" for="fat-il">İl</label><input class="kd-inp" id="fat-il" placeholder="İstanbul"></div>
+                <div class="kd-f"><label class="kd-lbl" for="fat-ilce">İlçe</label><input class="kd-inp" id="fat-ilce" placeholder="Kadıköy"></div>
+              </div>
+              <div class="kd-f"><label class="kd-lbl" for="fat-adres">Açık adres</label><textarea class="kd-inp" id="fat-adres" rows="2" placeholder="Mahalle, cadde, no, daire"></textarea></div>
+            </div>
+            <div class="kd-form-foot">
+              <span class="kd-hint" id="fat-durum">Bilgileriniz cihazınızda güvenle saklanır.</span>
+              <button class="kd-btn" onclick="faturaKaydet()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L19.5 6.5"/></svg> Fatura Bilgilerini Kaydet</button>
             </div>
           </div>
-          <p class="kd-hint" style="margin-top:14px">Fatura talebi ve bilgi değişikliği için destek talebi oluşturabilirsiniz.</p>
-          <button class="kd-btn kd-btn-ghost" onclick="kdGo('destek')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.4"/><path d="m6 6 3.6 3.6M14.4 14.4 18 18M18 6l-3.6 3.6M9.6 14.4 6 18"/></svg> Fatura talebi oluştur</button>
         </div>
 
         <div class="kd-card">
@@ -5207,8 +5224,8 @@ function csvYukle(input){
       if(parsed.length===0){toast('Ürün bulunamadı.','error','❌');return;}
       urunler=parsed;
       saveUrunler(true);
-      document.getElementById('urun-section').style.display='block';
       renderUrunler();
+      var _av=document.querySelector('.kd-item.on[data-v]');var _vv=_av?_av.getAttribute('data-v'):'panel';document.getElementById('urun-section').style.display=(_vv==='urunler'?'block':'none');try{if(typeof kdPanelDoldur==='function')kdPanelDoldur();}catch(e){}try{if(typeof kpCharts==='function')kpCharts();}catch(e){}
       toast(parsed.length+' ürün yüklendi'+(_geriYuklenen?' · '+_geriYuklenen+' ürünün maliyeti geri yüklendi':''),'success','✅');
       try{ maliyetSayacGuncelle(); }catch(e){}
       document.getElementById('urun-section').scrollIntoView({behavior:'smooth'});
@@ -5716,8 +5733,8 @@ async function loadSavedUrunler(){
       urunler=d.urunler;
       // localStorage'ı da güncelle
       localStorage.setItem('kp_urunler_'+currentUser.email, JSON.stringify(urunler));
-      document.getElementById('urun-section').style.display='block';
       renderUrunler();
+      var _av=document.querySelector('.kd-item.on[data-v]');var _vv=_av?_av.getAttribute('data-v'):'panel';document.getElementById('urun-section').style.display=(_vv==='urunler'?'block':'none');try{if(typeof kdPanelDoldur==='function')kdPanelDoldur();}catch(e){}try{if(typeof kpCharts==='function')kpCharts();}catch(e){}
       document.getElementById('hero').style.display='none';
       document.querySelectorAll('.how-section,.pricing-section,footer').forEach(e=>e.style.display='none');
       document.getElementById('app-section').style.display='block';
@@ -5731,8 +5748,8 @@ async function loadSavedUrunler(){
       try{
         urunler=JSON.parse(saved);
         if(urunler.length>0){
-          document.getElementById('urun-section').style.display='block';
           renderUrunler();
+          var _av=document.querySelector('.kd-item.on[data-v]');var _vv=_av?_av.getAttribute('data-v'):'panel';document.getElementById('urun-section').style.display=(_vv==='urunler'?'block':'none');try{if(typeof kdPanelDoldur==='function')kdPanelDoldur();}catch(e){}try{if(typeof kpCharts==='function')kpCharts();}catch(e){}
           document.getElementById('hero').style.display='none';
           document.querySelectorAll('.how-section,.pricing-section,footer').forEach(e=>e.style.display='none');
           document.getElementById('app-section').style.display='block';
@@ -5920,7 +5937,7 @@ function kdGo(v){
   }
 
   if(v==='panel'&&typeof kdPanelDoldur==='function'){ kdPanelDoldur(); kdListele(); }
-  if(v==='uyelik'&&typeof kdUyelikDoldur==='function'){ kdUyelikDoldur(); kdPanelDoldur(); }
+  if(v==='uyelik'&&typeof kdUyelikDoldur==='function'){ kdUyelikDoldur(); kdPanelDoldur(); try{faturaYukle();}catch(e){} }
   kdSyncUser();
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -6078,6 +6095,32 @@ function kpCharts(){
 })();
 
 
+// ══ FATURA BİLGİLERİ (düzenlenebilir) ══════════════════════════
+function faturaAnahtar(){ return 'kp_fatura_'+((currentUser&&currentUser.email)||'demo'); }
+function faturaYukle(){
+  var d={};
+  try{ d=JSON.parse(localStorage.getItem(faturaAnahtar())||'{}')||{}; }catch(e){}
+  var g=function(id){return document.getElementById(id);};
+  if(g('fat-unvan')) g('fat-unvan').value=d.unvan||((currentUser&&currentUser.ad)||'');
+  if(g('fat-vkn'))   g('fat-vkn').value=d.vkn||'';
+  if(g('fat-vd'))    g('fat-vd').value=d.vd||'';
+  if(g('fat-tel'))   g('fat-tel').value=d.tel||'';
+  if(g('fat-mail'))  g('fat-mail').value=d.mail||((currentUser&&currentUser.email)||'');
+  if(g('fat-il'))    g('fat-il').value=d.il||'';
+  if(g('fat-ilce'))  g('fat-ilce').value=d.ilce||'';
+  if(g('fat-adres')) g('fat-adres').value=d.adres||'';
+  var st=g('fat-durum'); if(st) st.textContent='Bilgileriniz cihaz\u0131n\u0131zda g\u00fcvenle saklan\u0131r.';
+}
+function faturaKaydet(){
+  var g=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};
+  var d={unvan:g('fat-unvan'),vkn:g('fat-vkn'),vd:g('fat-vd'),tel:g('fat-tel'),mail:g('fat-mail'),il:g('fat-il'),ilce:g('fat-ilce'),adres:g('fat-adres'),t:Date.now()};
+  if(d.mail && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.mail)){ toast('Ge\u00e7erli bir fatura e-postas\u0131 girin.','error','\u274c'); return; }
+  try{ localStorage.setItem(faturaAnahtar(),JSON.stringify(d)); }catch(e){}
+  if(currentUser){ try{ fetch(PROXY+'/api/fatura/kaydet',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:currentUser.email,fatura:d})}); }catch(e){} }
+  var st=document.getElementById('fat-durum'); if(st) st.textContent='Kaydedildi \u2713';
+  toast('Fatura bilgileriniz kaydedildi.','success','\ud83e\uddfe');
+}
+
 // ══ MALIYET HAFIZASI ══════════════════════════════════════════
 // Alis/kargo maliyetleri urunlerden bagimsiz saklanir; kullanici
 // urunleri silip Excel'i yeniden yuklese de maliyetler geri gelir.
@@ -6086,6 +6129,7 @@ function maliyetAnahtar(u){
   if(u.barcode)   k.push('bc:'+String(u.barcode).trim());
   if(u.modelCode) k.push('mc:'+String(u.modelCode).trim());
   if(u.id)        k.push('id:'+String(u.id).trim());
+  if(u.title)     k.push('tt:'+String(u.title).trim().toLowerCase().replace(/\s+/g,' '));
   return k;
 }
 function maliyetHafizaOku(){
