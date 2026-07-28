@@ -864,8 +864,19 @@ footer{background:linear-gradient(180deg,#0D1117 0%,#090D13 100%);padding:0;marg
   .kdv-grid{grid-template-columns:repeat(3,1fr)}
   nav{top:8px;padding:0 1rem}
   .nav-center{display:none}
+  .nav-inner{padding:0 12px;gap:8px}
+  .logo img{width:132px;height:auto}
+  #auth-btns{gap:6px!important}
+  #auth-btns button{padding:8px 14px!important;font-size:13px!important}
+  #nav-dashboard-btn{padding:8px 14px!important;font-size:13px!important}
+  .user-name{max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .modal-inputs{grid-template-columns:1fr}
   .fr2,.fr3{grid-template-columns:1fr}
+}
+@media(max-width:400px){
+  .logo img{width:112px}
+  .nav-inner{padding:0 9px;gap:5px}
+  #auth-btns button{padding:7px 11px!important;font-size:12px!important}
 }
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
@@ -3957,6 +3968,12 @@ body.app-mode .kp-lg b{margin-left:auto;color:#14110E;font-weight:800;font-varia
             <div class="kp-val" id="kp-net">—</div>
             <div class="kp-sub" id="kp-net-s">Toplam</div>
           </div>
+          <div class="kp-card" style="--c:#B45309;--cbg:rgba(217,119,6,.12)">
+            <span class="kp-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2.5 20.5h19L12 3z"/><path d="M12 10v4M12 17v.01"/></svg></span>
+            <div class="kp-lbl">Alış Fiyatı Girilmemiş</div>
+            <div class="kp-val" id="kp-alissiz">—</div>
+            <div class="kp-sub" id="kp-alissiz-s">Net kâr hesaplanamıyor</div>
+          </div>
       </div>
 
       <div class="kp-charts" id="kp-charts" style="display:none">
@@ -6008,6 +6025,10 @@ function kdPanelDoldur(){
   s('kp-zarar', has?g('stat-zarar') :'\u2014');
   s('kp-marj',  has?g('stat-marj')  :'\u2014');
   s('kp-net',   has?g('stat-netkar'):'\u2014');
+  var alissiz=0;
+  if(has){for(var _i=0;_i<urunler.length;_i++){try{if(!calcKar(urunler[_i]).hasAlis)alissiz++;}catch(e){}}}
+  s('kp-alissiz', has?String(alissiz):'\u2014');
+  s('kp-alissiz-s', has?(alissiz>0?'Net k\u00e2r hesaplanam\u0131yor':'Hepsi tamam \u2713'):'Veri bekleniyor');
   s('kp-karli-s',has?g('stat-karli-pct'):'Veri bekleniyor');
   s('kp-zarar-s',has?g('stat-zarar-pct'):'Veri bekleniyor');
   s('kp-toplam-s',has?'Aktif sat\u0131\u015fta':'Veri bekleniyor');
