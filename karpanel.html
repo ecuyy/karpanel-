@@ -3045,11 +3045,13 @@ body.app-mode .prod-table-wrap .kb-neutral{
 /* başlık kartla hizalı kalsın (min genişlik) */
 body.app-mode .prod-table-wrap table{min-width:1240px}
 
-/* ── kâr oranı = kartın arka planındaki yumuşak şeffaf ton (göz yormaz) ── */
-body.app-mode .prod-table-wrap .pt-row.pm-good>td{background:linear-gradient(180deg,rgba(16,185,129,var(--tint,.05)),rgba(16,185,129,calc(var(--tint,.05)*.35)))}
-body.app-mode .prod-table-wrap .pt-row.pm-bad>td{background:linear-gradient(180deg,rgba(239,68,68,var(--tint,.05)),rgba(239,68,68,calc(var(--tint,.05)*.35)))}
-body.app-mode .prod-table-wrap .pt-row.pm-good:hover>td{background:linear-gradient(180deg,rgba(16,185,129,calc(var(--tint,.05) + .03)),rgba(16,185,129,calc(var(--tint,.05)*.4)))}
-body.app-mode .prod-table-wrap .pt-row.pm-bad:hover>td{background:linear-gradient(180deg,rgba(239,68,68,calc(var(--tint,.05) + .03)),rgba(239,68,68,calc(var(--tint,.05)*.4)))}
+/* ── kâr oranı = kartta soldan sağa dolan yumuşak şeffaf ton (%oran kadar) ── */
+body.app-mode .prod-table-wrap .pt-row.pm-good{background:linear-gradient(90deg,rgba(16,185,129,.18) 0 var(--w,0%),rgba(0,0,0,0) var(--w,0%)),#fff}
+body.app-mode .prod-table-wrap .pt-row.pm-bad{background:linear-gradient(90deg,rgba(239,68,68,.15) 0 var(--w,0%),rgba(0,0,0,0) var(--w,0%)),#fff}
+body.app-mode .prod-table-wrap .pt-row.pm-good>td,
+body.app-mode .prod-table-wrap .pt-row.pm-bad>td{background:rgba(255,255,255,.6)}
+body.app-mode .prod-table-wrap .pt-row.pm-good:hover>td,
+body.app-mode .prod-table-wrap .pt-row.pm-bad:hover>td{background:rgba(255,255,255,.48)}
 
 /* ══ GENEL BAKIŞ GRAFİKLERİ — şeffaf beyaz kartlar ══ */
 body.app-mode .kp-charts{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:20px}
@@ -5519,9 +5521,9 @@ function renderUrunler(page){
     const karBadge=!hasAlis?'<span class="kar-badge kb-neutral">Girin</span>':net>=0?`<span class="kar-badge kb-good"><span class="kb-tag">KÂR</span><span class="kb-amt">+${fmt(net)}</span></span>`:`<span class="kar-badge kb-bad"><span class="kb-tag">ZARAR</span><span class="kb-amt">-${fmt(Math.abs(net))}</span></span>`;
     const marjStr=hasAlis&&marj!==null?'%'+marj.toFixed(1):'—';
     const marjColor=!hasAlis?'var(--t3)':marj>=15?'var(--green)':marj>=0?'var(--yellow)':'var(--red)';
-    const tintA=!hasAlis?0:Math.min(.16,Math.max(.035,Math.abs(marj||0)/25*.16));
+    const tintA=!hasAlis?0:Math.min(100,Math.max(3,Math.abs(marj||0)));
     const rowTintCls=!hasAlis?'':net>=0?'pm-good':'pm-bad';
-    const rowTintStyle=!hasAlis?'':`--tint:${tintA.toFixed(3)}`;
+    const rowTintStyle=!hasAlis?'':`--w:${tintA.toFixed(1)}%`;
     const satisInput=isDemo
       ?`<input class="tinput" type="text" style="width:108px;opacity:.55;cursor:not-allowed" value="${fmtSP(p.salePrice)}" readonly title="Demo modda düzenlenemez">`
       :`<input class="tinput" type="text" style="width:108px" value="${fmtSP(p.salePrice)}" onfocus="this.value=p.salePrice||''" onblur="this.value=fmtSP(this.value)" onchange="updUrun('${p.id}','salePrice',parseTR(this.value))" title="Satış fiyatını düzenleyebilirsiniz">`;
