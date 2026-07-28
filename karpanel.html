@@ -2887,6 +2887,38 @@ body.app-mode .prod-table-wrap input[type=checkbox].row-cb{accent-color:#F27A1A}
 body.app-mode .prod-table-wrap .empty{color:#8A8378}
 body.app-mode .prod-table-wrap .empty-ic{color:#D6CFC5}
 
+/* ── tablo okunabilirlik (v4): daha büyük görsel, satış fiyatı ve net kâr ── */
+body.app-mode .prod-table-wrap .pt-img .prod-img,
+body.app-mode .prod-table-wrap .pt-img .prod-img-ph{
+  width:74px;height:74px;border-radius:17px;
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 10px 22px -12px rgba(20,17,14,.45);
+}
+body.app-mode .prod-table-wrap .pt-prod{gap:16px}
+/* ürün adı kolonu daralsın → satış fiyatına yaklaşsın */
+body.app-mode .prod-table-wrap .ptable thead .kth:nth-child(2){min-width:180px!important;width:180px}
+body.app-mode .prod-table-wrap .pt-info{gap:7px}
+body.app-mode .prod-table-wrap .pt-info .prod-name{font-size:15px;font-weight:800;max-width:180px}
+/* satış fiyatı (3. sütun) — büyük ve net */
+body.app-mode .prod-table-wrap .pt-row>td:nth-child(3) .tinput{
+  font-size:18px;font-weight:800;color:#14110E;width:118px;letter-spacing:-.3px;text-align:center;
+}
+body.app-mode .prod-table-wrap .ptable thead .kth:nth-child(3){color:#14110E}
+/* net kâr — büyük, kâr/zarar bir bakışta belli */
+body.app-mode .prod-table-wrap .kar-badge{
+  font-size:21px;font-weight:900;letter-spacing:-.6px;padding:8px 12px;border-radius:12px;
+}
+body.app-mode .prod-table-wrap .kb-good{
+  color:#0A7A4E;background:rgba(16,185,129,.10);border:1px solid rgba(16,185,129,.20);
+}
+body.app-mode .prod-table-wrap .kb-bad{
+  color:#C0271F;background:rgba(239,68,68,.09);border:1px solid rgba(239,68,68,.18);
+}
+body.app-mode .prod-table-wrap .kb-neutral{font-size:13px}
+/* net kâr başlığı vurgulansın */
+body.app-mode .prod-table-wrap .ptable thead .kth:nth-child(7){color:#14110E;font-weight:800}
+/* satırlar biraz daha ferah */
+body.app-mode .prod-table-wrap .pt-row>td{padding-top:19px;padding-bottom:19px}
+
 /* ══ GENEL BAKIŞ GRAFİKLERİ — şeffaf beyaz kartlar ══ */
 body.app-mode .kp-charts{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:20px}
 body.app-mode .kp-chart{
