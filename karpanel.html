@@ -2775,6 +2775,67 @@ body.app-mode .kbx-foot{
 }
 body.app-mode .kbx-apply{border-radius:12px}
 
+/* ══ ANLAŞMALI KARGO v2 — aydınlık, kullanıcı dostu ══ */
+body.app-mode #kargo-barem-wrap.kbx{background:#FDFCFB;border:1px solid rgba(20,17,14,.07);border-radius:24px}
+/* başlık: koyu blok yerine sıcak aydınlık şerit */
+body.app-mode .kbx-head{
+  background:linear-gradient(180deg,#FFF6EC,#FDEFE0);
+  border-bottom:1px solid rgba(242,122,26,.16);padding:20px 24px;
+}
+body.app-mode .kbx-ic{
+  width:44px;height:44px;border-radius:14px;
+  background:linear-gradient(140deg,#FF9A42,#E0640C);color:#fff;
+  box-shadow:0 10px 22px -10px rgba(242,122,26,.7);
+}
+body.app-mode .kbx-title{color:#14110E;font-size:16px}
+body.app-mode .kbx-desc{color:#9A8F80}
+body.app-mode .kbx-kdv{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.26);color:#0E8A5B}
+/* her fiyat aralığı = yumuşak bölüm */
+body.app-mode .kbx-row{border-bottom:1px solid rgba(20,17,14,.06)}
+body.app-mode .kbx-rowhead{padding:20px 24px 4px;align-items:center}
+body.app-mode .kbx-range{
+  background:linear-gradient(135deg,#FF9A42,#E0640C);border:none;color:#fff;
+  font-size:12.5px;padding:6px 14px;border-radius:50px;box-shadow:0 8px 16px -8px rgba(242,122,26,.55);
+}
+body.app-mode .kbx-hint{color:#A8A29E;font-size:11.5px}
+body.app-mode .kbx-cards{padding:16px 24px 22px;gap:12px}
+/* kargo firması kartı — net seçilebilir çip */
+body.app-mode .kbx .kargo-secim-card{
+  background:#fff;border:1.5px solid rgba(20,17,14,.09);border-radius:16px;padding:16px 16px 15px;gap:7px;
+  box-shadow:0 1px 2px rgba(20,17,14,.03);
+}
+body.app-mode .kbx .kargo-secim-card:hover{
+  transform:translateY(-3px);border-color:rgba(242,122,26,.5);
+  box-shadow:0 16px 30px -16px rgba(242,122,26,.4);
+}
+body.app-mode .kbx .kargo-secim-card.secili{
+  border-color:var(--or);
+  background:linear-gradient(165deg,#FFF6EC,#fff);
+  box-shadow:0 0 0 1.5px var(--or) inset,0 16px 32px -16px rgba(242,122,26,.55);
+}
+body.app-mode .kbx .ksc-firma{font-size:10.5px;color:#9A8F80;letter-spacing:.06em}
+body.app-mode .kbx .ksc-fiyat{font-size:20px;letter-spacing:-.7px;color:#14110E}
+body.app-mode .kbx .kargo-secim-card.secili .ksc-fiyat{color:#C2610C}
+/* EN UYGUN rozeti + seçim onayı */
+body.app-mode .kbx .ksc-badge.en-uygun{
+  background:linear-gradient(135deg,#22C58A,#0E9E63);color:#fff;box-shadow:0 6px 14px -4px rgba(14,138,91,.6);
+  font-size:9px;padding:3px 9px;
+}
+body.app-mode .kbx .ksc-check{width:19px;height:19px;background:var(--or);box-shadow:0 4px 10px -3px rgba(242,122,26,.7)}
+/* manuel giriş + alt bar */
+body.app-mode .kbx-manual{padding:16px 24px 22px}
+body.app-mode .kbx-manual .kbx-field,body.app-mode .kbx-manual input{border-radius:13px}
+body.app-mode .kbx-foot{
+  padding:18px 24px;border-top:1px solid rgba(20,17,14,.06);
+  background:linear-gradient(180deg,#FFF9F2,#fff);
+}
+/* Uygula → turuncu birincil aksiyon */
+body.app-mode .kbx-apply{
+  background:linear-gradient(180deg,#FF9A42,#F27A1A);color:#fff;border:none;border-radius:13px;
+  padding:13px 26px;font-weight:800;box-shadow:0 14px 30px -12px rgba(242,122,26,.6);
+}
+body.app-mode .kbx-apply:hover{transform:translateY(-2px);box-shadow:0 20px 38px -14px rgba(242,122,26,.7)}
+
 /* ── tablo ince ayarlar (v3) ── */
 /* görseller biraz büyüdü */
 body.app-mode .pt-img .prod-img,body.app-mode .pt-img .prod-img-ph{width:60px;height:60px;border-radius:15px}
