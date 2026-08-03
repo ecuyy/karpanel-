@@ -1569,9 +1569,9 @@ async function yukleBloglar(){
         +'<span style="font-weight:700;color:#fff;font-size:14px">'+blogEscJs(y.baslik)+'</span>'+durum+'</div>'
         +'<div style="font-size:12px;color:var(--muted);margin-bottom:10px">'+tarih+' · /blog/'+blogEscJs(y.slug)+'</div>'
         +'<div class="actions">'
-        +'<button class="action-btn blue" onclick="blogDuzenle(\''+y._id+'\')">✏️ Düzenle</button>'
+        +'<button class="action-btn blue" onclick="blogDuzenle(\\''+y._id+'\\')">✏️ Düzenle</button>'
         +'<a class="action-btn green" href="/blog/'+encodeURIComponent(y.slug)+'" target="_blank" style="text-decoration:none">👁️ Gör</a>'
-        +'<button class="action-btn red" onclick="blogSil(\''+y._id+'\')">🗑️ Sil</button>'
+        +'<button class="action-btn red" onclick="blogSil(\\''+y._id+'\\')">🗑️ Sil</button>'
         +'</div></div>';
     }).join('');
   }catch(e){box.innerHTML='<div class="empty">Yazılar yüklenemedi</div>';}
