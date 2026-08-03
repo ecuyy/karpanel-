@@ -48,6 +48,63 @@ function getBody(req) {
   });
 }
 
+// ══════════ BLOG YARDIMCILARI ══════════
+function blogEsc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function slugify(s){
+  const tr={'ı':'i','İ':'i','ş':'s','Ş':'s','ğ':'g','Ğ':'g','ü':'u','Ü':'u','ö':'o','Ö':'o','ç':'c','Ç':'c'};
+  return String(s||'').replace(/[ışğüöçİŞĞÜÖÇ]/g,c=>tr[c]||c).toLowerCase()
+    .replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-').replace(/-+/g,'-').slice(0,80) || ('yazi-'+Date.now());
+}
+
+// Düz metni güvenli HTML'e çevir: ## başlık, boş satır = paragraf, - liste
+function blogIcerikRender(text){
+  const bloklar = String(text||'').replace(/\r/g,'').split(/\n\n+/);
+  return bloklar.map(b=>{
+    b=b.trim(); if(!b) return '';
+    if(b.startsWith('### ')) return '<h3>'+blogEsc(b.slice(4))+'</h3>';
+    if(b.startsWith('## ')) return '<h2>'+blogEsc(b.slice(3))+'</h2>';
+    const satirlar=b.split('\n');
+    if(satirlar.every(l=>/^[-*]\s+/.test(l.trim())))
+      return '<ul>'+satirlar.map(l=>'<li>'+blogEsc(l.trim().replace(/^[-*]\s+/,''))+'</li>').join('')+'</ul>';
+    return '<p>'+blogEsc(b).replace(/\n/g,'<br>')+'</p>';
+  }).join('\n');
+}
+
+function blogTarihTR(d){ try{ return new Date(d).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'}); }catch(e){ return ''; } }
+
+const BLOG_HEAD = (title, desc, canonical, extra='') => `<!DOCTYPE html><html lang="tr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${blogEsc(title)}</title>
+<meta name="description" content="${blogEsc(desc)}">
+<link rel="canonical" href="${canonical}">
+<meta property="og:type" content="article"><meta property="og:title" content="${blogEsc(title)}">
+<meta property="og:description" content="${blogEsc(desc)}"><meta property="og:url" content="${canonical}">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+${extra}
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;color:#2A211A;background:#FBF7F1;-webkit-font-smoothing:antialiased;line-height:1.65}
+a{color:#E0640C;text-decoration:none}a:hover{text-decoration:underline}
+.bnav{position:sticky;top:0;z-index:10;background:rgba(251,247,241,.9);backdrop-filter:blur(10px);border-bottom:1px solid rgba(0,0,0,.07)}
+.bnav-in{max-width:900px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
+.blogo{display:flex;align-items:center;gap:9px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:18px;color:#2A211A}
+.blogo .i{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#FF9A42,#E0640C);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px}
+.blogo em{color:#E0640C;font-style:normal}
+.bnav-cta{padding:9px 18px;border-radius:10px;background:linear-gradient(180deg,#FF9A42,#F27A1A);color:#fff!important;font-weight:700;font-size:14px;text-decoration:none!important}
+.bwrap{max-width:820px;margin:0 auto;padding:48px 24px 80px}
+.bfoot{border-top:1px solid rgba(0,0,0,.07);text-align:center;padding:28px;color:#8A7B6B;font-size:13px}
+.bfoot a{color:#8A7B6B}
+</style></head><body>
+<nav class="bnav"><div class="bnav-in">
+<a class="blogo" href="/"><span class="i">k</span>komisyon<em>hesap</em></a>
+<a class="bnav-cta" href="/">Ücretsiz Hesapla →</a>
+</div></nav>`;
+
+const BLOG_FOOT = `<footer class="bfoot">© ${new Date().getFullYear()} komisyonhesap · <a href="/">Ana Sayfa</a> · <a href="/blog">Blog</a> · <a href="https://www.instagram.com/komisyonhesap/" target="_blank" rel="noopener">Instagram</a></footer></body></html>`;
+
+
 const server = http.createServer(async (req, res) => {
   corsHeaders(res);
 
@@ -77,7 +134,15 @@ const server = http.createServer(async (req, res) => {
 
   // sitemap.xml
   if (parsed.pathname === '/sitemap.xml') {
-    const sitemap = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://komisyonhesap.com/</loc><lastmod>${new Date().toISOString().split('T')[0]}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url></urlset>`;
+    const bugun = new Date().toISOString().split('T')[0];
+    let blogUrls = '';
+    try {
+      if (db) {
+        const yazilar = await db.collection('blog').find({ yayinda: true }).project({ slug: 1, guncelleme: 1, tarih: 1 }).sort({ tarih: -1 }).limit(500).toArray();
+        blogUrls = yazilar.map(y => `<url><loc>https://komisyonhesap.com/blog/${blogEsc(y.slug)}</loc><lastmod>${new Date(y.guncelleme || y.tarih).toISOString().split('T')[0]}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`).join('');
+      }
+    } catch (e) {}
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://komisyonhesap.com/</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url><url><loc>https://komisyonhesap.com/blog</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>${blogUrls}</urlset>`;
     res.writeHead(200, { 'Content-Type': 'application/xml' });
     res.end(sitemap);
     return;
@@ -192,6 +257,15 @@ const server = http.createServer(async (req, res) => {
     const firstName = adParts[0] || 'Kullanici';
     const lastName = adParts.slice(1).join(' ') || 'Kullanici';
 
+    // Gerçek fatura bilgilerini kullan (yoksa güvenli varsayılan)
+    const onlyDigits = s => String(s || '').replace(/\D/g, '');
+    const tcDigits = onlyDigits(faturaTc);
+    const identityNumber = tcDigits.length === 11 ? tcDigits : '11111111110';
+    const telDigits = onlyDigits(faturaTel);
+    const gsmNumber = telDigits.length >= 10 ? '+90' + telDigits.slice(-10) : '+905000000000';
+    const buyerCity = faturaIl || 'Istanbul';
+    const buyerAddress = (faturaAdres && faturaAdres.length > 4) ? faturaAdres : 'Turkiye';
+
     const request = {
       locale: 'tr',
       conversationId: 'kp_' + Date.now(),
@@ -206,20 +280,20 @@ const server = http.createServer(async (req, res) => {
         id: user._id ? user._id.toString() : email,
         name: firstName,
         surname: lastName,
-        gsmNumber: '+905000000000',
+        gsmNumber: gsmNumber,
         email: email,
-        identityNumber: '11111111110',
-        registrationAddress: 'Turkiye',
+        identityNumber: identityNumber,
+        registrationAddress: buyerAddress,
         ip: (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '85.34.78.112').split(',')[0].trim().substring(0, 50),
-        city: 'Istanbul',
+        city: buyerCity,
         country: 'Turkey',
         zipCode: '34000'
       },
       billingAddress: {
-        contactName: (ad || user.ad || 'Kullanici'),
-        city: 'Istanbul',
+        contactName: (faturaAd || ad || user.ad || 'Kullanici'),
+        city: buyerCity,
         country: 'Turkey',
-        address: 'Turkiye',
+        address: buyerAddress,
         zipCode: '34000'
       },
       basketItems: [
@@ -633,6 +707,127 @@ async function sifirla(){
     return;
   }
 
+  // ══════════ BLOG ══════════
+  // Public: yayındaki yazıların listesi (ana site için JSON)
+  if (parsed.pathname === '/api/blog' && req.method === 'GET') {
+    if (!db) { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify([])); return; }
+    const yazilar = await db.collection('blog').find({ yayinda: true })
+      .project({ icerik: 0 }).sort({ tarih: -1 }).limit(30).toArray();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(yazilar));
+    return;
+  }
+
+  // Public: blog liste sayfası (SEO)
+  if (parsed.pathname === '/blog' && req.method === 'GET') {
+    let yazilar = [];
+    if (db) yazilar = await db.collection('blog').find({ yayinda: true }).project({ icerik: 0 }).sort({ tarih: -1 }).limit(50).toArray();
+    const kartlar = yazilar.length ? yazilar.map(y => `
+      <a href="/blog/${blogEsc(y.slug)}" style="display:block;background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;box-shadow:0 10px 30px -20px rgba(0,0,0,.3);transition:transform .18s">
+        ${y.kapak ? `<img src="${blogEsc(y.kapak)}" alt="${blogEsc(y.baslik)}" style="width:100%;height:180px;object-fit:cover" loading="lazy">` : ''}
+        <div style="padding:20px 22px">
+          <div style="font-size:12px;color:#B08247;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">${blogTarihTR(y.tarih)}</div>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:19px;font-weight:800;color:#2A211A;margin-bottom:8px;line-height:1.3">${blogEsc(y.baslik)}</div>
+          <div style="font-size:14px;color:#6B5E50;line-height:1.6">${blogEsc(y.ozet || '')}</div>
+          <div style="margin-top:14px;color:#E0640C;font-weight:700;font-size:14px">Devamını oku →</div>
+        </div>
+      </a>`).join('') : '<p style="text-align:center;color:#8A7B6B;padding:60px 0">Henüz blog yazısı yok. Yakında burada olacak! 🚀</p>';
+    const html = BLOG_HEAD('Blog · Trendyol Satıcı Rehberi | komisyonhesap',
+      'Trendyol satıcıları için komisyon, KDV, stopaj, kâr hesaplama ve e-ticaret rehberleri. Güncel oranlar ve pratik ipuçları.',
+      'https://komisyonhesap.com/blog')
+      + `<div class="bwrap">
+        <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:36px;font-weight:800;color:#2A211A;margin-bottom:10px">Blog</h1>
+        <p style="color:#6B5E50;font-size:16px;margin-bottom:36px">Trendyol satıcıları için komisyon, kâr ve e-ticaret rehberleri.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px">${kartlar}</div>
+      </div>` + BLOG_FOOT;
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    res.end(html);
+    return;
+  }
+
+  // Public: tekil blog yazısı sayfası (SEO)
+  if (parsed.pathname.startsWith('/blog/') && req.method === 'GET') {
+    const slug = decodeURIComponent(parsed.pathname.slice(6)).replace(/\/+$/, '');
+    let y = null;
+    if (db) y = await db.collection('blog').findOne({ slug, yayinda: true });
+    if (!y) {
+      res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(BLOG_HEAD('Yazı bulunamadı · komisyonhesap', 'Aradığınız yazı bulunamadı.', 'https://komisyonhesap.com/blog')
+        + '<div class="bwrap" style="text-align:center"><h1 style="font-family:Plus Jakarta Sans,sans-serif">Yazı bulunamadı</h1><p style="margin-top:12px"><a href="/blog">← Tüm yazılar</a></p></div>' + BLOG_FOOT);
+      return;
+    }
+    const canonical = 'https://komisyonhesap.com/blog/' + blogEsc(y.slug);
+    const jsonld = `<script type="application/ld+json">${JSON.stringify({
+      '@context': 'https://schema.org', '@type': 'BlogPosting', headline: y.baslik,
+      description: y.ozet || '', image: y.kapak || undefined, datePublished: y.tarih,
+      dateModified: y.guncelleme || y.tarih, author: { '@type': 'Organization', name: 'komisyonhesap' },
+      publisher: { '@type': 'Organization', name: 'komisyonhesap' }, mainEntityOfPage: canonical
+    })}</script>`;
+    const html = BLOG_HEAD(y.baslik + ' · komisyonhesap', y.ozet || y.baslik, canonical, jsonld)
+      + `<article class="bwrap">
+        <a href="/blog" style="font-size:14px;font-weight:600">← Tüm yazılar</a>
+        <div style="font-size:13px;color:#B08247;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin:22px 0 10px">${blogTarihTR(y.tarih)}</div>
+        <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(28px,5vw,42px);font-weight:800;color:#221A12;line-height:1.2;margin-bottom:24px">${blogEsc(y.baslik)}</h1>
+        ${y.kapak ? `<img src="${blogEsc(y.kapak)}" alt="${blogEsc(y.baslik)}" style="width:100%;border-radius:16px;margin-bottom:28px">` : ''}
+        <div class="bbody" style="font-size:17px;color:#3A2E24">${blogIcerikRender(y.icerik)}</div>
+        <div style="margin-top:44px;padding:28px;background:linear-gradient(135deg,#FFF3E6,#FFE8D0);border-radius:18px;text-align:center">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:#221A12;margin-bottom:8px">Trendyol kârını saniyede hesapla</div>
+          <div style="color:#6B5E50;margin-bottom:18px">Komisyon, KDV ve stopaj dahil net kârını ücretsiz gör.</div>
+          <a href="/" style="display:inline-block;padding:13px 28px;border-radius:12px;background:linear-gradient(180deg,#FF9A42,#F27A1A);color:#fff!important;font-weight:800;text-decoration:none!important">Ücretsiz Dene →</a>
+        </div>
+      </article>
+      <style>.bbody h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:#221A12;margin:34px 0 14px}.bbody h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:700;color:#221A12;margin:26px 0 10px}.bbody p{margin:0 0 18px}.bbody ul{margin:0 0 18px;padding-left:24px}.bbody li{margin-bottom:8px}</style>`
+      + BLOG_FOOT;
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    res.end(html);
+    return;
+  }
+
+  // Admin: tüm yazılar (taslak dahil)
+  if (parsed.pathname === '/api/admin/blog' && req.method === 'GET') {
+    if (parsed.query.token !== ADMIN_SIFRE) { res.writeHead(401); res.end(JSON.stringify({ error: 'Yetkisiz' })); return; }
+    if (!db) { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify([])); return; }
+    const yazilar = await db.collection('blog').find({}).sort({ tarih: -1 }).toArray();
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(yazilar));
+    return;
+  }
+
+  // Admin: yazı ekle / güncelle
+  if (parsed.pathname === '/api/admin/blog' && req.method === 'POST') {
+    const body = await getBody(req);
+    if (body.token !== ADMIN_SIFRE) { res.writeHead(401); res.end(JSON.stringify({ error: 'Yetkisiz' })); return; }
+    if (!db) { res.writeHead(500); res.end(JSON.stringify({ error: 'DB yok' })); return; }
+    const baslik = (body.baslik || '').trim();
+    if (!baslik || !(body.icerik || '').trim()) { res.writeHead(400); res.end(JSON.stringify({ error: 'Başlık ve içerik zorunlu' })); return; }
+    if (body.id) {
+      // güncelle
+      const { ObjectId } = require('mongodb');
+      await db.collection('blog').updateOne({ _id: new ObjectId(body.id) }, { $set: {
+        baslik, ozet: body.ozet || '', icerik: body.icerik, kapak: body.kapak || '',
+        yayinda: body.yayinda !== false, guncelleme: new Date()
+      }});
+      res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true })); return;
+    }
+    // yeni — benzersiz slug
+    let slug = slugify(baslik), taban = slug, n = 2;
+    while (await db.collection('blog').findOne({ slug })) { slug = taban + '-' + (n++); }
+    await db.collection('blog').insertOne({
+      slug, baslik, ozet: body.ozet || '', icerik: body.icerik, kapak: body.kapak || '',
+      yayinda: body.yayinda !== false, tarih: new Date(), guncelleme: new Date()
+    });
+    res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true, slug })); return;
+  }
+
+  // Admin: yazı sil
+  if (parsed.pathname === '/api/admin/blog/sil' && req.method === 'POST') {
+    const body = await getBody(req);
+    if (body.token !== ADMIN_SIFRE) { res.writeHead(401); res.end(JSON.stringify({ error: 'Yetkisiz' })); return; }
+    const { ObjectId } = require('mongodb');
+    await db.collection('blog').deleteOne({ _id: new ObjectId(body.id) });
+    res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true })); return;
+  }
+
   // Admin sayfası
   // ── /odeme sayfası ──
   if (parsed.pathname === '/odeme') {
@@ -763,12 +958,17 @@ async function odemeSayfasiYukle(){
       })
     });
     const d = await r.json();
+    if(d.paymentPageUrl){ window.location.href = d.paymentPageUrl; return; }
     if(!d.checkoutFormContent) throw new Error(d.errorMessage || d.error || 'Token alinamadi');
     const container = document.getElementById('iyzipay-checkout-form');
-    container.innerHTML = '';
-    const scriptEl = document.createElement('script');
-    scriptEl.textContent = d.checkoutFormContent.replace(/<[^>]+>/g, '');
-    document.body.appendChild(scriptEl);
+    container.innerHTML = d.checkoutFormContent;
+    // innerHTML ile eklenen <script> etiketleri calismaz; yeniden olusturarak calistir
+    var _scr = container.querySelectorAll('script');
+    for(var i=0;i<_scr.length;i++){
+      var old=_scr[i], s=document.createElement('script');
+      if(old.src) s.src=old.src; else s.textContent=old.textContent;
+      old.parentNode.replaceChild(s, old);
+    }
   } catch(e){
     document.getElementById('iyzipay-checkout-form').innerHTML =
       '<div class="error-state">❌ ' + e.message + '<br><br><button onclick="odemeSayfasiYukle()" style="padding:10px 20px;background:#F27A1A;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700">Tekrar Dene</button></div>';
@@ -964,6 +1164,9 @@ tr:hover td{background:rgba(255,255,255,.035)}
       <button class="nav-item" onclick="sayfaGoster('istatistikler')">
         <span class="icon">📊</span> İstatistikler
       </button>
+      <button class="nav-item" onclick="sayfaGoster('blog')">
+        <span class="icon">✍️</span> Blog
+      </button>
     </nav>
     <div class="sidebar-footer">
       <button class="btn-logout" onclick="adminCikis()">🚪 Çıkış Yap</button>
@@ -1054,6 +1257,52 @@ tr:hover td{background:rgba(255,255,255,.035)}
       </div>
       <div class="table-wrap" style="padding:1.5rem">
         <p style="color:var(--muted);font-size:14px;text-align:center;padding:2rem">Daha fazla analitik yakında eklenecek 🚀</p>
+      </div>
+    </div>
+
+    <!-- Blog Sayfası -->
+    <div id="page-blog" style="display:none">
+      <div class="page-header">
+        <div class="page-title">Blog</div>
+        <div class="page-sub">Yazı ekle, düzenle ve yayınla — SEO ile müşteri çek</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start">
+
+        <!-- Yazma formu -->
+        <div class="table-wrap" style="padding:1.5rem">
+          <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:1rem" id="blog-form-baslik">✍️ Yeni Yazı</div>
+          <input type="hidden" id="blog-id">
+          <div class="field" style="margin-bottom:12px">
+            <label>Başlık *</label>
+            <input type="text" id="blog-baslik" placeholder="Örn: Trendyol Komisyon Oranları 2026">
+          </div>
+          <div class="field" style="margin-bottom:12px">
+            <label>Özet (liste ve Google için kısa açıklama)</label>
+            <input type="text" id="blog-ozet" placeholder="1-2 cümlelik kısa özet">
+          </div>
+          <div class="field" style="margin-bottom:12px">
+            <label>Kapak görsel linki (opsiyonel)</label>
+            <input type="text" id="blog-kapak" placeholder="https://...">
+          </div>
+          <div class="field" style="margin-bottom:12px">
+            <label>İçerik * — boş satır = yeni paragraf, "## " = başlık, "- " = liste</label>
+            <textarea id="blog-icerik" rows="12" placeholder="Yazınızı buraya yazın...&#10;&#10;## Alt Başlık&#10;&#10;Paragraf metni...&#10;&#10;- Madde 1&#10;- Madde 2" style="width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:12px;background:rgba(255,255,255,.04);color:var(--text);font-family:inherit;font-size:14px;line-height:1.6;outline:none;resize:vertical"></textarea>
+          </div>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-bottom:16px;cursor:pointer">
+            <input type="checkbox" id="blog-yayinda" checked style="width:16px;height:16px;accent-color:var(--or)"> Hemen yayınla (kapalıysa taslak olur)
+          </label>
+          <div style="display:flex;gap:10px">
+            <button class="btn-login" style="margin:0;flex:1" onclick="blogKaydet()">💾 Kaydet</button>
+            <button class="btn-refresh" onclick="blogTemizle()">Temizle</button>
+          </div>
+        </div>
+
+        <!-- Yazı listesi -->
+        <div class="table-wrap">
+          <div class="table-info"><span>Yazılar: <strong id="blog-sayi">0</strong></span></div>
+          <div id="blog-liste" style="max-height:640px;overflow-y:auto"><div class="loading">⏳ Yükleniyor...</div></div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -1157,9 +1406,10 @@ function adminCikis(){
 function sayfaGoster(sayfa){
   document.getElementById('page-kullanicilar').style.display=sayfa==='kullanicilar'?'block':'none';
   document.getElementById('page-istatistikler').style.display=sayfa==='istatistikler'?'block':'none';
-  document.querySelectorAll('.nav-item').forEach((el,i)=>{
-    el.classList.toggle('active',(sayfa==='kullanicilar'&&i===0)||(sayfa==='istatistikler'&&i===1));
-  });
+  document.getElementById('page-blog').style.display=sayfa==='blog'?'block':'none';
+  const sira={kullanicilar:0,istatistikler:1,blog:2};
+  document.querySelectorAll('.nav-item').forEach((el,i)=>{ el.classList.toggle('active',i===sira[sayfa]); });
+  if(sayfa==='blog') yukleBloglar();
 }
 
 async function yukleCullanicilari(){
@@ -1296,6 +1546,73 @@ async function kullaniciSil(email,ad){
   await fetch('/api/admin/sil',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:adminToken,email})});
   toast('Kullanıcı silindi','info');
   yukleCullanicilari();
+}
+
+/* ─── BLOG ─── */
+var blogState=[];
+function blogEscJs(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+async function yukleBloglar(){
+  var box=document.getElementById('blog-liste');
+  box.innerHTML='<div class="loading">⏳ Yükleniyor...</div>';
+  try{
+    var r=await fetch('/api/admin/blog?token='+adminToken);
+    blogState=await r.json();
+    document.getElementById('blog-sayi').textContent=blogState.length;
+    if(!blogState.length){box.innerHTML='<div class="empty">Henüz yazı yok. Soldaki formdan ilk yazını ekle ✍️</div>';return;}
+    box.innerHTML=blogState.map(function(y){
+      var tarih=y.tarih?new Date(y.tarih).toLocaleDateString('tr-TR'):'';
+      var durum=y.yayinda!==false
+        ? '<span class="badge badge-green">● Yayında</span>'
+        : '<span class="badge badge-gray">Taslak</span>';
+      return '<div style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.05)">'
+        +'<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px">'
+        +'<span style="font-weight:700;color:#fff;font-size:14px">'+blogEscJs(y.baslik)+'</span>'+durum+'</div>'
+        +'<div style="font-size:12px;color:var(--muted);margin-bottom:10px">'+tarih+' · /blog/'+blogEscJs(y.slug)+'</div>'
+        +'<div class="actions">'
+        +'<button class="action-btn blue" onclick="blogDuzenle(\''+y._id+'\')">✏️ Düzenle</button>'
+        +'<a class="action-btn green" href="/blog/'+encodeURIComponent(y.slug)+'" target="_blank" style="text-decoration:none">👁️ Gör</a>'
+        +'<button class="action-btn red" onclick="blogSil(\''+y._id+'\')">🗑️ Sil</button>'
+        +'</div></div>';
+    }).join('');
+  }catch(e){box.innerHTML='<div class="empty">Yazılar yüklenemedi</div>';}
+}
+async function blogKaydet(){
+  var baslik=document.getElementById('blog-baslik').value.trim();
+  var icerik=document.getElementById('blog-icerik').value.trim();
+  if(!baslik||!icerik){alert('Başlık ve içerik zorunlu');return;}
+  var payload={token:adminToken,id:document.getElementById('blog-id').value||undefined,
+    baslik:baslik,ozet:document.getElementById('blog-ozet').value.trim(),
+    kapak:document.getElementById('blog-kapak').value.trim(),icerik:icerik,
+    yayinda:document.getElementById('blog-yayinda').checked};
+  try{
+    var r=await fetch('/api/admin/blog',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    var d=await r.json();
+    if(d.error){alert(d.error);return;}
+    toast(payload.id?'Yazı güncellendi ✓':'Yazı yayınlandı ✓','success');
+    blogTemizle(); yukleBloglar();
+  }catch(e){toast('Kaydedilemedi','error');}
+}
+function blogDuzenle(id){
+  var y=blogState.find(function(x){return x._id===id;}); if(!y)return;
+  document.getElementById('blog-id').value=y._id;
+  document.getElementById('blog-baslik').value=y.baslik||'';
+  document.getElementById('blog-ozet').value=y.ozet||'';
+  document.getElementById('blog-kapak').value=y.kapak||'';
+  document.getElementById('blog-icerik').value=y.icerik||'';
+  document.getElementById('blog-yayinda').checked=y.yayinda!==false;
+  document.getElementById('blog-form-baslik').textContent='✏️ Yazıyı Düzenle';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+async function blogSil(id){
+  if(!confirm('Bu yazı silinsin mi? Geri alınamaz!'))return;
+  await fetch('/api/admin/blog/sil',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:adminToken,id:id})});
+  toast('Yazı silindi','info'); yukleBloglar();
+}
+function blogTemizle(){
+  document.getElementById('blog-id').value='';
+  ['blog-baslik','blog-ozet','blog-kapak','blog-icerik'].forEach(function(i){document.getElementById(i).value='';});
+  document.getElementById('blog-yayinda').checked=true;
+  document.getElementById('blog-form-baslik').textContent='✍️ Yeni Yazı';
 }
 </script>
 </body>
