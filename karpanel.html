@@ -4343,6 +4343,20 @@ body.app-mode .kp-lg b{margin-left:auto;color:#14110E;font-weight:800;font-varia
   </section>
 </div>
 
+<!-- BLOG ÖNİZLEME -->
+<section id="blog" class="khm" style="display:none;padding:72px 24px;background:#FBF7F1">
+  <div style="max-width:1120px;margin:0 auto">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:34px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#E0640C;margin-bottom:8px">Blog</div>
+        <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(26px,4vw,36px);font-weight:800;color:#221A12;line-height:1.2">Trendyol Satıcı Rehberi</h2>
+      </div>
+      <a href="/blog" style="color:#E0640C;font-weight:700;font-size:15px">Tüm yazılar →</a>
+    </div>
+    <div id="blog-kartlar" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px"></div>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer class="khm kft">
 
@@ -4374,6 +4388,7 @@ body.app-mode .kp-lg b{margin-left:auto;color:#14110E;font-weight:800;font-varia
         <a href="#nasil">Nasıl Çalışır?</a>
         <a href="#fiyat">Fiyatlandırma</a>
         <a href="#demo" onclick="demoVeGo();return false;">Ücretsiz Demo</a>
+        <a href="/blog">Blog</a>
         <a href="#iletisim">İletişim</a>
         <a href="https://www.instagram.com/komisyonhesap/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none"/></svg>Instagram</a>
       </div>
@@ -6480,6 +6495,31 @@ function maliyetSayacGuncelle(){
   } else if(sec){
     sec.classList.add('play');
   }
+})();
+</script>
+
+<script>
+/* Blog önizleme — ana sayfada son 3 yazıyı göster */
+(function(){
+  fetch('/api/blog').then(function(r){return r.json();}).then(function(list){
+    if(!Array.isArray(list)||!list.length) return;
+    var sec=document.getElementById('blog'), box=document.getElementById('blog-kartlar');
+    if(!sec||!box) return;
+    function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+    function tar(d){try{return new Date(d).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'});}catch(e){return'';}}
+    box.innerHTML=list.slice(0,3).map(function(y){
+      var img=y.kapak?'<img src="'+esc(y.kapak)+'" alt="'+esc(y.baslik)+'" style="width:100%;height:180px;object-fit:cover" loading="lazy">':'';
+      return '<a href="/blog/'+encodeURIComponent(y.slug)+'" style="display:block;background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;box-shadow:0 12px 34px -22px rgba(0,0,0,.35)">'
+        +img
+        +'<div style="padding:20px 22px">'
+        +'<div style="font-size:12px;color:#B08247;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">'+tar(y.tarih)+'</div>'
+        +'<div style="font-family:\'Plus Jakarta Sans\',sans-serif;font-size:19px;font-weight:800;color:#221A12;margin-bottom:8px;line-height:1.3">'+esc(y.baslik)+'</div>'
+        +'<div style="font-size:14px;color:#6B5E50;line-height:1.6">'+esc(y.ozet||'')+'</div>'
+        +'<div style="margin-top:14px;color:#E0640C;font-weight:700;font-size:14px">Devamını oku →</div>'
+        +'</div></a>';
+    }).join('');
+    sec.style.display='block';
+  }).catch(function(){});
 })();
 </script>
 
