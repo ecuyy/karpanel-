@@ -19,7 +19,7 @@
   });
 </script>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
 <!-- ── PRIMARY SEO ── -->
@@ -3339,6 +3339,37 @@ body.app-mode .kp-lg b{margin-left:auto;color:#14110E;font-weight:800;font-varia
   .hero.khm .khm-cta-row{flex-direction:column}
   .hero.khm .khm-btn-or,.hero.khm .khm-btn-gh{width:100%;justify-content:center;text-align:center}
   .hero.khm .khm-ticks{gap:12px}
+}
+
+/* ══════ GLOBAL MOBİL SAĞLAMLAŞTIRMA (tüm cihazlar) ══════ */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+*{min-width:0}
+img,svg,video,canvas{max-width:100%;height:auto}
+body{overflow-x:hidden}
+body > nav{padding-left:max(0px,env(safe-area-inset-left));padding-right:max(0px,env(safe-area-inset-right))}
+/* uzun metin/mailler kutuyu kırmasın */
+input,textarea,select{max-width:100%}
+@media(max-width:768px){
+  /* uygulama içeriği kenarlarda nefes alsın */
+  body.app-mode [style*="max-width:1560px"]{padding-left:16px!important;padding-right:16px!important}
+  /* geniş tabloların yatay kaydırması garanti */
+  .prod-table-wrap,body.app-mode .prod-table-wrap{-webkit-overflow-scrolling:touch}
+  /* dokunma hedefleri en az 44px */
+  button,.kd-btn,.detay-btn,.fbtn,.action-btn,.kbx-apply,.nav-inner a,.nav-inner button{min-height:44px}
+  /* modallar tam ekrana yakın, kaydırılabilir */
+  .modal{max-width:100%;max-height:92vh;padding:1.3rem;border-radius:18px}
+  .overlay{padding:12px}
+}
+@media(max-width:480px){
+  body.app-mode [style*="max-width:1560px"]{padding-top:18px!important}
+  .modal{padding:1.1rem;border-radius:16px}
+  .modal-inputs{grid-template-columns:1fr}
+  h1,h2{text-wrap:balance}
+  /* iOS zoom önleme: form yazıları en az 16px */
+  input,textarea,select{font-size:16px}
+}
+@supports(padding:max(0px)){
+  body{padding-bottom:env(safe-area-inset-bottom)}
 }
 </style>
 </head>
