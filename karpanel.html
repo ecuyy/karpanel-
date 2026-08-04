@@ -267,14 +267,15 @@ body > nav{
 }
 .nav-inner{
   max-width:1200px;margin:0 auto;
-  background:rgba(255,255,255,.97);
-  backdrop-filter:blur(24px);
-  border:1px solid rgba(0,0,0,.08);
+  background:rgba(255,255,255,.55);
+  backdrop-filter:blur(26px) saturate(1.7);
+  -webkit-backdrop-filter:blur(26px) saturate(1.7);
+  border:1px solid rgba(255,255,255,.55);
   border-radius:100px;
   height:62px;
   display:flex;align-items:center;justify-content:space-between;
   padding:0 1.5rem;
-  box-shadow:0 8px 32px rgba(0,0,0,.1);
+  box-shadow:0 8px 32px rgba(20,17,14,.12),0 1px 0 rgba(255,255,255,.6) inset;
   pointer-events:all;
 }
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
@@ -3370,6 +3371,8 @@ input,textarea,select{max-width:100%}
 @supports(padding:max(0px)){
   body{padding-bottom:env(safe-area-inset-bottom)}
 }
+/* giriş yapınca (app-mode) blog bölümü görünmesin */
+body.app-mode #blog{display:none!important}
 </style>
 </head>
 <body>
