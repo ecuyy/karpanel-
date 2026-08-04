@@ -3345,7 +3345,6 @@ body.app-mode .kp-lg b{margin-left:auto;color:#14110E;font-weight:800;font-varia
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 *{min-width:0}
 img,svg,video,canvas{max-width:100%;height:auto}
-body{overflow-x:hidden}
 body > nav{padding-left:max(0px,env(safe-area-inset-left));padding-right:max(0px,env(safe-area-inset-right))}
 /* uzun metin/mailler kutuyu kırmasın */
 input,textarea,select{max-width:100%}
@@ -6489,7 +6488,10 @@ function kpCharts(){
     if(c.hasAlis){withA.push({t:urunler[i].title||urunler[i].name||'\u2014',net:c.net});if(c.net>=0)karli++;else zarar++;}
     else bekleyen++;
   }
-  var srt=withA.slice().sort(function(x,y){return y.net-x.net;}).slice(0,9);
+  var poz=withA.filter(function(r){return r.net>=0;}).sort(function(x,y){return y.net-x.net;});
+  var neg=withA.filter(function(r){return r.net<0;}).sort(function(x,y){return x.net-y.net;});
+  // en çok kazandıran 6 + en çok kaybettiren 6, sonra soldan sağa azalan (yeşiller solda, kırmızılar sağda)
+  var srt=poz.slice(0,6).concat(neg.slice(0,6)).sort(function(x,y){return y.net-x.net;});
   var maxAbs=1; srt.forEach(function(r){maxAbs=Math.max(maxAbs,Math.abs(r.net));});
   var bars='';
   if(!srt.length){bars='<div class="kp-chart-empty">Al\u0131\u015f fiyat\u0131 girilen \u00fcr\u00fcn yok</div>';}
