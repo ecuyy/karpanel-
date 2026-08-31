@@ -4836,6 +4836,7 @@ function calcKar(p){
 
 // ── NAVIGATION ──
 function goApp(){
+  if(currentUser && currentUser.trialBitti){ const o=document.getElementById('pay-overlay'); if(o) o.classList.add('open'); return; }
   try{ localStorage.setItem('kp_inapp','1'); }catch(e){}
   document.body.classList.add('app-mode');
   document.getElementById('hero').style.display='none';
@@ -4866,6 +4867,13 @@ function loadUser(){
   const u=localStorage.getItem('kp_user')||sessionStorage.getItem('kp_user');
   if(u){
     currentUser=JSON.parse(u);
+    // Deneme süresi bu oturumda (sunucuya gitmeden) dolduysa kilitle
+    if(currentUser.trialAktif && currentUser.trialBitis && new Date(currentUser.trialBitis).getTime()<Date.now()){
+      currentUser.premium=false; currentUser.trialAktif=false; currentUser.trialBitti=true;
+      try{ if(localStorage.getItem('kp_user')) localStorage.setItem('kp_user',JSON.stringify(currentUser));
+           if(sessionStorage.getItem('kp_user')) sessionStorage.setItem('kp_user',JSON.stringify(currentUser)); }catch(e){}
+    }
+    if(currentUser.trialBitti){ applyUserTrialBitti(); return; }
     // Üyelik süresi dolduysa otomatik premium'u kaldır
     if(currentUser.premium && !premiumAktif(currentUser)){
       currentUser.premium=false;
@@ -4924,6 +4932,22 @@ function showGuestUI(){
   const lcUcretsiz2=document.getElementById('lc-ucretsiz');
   if(lcGuest2) lcGuest2.style.display='flex';
   if(lcUcretsiz2) lcUcretsiz2.style.display='none';
+}
+function applyUserTrialBitti(){
+  document.getElementById('auth-btns').style.display='none';
+  document.getElementById('user-pill').style.display='flex';
+  document.getElementById('user-av').textContent=currentUser.ad.charAt(0).toUpperCase();
+  document.getElementById('user-name').textContent=currentUser.ad;
+  document.getElementById('nav-dashboard-btn').style.display='none';
+  const us=document.getElementById('urun-section'); if(us) us.style.display='none';
+  const as=document.getElementById('app-section'); if(as) as.style.display='none';
+  const dBanner=document.getElementById('demo-banner'); if(dBanner) dBanner.style.display='none';
+  const es=document.getElementById('excel-upload-section'); if(es) es.style.display='none';
+  const lcGuest=document.getElementById('lc-guest'); if(lcGuest) lcGuest.style.display='none';
+  const lcUcretsiz=document.getElementById('lc-ucretsiz'); if(lcUcretsiz) lcUcretsiz.style.display='none';
+  document.getElementById('login-cta').style.display='none';
+  document.querySelectorAll('.pay-skip').forEach(e=>e.style.display='none');
+  const o=document.getElementById('pay-overlay'); if(o) o.classList.add('open');
 }
 function kdUyelikDoldur(){
   if(!currentUser)return;
@@ -5038,7 +5062,7 @@ async function girisYap(){
     const d=await r.json();
     if(!r.ok){showAuthError(d.error||'Giriş başarısız');return;}
     const isPremium=PREMIUM_EMAILS.includes(email)||((d.user.premium||false)&&premiumAktif(d.user));
-    currentUser={ad:d.user.ad,email:d.user.email,premium:isPremium,odemeTarihi:d.user.odemeTarihi,uyelikBitis:d.user.uyelikBitis,fatura:d.user.fatura||null};
+    currentUser={ad:d.user.ad,email:d.user.email,premium:isPremium,odemeTarihi:d.user.odemeTarihi,uyelikBitis:d.user.uyelikBitis,fatura:d.user.fatura||null,trialAktif:d.user.trialAktif||false,trialBitti:d.user.trialBitti||false,trialBitis:d.user.trialBitisTarihi||null,trialKalanGun:d.user.trialKalanGun||0};
     const hatirla=document.getElementById('beni-hatirla');
     if(hatirla&&hatirla.checked){
       localStorage.setItem('kp_user',JSON.stringify(currentUser));
@@ -5046,9 +5070,16 @@ async function girisYap(){
       sessionStorage.setItem('kp_user',JSON.stringify(currentUser));
       localStorage.removeItem('kp_user');
     }
-    closeAuth(); applyUser();
-    if(!currentUser.premium){setTimeout(()=>document.getElementById('pay-overlay').classList.add('open'),400);}
-    else{toast('Hoş geldiniz, '+currentUser.ad+'! 🎉','success','👋');goApp();}
+    closeAuth();
+    if(currentUser.trialBitti){
+      applyUserTrialBitti();
+      toast('Deneme süreniz doldu. Devam etmek için üyelik satın alın.','info','⏳');
+    } else {
+      applyUser();
+      if(!currentUser.premium){setTimeout(()=>document.getElementById('pay-overlay').classList.add('open'),400);}
+      else if(currentUser.trialAktif){toast('Hoş geldiniz, '+currentUser.ad+'! '+currentUser.trialKalanGun+' günlük deneme süreniz devam ediyor ⏳','success','🎉');goApp();}
+      else{toast('Hoş geldiniz, '+currentUser.ad+'! 🎉','success','👋');goApp();}
+    }
   }catch(e){showAuthError('Sunucu yanıt vermiyor. Birkaç saniye bekleyip tekrar deneyin.');}
 }
 
@@ -5063,11 +5094,12 @@ async function kayitOl(){
     const r=await fetchWithRetry(PROXY+'/api/kayit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ad,email,sifre})});
     const d=await r.json();
     if(!r.ok){showAuthError(d.error||'Kayıt başarısız');return;}
-    const isPremium=PREMIUM_EMAILS.includes(email);
-    currentUser={ad,email,premium:isPremium};
+    const isPremium=PREMIUM_EMAILS.includes(email)||(d.user.trialAktif||false);
+    currentUser={ad,email,premium:isPremium,trialAktif:d.user.trialAktif||false,trialBitti:d.user.trialBitti||false,trialBitis:d.user.trialBitisTarihi||null,trialKalanGun:d.user.trialKalanGun||0};
     localStorage.setItem('kp_user',JSON.stringify(currentUser));
     closeAuth();applyUser();
     if(!isPremium){setTimeout(()=>document.getElementById('pay-overlay').classList.add('open'),400);}
+    else if(currentUser.trialAktif){toast('Hoş geldiniz, '+ad+'! 3 günlük ücretsiz deneme süreniz başladı ⏳','success','🎉');goApp();}
     else{toast('Hoş geldiniz, '+ad+'! 🎉','success','👋');goApp();}
   }catch(e){showAuthError('Sunucu yanıt vermiyor. Birkaç saniye bekleyip tekrar deneyin.');}
 }

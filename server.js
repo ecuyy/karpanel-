@@ -180,6 +180,17 @@ const server = http.createServer(async (req, res) => {
 
   // ── KULLANICI API ──
 
+  // ── DENEME SÜRESİ (TRIAL) ──
+  const TRIAL_GUN = 3;
+  function trialDurumuHesapla(user) {
+    const baslangic = user.trialBaslangic ? new Date(user.trialBaslangic) : (user.kayitTarihi ? new Date(user.kayitTarihi) : new Date());
+    const bitis = new Date(baslangic.getTime() + TRIAL_GUN * 24 * 60 * 60 * 1000);
+    const simdi = new Date();
+    const aktif = simdi <= bitis;
+    const kalanGun = Math.max(0, Math.ceil((bitis - simdi) / (24 * 60 * 60 * 1000)));
+    return { trialAktif: aktif, trialBitti: !aktif, trialBitisTarihi: bitis, trialKalanGun: kalanGun };
+  }
+
   // Kayıt ol
   if (parsed.pathname === '/api/kayit' && req.method === 'POST') {
     const body = await getBody(req);
@@ -194,10 +205,11 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Bu e-posta zaten kayıtlı' })); return;
     }
-    const user = { ad, email, sifre, premium: false, kayitTarihi: new Date(), odemeTarihi: null, uyelikBitis: null };
+    const user = { ad, email, sifre, premium: false, kayitTarihi: new Date(), odemeTarihi: null, uyelikBitis: null, trialBaslangic: new Date() };
     await db.collection('users').insertOne(user);
+    const trial = trialDurumuHesapla(user);
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true, user: { ad, email, premium: false } }));
+    res.end(JSON.stringify({ ok: true, user: { ad, email, premium: false, trialAktif: trial.trialAktif, trialBitti: trial.trialBitti, trialBitisTarihi: trial.trialBitisTarihi, trialKalanGun: trial.trialKalanGun } }));
     return;
   }
 
@@ -217,8 +229,15 @@ const server = http.createServer(async (req, res) => {
       effPremium = false;
       try { await db.collection('users').updateOne({ email }, { $set: { premium: false } }); } catch (e) {}
     }
+    // Gerçek premium değilse deneme süresini kontrol et
+    let trialAktif = false, trialBitti = false, trialKalanGun = 0, trialBitisTarihi = null;
+    if (!effPremium) {
+      const trial = trialDurumuHesapla(user);
+      trialAktif = trial.trialAktif; trialBitti = trial.trialBitti; trialKalanGun = trial.trialKalanGun; trialBitisTarihi = trial.trialBitisTarihi;
+      if (trialAktif) effPremium = true; // deneme süresince tam erişim
+    }
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true, user: { ad: user.ad, email: user.email, premium: effPremium, odemeTarihi: user.odemeTarihi, uyelikBitis: user.uyelikBitis, fatura: user.fatura || null } }));
+    res.end(JSON.stringify({ ok: true, user: { ad: user.ad, email: user.email, premium: effPremium, odemeTarihi: user.odemeTarihi, uyelikBitis: user.uyelikBitis, fatura: user.fatura || null, trialAktif, trialBitti, trialKalanGun, trialBitisTarihi } }));
     return;
   }
 
