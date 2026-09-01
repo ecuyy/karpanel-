@@ -4427,8 +4427,8 @@ body.app-mode #blog{display:none!important}
             <div><div class="kd-card-t">Fatura bilgileri</div><div class="kd-card-s">Yıllık plan ödeme özeti</div></div>
           </div>
           <div class="kd-plan-box">
-            <div class="kd-plan-row"><span>Plan</span><b>komisyonhesap Premium · Yıllık</b></div>
-            <div class="kd-plan-row"><span>Tutar</span><b>₺1.500 <small>KDV dâhil</small></b></div>
+            <div class="kd-plan-row"><span>Plan</span><b id="ku-fat-plan">komisyonhesap Premium · Yıllık</b></div>
+            <div class="kd-plan-row"><span>Tutar</span><b id="ku-fat-tutar">₺1.500 <small>KDV dâhil</small></b></div>
             <div class="kd-plan-row"><span>Yenileme tarihi</span><b id="ku-fat-bitis">—</b></div>
           </div>
 
@@ -4979,8 +4979,25 @@ function kdUyelikDoldur(){
   document.getElementById('hm-avatar').textContent=currentUser.ad.charAt(0).toUpperCase();
   document.getElementById('hm-ad').textContent=currentUser.ad;
   document.getElementById('hm-email').textContent=currentUser.email;
+  const kfp=document.getElementById('ku-fat-plan'), kft=document.getElementById('ku-fat-tutar');
   // Üyelik bilgileri
-  if(currentUser.premium){
+  if(currentUser.trialAktif){
+    const bitis=currentUser.trialBitis?new Date(currentUser.trialBitis):new Date();
+    const baslangic=new Date(bitis.getTime()-3*24*60*60*1000);
+    const bugun=new Date();
+    const kalanGun=Math.max(0,Math.ceil((bitis-bugun)/(1000*60*60*24)));
+    const pct=Math.max(0,Math.min(100,Math.round((kalanGun/3)*100)));
+    document.getElementById('hm-durum').textContent='⏳ Deneme Sürümü';
+    document.getElementById('hm-durum').style.background='rgba(242,122,26,.12)';
+    document.getElementById('hm-durum').style.color='var(--or)';
+    document.getElementById('hm-baslangic').textContent=baslangic.toLocaleDateString('tr-TR');
+    document.getElementById('hm-bitis').textContent=bitis.toLocaleDateString('tr-TR');
+    document.getElementById('hm-kalan').textContent=kalanGun+' gün deneme kaldı';
+    document.getElementById('hm-progress').style.width=pct+'%';
+    document.getElementById('hm-progress').style.background='var(--or)';
+    if(kfp) kfp.textContent='Ücretsiz Deneme (henüz ödeme yapılmadı)';
+    if(kft) kft.textContent='₺0 — deneme sonrası ₺1.500/yıl';
+  } else if(currentUser.premium){
     const users=JSON.parse(localStorage.getItem('kp_users')||'[]');
     const user=users.find(u=>u.email===currentUser.email);
     const baslangic=user&&user.odemeTarihi?new Date(user.odemeTarihi):new Date();
@@ -4998,6 +5015,8 @@ function kdUyelikDoldur(){
     document.getElementById('hm-kalan').textContent=kalanGun+' gün kaldı';
     document.getElementById('hm-progress').style.width=pct+'%';
     document.getElementById('hm-progress').style.background=kalanGun<30?'var(--red)':kalanGun<90?'var(--yellow)':'var(--green)';
+    if(kfp) kfp.textContent='komisyonhesap Premium · Yıllık';
+    if(kft) kft.innerHTML='₺1.500 <small>KDV dâhil</small>';
   } else {
     document.getElementById('hm-durum').textContent='Ücretsiz';
     document.getElementById('hm-durum').style.background='var(--bg2)';
@@ -5006,6 +5025,8 @@ function kdUyelikDoldur(){
     document.getElementById('hm-bitis').textContent='—';
     document.getElementById('hm-kalan').textContent='Premium değil';
     document.getElementById('hm-progress').style.width='0%';
+    if(kfp) kfp.textContent='komisyonhesap Premium · Yıllık';
+    if(kft) kft.innerHTML='₺1.500 <small>KDV dâhil</small>';
   }
 }
 function closeHesabim(ev){ if(ev&&ev.target!==ev.currentTarget)return; kdGo('panel'); }
