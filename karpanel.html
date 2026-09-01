@@ -6282,6 +6282,8 @@ loadUser();
         const u = JSON.parse(stored);
         if(u.email === email){
           u.premium = true;
+          u.trialBitti = false;
+          u.trialAktif = false;
           localStorage.setItem('kp_user', JSON.stringify(u));
           currentUser = u;
           applyUser();
