@@ -4679,6 +4679,26 @@ body.app-mode #blog{display:none!important}
 </div>
 
 <!-- ÖDEME MODAL -->
+<div class="overlay" id="trial-welcome-overlay">
+  <div class="pay-box">
+    <div class="pay-header">
+      <div class="pay-header-icon">⏳</div>
+      <div class="pay-header-title">3 Günlük Ücretsiz Deneme Başladı!</div>
+      <div class="pay-header-sub">Hoş geldiniz, <span id="tw-ad">-</span></div>
+    </div>
+    <div class="pay-body">
+      <div class="pay-features">
+        <div class="pay-feature"><div class="pf-icon2">✓</div>3 gün boyunca tüm premium özellikler ücretsiz</div>
+        <div class="pay-feature"><div class="pf-icon2">✓</div>Excel yükleme, sınırsız ürün, tam analiz</div>
+        <div class="pay-feature"><div class="pf-icon2">⚠️</div>3 gün sonunda ödeme yapmazsanız ürünlerinize erişiminiz kapanır</div>
+        <div class="pay-feature"><div class="pf-icon2">💳</div>Şimdi hiçbir ücret alınmadı, otomatik ödeme yoktur</div>
+      </div>
+      <div class="pay-form">
+        <button class="btn-pay" onclick="trialHosgeldinKapat()">Anladım, Devam Et →</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="overlay" id="pay-overlay">
   <div class="pay-box">
     <div class="pay-header">
@@ -5145,9 +5165,16 @@ async function kayitOl(){
     localStorage.setItem('kp_user',JSON.stringify(currentUser));
     closeAuth();applyUser();
     if(!isPremium){setTimeout(()=>document.getElementById('pay-overlay').classList.add('open'),400);}
-    else if(currentUser.trialAktif){toast('Hoş geldiniz, '+ad+'! 3 günlük ücretsiz deneme süreniz başladı ⏳','success','🎉');goApp();}
+    else if(currentUser.trialAktif){
+      const twAd=document.getElementById('tw-ad'); if(twAd) twAd.textContent=ad;
+      setTimeout(()=>{const o=document.getElementById('trial-welcome-overlay'); if(o) o.classList.add('open');},300);
+    }
     else{toast('Hoş geldiniz, '+ad+'! 🎉','success','👋');goApp();}
   }catch(e){showAuthError('Sunucu yanıt vermiyor. Birkaç saniye bekleyip tekrar deneyin.');}
+}
+function trialHosgeldinKapat(){
+  const o=document.getElementById('trial-welcome-overlay'); if(o) o.classList.remove('open');
+  goApp();
 }
 
 // ── ÖDEME ──

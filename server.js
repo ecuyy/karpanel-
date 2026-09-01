@@ -682,8 +682,15 @@ async function sifirla(){
     }
     if (!db) { res.writeHead(500); res.end(JSON.stringify({ error: 'DB yok' })); return; }
     const users = await db.collection('users').find({}, { projection: { sifre: 0 } }).sort({ kayitTarihi: -1 }).toArray();
+    const usersWithTrial = users.map(u => {
+      if (!u.premium) {
+        const t = trialDurumuHesapla(u);
+        return Object.assign({}, u, { trialAktif: t.trialAktif, trialKalanGun: t.trialKalanGun, trialBitisTarihi: t.trialBitisTarihi });
+      }
+      return u;
+    });
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(users));
+    res.end(JSON.stringify(usersWithTrial));
     return;
   }
 
@@ -1074,7 +1081,7 @@ h1,h2,.page-title,.stat-val,.login-logo span,.sidebar-logo span{font-family:'Plu
 .page-sub{color:var(--muted);font-size:14px;margin-top:5px}
 
 /* STATS */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.9rem}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.9rem}
 .stat{background:linear-gradient(162deg,var(--card2),var(--card));border:1px solid var(--border);border-radius:18px;padding:1.35rem 1.5rem;cursor:pointer;transition:.2s;position:relative;overflow:hidden;box-shadow:0 24px 52px -40px rgba(0,0,0,.9)}
 .stat::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--or),var(--or2));opacity:0;transition:.2s}
 .stat:hover{border-color:rgba(242,122,26,.32);transform:translateY(-3px)}
@@ -1210,6 +1217,11 @@ tr:hover td{background:rgba(255,255,255,.035)}
           <div class="stat-icon">💎</div>
           <div class="stat-val" id="stat-premium">0</div>
           <div class="stat-label">Premium</div>
+        </div>
+        <div class="stat" onclick="filtrele('deneme')" id="sf-deneme">
+          <div class="stat-icon">⏳</div>
+          <div class="stat-val" id="stat-deneme">0</div>
+          <div class="stat-label">Denemede</div>
         </div>
         <div class="stat" onclick="filtrele('ucretsiz')" id="sf-ucretsiz">
           <div class="stat-icon">🆓</div>
@@ -1445,15 +1457,17 @@ function hesaplaIstatistikler(){
   const bugun=new Date();
   const birAySonra=new Date(); birAySonra.setMonth(birAySonra.getMonth()+1);
   const buAyBaslangic=new Date(bugun.getFullYear(),bugun.getMonth(),1);
-  let premium=0,ucretsiz=0,bitiyor=0,buAyPremium=0;
+  let premium=0,ucretsiz=0,bitiyor=0,buAyPremium=0,deneme=0;
   tumKullanicilar.forEach(u=>{
     if(u.premium){ premium++;
       if(u.odemeTarihi&&new Date(u.odemeTarihi)>=buAyBaslangic) buAyPremium++;
       if(u.uyelikBitis){const b=new Date(u.uyelikBitis);if(b<birAySonra&&b>bugun)bitiyor++;}
-    } else ucretsiz++;
+    } else if(u.trialAktif){ deneme++; }
+    else { ucretsiz++; }
   });
   document.getElementById('stat-toplam').textContent=tumKullanicilar.length;
   document.getElementById('stat-premium').textContent=premium;
+  document.getElementById('stat-deneme').textContent=deneme;
   document.getElementById('stat-ucretsiz').textContent=ucretsiz;
   document.getElementById('stat-bitis').textContent=bitiyor;
   document.getElementById('ist-gelir').textContent='₺'+(premium*1500).toLocaleString('tr-TR');
@@ -1469,7 +1483,8 @@ function renderTablo(){
   let liste=tumKullanicilar.filter(u=>{
     if(arama&&!u.ad.toLowerCase().includes(arama)&&!u.email.toLowerCase().includes(arama)) return false;
     if(aktifFiltre==='premium') return u.premium;
-    if(aktifFiltre==='ucretsiz') return !u.premium;
+    if(aktifFiltre==='deneme') return !u.premium&&u.trialAktif;
+    if(aktifFiltre==='ucretsiz') return !u.premium&&!u.trialAktif;
     if(aktifFiltre==='bitiyor'){
       if(!u.uyelikBitis) return false;
       const b=new Date(u.uyelikBitis); return b<birAySonra&&b>bugun;
@@ -1477,7 +1492,7 @@ function renderTablo(){
     return true;
   });
   document.getElementById('gosterilen-sayi').textContent=liste.length;
-  const filtreLabelMap={'hepsi':'Tümü','premium':'Premium','ucretsiz':'Ücretsiz','bitiyor':'Bu Ay Bitiyor'};
+  const filtreLabelMap={'hepsi':'Tümü','premium':'Premium','deneme':'Denemede','ucretsiz':'Ücretsiz','bitiyor':'Bu Ay Bitiyor'};
   document.getElementById('aktif-filtre').textContent=filtreLabelMap[aktifFiltre]||'';
   if(!liste.length){
     document.getElementById('users-tbody').innerHTML='<tr><td colspan="6" class="empty">🔍 Kullanıcı bulunamadı</td></tr>';
@@ -1493,6 +1508,7 @@ function renderTablo(){
     let badge;
     if(u.premium&&bitis30) badge='<span class="badge badge-yellow">⚠️ Bitiyor</span>';
     else if(u.premium) badge='<span class="badge badge-green">💎 Premium</span>';
+    else if(u.trialAktif) badge='<span class="badge badge-yellow">⏳ Deneme ('+u.trialKalanGun+'g)</span>';
     else badge='<span class="badge badge-gray">Ücretsiz</span>';
     const bitisStyle=bitis30?'color:#F87171;font-weight:600':'';
     return \`<tr>
