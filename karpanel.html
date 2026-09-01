@@ -3948,6 +3948,15 @@ body.app-mode #blog{display:none!important}
     
 
     <!-- ÜRÜN LİSTESİ -->
+    <div class="demo-banner" id="trial-banner" style="display:none">
+      <div>
+        <h3 id="trial-banner-title">⏳ Deneme süreniz devam ediyor</h3>
+        <p id="trial-banner-desc">Tüm özellikleri deneyin, süre bitmeden üye olun.</p>
+      </div>
+      <div class="demo-actions">
+        <button class="btn-hero-dark" onclick="odemeYap()" style="background:var(--or);padding:10px 18px;border-radius:10px;font-weight:700;cursor:pointer;border:none;color:#fff">💎 Şimdi Üye Ol — ₺1.500/yıl</button>
+      </div>
+    </div>
     <div id="urun-section" style="display:none">
       <!-- NORMAL ÜRÜN GÖRÜNÜMÜ -->
       <div id="normal-urun-gorunum">
@@ -4905,6 +4914,19 @@ function applyUser(){
     if(demoBanner) demoBanner.style.display='none';
     const excelSection=document.getElementById('excel-upload-section');
     if(excelSection) excelSection.style.display='block';
+    // Deneme süresi aktifse kalıcı uyarı banner'ı göster
+    const trialBanner=document.getElementById('trial-banner');
+    if(trialBanner){
+      if(currentUser.trialAktif){
+        trialBanner.style.display='flex';
+        const tbt=document.getElementById('trial-banner-title'), tbd=document.getElementById('trial-banner-desc');
+        const kg=currentUser.trialKalanGun;
+        if(tbt) tbt.textContent='⏳ Deneme süreniz '+(kg>0?(kg+' gün sonra bitiyor'):'bugün bitiyor');
+        if(tbd) tbd.textContent='Tüm özellikleri şu an ücretsiz deniyorsunuz. Süre bitince ürünlerinize erişemezsiniz, üye olarak kesintisiz devam edin.';
+      } else {
+        trialBanner.style.display='none';
+      }
+    }
   } else {
     document.getElementById('login-cta').style.display='block';
     // Giriş yapmış ücretsiz: ödeme butonu göster, kayıt butonlarını gizle
@@ -4917,6 +4939,8 @@ function applyUser(){
     if(demoBanner) demoBanner.style.display='block';
     const excelSection=document.getElementById('excel-upload-section');
     if(excelSection) excelSection.style.display='none';
+    const trialBanner=document.getElementById('trial-banner');
+    if(trialBanner) trialBanner.style.display='none';
   }
   // Kaydedilmiş ürünleri yükle
   loadSavedUrunler();
@@ -4943,6 +4967,7 @@ function applyUserTrialBitti(){
   const as=document.getElementById('app-section'); if(as) as.style.display='none';
   const dBanner=document.getElementById('demo-banner'); if(dBanner) dBanner.style.display='none';
   const es=document.getElementById('excel-upload-section'); if(es) es.style.display='none';
+  const tb=document.getElementById('trial-banner'); if(tb) tb.style.display='none';
   const lcGuest=document.getElementById('lc-guest'); if(lcGuest) lcGuest.style.display='none';
   const lcUcretsiz=document.getElementById('lc-ucretsiz'); if(lcUcretsiz) lcUcretsiz.style.display='none';
   document.getElementById('login-cta').style.display='none';
@@ -6317,7 +6342,15 @@ function kdSyncUser(){
   var prem=!!(currentUser&&currentUser.premium);
   if(av) av.textContent=currentUser?currentUser.ad.charAt(0).toUpperCase():'?';
   if(nm) nm.textContent=currentUser?currentUser.ad:'Misafir';
-  if(pl){pl.textContent=prem?'Premium':(currentUser?'\u00dccretsiz':'Demo');pl.className='kd-pro'+(prem?'':' free');}
+  if(pl){
+    if(prem && currentUser && currentUser.trialAktif){
+      pl.textContent='Deneme · '+currentUser.trialKalanGun+'g';
+      pl.className='kd-pro';
+    } else {
+      pl.textContent=prem?'Premium':(currentUser?'\u00dccretsiz':'Demo');
+      pl.className='kd-pro'+(prem?'':' free');
+    }
+  }
   var ml=document.getElementById('kd-mail');
   if(ml) ml.textContent=currentUser?currentUser.email:'Giri\u015f yap\u0131lmad\u0131';
   var hf=document.getElementById('kd-hero-fill'), hn=document.getElementById('kd-hero-note');
@@ -6325,7 +6358,11 @@ function kdSyncUser(){
   if(hf&&hn){
     if(prem){ var pw=document.getElementById('hm-progress');
       hf.style.width=pw&&pw.style.width?pw.style.width:'100%';
-      hn.textContent=kal&&kal.textContent&&kal.textContent!=='\u2014'?kal.textContent:'\u00dcyeli\u011finiz aktif';
+      if(currentUser&&currentUser.trialAktif){
+        hn.textContent='Deneme s\u00fcreniz '+currentUser.trialKalanGun+' g\u00fcn sonra bitiyor';
+      } else {
+        hn.textContent=kal&&kal.textContent&&kal.textContent!=='\u2014'?kal.textContent:'\u00dcyeli\u011finiz aktif';
+      }
     } else { hf.style.width='0%'; hn.textContent=currentUser?'Premium de\u011fil':'Demo modu'; }
   }
   var sa=document.getElementById('sup-ad'),se=document.getElementById('sup-email');
