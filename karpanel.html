@@ -3696,6 +3696,39 @@ body.app-mode #blog{display:none!important}
   </div>
 </div>
 
+<!-- SATIN ALMA DEĞERİ -->
+<section class="khm" id="neden-komisyonhesap" style="padding:72px 24px;background:#fff">
+  <div style="max-width:1120px;margin:0 auto">
+    <div style="text-align:center;max-width:780px;margin:0 auto 34px">
+      <div style="font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#F27A1A;margin-bottom:10px">Neden komisyonhesap?</div>
+      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(30px,4vw,46px);line-height:1.12;letter-spacing:-1.4px;margin:0 0 14px;color:#14110E">Tek tek ürün hesaplamak yerine tüm listenizi görün</h2>
+      <p style="font-size:17px;line-height:1.75;color:#6B625A;margin:0">Trendyol ürün Excel'inizi yükleyin; satış fiyatı, komisyon, KDV, %1 stopaj, kargo ve hizmet bedeli etkisini ürün bazında tek ekranda inceleyin. Zarar eden ürünleri filtreleyip fiyat kararınızı verin.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      <div style="border:1px solid #EFE7DC;border-radius:18px;padding:24px;background:#FBFAF8">
+        <div style="font-size:26px;margin-bottom:10px">📊</div>
+        <div style="font-size:18px;font-weight:800;color:#14110E;margin-bottom:7px">Toplu analiz</div>
+        <div style="font-size:14px;line-height:1.65;color:#776B60">Tek ürün hesaplayıcıyla uğraşmak yerine Trendyol Excel listenizi tek seferde analiz edin.</div>
+      </div>
+      <div style="border:1px solid #EFE7DC;border-radius:18px;padding:24px;background:#FBFAF8">
+        <div style="font-size:26px;margin-bottom:10px">⚠️</div>
+        <div style="font-size:18px;font-weight:800;color:#14110E;margin-bottom:7px">Zarar edenleri ayırın</div>
+        <div style="font-size:14px;line-height:1.65;color:#776B60">Kârlı ve zarar eden ürünleri filtreleyin; hangi üründe fiyat veya maliyet müdahalesi gerektiğini görün.</div>
+      </div>
+      <div style="border:1px solid #EFE7DC;border-radius:18px;padding:24px;background:#FBFAF8">
+        <div style="font-size:26px;margin-bottom:10px">⏱️</div>
+        <div style="font-size:18px;font-weight:800;color:#14110E;margin-bottom:7px">3 gün kendi verinizle deneyin</div>
+        <div style="font-size:14px;line-height:1.65;color:#776B60">Kendi Trendyol Excel dosyanızla tüm premium özellikleri 3 gün deneyin. Kart gerekmez, otomatik ödeme yoktur.</div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:28px">
+      <button onclick="trackCta('value_trial');openAuth('kayit')" style="border:0;border-radius:12px;background:#F27A1A;color:#fff;padding:14px 22px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit">Kendi Excel'inle 3 Gün Ücretsiz Dene →</button>
+      <a href="/trendyol-komisyon-hesaplama" style="border:1px solid #D8CEC4;border-radius:12px;background:#fff;color:#28221D;padding:13px 20px;font-size:15px;font-weight:700;text-decoration:none">Önce Tek Ürün Hesapla</a>
+    </div>
+  </div>
+</section>
+<style>@media(max-width:780px){#neden-komisyonhesap [style*="grid-template-columns:repeat(3,1fr)"]{grid-template-columns:1fr!important}}</style>
+
 <!-- FİYATLANDIRMA -->
 <div class="pricing-section khm">
   <section id="fiyat" class="kpr">
@@ -4531,11 +4564,11 @@ body.app-mode #blog{display:none!important}
     <div class="kft-cta-in">
       <div>
         <div class="kft-cta-t">Hâlâ düşünüyor musun?</div>
-        <div class="kft-cta-s">Ücretsiz demo ile risk almadan dene. Kredi kartı gerekmez.</div>
+        <div class="kft-cta-s">Kendi Trendyol Excel'inle 3 gün tam erişim dene. Kredi kartı gerekmez, otomatik ödeme yoktur.</div>
       </div>
       <div class="kft-cta-btns">
-        <button class="kft-b2" onclick="demoVeGo()">Demo Dene</button>
-        <button class="kft-b1" onclick="uyeOlVeyaOde()">Hemen Başla <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></button>
+        <button class="kft-b2" onclick="trackCta('footer_demo');demoVeGo()">Örnek Demo</button>
+        <button class="kft-b1" onclick="trackCta('footer_trial');openAuth('kayit')">3 Gün Ücretsiz Dene <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></button>
       </div>
     </div>
   </div>
