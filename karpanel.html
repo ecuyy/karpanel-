@@ -3418,13 +3418,13 @@ body.app-mode #blog{display:none!important}
         </div>
 
         <div class="khm-cta-row">
-          <button class="khm-btn-or" onclick="demoVeGo()">Ücretsiz Demo Başlat <span style="font-size:15px">→</span></button>
-          <button class="khm-btn-gh" onclick="document.getElementById('nasil').scrollIntoView({behavior:'smooth'})">Nasıl Çalıştığını Gör</button>
+          <button class="khm-btn-or" onclick="trackCta('hero_trial');openAuth('kayit')">Kendi Excel'inle 3 Gün Ücretsiz Dene <span style="font-size:15px">→</span></button>
+          <button class="khm-btn-gh" onclick="trackCta('hero_demo');demoVeGo()">Örnek Demo'yu Gör</button>
         </div>
 
         <div class="khm-note">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="10.5" width="16" height="10.5" rx="2.5"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
-          Kredi kartı gerekmez. <strong style="color:#57534E">Örnek ürünlerle</strong> hemen deneyebilirsin.
+          3 gün tam erişim · Kredi kartı gerekmez · Otomatik ödeme yok.
         </div>
 
         <div class="khm-rule"></div>
@@ -4851,6 +4851,12 @@ function calcKar(p){
   const marj=s>0?(net/s*100):null;
   const ygd=a>0?(net/a*100):null;
   return{komisyon,komH,hizmet,stopaj,kdvS,kdvA,kdvK,kdvKom,kdvHiz,odKdv,net,marj,ygd,hasAlis:a>0};
+}
+
+function trackCta(label){
+  try{
+    if(typeof gtag==='function') gtag('event','cta_click',{cta_label:label});
+  }catch(e){}
 }
 
 // ── NAVIGATION ──
