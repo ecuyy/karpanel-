@@ -6842,5 +6842,21 @@ function maliyetSayacGuncelle(){
 })();
 </script>
 
+<script>
+/* Free calculator → trial handoff; hesaplama kodundan bağımsızdır. */
+(function(){
+  try{
+    var qs=new URLSearchParams(window.location.search);
+    if(qs.get('trial')==='1'){
+      window.addEventListener('load',function(){
+        setTimeout(function(){
+          try{ trackCta('calculator_to_trial'); openAuth('kayit'); }catch(e){}
+        },250);
+      });
+    }
+  }catch(e){}
+})();
+</script>
+
 </body>
 </html>
