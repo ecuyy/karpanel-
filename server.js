@@ -104,10 +104,10 @@ a{color:#E0640C;text-decoration:none}a:hover{text-decoration:underline}
 </style></head><body>
 <nav class="bnav"><div class="bnav-in">
 <a class="blogo" href="/"><span class="i">k</span>komisyon<em>hesap</em></a>
-<a class="bnav-cta" href="/">Ücretsiz Hesapla →</a>
+<a class="bnav-cta" href="/trendyol-komisyon-hesaplama">Ücretsiz Hesapla →</a>
 </div></nav>`;
 
-const BLOG_FOOT = `<footer class="bfoot">© ${new Date().getFullYear()} komisyonhesap · <a href="/">Ana Sayfa</a> · <a href="/blog">Blog</a> · <a href="https://www.instagram.com/komisyonhesap/" target="_blank" rel="noopener">Instagram</a></footer></body></html>`;
+const BLOG_FOOT = `<footer class="bfoot">© ${new Date().getFullYear()} komisyonhesap · <a href="/">Ana Sayfa</a> · <a href="/trendyol-komisyon-hesaplama">Trendyol Komisyon Hesaplama</a> · <a href="/blog">Blog</a> · <a href="https://www.instagram.com/komisyonhesap/" target="_blank" rel="noopener">Instagram</a></footer></body></html>`;
 
 
 const server = http.createServer(async (req, res) => {
@@ -816,9 +816,9 @@ async function sifirla(){
         ${y.kapak ? `<img src="${blogEsc(y.kapak)}" alt="${blogEsc(y.baslik)}" style="width:100%;border-radius:16px;margin-bottom:28px">` : ''}
         <div class="bbody" style="font-size:17px;color:#3A2E24">${blogIcerikRender(y.icerik)}</div>
         <div style="margin-top:44px;padding:28px;background:linear-gradient(135deg,#FFF3E6,#FFE8D0);border-radius:18px;text-align:center">
-          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:#221A12;margin-bottom:8px">Trendyol kârını saniyede hesapla</div>
-          <div style="color:#6B5E50;margin-bottom:18px">Komisyon, KDV ve stopaj dahil net kârını ücretsiz gör.</div>
-          <a href="/" style="display:inline-block;padding:13px 28px;border-radius:12px;background:linear-gradient(180deg,#FF9A42,#F27A1A);color:#fff!important;font-weight:800;text-decoration:none!important">Ücretsiz Dene →</a>
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:#221A12;margin-bottom:8px">Önce tek ürünü ücretsiz hesapla, sonra tüm Excel'ini analiz et</div>
+          <div style="color:#6B5E50;margin-bottom:18px">Komisyon, KDV, %1 stopaj, kargo ve hizmet bedeli sonrası net kârını gör. Kendi Excel'inle 3 günlük tam erişim denemesi de mevcut.</div>
+          <a href="/trendyol-komisyon-hesaplama" style="display:inline-block;padding:13px 28px;border-radius:12px;background:linear-gradient(180deg,#FF9A42,#F27A1A);color:#fff!important;font-weight:800;text-decoration:none!important">Ücretsiz Hesapla →</a>
         </div>
       </article>
       <style>.bbody h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:#221A12;margin:34px 0 14px}.bbody h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:700;color:#221A12;margin:26px 0 10px}.bbody p{margin:0 0 18px}.bbody ul{margin:0 0 18px;padding-left:24px}.bbody li{margin-bottom:8px}</style>`
