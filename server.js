@@ -125,6 +125,20 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // SEO landing page: Trendyol komisyon hesaplama
+  if (parsed.pathname === '/trendyol-komisyon-hesaplama' || parsed.pathname === '/trendyol-komisyon-hesaplama/') {
+    const filePath = path.join(__dirname, 'trendyol-komisyon-hesaplama.html');
+    fs.readFile(filePath, (err, data) => {
+      if (err) { res.writeHead(404); res.end('Sayfa bulunamadi'); return; }
+      res.writeHead(200, {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'public, max-age=300'
+      });
+      res.end(data);
+    });
+    return;
+  }
+
   // robots.txt
   if (parsed.pathname === '/robots.txt') {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
@@ -142,7 +156,7 @@ const server = http.createServer(async (req, res) => {
         blogUrls = yazilar.map(y => `<url><loc>https://komisyonhesap.com/blog/${blogEsc(y.slug)}</loc><lastmod>${new Date(y.guncelleme || y.tarih).toISOString().split('T')[0]}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`).join('');
       }
     } catch (e) {}
-    const sitemap = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://komisyonhesap.com/</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url><url><loc>https://komisyonhesap.com/blog</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>${blogUrls}</urlset>`;
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://komisyonhesap.com/</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url><url><loc>https://komisyonhesap.com/trendyol-komisyon-hesaplama</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url><url><loc>https://komisyonhesap.com/blog</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>${blogUrls}</urlset>`;
     res.writeHead(200, { 'Content-Type': 'application/xml' });
     res.end(sitemap);
     return;
