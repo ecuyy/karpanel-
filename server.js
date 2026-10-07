@@ -8,14 +8,19 @@ const { MongoClient } = require('mongodb');
 const Iyzipay = require('iyzipay');
 
 const PORT = process.env.PORT || 3001;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://info_db_user:rWUh1N0WLUblIVTa@karpanel.g062rms.mongodb.net/?appName=karpanel';
-const ADMIN_SIFRE = process.env.ADMIN_SIFRE || '91a87s64';
+const REQUIRED_ENV = ['MONGO_URI','ADMIN_SIFRE','IYZICO_API_KEY','IYZICO_SECRET'];
+const missingEnv = REQUIRED_ENV.filter(k => !process.env[k]);
+if (missingEnv.length) {
+  throw new Error('Eksik zorunlu ortam değişkenleri: ' + missingEnv.join(', '));
+}
+const MONGO_URI = process.env.MONGO_URI;
+const ADMIN_SIFRE = process.env.ADMIN_SIFRE;
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
 
 // iyzico yapılandırması (resmi npm paketi)
 const iyzipay = new Iyzipay({
-  apiKey: process.env.IYZICO_API_KEY || 'OHsPgULIkX0P2lBo6XXUKrNZvE6PNBYf',
-  secretKey: process.env.IYZICO_SECRET || 'XnjSF1WSqXarHDxIPx9RACTZ1cuytzEU',
+  apiKey: process.env.IYZICO_API_KEY,
+  secretKey: process.env.IYZICO_SECRET,
   uri: 'https://api.iyzipay.com'
 });
 
