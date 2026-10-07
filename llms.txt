@@ -1,0 +1,34 @@
+# KomisyonHesap
+
+> KomisyonHesap, Türkiye'deki Trendyol satıcılarının ürün bazında gerçek net kâr ve zararını analiz etmesine yardımcı olan bağımsız bir web uygulamasıdır.
+
+## Temel sayfalar
+
+- [Ana sayfa ve toplu kârlılık analizi](https://komisyonhesap.com/): Excel yükleme, toplu ürün analizi ve ürün bazında maliyet hesaplama.
+- [Trendyol komisyon hesaplama](https://komisyonhesap.com/trendyol-komisyon-hesaplama): Komisyon, KDV, stopaj, kargo ve hizmet bedeliyle net kâr hesaplama rehberi.
+- [Trendyol net kâr hesaplama](https://komisyonhesap.com/trendyol-net-kar-hesaplama): Gerçek kazancı oluşturan maliyet kalemlerini açıklayan rehber.
+- [Trendyol stopaj hesaplama](https://komisyonhesap.com/trendyol-stopaj-hesaplama): Yüzde 1 e-ticaret stopajının matrahını ve kârlılığa etkisini açıklayan rehber.
+- [Zarar eden ürünleri bulma](https://komisyonhesap.com/trendyolda-zarar-eden-urun-nasil-bulunur): Ürün bazında zarar tespiti ve toplu analiz rehberi.
+- [Trendyol Satıcı Rehberi](https://komisyonhesap.com/blog): Trendyol satıcılarına yönelik güncel kârlılık ve e-ticaret içerikleri.
+- [Site haritası](https://komisyonhesap.com/sitemap.xml): İndekslenebilir sayfaların listesi.
+
+## Öne çıkan özellikler
+
+- Trendyol Partner Panel'den indirilen Excel dosyalarıyla yüzlerce ürünü toplu analiz eder.
+- Komisyon, komisyon KDV'si, yüzde 1 stopaj, hizmet bedeli, kargo ve ürün maliyetini birlikte hesaplar.
+- Kârlı ve zarar eden ürünleri ürün bazında gösterir.
+- Avantajlı Etiket için hedef fiyat ve kâr etkisi analizi sunar.
+- Yüklenen ürün dosyaları tarayıcıda işlenir; sunucuya ürün dosyası yüklenmez.
+- Ücretsiz demo ve yıllık ücretli Premium planı vardır.
+
+## Güvenilirlik ve kapsam
+
+- KomisyonHesap bağımsız bir hizmettir; Trendyol ile resmî bağlantısı veya ortaklığı yoktur.
+- Komisyon oranları kategoriye ve satıcıya göre değişebilir. Kesin oran Trendyol Partner Panel'den doğrulanmalıdır.
+- Vergi ve stopaj hesapları bilgilendirme amaçlıdır; mali müşavir görüşünün yerine geçmez.
+
+## İletişim
+
+- Web: https://komisyonhesap.com/
+- E-posta: info@komisyonhesap.com
+- Instagram: https://www.instagram.com/komisyonhesap/

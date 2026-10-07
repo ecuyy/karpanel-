@@ -1,3 +1,91 @@
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /health
+Disallow: /odeme
+Disallow: /panel-giris
+Disallow: /sifre-sifirla
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /health
+Disallow: /odeme
+Disallow: /panel-giris
+Disallow: /sifre-sifirla
+
+User-agent: GPTBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /health
+Disallow: /odeme
+Disallow: /panel-giris
+Disallow: /sifre-sifirla
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /health
+Disallow: /odeme
+Disallow: /panel-giris
+Disallow: /sifre-sifirla
+
+User-agent: Claude-User
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /health
+Disallow: /odeme
+Disallow: /panel-giris
+Disallow: /sifre-sifirla
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /health
+Disallow: /odeme
+Disallow: /panel-giris
+Disallow: /sifre-sifirla
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /health
+Disallow: /odeme
+Disallow: /panel-giris
+Disallow: /sifre-sifirla
+
+User-agent: Googlebot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /health
+Disallow: /odeme
+Disallow: /panel-giris
+Disallow: /sifre-sifirla
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /health
+Disallow: /odeme
+Disallow: /panel-giris
+Disallow: /sifre-sifirla
+
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /health
+Disallow: /odeme
+Disallow: /panel-giris
+Disallow: /sifre-sifirla
+
 Sitemap: https://komisyonhesap.com/sitemap.xml
