@@ -3750,15 +3750,15 @@ body.app-mode #blog{display:none!important}
         <div class="kpr-right-in">
           <div class="kpr-price-lbl">Yıllık toplam</div>
           <div class="kpr-price"><span class="cur">₺</span>1.500</div>
-          <div class="kpr-price-sub">KDV dâhil · tek ödeme</div>
+          <div class="kpr-price-sub">KDV dâhil · tek ödeme · ₺125/ay eşdeğeri · ≈ ₺4,10/gün</div>
 
-          <button class="kpr-cta" onclick="uyeOlVeyaOde()">Hemen Başla <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6.5l5.5 5.5L13 17.5"/></svg></button>
-          <button class="kpr-alt" onclick="demoVeGo()"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Önce ücretsiz demo</button>
+          <button class="kpr-cta" onclick="trackCta('pricing_trial');openAuth('kayit')">3 Gün Ücretsiz Dene <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6.5l5.5 5.5L13 17.5"/></svg></button>
+          <button class="kpr-alt" onclick="trackCta('pricing_demo');demoVeGo()"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Önce ücretsiz demo</button>
 
           <ul class="kpr-assure">
             <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L19.5 6.5"/></svg><span>Kredi kartı bilgileriniz bize iletilmez</span></li>
             <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L19.5 6.5"/></svg><span>Ödeme sonrası anında aktivasyon</span></li>
-            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L19.5 6.5"/></svg><span>Demo için kayıt veya kart gerekmez</span></li>
+            <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L19.5 6.5"/></svg><span>3 günlük tam erişim için kart gerekmez; otomatik ödeme yoktur</span></li>
           </ul>
 
           <div class="kpr-pay">
@@ -3943,7 +3943,7 @@ body.app-mode #blog{display:none!important}
         <p id="trial-banner-desc">Tüm özellikleri deneyin, süre bitmeden üye olun.</p>
       </div>
       <div class="demo-actions">
-        <button class="btn-hero-dark" onclick="odemeYap()" style="background:var(--or);padding:10px 18px;border-radius:10px;font-weight:700;cursor:pointer;border:none;color:#fff">💎 Şimdi Üye Ol — ₺1.500/yıl</button>
+        <button class="btn-hero-dark" onclick="odemeYap()" style="background:var(--or);padding:10px 18px;border-radius:10px;font-weight:700;cursor:pointer;border:none;color:#fff">💎 Premium — ₺1.500/yıl (₺125/ay eşdeğeri)</button>
       </div>
     </div>
     <div id="urun-section" style="display:none">
@@ -4500,7 +4500,7 @@ body.app-mode #blog{display:none!important}
     </div>
     <div style="display:flex;flex-direction:column;gap:12px">
       <details><summary>Trendyol komisyon oranı nasıl hesaplanır?<span class="faq-plus">+</span></summary><div class="ans">Trendyol komisyon oranı kategoriye göre %5 ile %24 arasında değişir. Satış fiyatı üzerinden yüzde olarak hesaplanır. komisyonhesap komisyona ek olarak KDV, stopaj ve hizmet bedelini de otomatik hesaplayarak gerçek net karınızı gösterir.</div></details>
-      <details><summary>komisyonhesap ücretsiz mi?<span class="faq-plus">+</span></summary><div class="ans">Demo modu tamamen ücretsizdir. Örnek ürünlerle tüm özellikleri deneyebilirsiniz. Kendi ürünlerinizi Excel ile yüklemek ve sınırsız analiz yapmak için yıllık ₺1.500 premium üyelik gereklidir.</div></details>
+      <details><summary>komisyonhesap ücretsiz mi?<span class="faq-plus">+</span></summary><div class="ans">Örnek demo ücretsizdir. Ayrıca kayıt olan kullanıcılar 3 gün boyunca kendi Trendyol Excel dosyalarıyla tüm premium özellikleri ücretsiz deneyebilir. Kredi kartı gerekmez ve otomatik ödeme yoktur. Deneme sonrası yıllık premium üyelik ₺1.500 KDV dahildir.</div></details>
       <details><summary>Ürünlerimi nasıl yüklerim?<span class="faq-plus">+</span></summary><div class="ans">Trendyol Partner Panel → Ürünler → <strong>Dışa Aktar</strong> butonuna basın. Excel formatında indirin. komisyonhesap'de "Excel Yükle" butonuyla dosyayı seçin. Satış fiyatı, komisyon ve görseller otomatik gelir.</div></details>
       <details><summary>Hesaplama doğru mu?<span class="faq-plus">+</span></summary><div class="ans">komisyonhesap; komisyon, KDV, e-ticaret stopajı ve Trendyol hizmet bedelini birlikte dikkate alır. E-ticaret kapsamındaki stopaj oranı %1 olarak uygulanır ve matrah KDV hariç satış bedelidir.</div></details>
       <details><summary>Verilerim güvende mi?<span class="faq-plus">+</span></summary><div class="ans">Evet. Yüklediğiniz Excel dosyası ve girdiğiniz bilgiler yalnızca tarayıcınızda işlenir. Hiçbir ürün verisi veya fiyat bilgisi sunucularımıza gönderilmez veya saklanmaz.</div></details>
@@ -4694,12 +4694,12 @@ body.app-mode #blog{display:none!important}
     <div class="pay-header">
       <div class="pay-header-icon">💎</div>
       <div class="pay-header-title">komisyonhesap Premium</div>
-      <div class="pay-header-sub">Trendyol ürünlerinizi analiz edin</div>
+      <div class="pay-header-sub">Tüm Trendyol ürünlerinizi tek Excel ile analiz edin</div>
     </div>
     <div class="pay-body">
       <div class="pay-price-box">
         <div class="pay-price"><sup>₺</sup>1.500</div>
-        <div class="pay-price-per">yıllık üyelik · KDV dahil</div>
+        <div class="pay-price-per">yıllık üyelik · KDV dahil · ₺125/ay eşdeğeri · ≈ ₺4,10/gün</div>
       </div>
       <div class="pay-features">
         <div class="pay-feature"><div class="pf-icon2">✓</div>Excel ile otomatik ürün yükleme</div>
