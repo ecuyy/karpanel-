@@ -1379,7 +1379,6 @@ tr:hover td{background:#FCF8F4}
 .action-btn.blue{background:#EDF5FF;color:#2867B8;border-color:#D4E6FC}
 .action-btn.red{background:#FFF0EF;color:#BE3E39;border-color:#FFD9D6}
 .action-btn.green:hover{background:#DDF5EA}.action-btn.orange:hover{background:#FFE8D2}.action-btn.blue:hover{background:#DDECFD}.action-btn.red:hover{background:#FFE0DE}
-.action-btn:disabled{opacity:.48;cursor:not-allowed}
 .user-avatar{background:linear-gradient(135deg,#FF9945,#E9680D);border-radius:10px}
 .user-cell span{color:#202938}
 .loading,.empty{color:var(--muted)}
@@ -1520,7 +1519,7 @@ tr:hover td{background:#FCF8F4}
       </div>
       <div class="security-note" role="note">
         <span class="security-icon">🔐</span>
-        <div><strong>Parola güvenliği</strong><span>Kullanıcı parolaları görüntülenmez. Gerektiğinde kullanıcı satırındaki “Şifreyi Sıfırla” işlemini kullanabilirsiniz.</span></div>
+        <div><strong>Parola güvenliği</strong><span>Kullanıcı parolaları görüntülenmez. Gerektiğinde kullanıcı satırındaki “Yeni Şifre Belirle” işlemini kullanabilirsiniz.</span></div>
       </div>
       <div class="table-wrap">
         <div class="table-info">
@@ -1806,10 +1805,8 @@ function renderTablo(){
         \${u.premium
           ? \`<button class="action-btn orange" onclick="premiumDegistir('\${u.email}',false)">Premium Al</button>\`
           : \`<button class="action-btn green" onclick="premiumDegistir('\${u.email}',true)">💎 Premium Ver</button>\`}
-        <button class="action-btn blue" onclick="sifreSifirla('\${u.email}')" title="Kullanıcı için yeni parola belirle">🔑 Şifreyi Sıfırla</button>
-        \${u.fatura
-          ? \`<button class="action-btn green" onclick="faturaGoster('\${u.email}')">📄 Fatura</button>\`
-          : \`<button class="action-btn green" disabled title="Fatura bilgisi bulunmuyor">Fatura yok</button>\`}
+        <button class="action-btn blue" onclick="sifreSifirla('\${u.email}')" title="Kullanıcı için yeni parola belirle">🔑 Yeni Şifre Belirle</button>
+        <button class="action-btn green" onclick="faturaGoster('\${u.email}')" title="\${u.fatura?'Fatura bilgilerini aç':'Fatura bilgisi durumunu kontrol et'}">\${u.fatura?'📄 Fatura':'ℹ️ Fatura yok'}</button>
         <button class="action-btn red" onclick="kullaniciSil('\${u.email}','\${isim}')">🗑️ Sil</button>
       </div></td>
     </tr>\`;
@@ -1836,8 +1833,12 @@ async function premiumDegistir(email,aktif){
 async function sifreSifirla(email){
   const yeni=prompt(email+' için yeni şifre girin (min 6 karakter):');
   if(!yeni||yeni.length<6){if(yeni!==null)alert('Şifre en az 6 karakter olmalı');return;}
-  await fetch('/api/admin/sifre-sifirla',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:adminToken,email,yeniSifre:yeni})});
-  toast('Şifre güncellendi ✓','success');
+  try{
+    const r=await fetch('/api/admin/sifre-sifirla',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:adminToken,email,yeniSifre:yeni})});
+    const d=await r.json();
+    if(!r.ok||d.error){toast(d.error||'Şifre güncellenemedi','error');return;}
+    toast('Yeni şifre kaydedildi ✓','success');
+  }catch(e){toast('Şifre güncellenemedi','error');}
 }
 
 function faturaGoster(email) {
