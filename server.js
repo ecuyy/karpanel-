@@ -28,13 +28,25 @@ const iyzipay = new Iyzipay({
 
 let db;
 
-// MongoDB bağlantısı
-MongoClient.connect(MONGO_URI).then(client => {
+// MongoDB bağlantısı. SEO sayfaları ilk deploy isteğinde boş dönmesin diye
+// bağlantı sözünü saklıyor ve yalnızca veri gereken public rotalarda kısa süre bekliyoruz.
+const dbReady = MongoClient.connect(MONGO_URI).then(client => {
   db = client.db('karpanel');
   console.log('✅ MongoDB bağlandı!');
+  return db;
 }).catch(err => {
   console.error('❌ MongoDB bağlantı hatası:', err.message);
+  return null;
 });
+
+async function waitForDb(timeoutMs = 5000) {
+  if (db) return db;
+  await Promise.race([
+    dbReady,
+    new Promise(resolve => setTimeout(resolve, timeoutMs))
+  ]);
+  return db;
+}
 
 function corsHeaders(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -160,7 +172,10 @@ const server = http.createServer(async (req, res) => {
     const filePath = path.join(__dirname, 'karpanel.html');
     fs.readFile(filePath, (err, data) => {
       if (err) { res.writeHead(404); res.end('karpanel.html bulunamadi'); return; }
-      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.writeHead(200, {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'public, max-age=60, stale-while-revalidate=300'
+      });
       res.end(data);
     });
     return;
@@ -222,6 +237,7 @@ const server = http.createServer(async (req, res) => {
     const bugun = new Date().toISOString().split('T')[0];
     let blogUrls = '';
     try {
+      await waitForDb();
       if (db) {
         const yazilar = await db.collection('blog').find({ yayinda: true }).project({ slug: 1, guncelleme: 1, tarih: 1 }).sort({ tarih: -1 }).limit(500).toArray();
         blogUrls = yazilar.map(y => `<url><loc>https://komisyonhesap.com/blog/${blogEsc(y.slug)}</loc><lastmod>${new Date(y.guncelleme || y.tarih).toISOString().split('T')[0]}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`).join('');
@@ -805,6 +821,7 @@ async function sifirla(){
   // ══════════ BLOG ══════════
   // Public: yayındaki yazıların listesi (ana site için JSON)
   if (parsed.pathname === '/api/blog' && req.method === 'GET') {
+    await waitForDb();
     if (!db) { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify([])); return; }
     const yazilar = await db.collection('blog').find({ yayinda: true })
       .project({ icerik: 0 }).sort({ tarih: -1 }).limit(30).toArray();
@@ -822,6 +839,7 @@ async function sifirla(){
 
   if (parsed.pathname === '/blog' && req.method === 'GET') {
     let yazilar = [];
+    await waitForDb();
     if (db) yazilar = await db.collection('blog').find({ yayinda: true }).project({ icerik: 0 }).sort({ tarih: -1 }).limit(50).toArray();
     const kartlar = yazilar.length ? yazilar.map(y => `
       <a href="/blog/${blogEsc(y.slug)}" style="display:block;background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;box-shadow:0 10px 30px -20px rgba(0,0,0,.3);transition:transform .18s">
@@ -832,7 +850,12 @@ async function sifirla(){
           <div style="font-size:14px;color:#6B5E50;line-height:1.6">${blogEsc(y.ozet || '')}</div>
           <div style="margin-top:14px;color:#E0640C;font-weight:700;font-size:14px">Devamını oku →</div>
         </div>
-      </a>`).join('') : '<p style="text-align:center;color:#8A7B6B;padding:60px 0">Henüz blog yazısı yok. Yakında burada olacak! 🚀</p>';
+      </a>`).join('') : `<div style="color:#6B5E50;line-height:1.75;padding:28px 0">
+        <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;color:#2A211A;margin-bottom:14px">Trendyol satıcıları için kârlılık kaynakları</h2>
+        <p style="margin-bottom:14px">Bu bölümde Trendyol komisyon oranları, KDV etkisi, yüzde 1 e-ticaret stopajı, kargo giderleri ve hizmet bedelleri gibi satış kârlılığını doğrudan etkileyen konuları ele alıyoruz. Amaç, yalnızca satış fiyatına bakmak yerine ürünün bütün maliyetlerini aynı tabloda değerlendirmenize yardımcı olmaktır.</p>
+        <p style="margin-bottom:14px">Bir ürün yüksek ciro üretse bile komisyon, ürün alış maliyeti, kampanya indirimi, kargo ve vergi etkileri birlikte hesaplandığında zarar ettirebilir. Bu nedenle rehberlerimizde net kâr, kâr marjı, başabaş satış fiyatı ve kampanyaya katılmadan önce yapılması gereken kontrolleri pratik örneklerle açıklıyoruz.</p>
+        <p>Yazılar geçici olarak yüklenemediğinde <a href="/trendyol-komisyon-hesaplama">ücretsiz Trendyol komisyon hesaplama aracını</a> kullanabilir veya kısa süre sonra bu sayfayı yenileyebilirsiniz.</p>
+      </div>`;
     const listeCanonical = 'https://komisyonhesap.com/blog';
     const listeJsonLd = `<script type="application/ld+json">${guvenliJsonLd({
       '@context': 'https://schema.org',
@@ -857,8 +880,17 @@ async function sifirla(){
         <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:36px;font-weight:800;color:#2A211A;margin-bottom:10px">Blog</h1>
         <p style="color:#6B5E50;font-size:16px;margin-bottom:36px">Trendyol satıcıları için komisyon, kâr ve e-ticaret rehberleri.</p>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px">${kartlar}</div>
+        <section style="margin-top:48px;color:#6B5E50;font-size:15px;line-height:1.75" aria-labelledby="blog-rehber-baslik">
+          <h2 id="blog-rehber-baslik" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:25px;font-weight:800;color:#2A211A;margin-bottom:14px">Trendyol satışlarında gerçek kârı nasıl takip edebilirsiniz?</h2>
+          <p style="margin-bottom:14px">Trendyol’da satış yaparken yalnızca satış fiyatı ile ürün alış maliyeti arasındaki farka bakmak gerçek kazancı göstermez. Kategoriye göre değişen komisyon oranı, komisyonun KDV’si, kargo gideri, hizmet bedeli, kampanya indirimi ve elektronik ticaret kapsamındaki yüzde 1 stopaj birlikte değerlendirilmelidir. Bu kalemlerden biri eksik bırakıldığında kârlı görünen bir ürün gerçekte zarar edebilir.</p>
+          <p style="margin-bottom:14px">KomisyonHesap blogunda Trendyol komisyon hesaplama, net kâr analizi, kargo maliyeti, avantajlı etiket kampanyaları ve satıcı operasyonları hakkında güncel rehberler yayımlıyoruz. Her rehberde satıcının kendi panelindeki güncel oranları esas alması gerektiğini hatırlatıyor; sabit oran varsayımıyla yanıltıcı sonuç üretilmesini önlemeyi amaçlıyoruz.</p>
+          <p>Tek ürün için hızlı sonuç almak isterseniz <a href="/trendyol-komisyon-hesaplama">ücretsiz hesaplama aracını</a> kullanabilirsiniz. Çok sayıda ürününüz varsa Trendyol ürün Excel’inizi ana uygulamaya yükleyerek satış fiyatı, komisyon, alış maliyeti ve kargo bilgilerini ürün bazında inceleyebilir; zarar eden ürünleri tek ekranda ayırabilirsiniz.</p>
+        </section>
       </div>` + BLOG_FOOT;
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    res.writeHead(200, {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'public, max-age=300, stale-while-revalidate=600'
+    });
     res.end(html);
     return;
   }
@@ -867,6 +899,7 @@ async function sifirla(){
   if (parsed.pathname.startsWith('/blog/') && req.method === 'GET') {
     const slug = decodeURIComponent(parsed.pathname.slice(6)).replace(/\/+$/, '');
     let y = null;
+    await waitForDb();
     if (db) y = await db.collection('blog').findOne({ slug, yayinda: true });
     if (!y) {
       res.setHeader('X-Robots-Tag', 'noindex, follow');
@@ -905,7 +938,10 @@ async function sifirla(){
       </article>
       <style>.bbody h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:#221A12;margin:34px 0 14px}.bbody h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:700;color:#221A12;margin:26px 0 10px}.bbody p{margin:0 0 18px}.bbody ul{margin:0 0 18px;padding-left:24px}.bbody li{margin-bottom:8px}</style>`
       + BLOG_FOOT;
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    res.writeHead(200, {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'public, max-age=300, stale-while-revalidate=600'
+    });
     res.end(html);
     return;
   }

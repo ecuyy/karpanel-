@@ -10,14 +10,6 @@
   gtag('js', new Date());
   gtag('config', 'AW-16989542935');
 </script>
-<!-- Event snippet for Sayfa görüntüleme conversion page -->
-<script>
-  gtag('event', 'conversion', {
-      'send_to': 'AW-16989542935/PrD7CNm-zbUaEJe0n6U_',
-      'value': 1.0,
-      'currency': 'TRY'
-  });
-</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -62,7 +54,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 <meta name="theme-color" content="#14110E">
 <meta name="format-detection" content="telephone=no">
 <link rel="alternate" hreflang="tr" href="https://komisyonhesap.com/">
@@ -185,7 +176,6 @@
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"></noscript>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
 <style>
 :root{
   --or:#F27A1A;--or2:#FF8C38;--or-dim:#FFF4E8;
@@ -4796,6 +4786,29 @@ function premiumAktif(u){
 }
 const PROXY=window.location.hostname==='localhost'?'http://localhost:3001':window.location.origin;
 
+// Excel kütüphanesi ilk sayfa açılışını yavaşlatmasın; yalnızca kullanıcı
+// gerçekten Excel seçtiğinde indirilir. CSV işlemleri ek dosya gerektirmez.
+let xlsxLoader=null;
+function xlsxHazirla(){
+  if(window.XLSX) return Promise.resolve(window.XLSX);
+  if(xlsxLoader) return xlsxLoader;
+  xlsxLoader=new Promise(function(resolve,reject){
+    const script=document.createElement('script');
+    script.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+    script.async=true;
+    script.onload=function(){
+      if(window.XLSX) resolve(window.XLSX);
+      else reject(new Error('Excel modülü yüklenemedi.'));
+    };
+    script.onerror=function(){
+      xlsxLoader=null;
+      reject(new Error('Excel modülü yüklenemedi. İnternet bağlantınızı kontrol edin.'));
+    };
+    document.head.appendChild(script);
+  });
+  return xlsxLoader;
+}
+
 let urunler=[], filterMode='hepsi', searchQ='', kargoTipi='satici', modalUrun=null, currentUser=null;
 
 const fmt=n=>'₺'+Math.abs(n).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -4816,6 +4829,22 @@ function calcKar(p){
 function trackCta(label){
   try{
     if(typeof gtag==='function') gtag('event','cta_click',{cta_label:label});
+  }catch(e){}
+}
+function trackSignup(){
+  try{
+    if(typeof gtag==='function') gtag('event','sign_up',{method:'email'});
+  }catch(e){}
+}
+function trackPurchaseConversion(){
+  try{
+    if(typeof gtag!=='function') return;
+    gtag('event','purchase',{currency:'TRY',value:1500,items:[{item_name:'Premium yıllık üyelik',price:1500,quantity:1}]});
+    gtag('event','conversion',{
+      send_to:'AW-16989542935/PrD7CNm-zbUaEJe0n6U_',
+      value:1500,
+      currency:'TRY'
+    });
   }catch(e){}
 }
 
@@ -5119,6 +5148,7 @@ async function kayitOl(){
     const isPremium=PREMIUM_EMAILS.includes(email)||(d.user.trialAktif||false);
     currentUser={ad,email,premium:isPremium,trialAktif:d.user.trialAktif||false,trialBitti:d.user.trialBitti||false,trialBitis:d.user.trialBitisTarihi||null,trialKalanGun:d.user.trialKalanGun||0};
     localStorage.setItem('kp_user',JSON.stringify(currentUser));
+    trackSignup();
     closeAuth();applyUser();
     if(!isPremium){setTimeout(()=>document.getElementById('pay-overlay').classList.add('open'),400);}
     else if(currentUser.trialAktif){
@@ -5328,8 +5358,9 @@ function eaExcelYukle(input){
   const file = input.files[0]; if(!file) return;
   document.getElementById('ea-yukle-hata').style.display='none';
   const reader = new FileReader();
-  reader.onload = e => {
+  reader.onload = async e => {
     try{
+      await xlsxHazirla();
       const wb = XLSX.read(new Uint8Array(e.target.result), {type:'array'});
       const ws = wb.Sheets[wb.SheetNames[0]];
       const rows = XLSX.utils.sheet_to_json(ws, {header:1});
@@ -5622,10 +5653,11 @@ function csvYukle(input){
   if(!file)return;
   const isExcel=file.name.endsWith('.xlsx')||file.name.endsWith('.xls');
   const reader=new FileReader();
-  reader.onload=function(e){
+  reader.onload=async function(e){
     try{
       let rows=[];
       if(isExcel){
+        await xlsxHazirla();
         const data=new Uint8Array(e.target.result);
         const wb=XLSX.read(data,{type:'array'});
         const ws=wb.Sheets[wb.SheetNames[0]];
@@ -6284,6 +6316,7 @@ loadUser();
   const odeme = params.get('odeme');
   const email = params.get('email');
   if(odeme === 'basarili' && email){
+    trackPurchaseConversion();
     const stored = localStorage.getItem('kp_user') || sessionStorage.getItem('kp_user');
     if(stored){
       try{
