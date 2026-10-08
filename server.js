@@ -17,6 +17,86 @@ const MONGO_URI = process.env.MONGO_URI;
 const ADMIN_SIFRE = process.env.ADMIN_SIFRE;
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
 
+// Editoryal yazılar ilk kez yayına alındığında veritabanına eklenir.
+// $setOnInsert kullanıldığı için admin panelinden yapılan sonraki düzenlemeler korunur.
+const EDITORIAL_POSTS = [
+  {
+    slug: 'trendyol-komisyon-oranlari-2026',
+    baslik: 'Trendyol Komisyon Oranları 2026: Güncel Oranı Bulma ve Net Kâr Hesaplama',
+    ozet: 'Trendyol komisyon oranları 2026’da kategori, ürün ve satıcı koşullarına göre değişebilir. Güncel oranı bulup gerçek net kârı hesaplama rehberi.',
+    kapak: '',
+    yayinda: true,
+    tarih: new Date('2026-10-08T12:00:00Z'),
+    guncelleme: new Date('2026-10-08T12:00:00Z'),
+    faq: [
+      { soru: 'Trendyol komisyon oranları 2026 yılında ne kadar?', cevap: 'Tek bir sabit oran yoktur. Oran; ürün grubu, alt kategori, marka, satıcı seviyesi, özel satıcı grubu ve dönemsel kampanyalara göre değişebilir. Kesin oran ilgili ürün için Trendyol Satıcı Paneli üzerinden kontrol edilmelidir.' },
+      { soru: 'Trendyol komisyon oranı nereden öğrenilir?', cevap: 'İlgili ürünün güncel oranı Trendyol Satıcı Paneli içindeki ürün ve komisyon tarifesi alanlarından kontrol edilmelidir. İnternetteki listeler değişiklikleri gecikmeli yansıtabilir.' },
+      { soru: 'Trendyol komisyonu nasıl hesaplanır?', cevap: 'Temel hesap satış fiyatı ile komisyon oranının çarpılmasıdır. Gerçek net kâr için ürün maliyeti, kargo, hizmet bedeli, stopaj, KDV etkisi, reklam ve iade maliyetleri de hesaba katılmalıdır.' },
+      { soru: 'Komisyon oranı KDV dahil mi?', cevap: 'Bazı tarife listelerinde oran KDV dahil gösterilir. Hesaplamadan önce Satıcı Paneli veya komisyon faturasında oranın sunuluş biçimi kontrol edilmeli ve aynı vergi etkisi iki kez eklenmemelidir.' }
+    ],
+    icerik: [
+      'Trendyol komisyon oranları 2026 yılında bütün ürünler için geçerli tek bir yüzde değildir. Oran; ürün grubu, alt kategori, marka, satıcı seviyesi, özel satıcı grubu ve dönemsel kampanyalara göre değişebilir. Bu nedenle en doğru rakam, ilgili ürün için Trendyol Satıcı Paneli’nde görünen güncel orandır.',
+      'Bu rehber 8 Ekim 2026 tarihinde güncellenmiştir. Aşağıdaki oranlar piyasadaki güncel 2026 tarife listelerinden seçilmiş örneklerdir. Satış fiyatı belirlemeden veya kampanyaya katılmadan önce kendi panelinizdeki oranı mutlaka doğrulayın.',
+      '## Trendyol komisyon oranları 2026 yılında ne kadar?',
+      '2026 listelerinde komisyon oranları ürün grubuna göre geniş bir aralıkta değişmektedir. Özellikle aynı ana kategorinin altındaki iki ürün grubunda bile farklı oran görülebilir. Satıcı seviyesi, marka anlaşması veya özel satıcı programı da genel kategori oranından farklı bir tarife oluşturabilir.',
+      'Güncel listelerde görülen bazı ürün grubu örnekleri şöyledir:',
+      '- Akıllı cep telefonu: %7,00\n- Dizüstü bilgisayar ve oyuncu dizüstü bilgisayarı: %7,50\n- Televizyon: %8,00\n- Klima ve kombi: %11,00\n- Epilatör, saç düzleştirici, saç maşası ve tartı: %17,50\n- Avize, abajur, aplik, lambader, masa ve gece lambası: %21,36\n- Tablet kılıfı, tablet standı ve tablet kalemi: %22,00\n- Batarya, ekran, kamera, telefon kasası ve tuş takımı: %27,00',
+      'Bu örnekler genel fikir vermek içindir. Trendyol tarifeleri dönemsel olarak değişebildiği için ürününüzün kesin oranını yalnızca bu listeye bakarak fiyatlandırmayın. Trendyol’un resmi eğitim içeriği için [Fiyat ve Komisyon Hesaplama Kuralları](https://akademi.trendyol.com/TrainingContent?TrainingId=24768) sayfasını ve kendi Satıcı Panelinizi birlikte kontrol edin.',
+      '## Güncel Trendyol komisyon oranı nereden bulunur?',
+      'Önce Satıcı Panelinizde ilgili ürünü veya barkodu açın. Ürün komisyon tarifesi, anlaşma bilgileri ya da fiyat ve komisyon alanında gösterilen güncel oranı kontrol edin. Aynı kategoride satış yapan başka bir mağazanın oranını kendi ürününüze uygulamayın; marka ve satıcı koşulları farklı olabilir.',
+      'Kontrol sırasında şu dört bilgiyi birlikte not edin:',
+      '- Ürünün ana kategorisi ve alt kategorisi\n- Ürün veya marka için tanımlı özel oran\n- Satıcı seviyesine bağlı indirimli oran olup olmadığı\n- Kampanya süresince farklı bir oran uygulanıp uygulanmadığı',
+      'Panelde gördüğünüz oran ile komisyon faturanızdaki kesintiyi belirli aralıklarla karşılaştırın. Böylece kategori değişikliği, kampanya katılımı veya tarife güncellemesi nedeniyle oluşabilecek farkları erkenden yakalayabilirsiniz.',
+      '## Trendyol komisyonu nasıl hesaplanır?',
+      'Temel formül oldukça basittir: Komisyon tutarı = satış fiyatı × komisyon oranı.',
+      'Örneğin ürünün satış fiyatı 600 TL ve panelde görünen KDV dahil komisyon oranı %21,36 ise komisyon tutarı 600 × 0,2136 = 128,16 TL olur. Panelinizdeki oran KDV hariç gösteriliyorsa komisyon KDV’si ayrıca değerlendirilir. Aynı vergi etkisini iki kez eklememek için oranın KDV dahil olup olmadığını kontrol edin.',
+      'Sadece komisyonu düşmek gerçek kazancı göstermez. Hızlı kontrol için [ücretsiz Trendyol komisyon hesaplama aracına](/trendyol-komisyon-hesaplama) satış fiyatınızı ve panelinizdeki güncel oranı girebilirsiniz.',
+      '## Gerçek net kâr hesabına hangi giderler eklenmeli?',
+      'Trendyol’da ürün kârlılığı hesaplanırken aşağıdaki kalemler aynı tabloda görülmelidir:',
+      '- KDV dahil ürün alış veya üretim maliyeti\n- Trendyol komisyonu ve ilgili KDV etkisi\n- Kargo veya desi maliyeti\n- Sipariş başına hizmet bedeli\n- Elektronik ticaret kapsamındaki stopaj\n- Kampanya indiriminin satıcıya düşen kısmı\n- Ürün bazlı reklam harcaması\n- Paketleme gideri ve ortalama iade maliyeti',
+      'Örneğin 600 TL satış fiyatı, 128,16 TL komisyon, 250 TL ürün maliyeti, 70 TL kargo, 10 TL hizmet bedeli ve 5 TL stopaj bulunan bir siparişte; reklam, iade ve diğer vergi etkilerinden önce 136,84 TL kalır. Bu kalan tutarı doğrudan net kâr kabul etmek yerine KDV, reklam, iade ve işletme giderleriyle birlikte değerlendirmek gerekir.',
+      'Başabaş satış fiyatını veya hedef kâra ulaşmak için gerekli etiketi bulmak istiyorsanız [Trendyol maliyet hesaplama aracını](/trendyol-maliyet-hesaplama) kullanabilirsiniz. Komisyon, kargo ve diğer kesintiler sonrası sonucu görmek için [Trendyol net kâr hesaplama sayfası](/trendyol-net-kar-hesaplama) daha doğru bir kontrol noktasıdır.',
+      '## Sabit komisyon listeleri neden tek başına yeterli değildir?',
+      'Arama sonuçlarında gördüğünüz komisyon listesi yayınlandığı gün doğru olsa bile daha sonra değişebilir. Alt kategori güncellemesi, marka bazlı anlaşma, satıcı seviyesi, özel girişimci programı veya kampanya koşulu ürününüz için farklı bir oran oluşturabilir.',
+      'Bu nedenle sağlıklı yöntem üç aşamalıdır:',
+      '- Güncel oranı Satıcı Panelinden alın\n- Oranı ürünün bütün maliyetleriyle birlikte hesaplayın\n- Hesaplanan kesintiyi gerçekleşen komisyon faturasıyla karşılaştırın',
+      'KomisyonHesap, oranı sizin yerinize tahmin etmek yerine panelinizde gördüğünüz gerçek oranla hesap yapmanızı sağlar. Böylece eski bir liste nedeniyle fiyatı düşük belirleme veya kârlı sandığınız üründe zarar etme riski azalır.',
+      '## Kampanyaya girmeden önce yapılacak hızlı kontrol',
+      'Kampanya indirimi uygulanmış yeni satış fiyatını hesaplamaya yazın. Ardından güncel komisyon oranını, ürün maliyetini, kargo ve hizmet bedelini ekleyin. Sonuçta kalan net kâr hedefinizin altındaysa indirimi azaltın, kampanyaya katılmayın veya ürünün satış fiyatını yeniden planlayın.',
+      'Çok sayıda ürününüz varsa ürünleri tek tek hesaplamak yerine KomisyonHesap ana uygulamasına Trendyol ürün Excel’inizi yükleyebilirsiniz. Böylece komisyon ve maliyet bilgilerini ürün bazında değerlendirip zarar eden ürünleri toplu olarak ayırabilirsiniz.',
+      '## Sıkça sorulan sorular',
+      '### Trendyol komisyon oranları bütün satıcılarda aynı mı?',
+      'Hayır. Genel kategori tarifesinin yanında satıcı seviyesi, marka, özel satıcı grubu ve kampanya koşulları farklı oran oluşturabilir.',
+      '### Trendyol komisyon oranları ne zaman değişir?',
+      'Tarifeler dönemsel olarak güncellenebilir. Kampanyalar veya kategori düzenlemeleri de ürünün uygulanan oranını değiştirebilir. Bu nedenle önemli fiyat değişikliklerinden önce oranı yeniden kontrol edin.',
+      '### Komisyon oranı KDV dahil mi?',
+      'Bazı tarife listelerinde oran KDV dahil gösterilir. Panel veya komisyon faturasında kullanılan sunumu esas alın; KDV dahil bir oranı kullanıyorsanız aynı komisyon KDV’sini ikinci kez eklemeyin.',
+      '### Zarar eden Trendyol ürünü nasıl bulunur?',
+      'Satış fiyatından komisyon, ürün maliyeti, kargo, hizmet bedeli, stopaj, reklam ve iade payı düşülmelidir. Toplu kontrol için [Trendyol’da zarar eden ürünleri bulma rehberini](/trendyolda-zarar-eden-urun-nasil-bulunur) inceleyebilirsiniz.',
+      'Sonuç olarak 2026 Trendyol komisyon oranlarını tek bir sabit tablo gibi değerlendirmeyin. Doğru oranı panelden alın, bütün giderlerle birlikte hesaplayın ve gerçekleşen faturayla düzenli olarak karşılaştırın.'
+    ].join('\n\n')
+  }
+];
+
+async function seedEditorialPosts() {
+  if (!db) return;
+  await Promise.all(EDITORIAL_POSTS.map(post => db.collection('blog').updateOne(
+    { slug: post.slug },
+    { $setOnInsert: post },
+    { upsert: true }
+  )));
+}
+
+function editorialListItems() {
+  return EDITORIAL_POSTS.map(({ icerik, faq, ...post }) => ({ ...post }));
+}
+
+function mergeEditorialList(yazilar) {
+  const birlesik = new Map(editorialListItems().map(post => [post.slug, post]));
+  (yazilar || []).forEach(post => birlesik.set(post.slug, post));
+  return Array.from(birlesik.values()).sort((a, b) => new Date(b.tarih) - new Date(a.tarih));
+}
+
 // iyzico yapılandırması (resmi npm paketi)
 const iyzipay = new Iyzipay({
   apiKey: process.env.IYZICO_API_KEY,
@@ -30,9 +110,15 @@ let db;
 
 // MongoDB bağlantısı. SEO sayfaları ilk deploy isteğinde boş dönmesin diye
 // bağlantı sözünü saklıyor ve yalnızca veri gereken public rotalarda kısa süre bekliyoruz.
-const dbReady = MongoClient.connect(MONGO_URI).then(client => {
+const dbReady = MongoClient.connect(MONGO_URI).then(async client => {
   db = client.db('karpanel');
   console.log('✅ MongoDB bağlandı!');
+  try {
+    await seedEditorialPosts();
+    console.log('✅ Editoryal blog yazıları hazır!');
+  } catch (err) {
+    console.error('⚠️ Blog yazısı hazırlama hatası:', err.message);
+  }
   return db;
 }).catch(err => {
   console.error('❌ MongoDB bağlantı hatası:', err.message);
@@ -68,6 +154,20 @@ function getBody(req) {
 // ══════════ BLOG YARDIMCILARI ══════════
 function blogEsc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
+function blogInlineRender(s){
+  const metin = String(s == null ? '' : s);
+  const linkRe = /\[([^\]\n]+)\]\(((?:https?:\/\/|\/)[^\s)]+)\)/g;
+  let sonuc = '', son = 0, eslesme;
+  while ((eslesme = linkRe.exec(metin))) {
+    sonuc += blogEsc(metin.slice(son, eslesme.index));
+    const href = eslesme[2];
+    const disLink = /^https?:\/\//i.test(href);
+    sonuc += '<a href="' + blogEsc(href) + '"' + (disLink ? ' target="_blank" rel="noopener noreferrer"' : '') + '>' + blogEsc(eslesme[1]) + '</a>';
+    son = eslesme.index + eslesme[0].length;
+  }
+  return sonuc + blogEsc(metin.slice(son));
+}
+
 function slugify(s){
   const tr={'ı':'i','İ':'i','ş':'s','Ş':'s','ğ':'g','Ğ':'g','ü':'u','Ü':'u','ö':'o','Ö':'o','ç':'c','Ç':'c'};
   return String(s||'').replace(/[ışğüöçİŞĞÜÖÇ]/g,c=>tr[c]||c).toLowerCase()
@@ -79,12 +179,12 @@ function blogIcerikRender(text){
   const bloklar = String(text||'').replace(/\r/g,'').split(/\n\n+/);
   return bloklar.map(b=>{
     b=b.trim(); if(!b) return '';
-    if(b.startsWith('### ')) return '<h3>'+blogEsc(b.slice(4))+'</h3>';
-    if(b.startsWith('## ')) return '<h2>'+blogEsc(b.slice(3))+'</h2>';
+    if(b.startsWith('### ')) return '<h3>'+blogInlineRender(b.slice(4))+'</h3>';
+    if(b.startsWith('## ')) return '<h2>'+blogInlineRender(b.slice(3))+'</h2>';
     const satirlar=b.split('\n');
     if(satirlar.every(l=>/^[-*]\s+/.test(l.trim())))
-      return '<ul>'+satirlar.map(l=>'<li>'+blogEsc(l.trim().replace(/^[-*]\s+/,''))+'</li>').join('')+'</ul>';
-    return '<p>'+blogEsc(b).replace(/\n/g,'<br>')+'</p>';
+      return '<ul>'+satirlar.map(l=>'<li>'+blogInlineRender(l.trim().replace(/^[-*]\s+/,''))+'</li>').join('')+'</ul>';
+    return '<p>'+blogInlineRender(b).replace(/\n/g,'<br>')+'</p>';
   }).join('\n');
 }
 
@@ -236,14 +336,15 @@ const server = http.createServer(async (req, res) => {
   // sitemap.xml
   if (parsed.pathname === '/sitemap.xml') {
     const bugun = new Date().toISOString().split('T')[0];
-    let blogUrls = '';
+    let yazilar = editorialListItems();
     try {
       await waitForDb();
       if (db) {
-        const yazilar = await db.collection('blog').find({ yayinda: true }).project({ slug: 1, guncelleme: 1, tarih: 1 }).sort({ tarih: -1 }).limit(500).toArray();
-        blogUrls = yazilar.map(y => `<url><loc>https://komisyonhesap.com/blog/${blogEsc(y.slug)}</loc><lastmod>${new Date(y.guncelleme || y.tarih).toISOString().split('T')[0]}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`).join('');
+        const dbYazilari = await db.collection('blog').find({ yayinda: true }).project({ slug: 1, guncelleme: 1, tarih: 1 }).sort({ tarih: -1 }).limit(500).toArray();
+        yazilar = mergeEditorialList(dbYazilari);
       }
     } catch (e) {}
+    const blogUrls = yazilar.map(y => `<url><loc>https://komisyonhesap.com/blog/${blogEsc(y.slug)}</loc><lastmod>${new Date(y.guncelleme || y.tarih).toISOString().split('T')[0]}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`).join('');
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://komisyonhesap.com/</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url><url><loc>https://komisyonhesap.com/trendyol-komisyon-hesaplama</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url><url><loc>https://komisyonhesap.com/trendyol-maliyet-hesaplama</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url><url><loc>https://komisyonhesap.com/trendyol-net-kar-hesaplama</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url><url><loc>https://komisyonhesap.com/trendyol-stopaj-hesaplama</loc><lastmod>${bugun}</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url><url><loc>https://komisyonhesap.com/trendyolda-zarar-eden-urun-nasil-bulunur</loc><lastmod>${bugun}</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url><url><loc>https://komisyonhesap.com/blog</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>${blogUrls}</urlset>`;
     res.writeHead(200, { 'Content-Type': 'application/xml' });
     res.end(sitemap);
@@ -823,9 +924,10 @@ async function sifirla(){
   // Public: yayındaki yazıların listesi (ana site için JSON)
   if (parsed.pathname === '/api/blog' && req.method === 'GET') {
     await waitForDb();
-    if (!db) { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify([])); return; }
-    const yazilar = await db.collection('blog').find({ yayinda: true })
-      .project({ icerik: 0 }).sort({ tarih: -1 }).limit(30).toArray();
+    let yazilar = [];
+    if (db) yazilar = await db.collection('blog').find({ yayinda: true })
+      .project({ icerik: 0, faq: 0 }).sort({ tarih: -1 }).limit(30).toArray();
+    yazilar = mergeEditorialList(yazilar).slice(0, 30);
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(yazilar));
     return;
@@ -842,6 +944,7 @@ async function sifirla(){
     let yazilar = [];
     await waitForDb();
     if (db) yazilar = await db.collection('blog').find({ yayinda: true }).project({ icerik: 0 }).sort({ tarih: -1 }).limit(50).toArray();
+    yazilar = mergeEditorialList(yazilar).slice(0, 50);
     const kartlar = yazilar.length ? yazilar.map(y => `
       <a href="/blog/${blogEsc(y.slug)}" style="display:block;background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;box-shadow:0 10px 30px -20px rgba(0,0,0,.3);transition:transform .18s">
         ${y.kapak ? `<img src="${blogEsc(y.kapak)}" alt="${blogEsc(y.baslik)}" style="width:100%;height:180px;object-fit:cover" loading="lazy">` : ''}
@@ -902,6 +1005,7 @@ async function sifirla(){
     let y = null;
     await waitForDb();
     if (db) y = await db.collection('blog').findOne({ slug, yayinda: true });
+    if (!y) y = EDITORIAL_POSTS.find(post => post.slug === slug && post.yayinda) || null;
     if (!y) {
       res.setHeader('X-Robots-Tag', 'noindex, follow');
       res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
@@ -912,7 +1016,7 @@ async function sifirla(){
     const canonical = 'https://komisyonhesap.com/blog/' + encodeURIComponent(String(y.slug || ''));
     const seoBaslik = blogSeoBaslik(y.baslik);
     const seoAciklama = blogSeoAciklama(y);
-    const jsonld = `<script type="application/ld+json">${guvenliJsonLd({
+    const blogJsonLd = `<script type="application/ld+json">${guvenliJsonLd({
       '@context': 'https://schema.org', '@type': 'BlogPosting', headline: y.baslik,
       description: seoAciklama, image: y.kapak || undefined, datePublished: y.tarih,
       dateModified: y.guncelleme || y.tarih, inLanguage: 'tr-TR',
@@ -924,6 +1028,14 @@ async function sifirla(){
       mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
       isPartOf: { '@type': 'Blog', '@id': 'https://komisyonhesap.com/blog' }
     })}</script>`;
+    const faqJsonLd = Array.isArray(y.faq) && y.faq.length ? `<script type="application/ld+json">${guvenliJsonLd({
+      '@context': 'https://schema.org', '@type': 'FAQPage',
+      mainEntity: y.faq.map(item => ({
+        '@type': 'Question', name: item.soru,
+        acceptedAnswer: { '@type': 'Answer', text: item.cevap }
+      }))
+    })}</script>` : '';
+    const jsonld = blogJsonLd + faqJsonLd;
     const html = BLOG_HEAD(seoBaslik, seoAciklama, canonical, jsonld)
       + `<article class="bwrap">
         <a href="/blog" style="font-size:14px;font-weight:600">← Tüm yazılar</a>
