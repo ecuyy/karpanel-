@@ -4858,7 +4858,7 @@ function goApp(){
   try{ localStorage.setItem('kp_inapp','1'); }catch(e){}
   document.body.classList.add('app-mode');
   document.getElementById('hero').style.display='none';
-  document.querySelectorAll('.how-section,.pricing-section,footer').forEach(e=>e.style.display='none');
+  document.querySelectorAll('.how-section,#neden-komisyonhesap,.pricing-section,footer').forEach(e=>e.style.display='none');
   document.getElementById('app-section').style.display='block';
   document.getElementById('nav-dashboard-btn').style.display='none';
   if(typeof kdSyncUser==='function'){try{kdSyncUser();}catch(e){}}
@@ -4869,7 +4869,7 @@ function goHome(){
   try{ localStorage.setItem('kp_inapp','0'); }catch(e){}
   document.body.classList.remove('app-mode');
   document.getElementById('hero').style.display='flex';
-  document.querySelectorAll('.how-section,.pricing-section,footer').forEach(e=>e.style.display='');
+  document.querySelectorAll('.how-section,#neden-komisyonhesap,.pricing-section,footer').forEach(e=>e.style.display='');
   document.getElementById('app-section').style.display='none';
   if(currentUser) document.getElementById('nav-dashboard-btn').style.display='flex';
 }
