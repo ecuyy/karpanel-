@@ -11,6 +11,7 @@
 - [Trendyol stopaj hesaplama](https://komisyonhesap.com/trendyol-stopaj-hesaplama): Yüzde 1 e-ticaret stopajının matrahını ve kârlılığa etkisini açıklayan rehber.
 - [Zarar eden ürünleri bulma](https://komisyonhesap.com/trendyolda-zarar-eden-urun-nasil-bulunur): Ürün bazında zarar tespiti ve toplu analiz rehberi.
 - [Trendyol Satıcı Rehberi](https://komisyonhesap.com/blog): Trendyol satıcılarına yönelik güncel kârlılık ve e-ticaret içerikleri.
+- [Trendyol komisyon oranları 2026](https://komisyonhesap.com/blog/trendyol-komisyon-oranlari-2026): Güncel oranı Satıcı Paneli'nden bulma, örnek ürün grubu oranları ve gerçek net kâr hesaplama rehberi.
 - [Site haritası](https://komisyonhesap.com/sitemap.xml): İndekslenebilir sayfaların listesi.
 
 ## Öne çıkan özellikler
