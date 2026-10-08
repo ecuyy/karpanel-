@@ -2,13 +2,28 @@
 <!-- build: v2.8 -->
 <html lang="tr" prefix="og: https://ogp.me/ns#">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-16989542935"></script>
+<!-- Google tag: olayları hemen sıraya alır, ağ dosyasını ilk ekran çizildikten sonra yükler. -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'AW-16989542935');
+  (function(){
+    function loadGoogleTag(){
+      if(document.querySelector('script[data-kp-google-tag]')) return;
+      var script=document.createElement('script');
+      script.async=true;
+      script.src='https://www.googletagmanager.com/gtag/js?id=AW-16989542935';
+      script.setAttribute('data-kp-google-tag','1');
+      document.head.appendChild(script);
+    }
+    function scheduleGoogleTag(){
+      if('requestIdleCallback' in window) requestIdleCallback(loadGoogleTag,{timeout:2000});
+      else setTimeout(loadGoogleTag,500);
+    }
+    if(document.readyState==='complete') scheduleGoogleTag();
+    else window.addEventListener('load',scheduleGoogleTag,{once:true});
+  })();
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
