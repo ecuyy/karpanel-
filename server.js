@@ -151,7 +151,7 @@ a{color:#E0640C;text-decoration:none}a:hover{text-decoration:underline}
 <a class="bnav-cta" href="/trendyol-komisyon-hesaplama">Ücretsiz Hesapla →</a>
 </div></nav>`;
 
-const BLOG_FOOT = `<footer class="bfoot">© ${new Date().getFullYear()} komisyonhesap · <a href="/">Ana Sayfa</a> · <a href="/trendyol-komisyon-hesaplama">Trendyol Komisyon Hesaplama</a> · <a href="/blog">Blog</a> · <a href="https://www.instagram.com/komisyonhesap/" target="_blank" rel="noopener">Instagram</a></footer></body></html>`;
+const BLOG_FOOT = `<footer class="bfoot">© ${new Date().getFullYear()} komisyonhesap · <a href="/">Ana Sayfa</a> · <a href="/trendyol-komisyon-hesaplama">Trendyol Komisyon Hesaplama</a> · <a href="/trendyol-maliyet-hesaplama">Trendyol Maliyet Hesaplama</a> · <a href="/blog">Blog</a> · <a href="https://www.instagram.com/komisyonhesap/" target="_blank" rel="noopener">Instagram</a></footer></body></html>`;
 
 
 const server = http.createServer(async (req, res) => {
@@ -197,6 +197,7 @@ const server = http.createServer(async (req, res) => {
 
   // SEO content cluster pages
   const seoPages = {
+    '/trendyol-maliyet-hesaplama': 'trendyol-maliyet-hesaplama.html',
     '/trendyol-net-kar-hesaplama': 'trendyol-net-kar-hesaplama.html',
     '/trendyol-stopaj-hesaplama': 'trendyol-stopaj-hesaplama.html',
     '/trendyolda-zarar-eden-urun-nasil-bulunur': 'trendyolda-zarar-eden-urun-nasil-bulunur.html'
@@ -243,7 +244,7 @@ const server = http.createServer(async (req, res) => {
         blogUrls = yazilar.map(y => `<url><loc>https://komisyonhesap.com/blog/${blogEsc(y.slug)}</loc><lastmod>${new Date(y.guncelleme || y.tarih).toISOString().split('T')[0]}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`).join('');
       }
     } catch (e) {}
-    const sitemap = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://komisyonhesap.com/</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url><url><loc>https://komisyonhesap.com/trendyol-komisyon-hesaplama</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url><url><loc>https://komisyonhesap.com/trendyol-net-kar-hesaplama</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url><url><loc>https://komisyonhesap.com/trendyol-stopaj-hesaplama</loc><lastmod>${bugun}</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url><url><loc>https://komisyonhesap.com/trendyolda-zarar-eden-urun-nasil-bulunur</loc><lastmod>${bugun}</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url><url><loc>https://komisyonhesap.com/blog</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>${blogUrls}</urlset>`;
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://komisyonhesap.com/</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url><url><loc>https://komisyonhesap.com/trendyol-komisyon-hesaplama</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url><url><loc>https://komisyonhesap.com/trendyol-maliyet-hesaplama</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url><url><loc>https://komisyonhesap.com/trendyol-net-kar-hesaplama</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url><url><loc>https://komisyonhesap.com/trendyol-stopaj-hesaplama</loc><lastmod>${bugun}</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url><url><loc>https://komisyonhesap.com/trendyolda-zarar-eden-urun-nasil-bulunur</loc><lastmod>${bugun}</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url><url><loc>https://komisyonhesap.com/blog</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>${blogUrls}</urlset>`;
     res.writeHead(200, { 'Content-Type': 'application/xml' });
     res.end(sitemap);
     return;

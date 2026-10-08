@@ -6,6 +6,7 @@
 
 - [Ana sayfa ve toplu kârlılık analizi](https://komisyonhesap.com/): Excel yükleme, toplu ürün analizi ve ürün bazında maliyet hesaplama.
 - [Trendyol komisyon hesaplama](https://komisyonhesap.com/trendyol-komisyon-hesaplama): Komisyon, KDV, stopaj, kargo ve hizmet bedeliyle net kâr hesaplama rehberi.
+- [Trendyol maliyet hesaplama](https://komisyonhesap.com/trendyol-maliyet-hesaplama): Ürün maliyeti, başabaş satış fiyatı ve hedef kâr için gereken fiyatı hesaplayan ücretsiz araç.
 - [Trendyol net kâr hesaplama](https://komisyonhesap.com/trendyol-net-kar-hesaplama): Gerçek kazancı oluşturan maliyet kalemlerini açıklayan rehber.
 - [Trendyol stopaj hesaplama](https://komisyonhesap.com/trendyol-stopaj-hesaplama): Yüzde 1 e-ticaret stopajının matrahını ve kârlılığa etkisini açıklayan rehber.
 - [Zarar eden ürünleri bulma](https://komisyonhesap.com/trendyolda-zarar-eden-urun-nasil-bulunur): Ürün bazında zarar tespiti ve toplu analiz rehberi.
