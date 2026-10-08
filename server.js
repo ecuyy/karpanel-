@@ -77,72 +77,87 @@ const EDITORIAL_POSTS = [
     ].join('\n\n')
   },
   {
-    slug: 'trendyol-kargo-ucreti-2026',
-    baslik: 'Trendyol Kargo Ücreti 2026: Satıcı İçin Barem, Desi ve Net Kâr Hesabı',
-    ozet: 'Trendyol kargo ücreti 2026 yılında nasıl belirlenir? Kargo baremi, desi, ödeme modeli ve gerçek net kâr hesabını satıcılar için anlattık.',
+    slug: 'trendyol-hakedis-hesaplama-2026',
+    baslik: 'Trendyol Hakediş Hesaplama 2026: Satıcı Kesintileri ve Net Kâr Farkı',
+    ozet: 'Trendyol hakediş hesaplama 2026 rehberi: Komisyon, kargo, hizmet bedeli, stopaj ve iadelerden sonra kalan tutarı ve gerçek net kârı bulun.',
     kapak: '',
     yayinda: true,
-    tarih: new Date('2026-10-08T15:00:00Z'),
-    guncelleme: new Date('2026-10-08T15:00:00Z'),
+    tarih: new Date('2026-10-08T16:00:00Z'),
+    guncelleme: new Date('2026-10-08T16:00:00Z'),
     faq: [
-      { soru: 'Trendyol kargo ücreti 2026 yılında ne kadar?', cevap: 'Bütün siparişler için geçerli tek bir tutar yoktur. Ücret; sipariş tutarı ve uygulanan barem, paket desisi, kargo firması, gönderim modeli ve satıcıya özel sözleşme koşullarına göre değişebilir. Kesin tutar Satıcı Paneli ve ilgili siparişin finans hareketlerinden kontrol edilmelidir.' },
-      { soru: 'Trendyol kargo ücretini satıcı mı öder?', cevap: 'Gönderim modeline göre değişir. Trendyol anlaşmalı kargo modelinde ve satıcının kendi anlaşmalı kargo modelinde ücretin tahsil ve yansıtılma biçimi farklı olabilir. Siparişin kargo modeli ile satıcı sözleşmesindeki güncel koşullar birlikte kontrol edilmelidir.' },
-      { soru: 'Trendyol için desi nasıl hesaplanır?', cevap: 'Yaygın hacimsel ağırlık hesabı en × boy × yükseklik / 3000 şeklindedir ve ölçüler santimetre alınır. Ancak taşıyıcı kuralları ve özel ürün grupları farklılaşabileceği için faturalanan desi kargo firması ve Satıcı Paneli üzerinden doğrulanmalıdır.' },
-      { soru: 'Kargo maliyeti Trendyol net kâr hesabına nasıl eklenir?', cevap: 'Gerçek net kâr hesabında satış fiyatından ürün maliyeti, komisyon, komisyon KDV etkisi, kargo, hizmet bedeli, stopaj, reklam, paketleme ve beklenen iade payı düşülmelidir. Kargo için tahmini değil, mümkünse gerçekleşen sipariş tutarı kullanılmalıdır.' }
+      { soru: 'Trendyol hakediş nasıl hesaplanır?', cevap: 'Brüt satış tutarından komisyon, kargo, platform hizmet bedeli, stopaj, iade düzeltmeleri ve diğer finansal kesintiler düşülür. Kesin hesap için Satıcı Panelindeki gerçekleşen finans hareketleri kullanılmalıdır.' },
+      { soru: 'Trendyol hakediş ile net kâr aynı şey mi?', cevap: 'Hayır. Hakediş, pazaryeri kesintilerinden sonra satıcıya ödenecek tutardır. Net kârı bulmak için hakedişten ürün maliyeti, reklam, paketleme, personel, muhasebe ve diğer işletme giderleri de düşülmelidir.' },
+      { soru: 'Trendyol ödemesi ne zaman yatar?', cevap: 'Ödeme tarihi; ürün veya kategori vadesine, teslim ve iade durumuna, hakediş dönemine ve satıcı koşullarına göre değişebilir. Kesin ödeme tarihi Satıcı Panelindeki ödeme ve finans ekranından kontrol edilmelidir.' },
+      { soru: 'Trendyol platform hizmet bedeli hakedişten düşülür mü?', cevap: 'Uygulanan platform hizmet bedeli, Trendyol finans kayıtlarında ayrı bir kesinti faturası olarak görülebilir. Güncel tutar ve vergi bilgisi paneldeki ilgili kayıt ve faturadan alınmalıdır.' }
     ],
     icerik: [
-      'Trendyol kargo ücreti 2026 yılında bütün satıcılar ve siparişler için geçerli tek bir rakam değildir. Ödenecek tutar; siparişin tabi olduğu kargo baremine, paketin desisine, seçilen kargo firmasına, gönderim modeline ve satıcı sözleşmesine göre değişebilir. Bu nedenle internette gördüğünüz sabit bir fiyatı bütün ürünlere uygulamak yerine Satıcı Panelinizdeki güncel tarifeyi ve gerçekleşen kesintiyi esas alın.',
-      'Bu rehber 8 Ekim 2026 tarihinde güncellenmiştir. Trendyol tarifeleri ve satıcı koşulları değişebildiği için burada sabit ücret tablosu vermek yerine, doğru kargo maliyetini nasıl bulacağınızı ve ürünün gerçek net kârına nasıl ekleyeceğinizi gösteriyoruz.',
-      '## Trendyol kargo ücreti 2026 yılında nasıl belirlenir?',
-      'Bir siparişin kargo maliyetini anlamak için yalnızca ürünün satış fiyatına bakmak yeterli değildir. Aşağıdaki bilgiler birlikte değerlendirilir:',
-      '- Sipariş veya sepet tutarının dahil olduğu kargo baremi\n- Paketin ölçülerinden oluşan desi ve gerçek ağırlık\n- Trendyol anlaşmalı kargo ya da satıcı anlaşmalı kargo modeli\n- Seçilen taşıyıcı ve teslimat türü\n- Satıcıya, kategoriye veya döneme özel sözleşme koşulları\n- İade, yeniden gönderim veya birden fazla paket oluşması',
-      'Trendyol’un resmî entegrasyon dokümanında kargo firmaları hem “TY Pays” hem de “Seller Pays” başlıkları altında listelenir. Bu ayrım, kargo maliyetinin tahsil ve yansıtılma biçiminin gönderim modeline göre değişebileceğini gösterir. Güncel taşıyıcı listesini [Trendyol Kargo Firmaları](https://developers.trendyol.com/docs/kargo-firmalar%C4%B1) sayfasından kontrol edebilirsiniz.',
-      '## Kargo baremi nedir?',
-      'Kargo baremi, sipariş veya sepet tutarını belirli aralıklara ayırarak uygulanacak kargo koşulunu belirleyen yapıdır. Düşük fiyatlı bir ürün ile yüksek fiyatlı bir ürün aynı paket ölçüsünde olsa bile farklı barem koşullarına girebilir. Kampanya, müşteri indirimi veya birden fazla ürünün aynı siparişte yer alması da değerlendirilen tutarı etkileyebilir.',
-      'Barem eşikleri ve ücretler dönemsel olarak güncellenebildiği için eski bir ekran görüntüsünü kalıcı tarife olarak kullanmayın. Satıcı Panelindeki güncel kargo tarifesini, sipariş detayını ve finans hareketlerini birlikte kontrol edin. Fiyatlandırma tablonuzda her ürün için tek bir “ortalama kargo” rakamı kullanıyorsanız, gerçekleşen siparişlere göre bu ortalamayı düzenli biçimde yenileyin.',
-      '## Trendyol desi hesaplama nasıl yapılır?',
-      'Desi, paketin kargoda kapladığı hacmi sayısal olarak ifade eder. Türkiye içi gönderilerde yaygın hesap şu şekildedir: Desi = en × boy × yükseklik / 3000. Ölçüler santimetre cinsinden alınır.',
-      'Örneğin 30 × 20 × 10 cm ölçülerindeki bir paketin hacimsel desisi 30 × 20 × 10 / 3000 = 2 olur. Ancak nihai faturalamada taşıyıcının ölçümü, gerçek ağırlık, yuvarlama kuralı ve özel ürün koşulları etkili olabilir. Bu nedenle kendi hesabınızı kontrol amacıyla kullanın; gerçekleşen desiyi kargo kaydı ve faturayla doğrulayın.',
-      'Trendyol ürün aktarım dokümanında “dimensionalWeight”, yani desi miktarı zorunlu ürün alanlarından biri olarak tanımlanır. Entegrasyon kullanan satıcılar ürün kaydındaki desi değerinin güncel olduğundan emin olmalıdır. Resmî alan açıklamasını [Trendyol Ürün Bilgisi Güncelleme](https://developers.trendyol.com/tr/docs/%C3%BCr%C3%BCn-bilgisi-g%C3%BCncelleme-updateproduct) dokümanında görebilirsiniz.',
-      '## Trendyol kargo ücretini kim öder?',
-      'Kısa cevap: gönderim modeline ve sözleşme koşuluna göre değişir. Trendyol anlaşmalı kargo ile satıcının kendi anlaşmalı kargosu aynı finansal akışa sahip değildir. Müşterinin ekranda “ücretsiz kargo” görmesi de satıcı için kargo maliyeti oluşmadığı anlamına gelmez; bedelin tamamı veya bir kısmı sipariş koşullarına göre satıcıya yansıyabilir.',
-      'Bu yüzden her siparişte şu üç noktayı kontrol edin:',
-      '- Sipariş hangi kargo modeliyle oluşturuldu?\n- Müşteriden kargo bedeli tahsil edildi mi?\n- Satıcı finans hareketlerine hangi kargo kesintisi yansıdı?',
-      'Bu üç bilgi eşleşmiyorsa yalnızca sipariş ekranına bakarak kârlılık kararı vermeyin. Finans hareketi ve kargo faturası, tahmini maliyetten daha güvenilir bir kontrol noktasıdır.',
-      '## Kargo ücreti net kâr hesabına nasıl eklenir?',
-      'Gerçek net kâr için temel yaklaşım şöyledir: Net sonuç = satış fiyatı − ürün maliyeti − komisyon − komisyonun vergi etkisi − kargo − hizmet bedeli − stopaj − reklam − paketleme − iade payı.',
-      'Örneğin 500 TL’ye satılan bir üründe 180 TL ürün maliyeti, 90 TL komisyon ve vergi etkisi, 65 TL gerçekleşen kargo, 12 TL hizmet ve paketleme gideri, 5 TL stopaj ve sipariş başına 20 TL reklam payı olduğunu varsayalım. Diğer vergi ve iade etkilerinden önce kalan tutar 128 TL’dir. Kargo kalemi yanlışlıkla 40 TL girilirse ürünün kazancı 25 TL fazla görünür.',
-      'Tek ürünün bütün kesintilerini hızlıca görmek için [ücretsiz Trendyol komisyon hesaplama aracını](/trendyol-komisyon-hesaplama) kullanabilirsiniz. Satış fiyatı, ürün maliyeti, güncel komisyon oranı ve gerçekleşen kargo tutarını birlikte girmeniz daha gerçekçi sonuç verir.',
-      '## Küçük ürünlerde kargo maliyeti nasıl düşürülür?',
-      'Ürünü koruyacak en küçük güvenli ambalajı seçin. Gereksiz büyük kutu, ürün hafif olsa bile desiyi yükseltebilir. Aynı üründe kullandığınız kutuları standartlaştırın; paketleme masasındaki ölçüm farklarını azaltın. Ürün kartındaki desi bilgisini gerçek ambalaj ölçüsü değiştiğinde güncelleyin.',
-      'Tek siparişte birden fazla ürün varsa ürünlerin güvenli biçimde tek pakette gönderilip gönderilemeyeceğini operasyon kuralınıza göre değerlendirin. Ayrı paket gereken ürünleri tek paket varsayımıyla fiyatlandırmayın. Hacimli ve kırılabilir ürünlerde yalnızca düşük desi hedeflemek yerine hasar ve iade riskini de hesaba katın.',
-      '## İade ve yeniden gönderim neden ayrıca hesaplanmalı?',
-      'İade edilen siparişte ilk gönderim, dönüş kargosu, hasarlı ambalaj, yeniden paketleme ve ürünün tekrar satılabilirliği toplam maliyeti değiştirebilir. Her ürün için gerçekleşen iade oranını bilmiyorsanız kategori ortalamasını geçici bir pay olarak kullanabilir, veri biriktikçe kendi oranınızla değiştirebilirsiniz.',
-      'Örneğin yüz siparişin beşi iade oluyor ve bu iadelerin toplam ek lojistik maliyeti 1.500 TL ise sipariş başına ortalama iade lojistik payı 15 TL’dir. Bu payı ürün kârlılığına eklemek, yalnızca başarılı teslimatın kargosunu hesaplamaktan daha sağlıklı bir sonuç verir.',
-      '## Kargo maliyetini düzenli kontrol etmek için pratik yöntem',
-      'Önce Satıcı Panelinden güncel barem ve gönderim modelinizi doğrulayın. Ardından son 30 gündeki gerçekleşen kargo kesintilerini ürün veya desi grubuna göre ayırın. Her grup için sipariş başına ortalama tutarı bulun ve fiyatlandırma hesabınızı bu veriyle güncelleyin.',
-      'Çok sayıda ürün satıyorsanız Trendyol ürün Excel’inizi KomisyonHesap ana uygulamasına yükleyerek komisyon ve ürün maliyetlerini toplu biçimde inceleyebilirsiniz. Kargo kolonunu gerçekleşen ortalamalarınızla doldurduğunuzda zarar eden ürünleri daha hızlı ayırabilirsiniz. Hedef satış fiyatını bulmak için [Trendyol maliyet hesaplama aracını](/trendyol-maliyet-hesaplama), bütün kesintiler sonrası sonucu görmek için [Trendyol net kâr hesaplama sayfasını](/trendyol-net-kar-hesaplama) kullanın.',
+      'Trendyol hakediş hesaplama, satış tutarından pazaryerinin finansal kesintilerini düşerek satıcıya ödenecek tutarı bulma işlemidir. Ancak hakediş ile net kâr aynı şey değildir. Hakediş hesabında komisyon, kargo, platform hizmet bedeli, stopaj ve iadeler görülür; gerçek net kâr için ürün maliyeti, reklam, paketleme ve diğer işletme giderleri de ayrıca düşülmelidir.',
+      'Bu rehber 8 Ekim 2026 tarihinde güncellenmiştir. Trendyol’un resmî finans dokümanları esas alınmış, değişebilen tarife ve ödeme koşulları için Satıcı Panelindeki güncel kayıtların kontrol edilmesi önerilmiştir.',
+      '## Trendyol hakediş nedir?',
+      'Hakediş, vadesi gelen satış ve düzeltme kayıtlarından hesaplanarak satıcıya yapılacak ödemeyi ifade eder. Trendyol’un resmî Cari Hesap Ekstresi dokümanında “PaymentOrder”, vadesi gelen işlemlerden hesaplanan hakediş ödemesi olarak tanımlanır. Aynı finans akışında kesinti faturaları, iadeler, stopaj ve düzeltme kayıtları da ayrı işlem türleriyle izlenebilir.',
+      'Bu nedenle sipariş ekranındaki satış toplamı ile bankaya yatan tutarın aynı olması beklenmez. Aradaki farkı anlamak için satışları, vadeyi ve bütün finans hareketlerini aynı dönemde karşılaştırmak gerekir.',
+      '## Trendyol hakediş nasıl hesaplanır?',
+      'Pratik formül şöyledir: Hakediş = brüt satış tutarı − komisyon ve ilgili vergi etkisi − kargo − platform hizmet bedeli − e-ticaret stopajı − iade ve iptal düzeltmeleri − diğer kesintiler.',
+      'Hesapta tahmini oranlar yerine mümkün olduğunca gerçekleşen finans kayıtlarını kullanın. Komisyon oranı ürün kategorisine göre, kargo tutarı paket ve gönderim koşuluna göre, hizmet bedeli ile diğer kalemler ise güncel satıcı koşullarına göre değişebilir.',
+      'Resmî [Cari Hesap Ekstresi Entegrasyonu](https://developers.trendyol.com/docs/cari-hesap-ekstresi-entegrasyonu) dokümanı; PaymentOrder, DeductionInvoices, ReturnInvoice, FinancialItem ve Stoppage gibi finansal işlem türlerini ayrı ayrı açıklar. Entegrasyon kullanmayan satıcılar aynı mantıkla Satıcı Panelindeki ödeme, fatura ve finans hareketlerini karşılaştırabilir.',
+      '## Hakedişten düşülebilen başlıca Trendyol kesintileri',
+      'Bir hakediş döneminde şu kalemlerin tamamı veya bir bölümü görülebilir:',
+      '- Ürün kategorisine uygulanan komisyon ve komisyonun vergi etkisi\n- Siparişe veya pakete yansıtılan kargo faturası\n- Platform hizmet bedeli ve ilgili fatura\n- E-ticaret stopajı ve varsa stopaj iptali\n- İade veya iptal nedeniyle oluşan düzeltmeler\n- Kampanya, kupon ya da indirim paylaşımının satıcıya ait kısmı\n- Erken ödeme, virman ve diğer finansal düzeltmeler',
+      'Her kalemi kendi adıyla kaydetmek önemlidir. Örneğin platform hizmet bedelini komisyon oranının içine gömmek, daha sonra komisyon faturası ile finans ekstresini karşılaştırmayı zorlaştırır.',
+      '## Platform hizmet bedeli nerede görülür?',
+      'Trendyol Akademi’de platform hizmet bedelinin ne olduğu ve satıcılara nasıl uygulandığı için ayrı bir eğitim bulunur. Ayrıca Trendyol’un Mart 2026 tarihli finans servisi güncellemesinde bu kayıtların “PlatformServiceFee” alt türüyle filtrelenebildiği belirtilmiştir.',
+      'Güncel tutarı internet üzerindeki eski bir rakamdan almak yerine Satıcı Panelindeki kesinti faturası ve ilgili dönemin finans hareketinden alın. Resmî açıklama için [Platform Hizmet Bedeli eğitimini](https://akademi.trendyol.com/TrainingContent?TrainingId=16077) inceleyebilirsiniz.',
+      '## 1.000 TL satış için örnek hakediş hesabı',
+      'Aşağıdaki rakamlar yalnızca hesap yöntemini göstermek için hazırlanmış örnektir; güncel Trendyol tarifesi değildir:',
+      '- Brüt satış: 1.000 TL\n- Komisyon ve ilgili vergi etkisi: 180 TL\n- Kargo kesintisi: 80 TL\n- Platform hizmet bedeli: 13 TL\n- Stopaj: 10 TL\n- İade veya diğer dönem düzeltmesi: 20 TL',
+      'Bu örnekte hakediş 1.000 − 180 − 80 − 13 − 10 − 20 = 697 TL olur. Fakat 697 TL net kâr değildir. Ürünün maliyeti 380 TL, siparişe düşen reklam gideri 60 TL ve paketleme gideri 12 TL ise bu üç kalem sonrasında 245 TL kalır. Vergi ve diğer işletme giderleri de işletmenizin gerçek durumuna göre ayrıca değerlendirilmelidir.',
+      'Kendi rakamlarınızla hızlı kontrol yapmak için [ücretsiz Trendyol komisyon hesaplama aracını](/trendyol-komisyon-hesaplama) açın. Ürün maliyeti ve hedef kârı birlikte değerlendirmek için [Trendyol maliyet hesaplama aracını](/trendyol-maliyet-hesaplama) kullanın.',
+      '## Hakediş ile net kâr arasındaki fark',
+      'Hakediş, Trendyol’un finans akışındaki ödenecek tutarı gösterir. Net kâr ise işletmenin bu satıştan gerçekten kazandığı tutardır. Ürün alış veya üretim maliyeti çoğu zaman Trendyol finans ekranında yer almaz. Reklam, paketleme, personel, depo, muhasebe, yazılım ve ortalama iade zararı da hakediş dışında kalan giderler olabilir.',
+      'Bu ayrımı yapmazsanız bankaya yatan tutarı kâr zannedebilirsiniz. Sağlıklı takipte üç ayrı rakam tutulur: brüt satış, Trendyol hakedişi ve bütün işletme giderlerinden sonraki net sonuç.',
+      '## Trendyol ödemesi neden beklediğinizden farklı yatar?',
+      'En sık fark oluşturan nedenler; satışların farklı vadelerde olması, iade veya iptal kaydının başka döneme yansıması, kargo ve hizmet faturalarının ayrı tarihte oluşması, stopaj kaydı ve önceki dönem düzeltmeleridir. Sipariş tarihi ile ödeme tarihini aynı kabul etmek de dönem farkına yol açar.',
+      'Ödeme tutarı beklediğinizden farklıysa şu sırayla ilerleyin:',
+      '- İlgili PaymentOrder veya ödeme kaydındaki dönemi belirleyin\n- O döneme bağlı satış ve iade hareketlerini listeleyin\n- Komisyon, kargo ve hizmet faturalarını ayrı ayrı eşleştirin\n- Stoppage kayıtlarından stopaj ve iptal hareketlerini kontrol edin\n- Eşleşmeyen FinancialItem veya diğer düzeltmeleri inceleyin',
+      'Kargo faturası detayına ulaşmak için Trendyol’un resmî [Kargo Faturası Detayları](https://developers.trendyol.com/docs/kargo-faturas%C4%B1-detaylar%C4%B1) açıklamasından da yararlanabilirsiniz.',
+      '## Hakediş mutabakatı için aylık kontrol listesi',
+      'Her ödeme döneminde panelden brüt satış, iade, komisyon, kargo, hizmet bedeli, stopaj ve diğer düzeltmeleri dışa aktarın. Bankaya yatan tutarı PaymentOrder toplamıyla karşılaştırın. Ardından ürün maliyeti, reklam ve operasyon giderlerini ekleyerek gerçek net kârı hesaplayın.',
+      'Çok sayıda ürününüz varsa Trendyol ürün Excel’inizi KomisyonHesap ana uygulamasına yükleyebilir, ürün bazında komisyon ve maliyetleri toplu inceleyebilirsiniz. Zarar edenleri ayırmak için [Trendyol’da zarar eden ürünleri bulma rehberini](/trendyolda-zarar-eden-urun-nasil-bulunur), bütün giderlerden sonraki sonucu anlamak için [Trendyol net kâr hesaplama sayfasını](/trendyol-net-kar-hesaplama) kullanın.',
       '## Sıkça sorulan sorular',
-      '### Trendyol kargo ücreti 2026 yılında ne kadar?',
-      'Tek bir sabit tutar yoktur. Barem, desi, taşıyıcı, gönderim modeli ve satıcı koşulları birlikte etkili olabilir. Kesin tutarı Satıcı Paneli ve ilgili siparişin finans hareketinden kontrol edin.',
-      '### Trendyol kargo ücretini satıcı mı öder?',
-      'Gönderim modeline göre değişir. Trendyol anlaşmalı ve satıcı anlaşmalı kargo modellerinde maliyetin yansıtılması farklı olabilir. Müşteriye ücretsiz kargo sunulması, satıcıya hiç maliyet çıkmayacağı anlamına gelmez.',
-      '### Desi yanlış girilirse ne olur?',
-      'Ürün kartındaki veya paket bilgisindeki hatalı desi, tahmini kargo maliyetiniz ile gerçekleşen tutar arasında fark oluşturabilir. Gerçek ambalaj ölçüsünü kullanın ve taşıyıcının kaydettiği desiyi düzenli kontrol edin.',
-      '### Kargo maliyeti satış fiyatına nasıl yansıtılır?',
-      'Kargoyu tek başına satış fiyatına eklemek yerine komisyon, hizmet bedeli, stopaj, reklam, paketleme ve iade payıyla birlikte başabaş fiyat hesabı yapın. Böylece fiyat artışının komisyon tutarını da artırdığı gözden kaçmaz.',
-      'Sonuç olarak Trendyol kargo ücreti için eski veya herkese ait tek bir rakamı kullanmayın. Güncel baremi panelden doğrulayın, gerçek paket desisini ölçün, gerçekleşen kesintiyi kaydedin ve kargo maliyetini ürünün bütün giderleriyle birlikte hesaplayın.'
+      '### Trendyol hakediş nasıl hesaplanır?',
+      'Satış tutarından komisyon, kargo, hizmet bedeli, stopaj, iade ve diğer kesintiler düşülür. Kesin sonuç için tahmini rakamlar değil, Satıcı Panelindeki gerçekleşen finans hareketleri kullanılmalıdır.',
+      '### Trendyol hakediş ile net kâr aynı mı?',
+      'Hayır. Net kâr için hakedişten ürün maliyeti, reklam, paketleme ve diğer işletme giderleri de düşülmelidir.',
+      '### Trendyol ödemesi ne zaman yatar?',
+      'Vade; kategoriye, teslim ve iade durumuna, ödeme dönemine ve satıcı koşullarına göre değişebilir. Kesin tarihi paneldeki ödeme kaydından kontrol edin.',
+      '### Platform hizmet bedeli komisyondan ayrı mı?',
+      'Finans kayıtlarında platform hizmet bedeli ayrı bir kesinti faturası türü olarak izlenebilir. Bu nedenle komisyona ekleyip tek kalem yapmak yerine ayrı kaydetmek mutabakatı kolaylaştırır.',
+      'Sonuç olarak Trendyol hakedişini net kâr olarak değerlendirmeyin. Önce paneldeki gerçekleşen satış ve kesintileri eşleştirin, ardından ürün ve işletme giderlerini ekleyerek ürünün gerçekten ne kazandırdığını hesaplayın.'
     ].join('\n\n')
+  }
+];
+
+// Kısa süre yayında kalan çakışan editoryal URL'leri eski, kapsamlı yazıya yönlendir.
+const RETIRED_EDITORIAL_POSTS = [
+  {
+    slug: 'trendyol-kargo-ucreti-2026',
+    redirect: '/blog/trendyol-kargo-ucreti-2026-desi-hesaplama-ve-kargo-maliyeti-nasil-hesaplanir'
   }
 ];
 
 async function seedEditorialPosts() {
   if (!db) return;
-  await Promise.all(EDITORIAL_POSTS.map(post => db.collection('blog').updateOne(
-    { slug: post.slug },
-    { $setOnInsert: post },
-    { upsert: true }
-  )));
+  await Promise.all([
+    ...EDITORIAL_POSTS.map(post => db.collection('blog').updateOne(
+      { slug: post.slug },
+      { $setOnInsert: post },
+      { upsert: true }
+    )),
+    ...RETIRED_EDITORIAL_POSTS.map(post => db.collection('blog').updateOne(
+      { slug: post.slug },
+      { $set: { yayinda: false, guncelleme: new Date() } }
+    ))
+  ]);
 }
 
 function editorialListItems() {
@@ -1060,6 +1075,12 @@ async function sifirla(){
   // Public: tekil blog yazısı sayfası (SEO)
   if (parsed.pathname.startsWith('/blog/') && req.method === 'GET') {
     const slug = decodeURIComponent(parsed.pathname.slice(6)).replace(/\/+$/, '');
+    const retiredPost = RETIRED_EDITORIAL_POSTS.find(post => post.slug === slug);
+    if (retiredPost) {
+      res.writeHead(301, { Location: retiredPost.redirect, 'Cache-Control': 'public, max-age=86400' });
+      res.end();
+      return;
+    }
     let y = null;
     await waitForDb();
     if (db) y = await db.collection('blog').findOne({ slug, yayinda: true });
