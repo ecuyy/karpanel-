@@ -1164,6 +1164,7 @@ odemeSayfasiYukle();
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
 <title>komisyonhesap Yönetim Paneli</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -1291,6 +1292,135 @@ tr:hover td{background:rgba(255,255,255,.035)}
   .stats{grid-template-columns:repeat(2,1fr)}
   .table-wrap{overflow-x:auto}
 }
+
+/* 2026 ADMIN UI REFRESH */
+:root{--bg:#F4F6F9;--sidebar:#171A21;--card:#FFFFFF;--card2:#FFFFFF;--border:#E4E8EF;--or:#F27A1A;--or2:#E9680D;--text:#18202F;--muted:#687386;--green:#128A62;--red:#D34545;--blue:#3276D2;--yellow:#B86B08}
+body{background:#F4F6F9;color:var(--text)}
+
+/* Login */
+.login-wrap{background:radial-gradient(circle at 12% 12%,rgba(242,122,26,.13),transparent 28%),radial-gradient(circle at 88% 88%,rgba(23,26,33,.08),transparent 32%),linear-gradient(145deg,#F9FAFB,#EDF1F6)}
+.login-box{max-width:410px;padding:2.5rem 2.35rem 2.25rem;background:rgba(255,255,255,.96);border:1px solid rgba(255,255,255,.9);border-radius:26px;box-shadow:0 28px 70px -38px rgba(20,30,50,.4),0 2px 8px rgba(20,30,50,.05)}
+.login-box::before{background:linear-gradient(90deg,var(--or),#FFAA63);height:5px;bottom:auto;mask-image:none}
+.login-logo img{width:min(220px,86%);height:auto;border-radius:0}
+.login-subtitle{color:var(--muted);font-size:14px;margin:1.2rem 0 1.65rem}
+.field label{color:#586274;font-size:11px;letter-spacing:.08em}
+.field input,#blog-icerik{background:#F8FAFC!important;color:var(--text)!important;border-color:#DCE1E9!important}
+.field input:hover,#blog-icerik:hover{border-color:#C8CFDA!important}
+.field input:focus,#blog-icerik:focus{background:#fff!important;border-color:var(--or)!important;box-shadow:0 0 0 4px rgba(242,122,26,.12)!important}
+.field input::placeholder,#blog-icerik::placeholder{color:#A0A8B5}
+.btn-login{background:linear-gradient(135deg,#F27A1A,#E9680D);box-shadow:0 14px 28px -15px rgba(242,122,26,.72)}
+.btn-login:disabled{cursor:wait;opacity:.72;transform:none}
+
+/* Navigation */
+.sidebar{width:264px;background:linear-gradient(180deg,#1B1E27 0%,#12151B 100%);border-right:0;box-shadow:12px 0 34px -28px rgba(14,18,27,.8)}
+.sidebar-logo{padding:1.7rem 1.45rem 1.35rem;border-bottom-color:rgba(255,255,255,.08)}
+.sidebar-logo img{max-width:186px;height:auto;border-radius:0;filter:drop-shadow(0 4px 8px rgba(0,0,0,.12))}
+.sidebar-logo .sub{color:rgba(255,255,255,.46)!important;letter-spacing:.08em;text-transform:uppercase}
+.sidebar-nav{padding:1.2rem .9rem;gap:7px}
+.nav-item{padding:12px 14px;color:rgba(255,255,255,.62);border:1px solid transparent}
+.nav-item:hover{background:rgba(255,255,255,.065);color:#fff}
+.nav-item.active{background:linear-gradient(135deg,rgba(242,122,26,.2),rgba(242,122,26,.1));border-color:rgba(242,122,26,.2);color:#FFAA63}
+.nav-item.active::before{left:-9px;height:24px;width:4px}
+.nav-item .icon{display:grid;place-items:center;width:25px;height:25px;border-radius:7px;background:rgba(255,255,255,.06);font-size:14px}
+.nav-item.active .icon{background:rgba(242,122,26,.17)}
+.sidebar-footer{padding:1rem .9rem 1.2rem;border-top-color:rgba(255,255,255,.08)}
+.btn-logout{color:#FFAAA5;background:rgba(211,69,69,.1);border-color:rgba(255,130,124,.16)}
+
+/* Content */
+.main{margin-left:264px;padding:0 2.35rem 3rem;min-width:0}
+.topbar{height:78px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);margin-bottom:2rem}
+.topbar-kicker{display:block;color:var(--or);font-size:10px;font-weight:800;letter-spacing:.13em;margin-bottom:3px}
+.topbar strong{font-family:'Plus Jakarta Sans','Inter',sans-serif;font-size:16px;color:var(--text)}
+.system-pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #DCE9E3;border-radius:999px;background:#F2FBF7;color:#167755;font-size:12px;font-weight:700}
+.system-pill i{width:8px;height:8px;border-radius:50%;background:#22A875;box-shadow:0 0 0 4px rgba(34,168,117,.12)}
+.page-header{margin-bottom:1.5rem}
+.page-title{font-size:28px;letter-spacing:-.65px;color:#151D2A}
+.page-sub{color:var(--muted);font-size:13.5px;margin-top:6px}
+
+/* Summary cards */
+.stats{gap:14px;margin-bottom:1.5rem}
+.stat{background:#fff;border:1px solid var(--border);border-radius:18px;padding:1.25rem 1.35rem;box-shadow:0 8px 25px -22px rgba(26,39,63,.4)}
+.stat::before{height:4px;background:var(--accent,var(--or));opacity:1;transform:scaleX(0);transform-origin:left}
+.stat:hover{border-color:#D3D9E3;transform:translateY(-2px);box-shadow:0 16px 30px -24px rgba(26,39,63,.48)}
+.stat:hover::before,.stat.active-filter::before{transform:scaleX(1)}
+.stat.active-filter{border-color:color-mix(in srgb,var(--accent,var(--or)) 45%,white);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent,var(--or)) 9%,transparent)}
+.stat:nth-child(1){--accent:#64748B}.stat:nth-child(2){--accent:#8B5CF6}.stat:nth-child(3){--accent:#D98B0B}.stat:nth-child(4){--accent:#3B82F6}.stat:nth-child(5){--accent:#E05252}
+.stat-icon{width:40px;height:40px;margin-bottom:.9rem;border:0;border-radius:11px;background:color-mix(in srgb,var(--accent,var(--or)) 10%,white);font-size:18px}
+.stat-val{font-size:30px;color:#171F2D}
+.stat-label{color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.04em}
+
+/* Search and safety message */
+.toolbar{gap:.75rem;margin-bottom:1rem;padding:10px;background:#fff;border:1px solid var(--border);border-radius:15px;box-shadow:0 8px 24px -23px rgba(26,39,63,.45)}
+.search-box input{background:#F8FAFC;border-color:#E0E5EC;color:var(--text);padding:11px 14px 11px 42px}
+.search-box input:focus{background:#fff}
+.btn-refresh{background:#fff;color:#4D596B;border-color:#DDE2EA;padding:10px 16px}
+.btn-refresh:hover{border-color:rgba(242,122,26,.5);color:var(--or2);background:#FFF8F2}
+.security-note{display:flex;align-items:center;gap:11px;margin:0 0 1rem;padding:11px 14px;border:1px solid #DCE6F5;border-radius:13px;background:#F7FAFF;color:#526075}
+.security-note .security-icon{display:grid;place-items:center;width:34px;height:34px;flex:0 0 34px;border-radius:10px;background:#EAF2FF;font-size:15px}
+.security-note strong{display:block;color:#253147;font-size:12px;margin-bottom:2px}
+.security-note span:last-child{font-size:11.5px;line-height:1.4}
+
+/* Tables */
+.table-wrap{background:#fff;border-color:var(--border);border-radius:18px;box-shadow:0 10px 28px -25px rgba(26,39,63,.5)}
+.table-info{padding:1rem 1.25rem;background:#FBFCFD;color:var(--muted)}
+th{padding:13px 15px;background:#F8FAFC;color:#778296;border-color:#E6EAF0;font-size:10px;letter-spacing:.09em}
+td{padding:14px 15px;border-color:#EDF0F4;color:#303A4B}
+tr:hover td{background:#FCF8F4}
+.badge{padding:5px 10px;border-radius:999px}
+.badge-green{background:#ECF9F4;color:#117A58;border-color:#D2F0E3}
+.badge-gray{background:#F1F3F6;color:#687386;border-color:#E5E8ED}
+.badge-red{background:#FFF0EF;color:#BE3E39;border-color:#FFD9D6}
+.badge-yellow{background:#FFF7E8;color:#A46008;border-color:#F8E5B7}
+.action-btn{padding:7px 10px;border-radius:8px}
+.action-btn.green{background:#ECF9F4;color:#117A58;border-color:#D2F0E3}
+.action-btn.orange{background:#FFF4E8;color:#B85A0A;border-color:#FADBC0}
+.action-btn.blue{background:#EDF5FF;color:#2867B8;border-color:#D4E6FC}
+.action-btn.red{background:#FFF0EF;color:#BE3E39;border-color:#FFD9D6}
+.action-btn.green:hover{background:#DDF5EA}.action-btn.orange:hover{background:#FFE8D2}.action-btn.blue:hover{background:#DDECFD}.action-btn.red:hover{background:#FFE0DE}
+.action-btn:disabled{opacity:.48;cursor:not-allowed}
+.user-avatar{background:linear-gradient(135deg,#FF9945,#E9680D);border-radius:10px}
+.user-cell span{color:#202938}
+.loading,.empty{color:var(--muted)}
+
+/* Blog and invoice modal */
+#page-blog .table-wrap[style]{padding:1.4rem!important}
+#page-blog [style*="color:#fff"],#blog-liste [style*="color:#fff"]{color:var(--text)!important}
+#blog-liste>div{border-bottom-color:#EDF0F4!important}
+#fatura-modal{background:rgba(16,22,32,.58)!important;backdrop-filter:blur(5px)}
+#fatura-modal>div{background:#fff!important;border:1px solid var(--border)!important;box-shadow:0 30px 70px -30px rgba(14,22,36,.6)!important}
+#fatura-modal [style*="background:rgba(255,255,255,.04)"]{background:#F7F9FC!important;border:1px solid #E9EDF2}
+#fatura-modal [style*="color:#fff"]{color:var(--text)!important}
+#fatura-modal button{background:#F3F5F8!important;border-color:#E0E5EC!important;color:#3A4557!important}
+
+@media(max-width:1040px){
+  .main{padding-left:1.5rem;padding-right:1.5rem}
+  .stats{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:820px){
+  body{display:block}
+  .app{display:none;flex-direction:column}
+  .sidebar{width:100%;position:static;display:grid;grid-template-columns:1fr auto;box-shadow:none}
+  .sidebar-logo{padding:1rem 1.1rem}.sidebar-logo img{max-width:155px}
+  .sidebar-nav{grid-column:1/-1;order:3;width:100%;display:grid;grid-template-columns:repeat(3,1fr);padding:.65rem .8rem .8rem;border-top:1px solid rgba(255,255,255,.07)}
+  .nav-item{justify-content:center;padding:10px 8px}.nav-item.active::before{display:none}
+  .sidebar-footer{grid-column:2;grid-row:1;padding:.8rem}
+  .btn-logout{width:auto;font-size:0;padding:10px}.btn-logout::first-letter{font-size:15px}
+  .main{margin-left:0;padding:0 1rem 2rem;width:100%}
+  .topbar{height:66px;margin-bottom:1.4rem}
+  .page-title{font-size:24px}.stats{grid-template-columns:repeat(2,1fr)}
+  .toolbar{align-items:stretch}.btn-refresh{flex:0 0 auto}
+  .table-wrap{overflow-x:auto}.table-wrap table{min-width:940px}
+  #page-blog>div[style*="grid-template-columns"]{grid-template-columns:1fr!important}
+}
+@media(max-width:520px){
+  .login-wrap{padding:16px}.login-box{padding:2.2rem 1.35rem 1.8rem;border-radius:22px}
+  .topbar strong{font-size:14px}.system-pill{padding:7px 9px;font-size:11px}
+  .stats{gap:10px}.stat{padding:1rem}.stat-val{font-size:26px}.stat-icon{width:36px;height:36px}
+  .toolbar{flex-direction:column}.btn-refresh{width:100%}
+  .security-note{align-items:flex-start}
+  .nav-item{font-size:12px;gap:6px}.nav-item .icon{display:none}
+  #fatura-modal>div{padding:1.25rem!important}#fatura-modal>div>div:nth-child(2){grid-template-columns:1fr!important}
+}
 </style>
 </head>
 <body>
@@ -1339,6 +1469,13 @@ tr:hover td{background:rgba(255,255,255,.035)}
 
   <!-- Main -->
   <div class="main">
+    <header class="topbar">
+      <div>
+        <span class="topbar-kicker">KOMİSYONHESAP</span>
+        <strong>Yönetim Merkezi</strong>
+      </div>
+      <div class="system-pill"><i></i> Sistem aktif</div>
+    </header>
     <!-- Kullanıcılar Sayfası -->
     <div id="page-kullanicilar">
       <div class="page-header">
@@ -1346,7 +1483,7 @@ tr:hover td{background:rgba(255,255,255,.035)}
         <div class="page-sub">Tüm kayıtlı üyeleri yönetin</div>
       </div>
       <div class="stats">
-        <div class="stat" onclick="filtrele('hepsi')" id="sf-hepsi">
+        <div class="stat active-filter" onclick="filtrele('hepsi')" id="sf-hepsi">
           <div class="stat-icon">👥</div>
           <div class="stat-val" id="stat-toplam">0</div>
           <div class="stat-label">Toplam Üye</div>
@@ -1379,6 +1516,10 @@ tr:hover td{background:rgba(255,255,255,.035)}
         </div>
         <button class="btn-refresh" onclick="yukleCullanicilari()" title="Yenile">🔄 Yenile</button>
       </div>
+      <div class="security-note" role="note">
+        <span class="security-icon">🔐</span>
+        <div><strong>Parola güvenliği</strong><span>Kullanıcı parolaları görüntülenmez. Gerektiğinde kullanıcı satırındaki “Şifreyi Sıfırla” işlemini kullanabilirsiniz.</span></div>
+      </div>
       <div class="table-wrap">
         <div class="table-info">
           <span>Gösterilen: <strong id="gosterilen-sayi">0</strong> kullanıcı</span>
@@ -1396,7 +1537,7 @@ tr:hover td{background:rgba(255,255,255,.035)}
               <th>İşlemler</th>
             </tr>
           </thead>
-          <tbody id="users-tbody"><tr><td colspan="6" class="loading">⏳ Yükleniyor...</td></tr></tbody>
+          <tbody id="users-tbody"><tr><td colspan="7" class="loading">⏳ Yükleniyor...</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -1582,7 +1723,7 @@ function sayfaGoster(sayfa){
 }
 
 async function yukleCullanicilari(){
-  document.getElementById('users-tbody').innerHTML='<tr><td colspan="6" class="loading">⏳ Yükleniyor...</td></tr>';
+  document.getElementById('users-tbody').innerHTML='<tr><td colspan="7" class="loading">⏳ Yükleniyor...</td></tr>';
   try{
     const r=await fetch('/api/admin/users?token='+adminToken);
     tumKullanicilar=await r.json();
@@ -1619,7 +1760,9 @@ function renderTablo(){
   const bugun=new Date();
   const birAySonra=new Date(); birAySonra.setMonth(birAySonra.getMonth()+1);
   let liste=tumKullanicilar.filter(u=>{
-    if(arama&&!u.ad.toLowerCase().includes(arama)&&!u.email.toLowerCase().includes(arama)) return false;
+    const aranacakAd=(u.ad||'').toLowerCase();
+    const aranacakEmail=(u.email||'').toLowerCase();
+    if(arama&&!aranacakAd.includes(arama)&&!aranacakEmail.includes(arama)) return false;
     if(aktifFiltre==='premium') return u.premium;
     if(aktifFiltre==='deneme') return !u.premium&&u.trialAktif;
     if(aktifFiltre==='ucretsiz') return !u.premium&&!u.trialAktif;
@@ -1633,16 +1776,17 @@ function renderTablo(){
   const filtreLabelMap={'hepsi':'Tümü','premium':'Premium','deneme':'Denemede','ucretsiz':'Ücretsiz','bitiyor':'Bu Ay Bitiyor'};
   document.getElementById('aktif-filtre').textContent=filtreLabelMap[aktifFiltre]||'';
   if(!liste.length){
-    document.getElementById('users-tbody').innerHTML='<tr><td colspan="6" class="empty">🔍 Kullanıcı bulunamadı</td></tr>';
+    document.getElementById('users-tbody').innerHTML='<tr><td colspan="7" class="empty">🔍 Kullanıcı bulunamadı</td></tr>';
     return;
   }
   const tbody=document.getElementById('users-tbody');
   tbody.innerHTML=liste.map(u=>{
+    const isim=u.ad||'İsimsiz kullanıcı';
     const kayit=u.kayitTarihi?new Date(u.kayitTarihi).toLocaleDateString('tr-TR'):'—';
     const bitis=u.uyelikBitis?new Date(u.uyelikBitis).toLocaleDateString('tr-TR'):'—';
     const bitisDate=u.uyelikBitis?new Date(u.uyelikBitis):null;
     const bitis30=bitisDate&&bitisDate<birAySonra&&bitisDate>bugun;
-    const av=u.ad.charAt(0).toUpperCase();
+    const av=isim.charAt(0).toUpperCase();
     let badge;
     if(u.premium&&bitis30) badge='<span class="badge badge-yellow">⚠️ Bitiyor</span>';
     else if(u.premium) badge='<span class="badge badge-green">💎 Premium</span>';
@@ -1650,7 +1794,7 @@ function renderTablo(){
     else badge='<span class="badge badge-gray">Ücretsiz</span>';
     const bitisStyle=bitis30?'color:#F87171;font-weight:600':'';
     return \`<tr>
-      <td><div class="user-cell"><div class="user-avatar">\${av}</div><span style="font-weight:600">\${u.ad}</span></div></td>
+      <td><div class="user-cell"><div class="user-avatar">\${av}</div><span style="font-weight:600">\${isim}</span></div></td>
       <td style="color:var(--muted)">\${u.email}</td>
       <td style="color:var(--muted)">\${kayit}</td>
       <td>\${badge}</td>
@@ -1660,9 +1804,11 @@ function renderTablo(){
         \${u.premium
           ? \`<button class="action-btn orange" onclick="premiumDegistir('\${u.email}',false)">Premium Al</button>\`
           : \`<button class="action-btn green" onclick="premiumDegistir('\${u.email}',true)">💎 Premium Ver</button>\`}
-        <button class="action-btn blue" onclick="sifreSifirla('\${u.email}')">🔑 Şifre</button>
-        <button class="action-btn green" onclick="faturaGoster('\${u.email}')">📄 Fatura</button>
-        <button class="action-btn red" onclick="kullaniciSil('\${u.email}','\${u.ad}')">🗑️ Sil</button>
+        <button class="action-btn blue" onclick="sifreSifirla('\${u.email}')" title="Kullanıcı için yeni parola belirle">🔑 Şifreyi Sıfırla</button>
+        \${u.fatura
+          ? \`<button class="action-btn green" onclick="faturaGoster('\${u.email}')">📄 Fatura</button>\`
+          : \`<button class="action-btn green" disabled title="Fatura bilgisi bulunmuyor">Fatura yok</button>\`}
+        <button class="action-btn red" onclick="kullaniciSil('\${u.email}','\${isim}')">🗑️ Sil</button>
       </div></td>
     </tr>\`;
   }).join('');
@@ -1671,7 +1817,7 @@ function renderTablo(){
 function filtrele(tip){
   aktifFiltre=tip;
   document.querySelectorAll('.stat').forEach(el=>el.classList.remove('active-filter'));
-  const map={hepsi:'sf-hepsi',premium:'sf-premium',ucretsiz:'sf-ucretsiz',bitiyor:'sf-bitiyor'};
+  const map={hepsi:'sf-hepsi',premium:'sf-premium',deneme:'sf-deneme',ucretsiz:'sf-ucretsiz',bitiyor:'sf-bitiyor'};
   if(map[tip]) document.getElementById(map[tip]).classList.add('active-filter');
   renderTablo();
 }
