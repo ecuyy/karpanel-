@@ -123,7 +123,7 @@
       "name": "komisyonhesap ücretsiz mi?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Örnek demo ücretsizdir. Ayrıca kayıt olan kullanıcılar 3 gün boyunca kendi Trendyol Excel dosyalarıyla tüm premium özellikleri ücretsiz deneyebilir. Kredi kartı gerekmez ve otomatik ödeme yoktur. Deneme sonrası yıllık premium üyelik ₺1.500 KDV dahildir."
+        "text": "Kayıt olan kullanıcılar 3 gün boyunca kendi Trendyol Excel dosyalarıyla tüm premium özellikleri ücretsiz deneyebilir. Kredi kartı gerekmez ve otomatik ödeme yoktur. Deneme sonrası yıllık premium üyelik ₺1.500 KDV dahildir."
       }
     },
     {
@@ -3389,6 +3389,36 @@ body.app-mode #blog{display:none!important}
 @media(max-width:420px){.how-section.khm.khm-trial-section{padding-left:14px;padding-right:14px}.kh-trial-card{padding:23px 19px}.kh-trial-card h2{font-size:29px;letter-spacing:-1px}.kh-trial-description{font-size:14px}.kh-trial-start{width:100%;font-size:12px;padding:16px 13px;gap:10px}.kh-trial-assurances{gap:8px 12px}.kh-trial-assurances>span{font-size:9px}.kh-trial-steps strong{font-size:11px}.kh-trial-steps small{font-size:9px}}
 @media(prefers-reduced-motion:reduce){.kh-trial-start,.kh-trial-start svg{transition:none}.kh-trial-start:hover,.kh-trial-start:hover svg{transform:none}}
 
+
+/* FAQ: restrained typography, native accordion and quiet dividers. */
+#kh-faq .khm-faq{max-width:1180px;padding:94px 32px 76px;scroll-margin-top:100px}
+.kh-faq-layout{display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.5fr);gap:80px;align-items:start}
+.kh-faq-kicker{display:block;font-size:11px;font-weight:600;color:#9A8875;margin-bottom:18px;letter-spacing:.015em}
+.kh-faq-intro h2{font-family:'Plus Jakarta Sans',sans-serif;color:#28211A;font-size:39px;font-weight:600;letter-spacing:-1.4px;line-height:1.15;margin:0 0 20px}
+.kh-faq-intro>p{color:#887B6D;font-size:13px;line-height:1.8;max-width:240px;margin:0}
+.kh-faq-contact{margin-top:34px;font-size:11px;line-height:1.7}.kh-faq-contact>span{display:block;color:#9B8E80;margin-bottom:6px}.kh-faq-contact>a{display:inline-flex;align-items:center;gap:14px;font-size:12px;font-weight:600;color:#5F4B38;text-decoration:none;border-bottom:1px solid #CDBAA7;padding-bottom:3px}.kh-faq-contact>a:hover{color:#B35B16;border-color:#B35B16}.kh-faq-contact>a>span{font-size:15px;font-weight:400}
+#kh-faq .kh-faq-list{border-top:1px solid #DDD4C8}
+#kh-faq .kh-faq-list details{background:transparent;border:0;border-bottom:1px solid #E2DAD0;border-radius:0;overflow:visible}
+#kh-faq .kh-faq-list summary{font-family:inherit;padding:24px 0;min-height:70px;color:#42382D;font-size:14px;font-weight:600;line-height:1.65;letter-spacing:-.1px;gap:24px}
+#kh-faq .kh-faq-list summary:hover{color:#AD591A}
+#kh-faq .kh-faq-list summary:focus-visible{outline:2px solid #BF7D46;outline-offset:5px;border-radius:2px}
+#kh-faq .kh-faq-list details[open] summary{color:#32271D;padding-bottom:13px}
+#kh-faq .kh-faq-list .ans{font-size:13px;line-height:1.9;color:#827465;padding:0 36px 25px 0;max-width:610px}
+#kh-faq .kh-faq-list .ans strong{font-weight:600;color:#514131}
+#kh-faq .faq-plus{position:relative;width:17px;height:17px;flex:0 0 17px;font-size:0;color:#9B836B;transform:none}
+#kh-faq .faq-plus::before,#kh-faq .faq-plus::after{content:'';position:absolute;left:2px;right:2px;top:8px;height:1px;background:currentColor;transition:transform .18s,opacity .18s}
+#kh-faq .faq-plus::after{transform:rotate(90deg)}
+#kh-faq details[open] .faq-plus{transform:none;color:#AD591A}
+#kh-faq details[open] .faq-plus::after{transform:rotate(0);opacity:0}
+.kh-faq-resources{margin-top:54px;padding-top:30px;border-top:1px solid #E6DED4}
+.kh-faq-resources h2{font-family:inherit;font-size:14px;letter-spacing:-.15px;font-weight:600;line-height:1.6;color:#514335;margin:0 0 10px}
+.kh-faq-resources>p{font-size:12px;line-height:1.8;color:#9B8B79;max-width:680px;margin:0 0 25px}
+.kh-faq-resources ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:50px;row-gap:22px;list-style:none;margin:0;padding:0}
+.kh-faq-resources a{font-size:12px;font-weight:500;color:#76604B;text-decoration:none;line-height:1.65}.kh-faq-resources a:hover{color:#BA611A;text-decoration:underline;text-underline-offset:4px}
+.kh-faq-resources li p{font-size:11px;color:#A1907E;line-height:1.75;margin:5px 0 0}
+@media(max-width:850px){.kh-faq-layout{grid-template-columns:minmax(0,.8fr) minmax(0,1.5fr);gap:40px}.kh-faq-intro h2{font-size:34px;letter-spacing:-1px}}
+@media(max-width:650px){#kh-faq .khm-faq{padding:60px 24px}.kh-faq-layout{grid-template-columns:1fr;gap:30px}.kh-faq-intro h2{font-size:33px}.kh-faq-intro h2 br{display:none}.kh-faq-intro>p{max-width:340px}.kh-faq-kicker{margin-bottom:12px}.kh-faq-contact{margin-top:20px}.kh-faq-contact>span{display:inline;margin-right:12px}#kh-faq .kh-faq-list summary{font-size:13px;padding:21px 0;min-height:64px;gap:18px}#kh-faq .kh-faq-list .ans{font-size:12.5px;padding-right:18px;padding-bottom:22px}.kh-faq-resources{margin-top:38px;padding-top:25px}.kh-faq-resources ul{grid-template-columns:1fr;gap:20px}}
+@media(prefers-reduced-motion:reduce){#kh-faq .faq-plus::before,#kh-faq .faq-plus::after{transition:none}}
 </style>
 </head>
 <body>
@@ -4513,28 +4543,26 @@ body.app-mode #blog{display:none!important}
 
 <!-- SSS / FAQ -->
 <div class="khm" id="kh-faq" style="background:#FBFAF8">
-  <section class="khm-faq">
-    <div style="text-align:center;margin-bottom:40px">
-      <div style="font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#F27A1A;margin-bottom:12px">SSS</div>
-      <h2 style="font-size:clamp(28px,3.6vw,42px);font-weight:800;letter-spacing:-1.5px">Sık sorulan sorular</h2>
+  <section class="khm-faq" aria-labelledby="kh-faq-title">
+    <div class="kh-faq-layout">
+      <header class="kh-faq-intro"><span class="kh-faq-kicker">Yardım</span><h2 id="kh-faq-title">Sık sorulan<br>sorular.</h2><p>Başlamadan önce bilmek isteyebileceğiniz birkaç ayrıntı.</p><div class="kh-faq-contact"><span>Başka bir sorunuz mu var?</span><a href="mailto:info@komisyonhesap.com">Bize yazın <span aria-hidden="true">↗</span></a></div></header>
+      <div class="kh-faq-list">
+        <details name="komisyonhesap-faq"><summary>Trendyol komisyon oranı nasıl hesaplanır?<span class="faq-plus" aria-hidden="true"></span></summary><div class="ans">Trendyol komisyon oranı ürün kategorisine, kampanyaya ve satıcı koşullarına göre değişebilir. Satış fiyatını, satıcı panelinizde ürününüz için görünen güncel komisyon oranıyla çarparak komisyon tutarını bulabilirsiniz. Ürün kârlılığını değerlendirirken alış maliyetini, kargoyu, hizmet bedelini ve vergi etkilerini de birlikte inceleyin.</div></details>
+        <details name="komisyonhesap-faq"><summary>komisyonhesap ücretsiz mi?<span class="faq-plus" aria-hidden="true"></span></summary><div class="ans">Kayıt olan kullanıcılar 3 gün boyunca kendi Trendyol Excel dosyalarıyla tüm premium özellikleri ücretsiz deneyebilir. Kredi kartı gerekmez ve otomatik ödeme yoktur. Deneme sonrası yıllık premium üyelik ₺1.500 KDV dahildir.</div></details>
+        <details name="komisyonhesap-faq"><summary>Ürünlerimi nasıl yüklerim?<span class="faq-plus" aria-hidden="true"></span></summary><div class="ans">Trendyol Partner Panel → Ürünler → <strong>Dışa Aktar</strong> butonuna basın. Excel formatında indirin. komisyonhesap'de "Excel Yükle" butonuyla dosyayı seçin. Satış fiyatı, komisyon ve görseller otomatik gelir.</div></details>
+        <details name="komisyonhesap-faq"><summary>Hesaplama doğru mu?<span class="faq-plus" aria-hidden="true"></span></summary><div class="ans">komisyonhesap; komisyon, KDV, e-ticaret stopajı ve Trendyol hizmet bedelini birlikte dikkate alır. E-ticaret kapsamındaki stopaj oranı %1 olarak uygulanır ve matrah KDV hariç satış bedelidir.</div></details>
+        <details name="komisyonhesap-faq"><summary>Verilerim güvende mi?<span class="faq-plus" aria-hidden="true"></span></summary><div class="ans">Evet. Yüklediğiniz Excel dosyası ve girdiğiniz bilgiler yalnızca tarayıcınızda işlenir. Hiçbir ürün verisi veya fiyat bilgisi sunucularımıza gönderilmez veya saklanmaz.</div></details>
+        <details name="komisyonhesap-faq"><summary>Neden komisyonhesap'ı seçmeliyim?<span class="faq-plus" aria-hidden="true"></span></summary><div class="ans">Çoğu Trendyol satıcısı komisyon oranını biliyor ama KDV, stopaj ve Trendyol hizmet bedelini hesaba katmıyor. Bu üç kalem birlikte ciddi bir maliyet oluşturuyor. komisyonhesap bunların hepsini otomatik hesaplayarak gerçek net karınızı gösterir. Üstelik yıllık tek ödeme — aylık sürpriz fatura yok.</div></details>
+      </div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <details><summary>Trendyol komisyon oranı nasıl hesaplanır?<span class="faq-plus">+</span></summary><div class="ans">Trendyol komisyon oranı ürün kategorisine, kampanyaya ve satıcı koşullarına göre değişebilir. Satış fiyatını, satıcı panelinizde ürününüz için görünen güncel komisyon oranıyla çarparak komisyon tutarını bulabilirsiniz. Ürün kârlılığını değerlendirirken alış maliyetini, kargoyu, hizmet bedelini ve vergi etkilerini de birlikte inceleyin.</div></details>
-      <details><summary>komisyonhesap ücretsiz mi?<span class="faq-plus">+</span></summary><div class="ans">Örnek demo ücretsizdir. Ayrıca kayıt olan kullanıcılar 3 gün boyunca kendi Trendyol Excel dosyalarıyla tüm premium özellikleri ücretsiz deneyebilir. Kredi kartı gerekmez ve otomatik ödeme yoktur. Deneme sonrası yıllık premium üyelik ₺1.500 KDV dahildir.</div></details>
-      <details><summary>Ürünlerimi nasıl yüklerim?<span class="faq-plus">+</span></summary><div class="ans">Trendyol Partner Panel → Ürünler → <strong>Dışa Aktar</strong> butonuna basın. Excel formatında indirin. komisyonhesap'de "Excel Yükle" butonuyla dosyayı seçin. Satış fiyatı, komisyon ve görseller otomatik gelir.</div></details>
-      <details><summary>Hesaplama doğru mu?<span class="faq-plus">+</span></summary><div class="ans">komisyonhesap; komisyon, KDV, e-ticaret stopajı ve Trendyol hizmet bedelini birlikte dikkate alır. E-ticaret kapsamındaki stopaj oranı %1 olarak uygulanır ve matrah KDV hariç satış bedelidir.</div></details>
-      <details><summary>Verilerim güvende mi?<span class="faq-plus">+</span></summary><div class="ans">Evet. Yüklediğiniz Excel dosyası ve girdiğiniz bilgiler yalnızca tarayıcınızda işlenir. Hiçbir ürün verisi veya fiyat bilgisi sunucularımıza gönderilmez veya saklanmaz.</div></details>
-      <details><summary>Neden komisyonhesap'ı seçmeliyim?<span class="faq-plus">+</span></summary><div class="ans">Çoğu Trendyol satıcısı komisyon oranını biliyor ama KDV, stopaj ve Trendyol hizmet bedelini hesaba katmıyor. Bu üç kalem birlikte ciddi bir maliyet oluşturuyor. komisyonhesap bunların hepsini otomatik hesaplayarak gerçek net karınızı gösterir. Üstelik yıllık tek ödeme — aylık sürpriz fatura yok.</div></details>
-    </div>
-
-    <nav aria-labelledby="kh-tools-title" style="margin-top:40px;padding-top:28px;border-top:1px solid #E7DED4">
-      <h2 id="kh-tools-title" style="font-size:clamp(23px,3vw,30px);line-height:1.25;margin-bottom:14px">Trendyol satıcıları için hesaplama araçları ve rehberler</h2>
-      <p style="line-height:1.7;margin-bottom:18px;color:#6B5E50">Tek ürünün komisyonunu hesaplayın, hedef satış fiyatınızı bulun veya ürün listenizdeki zararları inceleyin. Çok sayıda ürününüz varsa Excel ile toplu analizden başlayın.</p>
-      <ul style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:18px;list-style:none;padding:0;margin:0">
-        <li><a href="/trendyol-komisyon-hesaplama" style="color:#B94B00;font-weight:700">Trendyol komisyon hesaplama →</a><p style="font-size:14px;line-height:1.6;margin-top:6px">Tek ürünün satış fiyatını ve kesintilerini ücretsiz karşılaştırın.</p></li>
-        <li><a href="/trendyol-maliyet-hesaplama" style="color:#B94B00;font-weight:700">Trendyol maliyet ve satış fiyatı hesaplama →</a><p style="font-size:14px;line-height:1.6;margin-top:6px">Başabaş fiyatını ve hedef kâr için gereken satış fiyatını bulun.</p></li>
-        <li><a href="/trendyol-net-kar-hesaplama" style="color:#B94B00;font-weight:700">Trendyol net kâr hesaplama rehberi →</a><p style="font-size:14px;line-height:1.6;margin-top:6px">Ürün kârlılığı, kâr marjı ve işletme kazancı arasındaki farkı öğrenin.</p></li>
-        <li><a href="/trendyolda-zarar-eden-urun-nasil-bulunur" style="color:#B94B00;font-weight:700">Trendyol’da zarar eden ürünleri bulma →</a><p style="font-size:14px;line-height:1.6;margin-top:6px">Ürün listenizi maliyet ve fiyat kararları için nasıl inceleyeceğinizi görün.</p></li>
+    <nav class="kh-faq-resources" aria-labelledby="kh-tools-title">
+      <h2 id="kh-tools-title">Trendyol satıcıları için hesaplama araçları ve rehberler</h2>
+      <p>Tek ürünün komisyonunu hesaplayın, hedef satış fiyatınızı bulun veya ürün listenizdeki zararları inceleyin. Çok sayıda ürününüz varsa Excel ile toplu analizden başlayın.</p>
+      <ul>
+        <li><a href="/trendyol-komisyon-hesaplama">Trendyol komisyon hesaplama →</a><p>Tek ürünün satış fiyatını ve kesintilerini ücretsiz karşılaştırın.</p></li>
+        <li><a href="/trendyol-maliyet-hesaplama">Trendyol maliyet ve satış fiyatı hesaplama →</a><p>Başabaş fiyatını ve hedef kâr için gereken satış fiyatını bulun.</p></li>
+        <li><a href="/trendyol-net-kar-hesaplama">Trendyol net kâr hesaplama rehberi →</a><p>Ürün kârlılığı, kâr marjı ve işletme kazancı arasındaki farkı öğrenin.</p></li>
+        <li><a href="/trendyolda-zarar-eden-urun-nasil-bulunur">Trendyol’da zarar eden ürünleri bulma →</a><p>Ürün listenizi maliyet ve fiyat kararları için nasıl inceleyeceğinizi görün.</p></li>
       </ul>
     </nav>
   </section>
