@@ -145,6 +145,18 @@ const RETIRED_EDITORIAL_POSTS = [
   }
 ];
 
+// GitHub üzerinden yayın: yalnız doğrulanmış, yayındaki içerikleri mevcut akışa ekle.
+// Hatalı dosya ana uygulamayı durdurmaz; mevcut yazılar çalışmaya devam eder.
+try {
+  const { loadPublishedPosts } = require('./blog-publishing');
+  EDITORIAL_POSTS.push(...loadPublishedPosts(
+    path.join(__dirname, 'blog-posts.json'),
+    [...EDITORIAL_POSTS, ...RETIRED_EDITORIAL_POSTS].map(post => post.slug)
+  ));
+} catch (err) {
+  console.error('Blog dosyası yüklenemedi:', err.message);
+}
+
 async function seedEditorialPosts() {
   if (!db) return;
   await Promise.all([
@@ -1001,7 +1013,7 @@ async function sifirla(){
     if (db) yazilar = await db.collection('blog').find({ yayinda: true })
       .project({ icerik: 0, faq: 0 }).sort({ tarih: -1 }).limit(30).toArray();
     yazilar = mergeEditorialList(yazilar).slice(0, 30);
-    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.writeHead(200, { 'Content-Type': 'application/json', 'X-Blog-Publishing': 'repository-v1' });
     res.end(JSON.stringify(yazilar));
     return;
   }
