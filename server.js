@@ -1024,9 +1024,13 @@ async function sifirla(){
     if (!(await adminOturumGecerli(req))) {
       res.writeHead(401); res.end(JSON.stringify({ error: 'Yetkisiz' })); return;
     }
-    const { email, aktif } = body;
-    const uyelikBitis = aktif ? (() => { const d = new Date(); d.setFullYear(d.getFullYear() + 1); return d; })() : null;
-    await db.collection('users').updateOne({ email }, { $set: { premium: aktif, odemeTarihi: aktif ? new Date() : null, uyelikBitis } });
+    const { email, aktif, bitisTarihi } = body;
+    if(typeof email!=='string'||typeof aktif!=='boolean'){res.writeHead(400,{'Content-Type':'application/json'});res.end(JSON.stringify({error:'Geçersiz üyelik bilgisi'}));return;}
+    const mevcut=await db.collection('users').findOne({email});
+    if(!mevcut){res.writeHead(404,{'Content-Type':'application/json'});res.end(JSON.stringify({error:'Kullanıcı bulunamadı'}));return;}
+    const uyelikBitis=aktif?(bitisTarihi?new Date(bitisTarihi):(()=>{const d=new Date();d.setFullYear(d.getFullYear()+1);return d;})()):null;
+    if(aktif&&(Number.isNaN(uyelikBitis.getTime())||uyelikBitis<=new Date())){res.writeHead(400,{'Content-Type':'application/json'});res.end(JSON.stringify({error:'Gelecekte geçerli bir bitiş tarihi seçin'}));return;}
+    await db.collection('users').updateOne({ email }, { $set: { premium: aktif, odemeTarihi: aktif ? (mevcut.premium?mevcut.odemeTarihi||null:new Date()) : null, uyelikBitis } });
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ ok: true }));
     return;
@@ -1039,6 +1043,8 @@ async function sifirla(){
       res.writeHead(401); res.end(JSON.stringify({ error: 'Yetkisiz' })); return;
     }
     const { email, yeniSifre } = body;
+    if(typeof email!=='string'||typeof yeniSifre!=='string'||yeniSifre.length<6){res.writeHead(400,{'Content-Type':'application/json'});res.end(JSON.stringify({error:'Şifre en az 6 karakter olmalı'}));return;}
+    const mevcut=await db.collection('users').findOne({email});if(!mevcut){res.writeHead(404,{'Content-Type':'application/json'});res.end(JSON.stringify({error:'Kullanıcı bulunamadı'}));return;}
     await db.collection('users').updateOne({ email }, { $set: { sifre: yeniSifre } });
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ ok: true }));
@@ -1719,6 +1725,29 @@ tr:hover td{background:#FCF8F4}
 .analytics-detail-summary{margin:18px 24px;padding:12px 16px;border-radius:12px;background:#FFF5EA;color:#A54D0B;font-size:13px;font-weight:600;line-height:1.6}
 .analytics-detail-table{overflow:auto;padding:0 24px 24px}.analytics-detail table{width:100%;border-collapse:collapse}.analytics-detail th{white-space:nowrap}.analytics-detail td{font-size:12px;white-space:nowrap}.analytics-detail td:first-child{font-weight:600}.analytics-detail-empty{text-align:center!important;padding:28px!important;color:var(--muted)}
 @media(max-width:650px){.analytics-detail-header{padding:20px 16px}.analytics-detail-summary{margin:16px}.analytics-detail-table{padding:0 16px 16px}}
+
+/* Member workspace */
+#page-kullanicilar .stats{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+#page-kullanicilar button.stat{font-family:inherit;text-align:left;color:var(--text);cursor:pointer;min-width:0;padding:18px;position:relative}
+#page-kullanicilar .stat-val{font-size:29px}#page-kullanicilar .stat-icon{width:34px;height:34px;font-size:15px;margin-bottom:14px}#page-kullanicilar .stat-label{font-size:10px;letter-spacing:.04em}
+#page-kullanicilar .stat.active-filter{background:linear-gradient(140deg,#FFF8F1,#fff);border-color:#F4B17B;box-shadow:0 0 0 2px #F27A1A10}
+#page-kullanicilar .stat.active-filter::after{content:'✓';position:absolute;right:14px;top:14px;background:#F27A1A;color:#fff;border-radius:50%;width:18px;height:18px;font-size:11px;display:grid;place-items:center}
+#page-kullanicilar button:focus-visible,#user-manage input:focus-visible,#user-manage select:focus-visible{outline:3px solid #F6B680;outline-offset:3px}
+#page-kullanicilar .toolbar{flex-wrap:wrap;padding:14px;gap:12px;border-radius:18px}#page-kullanicilar .search-box{flex:1;min-width:200px}
+.users-sort{font-size:10px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:8px}.users-sort select{font-family:inherit;border:1px solid #DDE2EA;border-radius:10px;padding:10px;color:var(--text);background:#F8FAFC;font-size:12px;max-width:210px}
+.users-clear{border:0;background:transparent;color:#8C500F;font-family:inherit;font-weight:600;font-size:12px;cursor:pointer;padding:10px}
+.users-help{display:flex;gap:9px;align-items:flex-start;color:var(--muted);font-size:12px;line-height:1.6;margin:14px 3px 18px}.users-help>span:first-child{color:var(--or2)}
+#page-kullanicilar .table-wrap{overflow:hidden}#page-kullanicilar .table-info{flex-wrap:wrap;gap:10px}.users-table-scroll{overflow:auto}#page-kullanicilar table{min-width:950px}#page-kullanicilar td{padding:17px 14px}#page-kullanicilar tbody tr:hover td{background:#FFF9F3}
+.users-person{display:flex;gap:10px;align-items:center}.users-person strong{display:block;max-width:190px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px}.users-person small{font-size:10px;color:var(--muted);display:block;margin-top:5px}.users-person .user-avatar{width:36px;height:36px;background:#FFF0E2;color:#C66011;border:1px solid #F8DEC5;border-radius:12px;flex:0 0 36px}
+.users-login-count{display:inline-flex;align-items:center;justify-content:center;min-width:32px;padding:6px 9px;background:#F2F5FA;border-radius:9px;font-weight:700;color:#526075;font-variant-numeric:tabular-nums}
+.users-manage-btn{font-family:inherit;border:1px solid #F5C79F;background:#FFF4E8;color:#AE530B;border-radius:10px;padding:9px 14px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}.users-manage-btn:hover{background:#FFE5CC;border-color:#F27A1A}.users-fatura{font-size:11px;color:#128A62}.users-fatura.missing{color:var(--muted)}
+.users-pagination{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}.users-pagination>div{display:flex;gap:8px}.users-pagination button{font-family:inherit;border:1px solid #DDE2EA;background:#fff;border-radius:9px;padding:8px 12px;color:#526075;font-size:12px;cursor:pointer}.users-pagination button:disabled{opacity:.4;cursor:default}
+.user-manage-dialog{max-width:740px}.user-manage-content{padding:22px 24px}.user-profile-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:22px}.user-profile-summary div{padding:12px;background:#F7F9FC;border-radius:12px}.user-profile-summary dt{font-size:10px;color:var(--muted);margin-bottom:7px}.user-profile-summary dd{font-size:13px;font-weight:700;margin:0;overflow-wrap:anywhere}
+.user-manage-section{border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:16px}.user-manage-section h3{font-size:14px;margin:0 0 6px}.user-manage-section p{font-size:12px;color:var(--muted);line-height:1.6;margin:0 0 14px}.user-manage-fields{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.user-manage-fields label{flex:1;min-width:160px;font-size:11px;font-weight:600;color:#526075}.user-manage-fields input,.user-manage-fields select{display:block;width:100%;padding:11px;border:1px solid #DDE2EA;background:#F8FAFC;color:var(--text);border-radius:10px;font:inherit;margin-top:7px;min-height:42px}
+.user-save{font-family:inherit;background:#F27A1A;border:1px solid #E9680D;color:#fff;padding:11px 16px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;min-height:42px}.user-save:disabled{opacity:.5;cursor:wait}.user-secondary{font-family:inherit;background:#fff;border:1px solid #DDE2EA;color:#526075;padding:10px 14px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer}.user-danger{border-top:1px solid var(--border);padding-top:18px;display:flex;align-items:center;justify-content:space-between;gap:14px}.user-danger small{color:var(--muted);font-size:11px;line-height:1.6}.user-delete{font-family:inherit;white-space:nowrap;padding:10px 14px;border:1px solid #F3D0D0;background:#FFF6F6;color:#C14444;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer}.user-manage-status{font-size:12px;min-height:20px;color:#128A62;margin:12px 0 0}
+@media(max-width:1120px){#page-kullanicilar .stats{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:650px){#page-kullanicilar .stats{grid-template-columns:repeat(2,minmax(0,1fr))}#page-kullanicilar .stats .stat:first-child{grid-column:1/-1}#page-kullanicilar .toolbar{align-items:stretch}#page-kullanicilar .search-box{flex-basis:100%}.users-sort{flex:1}.users-sort select{width:100%}.users-pagination{flex-direction:column;align-items:flex-start}.user-manage-content{padding:18px 16px}.user-profile-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.user-danger{align-items:flex-start}}
+
+@media(max-width:650px){#page-kullanicilar .users-table-scroll table{min-width:0}#page-kullanicilar .users-table-scroll thead{display:none}#page-kullanicilar .users-table-scroll tbody,#page-kullanicilar .users-table-scroll tr{display:block}#page-kullanicilar .users-table-scroll tr{padding:12px 16px;border-bottom:1px solid var(--border)}#page-kullanicilar .users-table-scroll td{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 0;border:0;overflow-wrap:anywhere;font-size:12px}#page-kullanicilar .users-table-scroll td::before{content:attr(data-label);font-size:10px;font-weight:600;color:var(--muted);white-space:nowrap}#page-kullanicilar .users-table-scroll td:first-child::before,#page-kullanicilar .users-table-scroll td:last-child::before{display:none}#page-kullanicilar .users-manage-btn{width:100%}.users-person strong{max-width:240px}}
 </style>
 </head>
 <body>
@@ -1778,53 +1807,52 @@ tr:hover td{background:#FCF8F4}
     <div id="page-kullanicilar">
       <div class="page-header">
         <div class="page-title">Kullanıcılar</div>
-        <div class="page-sub">Tüm kayıtlı üyeleri yönetin</div>
+        <div class="page-sub">Üyeleri bulun, hesap detaylarını inceleyin ve üyeliklerini kolayca yönetin.</div>
       </div>
       <div class="stats">
-        <div class="stat active-filter" onclick="filtrele('hepsi')" id="sf-hepsi">
+        <button type="button" class="stat active-filter" onclick="filtrele('hepsi')" id="sf-hepsi" aria-pressed="true">
           <div class="stat-icon">👥</div>
           <div class="stat-val" id="stat-toplam">0</div>
           <div class="stat-label">Toplam Üye</div>
-        </div>
-        <div class="stat" onclick="filtrele('premium')" id="sf-premium">
+        </button>
+        <button type="button" class="stat" onclick="filtrele('premium')" id="sf-premium" aria-pressed="false">
           <div class="stat-icon">💎</div>
           <div class="stat-val" id="stat-premium">0</div>
           <div class="stat-label">Premium</div>
-        </div>
-        <div class="stat" onclick="filtrele('deneme')" id="sf-deneme">
+        </button>
+        <button type="button" class="stat" onclick="filtrele('deneme')" id="sf-deneme" aria-pressed="false">
           <div class="stat-icon">⏳</div>
           <div class="stat-val" id="stat-deneme">0</div>
           <div class="stat-label">Denemede</div>
-        </div>
-        <div class="stat" onclick="filtrele('ucretsiz')" id="sf-ucretsiz">
+        </button>
+        <button type="button" class="stat" onclick="filtrele('ucretsiz')" id="sf-ucretsiz" aria-pressed="false">
           <div class="stat-icon">🆓</div>
           <div class="stat-val" id="stat-ucretsiz">0</div>
           <div class="stat-label">Ücretsiz</div>
-        </div>
-        <div class="stat" onclick="filtrele('bitiyor')" id="sf-bitiyor">
+        </button>
+        <button type="button" class="stat" onclick="filtrele('bitiyor')" id="sf-bitiyor" aria-pressed="false">
           <div class="stat-icon">⚠️</div>
           <div class="stat-val" id="stat-bitis">0</div>
-          <div class="stat-label">Bu Ay Bitiyor</div>
-        </div>
+          <div class="stat-label">Yakında Bitiyor</div>
+        </button>
       </div>
       <div class="toolbar">
         <div class="search-box">
           <span class="search-icon">🔍</span>
-          <input type="text" id="search-input" placeholder="Ad veya e-posta ile ara..." oninput="aramaYap()">
+          <input type="text" id="search-input" aria-label="Kullanıcı ara" placeholder="Ad veya e-posta ile ara..." oninput="aramaYap()">
         </div>
-        <button class="btn-refresh" onclick="yukleCullanicilari()" title="Yenile">🔄 Yenile</button>
+        <label class="users-sort">Sıralama<select id="users-sort" onchange="kullaniciSayfa=1;renderTablo()"><option value="yeni">En yeni kayıt</option><option value="giris">En çok giriş</option><option value="bitis">En yakın üyelik bitişi</option><option value="ad">Ada göre A–Z</option></select></label>
+        <button type="button" class="users-clear" onclick="kullaniciFiltreTemizle()">Filtreleri temizle</button>
+        <button type="button" class="btn-refresh" onclick="yukleCullanicilari()" title="Yenile">🔄 Yenile</button>
       </div>
-      <div class="security-note" role="note">
-        <span class="security-icon">🔐</span>
-        <div><strong>Parola güvenliği</strong><span>Kullanıcı parolaları görüntülenmez. Gerektiğinde kullanıcı satırındaki “Yeni Şifre Belirle” işlemini kullanabilirsiniz.</span></div>
-      </div>
+      <div class="users-help"><span>ⓘ</span><span>Kartlara tıklayarak üyeleri filtreleyin. Hesap işlemleri için kullanıcı satırındaki <strong>Yönet</strong> düğmesini kullanın.</span></div>
       <div class="table-wrap">
         <div class="table-info">
           <span>Gösterilen: <strong id="gosterilen-sayi">0</strong> kullanıcı</span>
           <span style="font-size:12px">Giriş sayısı güncellemeden sonraki başarılı girişleri gösterir.</span>
           <span id="aktif-filtre" style="color:var(--or);font-weight:600;font-size:12px"></span>
         </div>
-        <table>
+        <div class="users-table-scroll"><table>
           <thead>
             <tr>
               <th>Kullanıcı</th>
@@ -1838,7 +1866,8 @@ tr:hover td{background:#FCF8F4}
             </tr>
           </thead>
           <tbody id="users-tbody"><tr><td colspan="8" class="loading">⏳ Yükleniyor...</td></tr></tbody>
-        </table>
+        </table></div>
+        <div class="users-pagination"><span id="users-page-info" aria-live="polite"></span><div><button type="button" id="users-prev" onclick="kullaniciSayfaDegistir(-1)" aria-label="Önceki kullanıcı sayfası">← Önceki</button><button type="button" id="users-next" onclick="kullaniciSayfaDegistir(1)" aria-label="Sonraki kullanıcı sayfası">Sonraki →</button></div></div>
       </div>
     </div>
 
@@ -1920,6 +1949,18 @@ tr:hover td{background:#FCF8F4}
   <div class="analytics-detail-summary" id="ist-detay-ozet" aria-live="polite"></div>
   <div class="analytics-detail-table"><table><thead><tr><th>Kullanıcı</th><th>E-posta</th><th>Kayıt tarihi</th><th>Giriş sayısı</th><th>Üyelik</th><th>Üyelik bitiş</th></tr></thead><tbody id="ist-detay-satirlar"></tbody></table></div>
 </dialog>
+
+<dialog id="user-manage" class="analytics-detail user-manage-dialog" aria-labelledby="user-manage-name" aria-describedby="user-manage-email">
+  <div class="analytics-detail-header"><div><div class="analytics-eyebrow">KULLANICI YÖNETİMİ</div><h2 id="user-manage-name"></h2><p id="user-manage-email"></p></div><button type="button" class="analytics-detail-close" aria-label="Kullanıcı yönetimini kapat" onclick="document.getElementById('user-manage').close()">×</button></div>
+  <div class="user-manage-content">
+    <dl class="user-profile-summary"><div><dt>Üyelik</dt><dd id="um-status"></dd></div><div><dt>Kayıt tarihi</dt><dd id="um-registration"></dd></div><div><dt>Başarılı giriş</dt><dd id="um-logins"></dd></div><div><dt>Üyelik bitişi</dt><dd id="um-expiry"></dd></div></dl>
+    <form class="user-manage-section" id="um-membership-form"><h3>Üyelik düzenle</h3><p>Premium tanımlayın, mevcut üyeliğin bitişini değiştirin veya premium üyeliği kaldırın.</p><div class="user-manage-fields"><label>İşlem<select id="um-membership" onchange="uyelikTarihAlani()"><option value="koru">Mevcut bitiş tarihini koru</option><option value="30">Bugünden itibaren 30 gün premium</option><option value="90">Bugünden itibaren 90 gün premium</option><option value="365">Bugünden itibaren 365 gün premium</option><option value="tarih">Özel bitiş tarihi</option><option value="kaldir">Premium üyeliği kaldır</option></select></label><label id="um-date-label" hidden>Bitiş tarihi<input type="date" id="um-date"></label><button class="user-save" type="submit">Üyeliği kaydet</button></div></form>
+    <form class="user-manage-section" id="um-password-form"><h3>Yeni şifre belirle</h3><p>Mevcut şifre görüntülenmez. Bu işlem kullanıcının giriş şifresini değiştirir.</p><div class="user-manage-fields"><label>Yeni şifre<input id="um-password" type="password" autocomplete="new-password" minlength="6" required placeholder="En az 6 karakter"></label><button type="submit" class="user-secondary">Şifreyi güncelle</button></div></form>
+    <div class="user-manage-section"><h3>Fatura bilgileri</h3><p id="um-invoice-note"></p><button type="button" class="user-secondary" id="um-invoice">Fatura bilgilerini aç</button></div>
+    <div class="user-danger"><small>Hesabı silmek kalıcıdır.<br>Silme işleminden önce ayrıca onay istenir.</small><button type="button" class="user-delete" id="um-delete">Kullanıcıyı sil</button></div>
+    <p id="um-feedback" class="user-manage-status" role="status"></p>
+  </div>
+</dialog>
 <!-- FATURA DETAY MODAL -->
 <div id="fatura-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;align-items:center;justify-content:center;padding:1rem">
   <div style="background:linear-gradient(162deg,#221A13,#15110D);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:2rem;width:100%;max-width:480px;box-shadow:0 44px 96px -44px rgba(0,0,0,.9)">
@@ -1978,6 +2019,8 @@ tr:hover td{background:#FCF8F4}
 let adminOturumSurumu=0;
 let tumKullanicilar=[];
 let aktifFiltre='hepsi';
+let kullaniciSayfa=1;
+let yonetilenEmail='';
 
 function toast(msg,type='info'){
   const wrap=document.getElementById('toast-wrap');
@@ -2015,6 +2058,7 @@ function adminOturumuKapat(){
   document.getElementById('admin-err').textContent='';
   const detay=document.getElementById('ist-detay-modal');if(detay.open)detay.close();
   document.getElementById('fatura-modal').style.display='none';
+  const yonetim=document.getElementById('user-manage');if(yonetim.open)yonetim.close();
   tumKullanicilar=[];
 }
 async function adminCikis(){
@@ -2059,10 +2103,11 @@ async function yukleCullanicilari(){
   document.getElementById('users-tbody').innerHTML='<tr><td colspan="8" class="loading">⏳ Yükleniyor...</td></tr>';
   try{
     const r=await adminFetch('/api/admin/users');
-    tumKullanicilar=await r.json();
+    const liste=await r.json();if(!r.ok||!Array.isArray(liste))throw new Error('Kullanıcılar yüklenemedi');
+    tumKullanicilar=liste;
     hesaplaIstatistikler();
     renderTablo();
-  } catch(e){ toast('Kullanıcılar yüklenemedi','error'); }
+  } catch(e){const tbody=document.getElementById('users-tbody');tbody.innerHTML='<tr><td colspan="8" class="empty">Kullanıcılar yüklenemedi. Yenile düğmesiyle tekrar deneyin.</td></tr>';toast('Kullanıcılar yüklenemedi','error');}
 }
 
 function hesaplaIstatistikler(){
@@ -2169,92 +2214,93 @@ document.getElementById('page-istatistikler').addEventListener('click',e=>{
 });
 document.getElementById('ist-detay-modal').addEventListener('click',e=>{if(e.target===e.currentTarget){const r=e.currentTarget.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)e.currentTarget.close();}});
 
-function renderTablo(){
-  const arama=document.getElementById('search-input').value.toLowerCase();
-  const bugun=new Date();
-  const birAySonra=new Date(); birAySonra.setMonth(birAySonra.getMonth()+1);
-  let liste=tumKullanicilar.filter(u=>{
-    const aranacakAd=(u.ad||'').toLowerCase();
-    const aranacakEmail=(u.email||'').toLowerCase();
-    if(arama&&!aranacakAd.includes(arama)&&!aranacakEmail.includes(arama)) return false;
-    if(aktifFiltre==='premium') return u.premium;
-    if(aktifFiltre==='deneme') return !u.premium&&u.trialAktif;
-    if(aktifFiltre==='ucretsiz') return !u.premium&&!u.trialAktif;
-    if(aktifFiltre==='bitiyor'){
-      if(!u.uyelikBitis) return false;
-      const b=new Date(u.uyelikBitis); return b<birAySonra&&b>bugun;
-    }
+function kullaniciTarih(d){return d&&!Number.isNaN(new Date(d).getTime())?new Date(d).toLocaleDateString('tr-TR'):'—';}
+function kullaniciGiris(u){return Number.isSafeInteger(u.loginCount)&&u.loginCount>=0?u.loginCount:0;}
+function kullaniciListesi(arama,filtre,siralama){
+  const bugun=new Date(),birAySonra=new Date();birAySonra.setMonth(birAySonra.getMonth()+1);
+  const q=String(arama||'').trim().toLocaleLowerCase('tr-TR');
+  return tumKullanicilar.filter(u=>{
+    if(q&&!String(u.ad||'').toLocaleLowerCase('tr-TR').includes(q)&&!String(u.email||'').toLocaleLowerCase('tr-TR').includes(q))return false;
+    if(filtre==='premium')return !!u.premium;
+    if(filtre==='deneme')return !u.premium&&!!u.trialAktif;
+    if(filtre==='ucretsiz')return !u.premium&&!u.trialAktif;
+    if(filtre==='bitiyor')return u.premium&&u.uyelikBitis&&new Date(u.uyelikBitis)>bugun&&new Date(u.uyelikBitis)<birAySonra;
     return true;
+  }).sort((a,b)=>{
+    if(siralama==='giris')return kullaniciGiris(b)-kullaniciGiris(a);
+    if(siralama==='ad')return String(a.ad||'').localeCompare(String(b.ad||''),'tr');
+    if(siralama==='bitis'){const tarih=u=>u.premium&&u.uyelikBitis&&!Number.isNaN(new Date(u.uyelikBitis).getTime())?new Date(u.uyelikBitis).getTime():Infinity;return tarih(a)-tarih(b);}
+    return (new Date(b.kayitTarihi).getTime()||0)-(new Date(a.kayitTarihi).getTime()||0);
   });
-  document.getElementById('gosterilen-sayi').textContent=liste.length;
-  const filtreLabelMap={'hepsi':'Tümü','premium':'Premium','deneme':'Denemede','ucretsiz':'Ücretsiz','bitiyor':'Bu Ay Bitiyor'};
-  document.getElementById('aktif-filtre').textContent=filtreLabelMap[aktifFiltre]||'';
-  if(!liste.length){
-    document.getElementById('users-tbody').innerHTML='<tr><td colspan="8" class="empty">🔍 Kullanıcı bulunamadı</td></tr>';
-    return;
-  }
-  const tbody=document.getElementById('users-tbody');
-  tbody.innerHTML=liste.map(u=>{
-    const isim=u.ad||'İsimsiz kullanıcı';
-    const kayit=u.kayitTarihi?new Date(u.kayitTarihi).toLocaleDateString('tr-TR'):'—';
-    const bitis=u.uyelikBitis?new Date(u.uyelikBitis).toLocaleDateString('tr-TR'):'—';
-    const bitisDate=u.uyelikBitis?new Date(u.uyelikBitis):null;
-    const bitis30=bitisDate&&bitisDate<birAySonra&&bitisDate>bugun;
-    const girisSayisi=Number.isSafeInteger(u.loginCount)&&u.loginCount>=0?u.loginCount:0;
-    const av=isim.charAt(0).toUpperCase();
-    let badge;
-    if(u.premium&&bitis30) badge='<span class="badge badge-yellow">⚠️ Bitiyor</span>';
-    else if(u.premium) badge='<span class="badge badge-green">💎 Premium</span>';
-    else if(u.trialAktif) badge='<span class="badge badge-yellow">⏳ Deneme ('+u.trialKalanGun+'g)</span>';
-    else badge='<span class="badge badge-gray">Ücretsiz</span>';
-    const bitisStyle=bitis30?'color:#F87171;font-weight:600':'';
-    return \`<tr>
-      <td><div class="user-cell"><div class="user-avatar">\${av}</div><span style="font-weight:600">\${isim}</span></div></td>
-      <td style="color:var(--muted)">\${u.email}</td>
-      <td style="color:var(--muted)">\${kayit}</td>
-      <td style="font-weight:700">\${girisSayisi}</td>
-      <td>\${badge}</td>
-      <td style="\${bitisStyle}">\${bitis}</td>
-      <td style="font-size:12px">\${u.fatura ? '✓' : '—'}</td>
-      <td><div class="actions">
-        \${u.premium
-          ? \`<button class="action-btn orange" onclick="premiumDegistir('\${u.email}',false)">Premium Al</button>\`
-          : \`<button class="action-btn green" onclick="premiumDegistir('\${u.email}',true)">💎 Premium Ver</button>\`}
-        <button class="action-btn blue" onclick="sifreSifirla('\${u.email}')" title="Kullanıcı için yeni parola belirle">🔑 Yeni Şifre Belirle</button>
-        <button class="action-btn green" onclick="faturaGoster('\${u.email}')" title="\${u.fatura?'Fatura bilgilerini aç':'Fatura bilgisi durumunu kontrol et'}">\${u.fatura?'📄 Fatura':'ℹ️ Fatura yok'}</button>
-        <button class="action-btn red" onclick="kullaniciSil('\${u.email}','\${isim}')">🗑️ Sil</button>
-      </div></td>
-    </tr>\`;
-  }).join('');
 }
-
+function renderTablo(){
+  const liste=kullaniciListesi(document.getElementById('search-input').value,aktifFiltre,document.getElementById('users-sort').value);
+  const etiketler={hepsi:'Tüm üyeler',premium:'Premium',deneme:'Denemede',ucretsiz:'Ücretsiz',bitiyor:'Yakında bitiyor'};
+  document.getElementById('gosterilen-sayi').textContent=liste.length;
+  document.getElementById('aktif-filtre').textContent=etiketler[aktifFiltre]||'';
+  const sayfaSayisi=Math.max(1,Math.ceil(liste.length/20));kullaniciSayfa=Math.max(1,Math.min(kullaniciSayfa,sayfaSayisi));
+  const baslangic=(kullaniciSayfa-1)*20;
+  document.getElementById('users-page-info').textContent=liste.length?(baslangic+1)+'–'+Math.min(baslangic+20,liste.length)+' / '+liste.length+' kullanıcı · Sayfa '+kullaniciSayfa+' / '+sayfaSayisi:'Eşleşen kullanıcı yok';
+  document.getElementById('users-prev').disabled=kullaniciSayfa===1;document.getElementById('users-next').disabled=kullaniciSayfa===sayfaSayisi;
+  const tbody=document.getElementById('users-tbody');tbody.replaceChildren();
+  if(!liste.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=8;td.className='empty';td.textContent='Kullanıcı bulunamadı. Aramayı veya filtreyi değiştirebilirsiniz.';tr.appendChild(td);tbody.appendChild(tr);return;}
+  liste.slice(baslangic,baslangic+20).forEach(u=>{
+    const tr=document.createElement('tr');
+    const cell=()=>{const td=document.createElement('td');td.setAttribute('data-label',['Kullanıcı','E-posta','Kayıt','Giriş sayısı','Durum','Üyelik bitiş','Fatura','İşlemler'][tr.children.length]);tr.appendChild(td);return td;};
+    const person=document.createElement('div');person.className='users-person';
+    const avatar=document.createElement('div');avatar.className='user-avatar';avatar.textContent=String(u.ad||'?').charAt(0).toLocaleUpperCase('tr-TR');
+    const info=document.createElement('div'),name=document.createElement('strong'),hint=document.createElement('small');name.textContent=u.ad||'İsimsiz kullanıcı';hint.textContent='Hesap detayları ve üyelik';info.append(name,hint);person.append(avatar,info);cell().appendChild(person);
+    cell().textContent=u.email||'—';cell().textContent=kullaniciTarih(u.kayitTarihi);
+    const count=document.createElement('span');count.className='users-login-count';count.textContent=kullaniciGiris(u).toLocaleString('tr-TR');cell().appendChild(count);
+    const durum=document.createElement('span');durum.className='badge '+(u.premium?'badge-green':u.trialAktif?'badge-yellow':'badge-gray');durum.textContent=u.premium?'Premium':u.trialAktif?'Deneme · '+(u.trialKalanGun||0)+' gün':'Ücretsiz';cell().appendChild(durum);
+    cell().textContent=kullaniciTarih(u.uyelikBitis);
+    const fatura=document.createElement('span');fatura.className='users-fatura'+(u.fatura?'':' missing');fatura.textContent=u.fatura?'Bilgi mevcut':'Bilgi yok';cell().appendChild(fatura);
+    const btn=document.createElement('button');btn.type='button';btn.className='users-manage-btn';btn.textContent='Yönet →';btn.setAttribute('aria-label',(u.ad||u.email)+' kullanıcısını yönet');btn.setAttribute('aria-haspopup','dialog');btn.addEventListener('click',()=>kullaniciYonet(u.email));cell().appendChild(btn);tbody.appendChild(tr);
+  });
+}
 function filtrele(tip){
-  aktifFiltre=tip;
-  document.querySelectorAll('.stat').forEach(el=>el.classList.remove('active-filter'));
+  aktifFiltre=tip;kullaniciSayfa=1;
   const map={hepsi:'sf-hepsi',premium:'sf-premium',deneme:'sf-deneme',ucretsiz:'sf-ucretsiz',bitiyor:'sf-bitiyor'};
-  if(map[tip]) document.getElementById(map[tip]).classList.add('active-filter');
+  Object.entries(map).forEach(([key,id])=>{const el=document.getElementById(id);el.classList.toggle('active-filter',key===tip);el.setAttribute('aria-pressed',String(key===tip));});
   renderTablo();
 }
-
-function aramaYap(){ renderTablo(); }
-
-async function premiumDegistir(email,aktif){
-  if(!confirm(aktif?email+' kullanıcısına premium ver?':email+' kullanıcısının premiumunu al?')) return;
-  await adminFetch('/api/admin/premium',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,aktif})});
-  toast(aktif?'Premium verildi ✓':'Premium alındı','success');
-  yukleCullanicilari();
+function aramaYap(){kullaniciSayfa=1;renderTablo();}
+function kullaniciSayfaDegistir(adim){kullaniciSayfa+=adim;renderTablo();}
+function kullaniciFiltreTemizle(){document.getElementById('search-input').value='';document.getElementById('users-sort').value='yeni';filtrele('hepsi');}
+function uyelikTarihAlani(){document.getElementById('um-date-label').hidden=document.getElementById('um-membership').value!=='tarih';document.getElementById('um-date').required=!document.getElementById('um-date-label').hidden;}
+function kullaniciYonet(email){
+  const u=tumKullanicilar.find(x=>x.email===email);if(!u)return;
+  yonetilenEmail=email;document.getElementById('user-manage-name').textContent=u.ad||'İsimsiz kullanıcı';document.getElementById('user-manage-email').textContent=email;
+  document.getElementById('um-status').textContent=u.premium?'Premium':u.trialAktif?'Denemede':'Ücretsiz';
+  document.getElementById('um-registration').textContent=kullaniciTarih(u.kayitTarihi);document.getElementById('um-logins').textContent=kullaniciGiris(u);document.getElementById('um-expiry').textContent=kullaniciTarih(u.uyelikBitis);
+  document.getElementById('um-membership').value=u.premium?'koru':'365';document.getElementById('um-membership').querySelector('option[value="koru"]').disabled=!u.premium;
+  document.getElementById('um-date').value=u.uyelikBitis&&!Number.isNaN(new Date(u.uyelikBitis).getTime())?new Date(u.uyelikBitis).toISOString().slice(0,10):'';uyelikTarihAlani();
+  document.getElementById('um-password').value='';document.getElementById('um-feedback').textContent='';
+  document.getElementById('um-invoice-note').textContent=u.fatura?'Bu hesabın fatura bilgileri mevcut.':'Bu kullanıcı henüz fatura bilgisi eklememiş.';document.getElementById('um-invoice').disabled=!u.fatura;
+  const modal=document.getElementById('user-manage');if(!modal.open)modal.showModal();
 }
-
-async function sifreSifirla(email){
-  const yeni=prompt(email+' için yeni şifre girin (min 6 karakter):');
-  if(!yeni||yeni.length<6){if(yeni!==null)alert('Şifre en az 6 karakter olmalı');return;}
-  try{
-    const r=await adminFetch('/api/admin/sifre-sifirla',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,yeniSifre:yeni})});
-    const d=await r.json();
-    if(!r.ok||d.error){toast(d.error||'Şifre güncellenemedi','error');return;}
-    toast('Yeni şifre kaydedildi ✓','success');
-  }catch(e){toast('Şifre güncellenemedi','error');}
+async function kullaniciIslemKaydet(form,islem){
+  const buttons=form.querySelectorAll('button');buttons.forEach(b=>b.disabled=true);
+  const feedback=document.getElementById('um-feedback');feedback.textContent='Kaydediliyor...';feedback.style.color='var(--muted)';
+  try{await islem();feedback.textContent='Değişiklik kaydedildi.';feedback.style.color='var(--green)';await yukleCullanicilari();const u=tumKullanicilar.find(x=>x.email===yonetilenEmail);if(u){document.getElementById('um-status').textContent=u.premium?'Premium':u.trialAktif?'Denemede':'Ücretsiz';document.getElementById('um-expiry').textContent=kullaniciTarih(u.uyelikBitis);}}
+  catch(e){feedback.textContent=e.message||'İşlem tamamlanamadı.';feedback.style.color='var(--red)';}
+  finally{buttons.forEach(b=>b.disabled=false);}
 }
+document.getElementById('um-membership-form').addEventListener('submit',async e=>{
+  e.preventDefault();const u=tumKullanicilar.find(x=>x.email===yonetilenEmail);if(!u)return;
+  const secim=document.getElementById('um-membership').value;if(secim==='koru'){document.getElementById('um-feedback').textContent='Mevcut bitiş tarihi korunuyor; değişiklik yapılmadı.';return;}
+  let bitis=null;const aktif=secim!=='kaldir';
+  if(aktif){bitis=secim==='tarih'?new Date(document.getElementById('um-date').value+'T23:59:59+03:00'):new Date(Date.now()+Number(secim)*86400000);if(Number.isNaN(bitis.getTime())||bitis<=new Date()){document.getElementById('um-feedback').textContent='Gelecekte bir bitiş tarihi seçin.';return;}}
+  if(!confirm(u.email+' için '+(aktif?'premium bitişi '+kullaniciTarih(bitis)+' olarak kaydedilsin mi?':'premium üyeliği kaldırılsın mı?')))return;
+  const email=u.email;await kullaniciIslemKaydet(e.currentTarget,async()=>{const r=await adminFetch('/api/admin/premium',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,aktif,bitisTarihi:bitis?bitis.toISOString():null})});const d=await r.json();if(!r.ok||d.error)throw new Error(d.error||'Üyelik kaydedilemedi');});
+});
+document.getElementById('um-password-form').addEventListener('submit',async e=>{
+  e.preventDefault();const email=yonetilenEmail,yeni=document.getElementById('um-password').value;if(yeni.length<6)return;
+  if(!confirm(email+' kullanıcısının giriş şifresi değiştirilsin mi?'))return;
+  await kullaniciIslemKaydet(e.currentTarget,async()=>{const r=await adminFetch('/api/admin/sifre-sifirla',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,yeniSifre:yeni})});const d=await r.json();if(!r.ok||d.error)throw new Error(d.error||'Şifre kaydedilemedi');document.getElementById('um-password').value='';});
+});
+document.getElementById('um-invoice').addEventListener('click',()=>{const email=yonetilenEmail;document.getElementById('user-manage').close();faturaGoster(email);});
+document.getElementById('um-delete').addEventListener('click',()=>{const u=tumKullanicilar.find(x=>x.email===yonetilenEmail);if(u)kullaniciSil(u.email,u.ad||'Kullanıcı');});
 
 function faturaGoster(email) {
   const u = tumKullanicilar.find(x => x.email === email);
@@ -2280,9 +2326,7 @@ function faturaGoster(email) {
 
 async function kullaniciSil(email,ad){
   if(!confirm(ad+' ('+email+') silinsin mi? Bu işlem geri alınamaz!')) return;
-  await adminFetch('/api/admin/sil',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
-  toast('Kullanıcı silindi','info');
-  yukleCullanicilari();
+  try{const r=await adminFetch('/api/admin/sil',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});const d=await r.json();if(!r.ok||d.error)throw new Error(d.error||'Kullanıcı silinemedi');document.getElementById('user-manage').close();toast('Kullanıcı silindi','info');await yukleCullanicilari();}catch(e){toast(e.message||'Kullanıcı silinemedi','error');}
 }
 
 /* ─── BLOG ─── */
