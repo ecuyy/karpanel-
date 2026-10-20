@@ -2,15 +2,15 @@ const {test}=require('node:test');const assert=require('node:assert/strict');
 const vm=require('node:vm'),fs=require('node:fs'),path=require('node:path'),{Readable}=require('node:stream');
 
 function memory(){
- const stores={};const match=(r,q)=>Object.entries(q).every(([k,v])=>k==='$or'?v.some(x=>match(r,x)):v&&typeof v==='object'&&!(v instanceof Date)?Object.entries(v).every(([op,n])=>op==='$gt'?r[k]>n:op==='$lt'?r[k]<n:op==='$lte'?r[k]<=n:false):r[k]===v);
+ const stores={};const match=(r,q)=>Object.entries(q).every(([k,v])=>k==='$or'?v.some(x=>match(r,x)):k==='_id'?String(r[k])===String(v):v&&typeof v==='object'&&!(v instanceof Date)?Object.entries(v).every(([op,n])=>op==='$ne'?r[k]!==n:op==='$gt'?r[k]>n:op==='$lt'?r[k]<n:op==='$lte'?r[k]<=n:false):r[k]===v);
  return {stores,collection(name){const rows=stores[name]||(stores[name]=[]);const apply=(r,u,fresh)=>{if(fresh)Object.assign(r,u.$setOnInsert);Object.assign(r,u.$set||{});for(const [k,n]of Object.entries(u.$inc||{}))r[k]=(r[k]||0)+n;};return {
   async createIndex(){},
   async deleteOne(q){const i=rows.findIndex(r=>match(r,q));if(i>=0)rows.splice(i,1);return{};},
   async insertOne(r){const d={_id:'user-'+rows.length,...r};rows.push(d);return {insertedId:d._id};},
   async findOne(q){return rows.find(r=>match(r,q))||null;},
-  async updateOne(q,u,opt={}){let r=rows.find(x=>match(x,q));const fresh=!r;if(!r){if(!opt.upsert)return {};r={...q};rows.push(r);}apply(r,u,fresh);return{};},
+  async updateOne(q,u,opt={}){let r=rows.find(x=>match(x,q));const fresh=!r;if(!r){if(!opt.upsert)return {};r={_id:(rows.length+1).toString(16).padStart(24,'0'),...q};rows.push(r);}apply(r,u,fresh);return{};},
   async findOneAndUpdate(q,u){const r=rows.find(x=>match(x,q));if(!r)return null;apply(r,u,false);return {...r};},
-  find(){const c={sort(){return c;},async toArray(){return rows;}};return c;}
+  find(q={}){const c={sort(){return c;},project(){return c;},limit(){return c;},async toArray(){return rows.filter(r=>match(r,q));}};return c;}
  };}};
 }
 test('session survives page reload and server restart; logout revokes the cookie',async()=>{
@@ -85,12 +85,34 @@ test('member cards filter, search and sort safely; pagination resets on filterin
  context.filtrele('hepsi');const name=els['users-tbody'].children[0].children[0].children[0].children[1].children[0];assert.equal(name.textContent,members[0].ad);assert(!name.innerHTML);
  get('search-input').value='no-match';context.aramaYap();assert.equal(els['users-tbody'].children[0].children[0].colSpan,8);context.kullaniciFiltreTemizle();assert.equal(context.aktifFiltre,'hepsi');assert.equal(els['gosterilen-sayi'].textContent,25);
 });
+test('coupon article is public, has metadata and is included in sitemap',async()=>{
+ const a=await app();const route='/blog/trendyol-kupon-maliyeti-hesaplama';const r=await a.request(route);assert.equal(r.status,200);assert.match(r.body,/Trendyol Kupon Maliyeti/);assert.match(r.body,/36,67 TL/);assert.match(r.body,/<link rel="canonical"/);assert.match(r.body,/BlogPosting/);assert.match(r.body,/FAQPage/);assert.match(r.body,/akademi.trendyol.com/);assert.match((await a.request('/sitemap.xml')).body,/trendyol-kupon-maliyeti-hesaplama/);
+});
+test('draft and deleted seeded articles do not reappear in lists, pages or after restart',async()=>{
+ const a=await app(),slug='trendyol-kupon-maliyeti-hesaplama';const post=a.db.stores.blog.find(y=>y.slug===slug);assert(post);
+ const login=await a.request('/api/admin/giris',{sifre:'test-admin'}),headers={cookie:login.headers['Set-Cookie'].split(';')[0]};const payload={id:post._id,baslik:post.baslik,icerik:post.icerik,ozet:post.ozet,yayinda:false};
+ assert.equal((await a.request('/api/admin/blog',payload,headers)).status,200);assert.equal((await a.request('/blog/'+slug)).status,404);assert(!JSON.parse((await a.request('/api/blog')).body).some(y=>y.slug===slug));assert(!(await a.request('/sitemap.xml')).body.includes('/blog/'+slug));
+ assert.equal((await a.request('/api/admin/blog',{...payload,yayinda:true},headers)).status,200);assert.equal((await a.request('/blog/'+slug)).status,200);
+ assert.equal((await a.request('/api/admin/blog/sil',{id:post._id},headers)).status,200);const restarted=await app(a.db);assert.equal((await restarted.request('/blog/'+slug)).status,404);assert(!JSON.parse((await restarted.request('/api/admin/blog',undefined,headers)).body).some(y=>y.slug===slug));
+});
+test('blog editor filters and preview escape markup while keeping supported links',async()=>{
+ const a=await app(),html=(await a.request('/admin')).body;const fn=html.slice(html.indexOf('function blogEsc('),html.indexOf('function blogFiltrele('));const context={};vm.createContext(context);vm.runInContext(fn,context);
+ assert.equal(context.blogListeSec([{baslik:'Kupon rehberi',yayinda:true},{baslik:'İade rehberi',yayinda:false}],'taslak','iade').length,1);
+ assert.equal(context.blogListeSec([{baslik:'Kupon',yayinda:true}],'yayinda','eksik').length,0);
+ const rendered=context.blogIcerikRender('## Örnek\n\n<script>alert(1)</script>\n\n[Hesapla](/trendyol-komisyon-hesaplama)\n\n- Bir\n- İki');assert(!rendered.includes('<script>'));assert.match(rendered,/&lt;script&gt;/);assert.match(rendered,/<h2>Örnek<\/h2>/);assert.match(rendered,/href="\/trendyol-komisyon-hesaplama"/);assert.match(rendered,/<ul>/);
+});
+test('editor word counter and SEO preview use the actual form content',async()=>{
+ const a=await app(),html=(await a.request('/admin')).body;const code=html.slice(html.indexOf('function blogEsc('),html.indexOf("document.getElementById('blog-editor-form').addEventListener"));
+ const els={};const get=id=>els[id]||(els[id]={value:'',checked:true});get('blog-baslik').value='Kupon maliyeti';get('blog-icerik').value='Bir iki\nüç';
+ const ctx={document:{getElementById:get}};vm.createContext(ctx);vm.runInContext(code,ctx);ctx.blogYaziBilgisi();assert.match(els['blog-wordcount'].textContent,/3 kelime/);assert.match(els['blog-seo-url'].textContent,/kupon-maliyeti/);assert.match(els['blog-seo-title'].textContent,/KomisyonHesap/);assert.equal(els['blog-save'].textContent,'Yayınla');
+ get('blog-yayinda').checked=false;ctx.blogYaziBilgisi();assert.equal(els['blog-save'].textContent,'Taslağı kaydet');
+});
 function res(){return {headers:{},setHeader(k,v){this.headers[k]=v;},writeHead(status,headers){this.status=status;Object.assign(this.headers,headers);},end(body){this.body=body;this.done?.();}};}
 async function app(sharedDb){
  const db=sharedDb||memory(),notices=[];let handler;let payment={status:'success',paymentStatus:'SUCCESS',paymentId:'p-1'};
- const context={console:{log(){},error(){}},Buffer,URL,URLSearchParams,fetch:()=>{throw Error('No external mail in tests');},process:{env:{MONGO_URI:'test',ADMIN_SIFRE:'test-admin',IYZICO_API_KEY:'test',IYZICO_SECRET:'test'}},setTimeout,clearTimeout,setInterval:()=>({unref(){}}),require(name){
+ const context={__dirname,console:{log(){},error(){}},Buffer,URL,URLSearchParams,fetch:()=>{throw Error('No external mail in tests');},process:{env:{MONGO_URI:'test',ADMIN_SIFRE:'test-admin',IYZICO_API_KEY:'test',IYZICO_SECRET:'test'}},setTimeout,clearTimeout,setInterval:()=>({unref(){}}),require(name){
   if(name==='http')return {createServer(h){handler=h;return {listen(){}};}};
-  if(name==='mongodb')return {MongoClient:{connect:async()=>({db:()=>db})}};
+  if(name==='mongodb')return {ObjectId:class {constructor(v){this.v=v;}toString(){return this.v;}static isValid(v){return /^[a-f0-9]{24}$/.test(v);}},MongoClient:{connect:async()=>({db:()=>db})}};
   if(name==='iyzipay')return function(){this.checkoutForm={retrieve(_p,cb){cb(null,payment);}};};
   if(name==='./member-notifications')return {createMemberNotifications:()=>({flush:async()=>{},enqueue:async(...args)=>notices.push(args)})};
   return require(name.startsWith('./')?path.join(__dirname,name):name);

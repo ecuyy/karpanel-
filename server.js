@@ -179,7 +179,7 @@ function editorialListItems() {
 function mergeEditorialList(yazilar) {
   const birlesik = new Map(editorialListItems().map(post => [post.slug, post]));
   (yazilar || []).forEach(post => birlesik.set(post.slug, post));
-  return Array.from(birlesik.values()).sort((a, b) => new Date(b.tarih) - new Date(a.tarih));
+  return Array.from(birlesik.values()).filter(post=>post.yayinda&&!post.deleted).sort((a, b) => new Date(b.tarih) - new Date(a.tarih));
 }
 
 // iyzico yapılandırması (resmi npm paketi)
@@ -446,7 +446,7 @@ const server = http.createServer(async (req, res) => {
     try {
       await waitForDb();
       if (db) {
-        const dbYazilari = await db.collection('blog').find({ yayinda: true }).project({ slug: 1, guncelleme: 1, tarih: 1 }).sort({ tarih: -1 }).limit(500).toArray();
+        const dbYazilari = await db.collection('blog').find({}).project({ slug: 1, guncelleme: 1, tarih: 1, yayinda: 1, deleted: 1 }).sort({ tarih: -1 }).toArray();
         yazilar = mergeEditorialList(dbYazilari);
       }
     } catch (e) {}
@@ -1068,8 +1068,8 @@ async function sifirla(){
   if (parsed.pathname === '/api/blog' && req.method === 'GET') {
     await waitForDb();
     let yazilar = [];
-    if (db) yazilar = await db.collection('blog').find({ yayinda: true })
-      .project({ icerik: 0, faq: 0 }).sort({ tarih: -1 }).limit(30).toArray();
+    if (db) yazilar = await db.collection('blog').find({})
+      .project({ icerik: 0, faq: 0 }).sort({ tarih: -1 }).toArray();
     yazilar = mergeEditorialList(yazilar).slice(0, 30);
     res.writeHead(200, { 'Content-Type': 'application/json', 'X-Blog-Publishing': 'repository-v1' });
     res.end(JSON.stringify(yazilar));
@@ -1086,7 +1086,7 @@ async function sifirla(){
   if (parsed.pathname === '/blog' && req.method === 'GET') {
     let yazilar = [];
     await waitForDb();
-    if (db) yazilar = await db.collection('blog').find({ yayinda: true }).project({ icerik: 0 }).sort({ tarih: -1 }).limit(50).toArray();
+    if (db) yazilar = await db.collection('blog').find({}).project({ icerik: 0 }).sort({ tarih: -1 }).toArray();
     yazilar = mergeEditorialList(yazilar).slice(0, 50);
     const kartlar = yazilar.length ? yazilar.map(y => `
       <a href="/blog/${blogEsc(y.slug)}" style="display:block;background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;box-shadow:0 10px 30px -20px rgba(0,0,0,.3);transition:transform .18s">
@@ -1153,8 +1153,10 @@ async function sifirla(){
     }
     let y = null;
     await waitForDb();
-    if (db) y = await db.collection('blog').findOne({ slug, yayinda: true });
-    if (!y) y = EDITORIAL_POSTS.find(post => post.slug === slug && post.yayinda) || null;
+    let dbKaydi=null;
+    if (db) dbKaydi=await db.collection('blog').findOne({slug});
+    if(dbKaydi)y=dbKaydi.yayinda&&!dbKaydi.deleted?dbKaydi:null;
+    else y=EDITORIAL_POSTS.find(post=>post.slug===slug&&post.yayinda)||null;
     if (!y) {
       res.setHeader('X-Robots-Tag', 'noindex, follow');
       res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
@@ -1212,7 +1214,7 @@ async function sifirla(){
   if (parsed.pathname === '/api/admin/blog' && req.method === 'GET') {
     if (!(await adminOturumGecerli(req))) { res.writeHead(401); res.end(JSON.stringify({ error: 'Yetkisiz' })); return; }
     if (!db) { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify([])); return; }
-    const yazilar = await db.collection('blog').find({}).sort({ tarih: -1 }).toArray();
+    const yazilar = await db.collection('blog').find({deleted:{$ne:true}}).sort({ tarih: -1 }).toArray();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(yazilar));
     return;
@@ -1228,6 +1230,9 @@ async function sifirla(){
     if (body.id) {
       // güncelle
       const { ObjectId } = require('mongodb');
+      if(typeof body.id!=='string'||!ObjectId.isValid(body.id)){res.writeHead(400,{'Content-Type':'application/json'});res.end(JSON.stringify({error:'Geçersiz yazı kimliği'}));return;}
+      const kayit=await db.collection('blog').findOne({_id:new ObjectId(body.id)});
+      if(!kayit||kayit.deleted){res.writeHead(404,{'Content-Type':'application/json'});res.end(JSON.stringify({error:'Yazı bulunamadı'}));return;}
       await db.collection('blog').updateOne({ _id: new ObjectId(body.id) }, { $set: {
         baslik, ozet: body.ozet || '', icerik: body.icerik, kapak: body.kapak || '',
         yayinda: body.yayinda !== false, guncelleme: new Date()
@@ -1249,7 +1254,11 @@ async function sifirla(){
     const body = await getBody(req);
     if (!(await adminOturumGecerli(req))) { res.writeHead(401); res.end(JSON.stringify({ error: 'Yetkisiz' })); return; }
     const { ObjectId } = require('mongodb');
-    await db.collection('blog').deleteOne({ _id: new ObjectId(body.id) });
+    if(typeof body.id!=='string'||!ObjectId.isValid(body.id)){res.writeHead(400,{'Content-Type':'application/json'});res.end(JSON.stringify({error:'Geçersiz yazı kimliği'}));return;}
+    // Tombstone keeps repository-seeded content from reappearing after removal.
+    const kayit=await db.collection('blog').findOne({_id:new ObjectId(body.id)});
+    if(!kayit||kayit.deleted){res.writeHead(404,{'Content-Type':'application/json'});res.end(JSON.stringify({error:'Yazı bulunamadı'}));return;}
+    await db.collection('blog').updateOne({_id:new ObjectId(body.id)},{$set:{yayinda:false,deleted:true,guncelleme:new Date()}});
     res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true })); return;
   }
 
@@ -1748,6 +1757,13 @@ tr:hover td{background:#FCF8F4}
 @media(max-width:1120px){#page-kullanicilar .stats{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:650px){#page-kullanicilar .stats{grid-template-columns:repeat(2,minmax(0,1fr))}#page-kullanicilar .stats .stat:first-child{grid-column:1/-1}#page-kullanicilar .toolbar{align-items:stretch}#page-kullanicilar .search-box{flex-basis:100%}.users-sort{flex:1}.users-sort select{width:100%}.users-pagination{flex-direction:column;align-items:flex-start}.user-manage-content{padding:18px 16px}.user-profile-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.user-danger{align-items:flex-start}}
 
 @media(max-width:650px){#page-kullanicilar .users-table-scroll table{min-width:0}#page-kullanicilar .users-table-scroll thead{display:none}#page-kullanicilar .users-table-scroll tbody,#page-kullanicilar .users-table-scroll tr{display:block}#page-kullanicilar .users-table-scroll tr{padding:12px 16px;border-bottom:1px solid var(--border)}#page-kullanicilar .users-table-scroll td{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 0;border:0;overflow-wrap:anywhere;font-size:12px}#page-kullanicilar .users-table-scroll td::before{content:attr(data-label);font-size:10px;font-weight:600;color:var(--muted);white-space:nowrap}#page-kullanicilar .users-table-scroll td:first-child::before,#page-kullanicilar .users-table-scroll td:last-child::before{display:none}#page-kullanicilar .users-manage-btn{width:100%}.users-person strong{max-width:240px}}
+
+.blog-overview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:0 0 22px}.blog-overview-card{font-family:inherit;text-align:left;border:1px solid var(--border);border-radius:18px;background:#fff;padding:18px 22px;color:var(--text);cursor:pointer;position:relative}.blog-overview-card span{font-size:12px;font-weight:600;color:var(--muted)}.blog-overview-card strong{display:block;font-size:29px;letter-spacing:-1px;margin:10px 0 5px}.blog-overview-card small{font-size:11px;color:var(--muted)}.blog-overview-card.selected{border-color:#F4B17B;background:linear-gradient(135deg,#FFF7EF,#fff)}.blog-overview-card.selected:after{content:'✓';position:absolute;right:18px;top:18px;color:var(--or2);font-weight:800}.blog-overview-card:hover{border-color:var(--or)}
+.blog-workspace{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:22px;align-items:start}.blog-panel{background:#fff;border:1px solid var(--border);border-radius:20px;padding:22px;min-width:0;box-shadow:0 9px 24px -22px #18202f44}.blog-panel-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:22px}.blog-panel-heading h2{font-size:16px;margin:0 0 6px}.blog-panel-heading p{font-size:12px;color:var(--muted);margin:0;line-height:1.5}
+#page-blog .field{margin-bottom:18px}#page-blog label{font-size:11px;font-weight:600;color:#526075;display:block;margin-bottom:8px}#page-blog input:not([type=checkbox]),#page-blog textarea{display:block;width:100%;padding:12px 14px;border:1px solid #DDE2EA;border-radius:11px;font-family:inherit;font-size:13px;color:var(--text);background:#F8FAFC;line-height:1.65}#page-blog textarea{resize:vertical}#page-blog input:focus,#page-blog textarea:focus{outline:0;border-color:var(--or);box-shadow:0 0 0 3px #F27A1A16}.blog-format-help,.blog-field-help,.blog-wordcount{font-size:10px;color:var(--muted);line-height:1.7}.blog-format-help{padding:9px 12px;background:#F4F6FA;border-radius:9px;margin-bottom:8px}.blog-wordcount{margin-top:7px;text-align:right}.blog-field-help{display:block;margin-top:5px}.blog-seo{padding:16px;border:1px dashed #D6DFEB;border-radius:14px;background:#FBFCFE;margin-bottom:18px;overflow-wrap:anywhere}.blog-seo-label{font-size:9px;font-weight:800;letter-spacing:.12em;color:#7F8C9F;margin-bottom:12px}.blog-seo-url{font-size:10px;color:#5B7063;margin-bottom:7px}.blog-seo-title{font-size:16px;color:#2956B1;font-weight:600;line-height:1.4}.blog-seo p{font-size:12px;line-height:1.6;color:#596478;margin:7px 0 10px}.blog-seo small{font-size:10px;color:#8690A1}
+#page-blog .blog-publish-toggle{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid #E5EAF1;border-radius:12px;margin-bottom:18px;cursor:pointer}.blog-publish-toggle input{width:18px;height:18px;accent-color:var(--or)}.blog-publish-toggle strong{display:block;font-size:12px}.blog-publish-toggle small{display:block;font-size:11px;color:var(--muted);margin-top:5px;font-weight:400}.blog-editor-actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.blog-editor-feedback{font-size:12px;line-height:1.6;min-height:20px;color:var(--green);margin:12px 0 0}.blog-library-search{margin-bottom:12px}.blog-library-list{max-height:1000px;overflow-y:auto}.blog-entry{padding:20px 0;border-bottom:1px solid #EDF0F4}.blog-entry:first-child{padding-top:8px}.blog-entry:last-child{border-bottom:0}.blog-entry-heading{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.blog-entry h3{font-size:14px;line-height:1.55;margin:0;color:#253147;overflow-wrap:anywhere}.blog-entry-excerpt{font-size:12px;color:var(--muted);line-height:1.7;margin:9px 0}.blog-entry-meta{font-size:10px;color:#8A94A4;margin:9px 0 13px;line-height:1.6;overflow-wrap:anywhere}.blog-entry-actions{display:flex;gap:7px;flex-wrap:wrap}.blog-entry-actions button,.blog-entry-actions a{font-family:inherit;font-size:11px;border-radius:8px;border:1px solid #DDE2EA;background:#fff;padding:7px 10px;text-decoration:none;color:#526075;font-weight:600;cursor:pointer}.blog-entry-actions .blog-edit{background:#FFF4E8;color:#AE530B;border-color:#F5D6B8}.blog-entry-actions .blog-delete{color:#C14444;border-color:#F1D6D6;background:#FFF9F9}#page-blog button:focus-visible,#blog-preview button:focus-visible{outline:3px solid #F6B680;outline-offset:3px}.blog-entry .badge{font-size:9px;white-space:nowrap;padding:4px 7px;margin-top:3px}
+.blog-preview-content{padding:26px;color:#374151;font-size:15px;line-height:1.9}.blog-preview-content h1{font-size:28px;line-height:1.35;letter-spacing:-.5px;margin:0 0 16px;color:var(--text)}.blog-preview-description{color:var(--muted);padding-bottom:18px;margin-bottom:20px;border-bottom:1px solid var(--border)}.blog-preview-body h2{font-size:21px;margin:28px 0 12px;line-height:1.4}.blog-preview-body h3{font-size:17px;margin:22px 0 10px}.blog-preview-body p{margin:0 0 16px}.blog-preview-body ul{padding-left:22px;margin-bottom:18px}.blog-preview-body a{color:var(--or2)}
+@media(max-width:1150px){.blog-workspace{grid-template-columns:1fr}.blog-library-list{max-height:750px}}@media(max-width:650px){.blog-panel{padding:18px 16px}.blog-overview{gap:9px}.blog-overview-card{padding:14px 12px;border-radius:14px}.blog-overview-card span{font-size:11px}.blog-overview-card strong{font-size:25px}.blog-overview-card small{font-size:9px}.blog-overview-card.selected:after{right:10px;top:10px;font-size:10px}.blog-preview-content{padding:20px 16px}}
 </style>
 </head>
 <body>
@@ -1897,47 +1913,20 @@ tr:hover td{background:#FCF8F4}
 
     <!-- Blog Sayfası -->
     <div id="page-blog" style="display:none">
-      <div class="page-header">
-        <div class="page-title">Blog</div>
-        <div class="page-sub">Yazı ekle, düzenle ve yayınla — SEO ile müşteri çek</div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start">
-
-        <!-- Yazma formu -->
-        <div class="table-wrap" style="padding:1.5rem">
-          <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:1rem" id="blog-form-baslik">✍️ Yeni Yazı</div>
-          <input type="hidden" id="blog-id">
-          <div class="field" style="margin-bottom:12px">
-            <label>Başlık *</label>
-            <input type="text" id="blog-baslik" placeholder="Örn: Trendyol Komisyon Oranları 2026">
-          </div>
-          <div class="field" style="margin-bottom:12px">
-            <label>Özet (liste ve Google için kısa açıklama)</label>
-            <input type="text" id="blog-ozet" placeholder="1-2 cümlelik kısa özet">
-          </div>
-          <div class="field" style="margin-bottom:12px">
-            <label>Kapak görsel linki (opsiyonel)</label>
-            <input type="text" id="blog-kapak" placeholder="https://...">
-          </div>
-          <div class="field" style="margin-bottom:12px">
-            <label>İçerik * — boş satır = yeni paragraf, "## " = başlık, "- " = liste</label>
-            <textarea id="blog-icerik" rows="12" placeholder="Yazınızı buraya yazın...&#10;&#10;## Alt Başlık&#10;&#10;Paragraf metni...&#10;&#10;- Madde 1&#10;- Madde 2" style="width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:12px;background:rgba(255,255,255,.04);color:var(--text);font-family:inherit;font-size:14px;line-height:1.6;outline:none;resize:vertical"></textarea>
-          </div>
-          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-bottom:16px;cursor:pointer">
-            <input type="checkbox" id="blog-yayinda" checked style="width:16px;height:16px;accent-color:var(--or)"> Hemen yayınla (kapalıysa taslak olur)
-          </label>
-          <div style="display:flex;gap:10px">
-            <button class="btn-login" style="margin:0;flex:1" onclick="blogKaydet()">💾 Kaydet</button>
-            <button class="btn-refresh" onclick="blogTemizle()">Temizle</button>
-          </div>
-        </div>
-
-        <!-- Yazı listesi -->
-        <div class="table-wrap">
-          <div class="table-info"><span>Yazılar: <strong id="blog-sayi">0</strong></span></div>
-          <div id="blog-liste" style="max-height:640px;overflow-y:auto"><div class="loading">⏳ Yükleniyor...</div></div>
-        </div>
-
+      <div class="analytics-heading"><div><div class="analytics-eyebrow">İÇERİK MERKEZİ</div><div class="page-title">Blog yönetimi</div><div class="page-sub">Trendyol satıcılarına ulaşan içerikleri hazırlayın ve yönetin.</div></div><button type="button" class="analytics-refresh" onclick="yukleBloglar()">↻ Yazıları yenile</button></div>
+      <div class="blog-overview"><button type="button" class="blog-overview-card selected" id="blog-filter-hepsi" onclick="blogFiltrele('hepsi')" aria-pressed="true"><span>Tüm yazılar</span><strong id="blog-toplam">—</strong><small>İçerik arşiviniz</small></button><button type="button" class="blog-overview-card" id="blog-filter-yayinda" onclick="blogFiltrele('yayinda')" aria-pressed="false"><span>Yayında</span><strong id="blog-yayindaki">—</strong><small>Ziyaretçilere açık</small></button><button type="button" class="blog-overview-card" id="blog-filter-taslak" onclick="blogFiltrele('taslak')" aria-pressed="false"><span>Taslaklar</span><strong id="blog-taslak">—</strong><small>Yayınlanmayı bekleyen</small></button></div>
+      <div class="blog-workspace">
+        <section class="blog-panel" id="blog-editor" aria-labelledby="blog-form-baslik"><div class="blog-panel-heading"><div><h2 id="blog-form-baslik">Yeni yazı</h2><p>İçeriği hazırlayın, önizleyin ve yayınlayın.</p></div><button type="button" class="users-clear" onclick="blogTemizle()">＋ Yeni yazı</button></div>
+          <form id="blog-editor-form"><input type="hidden" id="blog-id">
+          <div class="field"><label for="blog-baslik">Yazı başlığı</label><input type="text" id="blog-baslik" required placeholder="Trendyol satıcısının sorusunu başlığa taşıyın"></div>
+          <div class="field"><label for="blog-ozet">Kısa açıklama</label><textarea id="blog-ozet" rows="2" placeholder="Yazının ne kazandıracağını 1–2 cümlede anlatın."></textarea><small class="blog-field-help" id="blog-description-count">0 karakter</small></div>
+          <div class="field"><label for="blog-kapak">Kapak görseli URL’si · isteğe bağlı</label><input type="url" id="blog-kapak" placeholder="https://..."></div>
+          <div class="field"><label for="blog-icerik">Yazı içeriği</label><div class="blog-format-help">## Alt başlık &nbsp; · &nbsp; - Liste maddesi &nbsp; · &nbsp; Boş satır: yeni paragraf</div><textarea id="blog-icerik" rows="15" required placeholder="Okuyucunun sorunuyla başlayın, örnekle açıklayın, uygulanabilir adımlarla bitirin."></textarea><div class="blog-wordcount" id="blog-wordcount">0 kelime · 0 dk okuma</div></div>
+          <div class="blog-seo"><div class="blog-seo-label">ARAMA SONUCU ÖNİZLEMESİ</div><div class="blog-seo-url" id="blog-seo-url">komisyonhesap.com/blog/...</div><div class="blog-seo-title" id="blog-seo-title">Yazınızın başlığı burada görünecek</div><p id="blog-seo-description">Kısa açıklamanızı ekleyin.</p><small>Önizleme fikir vermek içindir; Google başlığı ve açıklamayı değiştirebilir.</small></div>
+          <label class="blog-publish-toggle"><input type="checkbox" id="blog-yayinda" checked><span><strong>Yayına açık</strong><small>Kapalıysa yazı taslak olarak kaydedilir.</small></span></label>
+          <div class="blog-editor-actions"><button type="submit" class="user-save" id="blog-save">Yayınla</button><button type="button" class="user-secondary" onclick="blogOnizle()">Önizle</button><button type="button" class="users-clear" onclick="blogTemizle()">Formu temizle</button></div><p class="blog-editor-feedback" id="blog-feedback" role="status"></p></form>
+        </section>
+        <section class="blog-panel" aria-labelledby="blog-library-title"><div class="blog-panel-heading"><div><h2 id="blog-library-title">Yazı arşivi</h2><p><span id="blog-sayi">0</span> yazı gösteriliyor</p></div><span class="analytics-tag" id="blog-filter-label">TÜMÜ</span></div><div class="blog-library-search"><input type="search" id="blog-search" aria-label="Blog yazısı ara" placeholder="Başlık veya içerikte ara..." oninput="blogListeRender()"></div><div id="blog-liste" class="blog-library-list"><div class="loading">Yazılar yükleniyor...</div></div></section>
       </div>
     </div>
   </div>
@@ -1961,6 +1950,7 @@ tr:hover td{background:#FCF8F4}
     <p id="um-feedback" class="user-manage-status" role="status"></p>
   </div>
 </dialog>
+<dialog id="blog-preview" class="analytics-detail" aria-labelledby="blog-preview-label"><div class="analytics-detail-header"><div><h2 id="blog-preview-label">Yazı önizlemesi</h2><p>İçerik önizlemesidir; bu işlem yazıyı yayınlamaz.</p></div><button type="button" class="analytics-detail-close" aria-label="Önizlemeyi kapat" onclick="document.getElementById('blog-preview').close()">×</button></div><article class="blog-preview-content"><h1 id="blog-preview-title"></h1><p class="blog-preview-description" id="blog-preview-description"></p><div class="blog-preview-body" id="blog-preview-body"></div></article></dialog>
 <!-- FATURA DETAY MODAL -->
 <div id="fatura-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;align-items:center;justify-content:center;padding:1rem">
   <div style="background:linear-gradient(162deg,#221A13,#15110D);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:2rem;width:100%;max-width:480px;box-shadow:0 44px 96px -44px rgba(0,0,0,.9)">
@@ -2059,6 +2049,7 @@ function adminOturumuKapat(){
   const detay=document.getElementById('ist-detay-modal');if(detay.open)detay.close();
   document.getElementById('fatura-modal').style.display='none';
   const yonetim=document.getElementById('user-manage');if(yonetim.open)yonetim.close();
+  const blogOnizleme=document.getElementById('blog-preview');if(blogOnizleme.open)blogOnizleme.close();
   tumKullanicilar=[];
 }
 async function adminCikis(){
@@ -2330,71 +2321,88 @@ async function kullaniciSil(email,ad){
 }
 
 /* ─── BLOG ─── */
-var blogState=[];
-function blogEscJs(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+${blogEsc.toString()}
+${blogInlineRender.toString()}
+${blogIcerikRender.toString()}
+${slugify.toString()}
+${blogDuzMetin.toString()}
+${blogSeoBaslik.toString()}
+${blogSeoAciklama.toString()}
+var blogState=[],blogAktifFiltre='hepsi',blogDegisti=false,blogKaydediliyor=false;
+function blogListeSec(liste,filtre,arama){
+  const q=String(arama||'').trim().toLocaleLowerCase('tr-TR');
+  return liste.filter(y=>(filtre==='hepsi'||(filtre==='yayinda'?y.yayinda!==false:y.yayinda===false))&&(!q||[y.baslik,y.ozet,y.icerik].join(' ').toLocaleLowerCase('tr-TR').includes(q)));
+}
+function blogFiltrele(tip){
+  blogAktifFiltre=tip;
+  ['hepsi','yayinda','taslak'].forEach(t=>{const el=document.getElementById('blog-filter-'+t);el.classList.toggle('selected',t===tip);el.setAttribute('aria-pressed',String(t===tip));});blogListeRender();
+}
 async function yukleBloglar(){
-  var box=document.getElementById('blog-liste');
-  box.innerHTML='<div class="loading">⏳ Yükleniyor...</div>';
-  try{
-    var r=await adminFetch('/api/admin/blog');
-    blogState=await r.json();
-    document.getElementById('blog-sayi').textContent=blogState.length;
-    if(!blogState.length){box.innerHTML='<div class="empty">Henüz yazı yok. Soldaki formdan ilk yazını ekle ✍️</div>';return;}
-    box.innerHTML=blogState.map(function(y){
-      var tarih=y.tarih?new Date(y.tarih).toLocaleDateString('tr-TR'):'';
-      var durum=y.yayinda!==false
-        ? '<span class="badge badge-green">● Yayında</span>'
-        : '<span class="badge badge-gray">Taslak</span>';
-      return '<div style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.05)">'
-        +'<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px">'
-        +'<span style="font-weight:700;color:#fff;font-size:14px">'+blogEscJs(y.baslik)+'</span>'+durum+'</div>'
-        +'<div style="font-size:12px;color:var(--muted);margin-bottom:10px">'+tarih+' · /blog/'+blogEscJs(y.slug)+'</div>'
-        +'<div class="actions">'
-        +'<button class="action-btn blue" onclick="blogDuzenle(\\''+y._id+'\\')">✏️ Düzenle</button>'
-        +'<a class="action-btn green" href="/blog/'+encodeURIComponent(y.slug)+'" target="_blank" style="text-decoration:none">👁️ Gör</a>'
-        +'<button class="action-btn red" onclick="blogSil(\\''+y._id+'\\')">🗑️ Sil</button>'
-        +'</div></div>';
-    }).join('');
-  }catch(e){box.innerHTML='<div class="empty">Yazılar yüklenemedi</div>';}
+  const box=document.getElementById('blog-liste');box.innerHTML='<div class="loading">Yazılar yükleniyor...</div>';
+  try{const r=await adminFetch('/api/admin/blog');const d=await r.json();if(!r.ok||!Array.isArray(d))throw new Error('Yazılar yüklenemedi');blogState=d;blogListeRender();}
+  catch(e){box.textContent='Yazılar yüklenemedi. Yenile düğmesiyle tekrar deneyin.';}
+}
+function blogListeRender(){
+  document.getElementById('blog-toplam').textContent=blogState.length;
+  document.getElementById('blog-yayindaki').textContent=blogState.filter(y=>y.yayinda!==false).length;
+  document.getElementById('blog-taslak').textContent=blogState.filter(y=>y.yayinda===false).length;
+  const liste=blogListeSec(blogState,blogAktifFiltre,document.getElementById('blog-search').value);
+  document.getElementById('blog-sayi').textContent=liste.length;document.getElementById('blog-filter-label').textContent={hepsi:'TÜMÜ',yayinda:'YAYINDA',taslak:'TASLAK'}[blogAktifFiltre];
+  const box=document.getElementById('blog-liste');box.replaceChildren();
+  if(!liste.length){const empty=document.createElement('p');empty.className='empty';empty.textContent='Bu filtreyle eşleşen yazı bulunmuyor.';box.appendChild(empty);return;}
+  liste.forEach(y=>{
+    const card=document.createElement('article');card.className='blog-entry';const heading=document.createElement('div');heading.className='blog-entry-heading';const title=document.createElement('h3');title.textContent=y.baslik;const badge=document.createElement('span');badge.className='badge '+(y.yayinda!==false?'badge-green':'badge-gray');badge.textContent=y.yayinda!==false?'Yayında':'Taslak';heading.append(title,badge);
+    const excerpt=document.createElement('p');excerpt.className='blog-entry-excerpt';excerpt.textContent=String(y.ozet||'Özet eklenmemiş.').slice(0,180);
+    const meta=document.createElement('div');meta.className='blog-entry-meta';meta.textContent=kullaniciTarih(y.guncelleme||y.tarih)+' · /blog/'+(y.slug||'');
+    const actions=document.createElement('div');actions.className='blog-entry-actions';
+    const btn=(text,fn,cls)=>{const b=document.createElement('button');b.type='button';b.className=cls||'';b.textContent=text;b.addEventListener('click',fn);actions.appendChild(b);return b;};
+    btn('Düzenle',()=>blogDuzenle(y._id),'blog-edit');btn('Önizle',()=>blogOnizle(y));
+    if(y.yayinda!==false){const link=document.createElement('a');link.href='/blog/'+encodeURIComponent(y.slug);link.target='_blank';link.rel='noopener noreferrer';link.textContent='Sitede gör ↗';actions.appendChild(link);}
+    btn(y.yayinda!==false?'Taslağa al':'Yayınla',()=>blogDurumDegistir(y._id));btn('Sil',()=>blogSil(y._id),'blog-delete');card.append(heading,excerpt,meta,actions);box.appendChild(card);
+  });
+}
+function blogFormVerisi(){return {id:document.getElementById('blog-id').value||undefined,baslik:document.getElementById('blog-baslik').value.trim(),ozet:document.getElementById('blog-ozet').value.trim(),kapak:document.getElementById('blog-kapak').value.trim(),icerik:document.getElementById('blog-icerik').value.trim(),yayinda:document.getElementById('blog-yayinda').checked};}
+function blogYaziBilgisi(){
+  const p=blogFormVerisi(),kelime=p.icerik.trim()?p.icerik.trim().split(/\\s+/).length:0;
+  document.getElementById('blog-wordcount').textContent=kelime+' kelime · '+(kelime?Math.max(1,Math.ceil(kelime/200)):0)+' dk okuma';
+  document.getElementById('blog-description-count').textContent=p.ozet.length+' karakter';
+  document.getElementById('blog-seo-title').textContent=p.baslik?blogSeoBaslik(p.baslik):'Yazınızın başlığı burada görünecek';
+  document.getElementById('blog-seo-description').textContent=p.ozet||p.icerik?blogSeoAciklama(p):'Kısa açıklamanızı ekleyin.';
+  const eski=blogState.find(y=>String(y._id)===p.id);document.getElementById('blog-seo-url').textContent='komisyonhesap.com/blog/'+(eski?eski.slug:p.baslik?slugify(p.baslik):'...');
+  document.getElementById('blog-save').textContent=p.id?'Değişiklikleri kaydet':p.yayinda?'Yayınla':'Taslağı kaydet';
+}
+function blogOnizle(y){
+  const p=y||blogFormVerisi();if(!p.baslik&&!p.icerik){document.getElementById('blog-feedback').textContent='Önizleme için başlık veya içerik ekleyin.';return;}
+  document.getElementById('blog-preview-title').textContent=p.baslik||'Başlıksız yazı';document.getElementById('blog-preview-description').textContent=p.ozet||'';
+  document.getElementById('blog-preview-body').innerHTML=blogIcerikRender(p.icerik||'');document.getElementById('blog-preview').showModal();
 }
 async function blogKaydet(){
-  var baslik=document.getElementById('blog-baslik').value.trim();
-  var icerik=document.getElementById('blog-icerik').value.trim();
-  if(!baslik||!icerik){alert('Başlık ve içerik zorunlu');return;}
-  var payload={id:document.getElementById('blog-id').value||undefined,
-    baslik:baslik,ozet:document.getElementById('blog-ozet').value.trim(),
-    kapak:document.getElementById('blog-kapak').value.trim(),icerik:icerik,
-    yayinda:document.getElementById('blog-yayinda').checked};
-  try{
-    var r=await adminFetch('/api/admin/blog',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    var d=await r.json();
-    if(d.error){alert(d.error);return;}
-    toast(payload.id?'Yazı güncellendi ✓':'Yazı yayınlandı ✓','success');
-    blogTemizle(); yukleBloglar();
-  }catch(e){toast('Kaydedilemedi','error');}
+  if(blogKaydediliyor)return;const payload=blogFormVerisi();if(!payload.baslik||!payload.icerik)return;
+  blogKaydediliyor=true;const kontroller=Array.from(document.getElementById('blog-editor-form').elements);const oncekiDurum=kontroller.map(el=>el.disabled);kontroller.forEach(el=>el.disabled=true);const feedback=document.getElementById('blog-feedback');feedback.textContent='Kaydediliyor...';feedback.style.color='var(--muted)';
+  try{const r=await adminFetch('/api/admin/blog',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const d=await r.json();if(!r.ok||d.error)throw new Error(d.error||'Yazı kaydedilemedi');blogDegisti=false;await yukleBloglar();const y=payload.id?blogState.find(y=>String(y._id)===payload.id):blogState.find(y=>y.slug===d.slug);if(y)blogFormDoldur(y);feedback.textContent=payload.yayinda?'Yazı kaydedildi ve yayında.':'Yazı taslak olarak kaydedildi.';feedback.style.color='var(--green)';}
+  catch(e){feedback.textContent=e.message||'Kaydedilemedi. Formunuz korunuyor.';feedback.style.color='var(--red)';}
+  finally{blogKaydediliyor=false;kontroller.forEach((el,i)=>el.disabled=oncekiDurum[i]);blogYaziBilgisi();}
 }
-function blogDuzenle(id){
-  var y=blogState.find(function(x){return x._id===id;}); if(!y)return;
-  document.getElementById('blog-id').value=y._id;
-  document.getElementById('blog-baslik').value=y.baslik||'';
-  document.getElementById('blog-ozet').value=y.ozet||'';
-  document.getElementById('blog-kapak').value=y.kapak||'';
-  document.getElementById('blog-icerik').value=y.icerik||'';
-  document.getElementById('blog-yayinda').checked=y.yayinda!==false;
-  document.getElementById('blog-form-baslik').textContent='✏️ Yazıyı Düzenle';
-  window.scrollTo({top:0,behavior:'smooth'});
+function blogFormDoldur(y){
+  document.getElementById('blog-id').value=y._id||'';['baslik','ozet','kapak','icerik'].forEach(k=>document.getElementById('blog-'+k).value=y[k]||'');document.getElementById('blog-yayinda').checked=y.yayinda!==false;document.getElementById('blog-form-baslik').textContent=y._id?'Yazıyı düzenle':'Yeni yazı';document.getElementById('blog-feedback').textContent='';blogDegisti=false;blogYaziBilgisi();
+}
+function blogDuzenle(id){if(blogKaydediliyor)return;if(blogDegisti&&!confirm('Kaydedilmemiş değişiklikler var. Diğer yazıyı açmak için vazgeçilsin mi?'))return;const y=blogState.find(y=>y._id===id);if(!y)return;blogFormDoldur(y);document.getElementById('blog-editor').scrollIntoView({behavior:'smooth',block:'start'});document.getElementById('blog-baslik').focus({preventScroll:true});}
+function blogTemizle(){if(blogKaydediliyor)return;if(blogDegisti&&!confirm('Kaydedilmemiş değişiklikler silinsin mi?'))return;blogFormDoldur({yayinda:true});}
+async function blogDurumDegistir(id){
+  const y=blogState.find(y=>y._id===id);if(!y||blogKaydediliyor)return;
+  if(String(document.getElementById('blog-id').value)===String(id)&&blogDegisti){toast('Önce formdaki değişiklikleri kaydedin.','error');return;}
+  const yayinda=y.yayinda===false;if(!confirm('“'+y.baslik+'” '+(yayinda?'yayınlansın mı?':'taslağa alınsın mı?')))return;
+  try{const r=await adminFetch('/api/admin/blog',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:y._id,baslik:y.baslik,ozet:y.ozet||'',icerik:y.icerik,kapak:y.kapak||'',yayinda})});const d=await r.json();if(!r.ok||d.error)throw new Error(d.error||'Durum değiştirilemedi');if(String(document.getElementById('blog-id').value)===String(id)){document.getElementById('blog-yayinda').checked=yayinda;blogYaziBilgisi();}await yukleBloglar();toast(yayinda?'Yazı yayınlandı':'Yazı taslağa alındı','success');}catch(e){toast(e.message||'Durum değiştirilemedi','error');}
 }
 async function blogSil(id){
-  if(!confirm('Bu yazı silinsin mi? Geri alınamaz!'))return;
-  await adminFetch('/api/admin/blog/sil',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})});
-  toast('Yazı silindi','info'); yukleBloglar();
+  const y=blogState.find(y=>y._id===id);if(!y||blogKaydediliyor)return;if(!confirm('“'+y.baslik+'” silinsin mi?'))return;
+  try{const r=await adminFetch('/api/admin/blog/sil',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});const d=await r.json();if(!r.ok||d.error)throw new Error(d.error||'Yazı silinemedi');if(String(document.getElementById('blog-id').value)===String(id))blogFormDoldur({yayinda:true});await yukleBloglar();toast('Yazı kaldırıldı','success');}catch(e){toast(e.message||'Yazı silinemedi','error');}
 }
-function blogTemizle(){
-  document.getElementById('blog-id').value='';
-  ['blog-baslik','blog-ozet','blog-kapak','blog-icerik'].forEach(function(i){document.getElementById(i).value='';});
-  document.getElementById('blog-yayinda').checked=true;
-  document.getElementById('blog-form-baslik').textContent='✍️ Yeni Yazı';
-}
+document.getElementById('blog-editor-form').addEventListener('submit',e=>{e.preventDefault();blogKaydet();});
+document.getElementById('blog-editor-form').addEventListener('input',()=>{blogDegisti=true;blogYaziBilgisi();});
+window.addEventListener('beforeunload',e=>{if(blogDegisti){e.preventDefault();e.returnValue='';}});
+blogYaziBilgisi();
+
 adminOturumunuYukle();
 </script>
 </body>
