@@ -4,6 +4,7 @@ const url = require('url');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const servePublicAssets = require('./public-assets').createPublicAssets(__dirname);
 const { MongoClient } = require('mongodb');
 const Iyzipay = require('iyzipay');
 
@@ -372,6 +373,9 @@ const server = http.createServer(async (req, res) => {
   if (privatePaths.some(p => parsed.pathname === p || parsed.pathname.startsWith(p))) {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
   }
+
+  // Public-only immutable assets and precompressed pages; private routes stay untouched.
+  if (servePublicAssets(req, res, parsed.pathname)) return;
 
   // Ana sayfa
   if (parsed.pathname === '/' || parsed.pathname === '/index.html') {
