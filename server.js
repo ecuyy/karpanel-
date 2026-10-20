@@ -1659,6 +1659,18 @@ tr:hover td{background:#FCF8F4}
 .analytics-insights{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.analytics-insight{border:1px solid var(--border);border-radius:16px;padding:20px;background:#fff;display:flex;align-items:flex-start;gap:12px}.analytics-insight strong{font-size:23px;display:block;margin:0 0 5px;letter-spacing:-.5px}.analytics-insight p{font-size:12px;margin:0 0 5px;font-weight:600}.analytics-insight small{font-size:11px;color:var(--muted);line-height:1.5;display:block}.analytics-footnote{font-size:11px;color:var(--muted);line-height:1.7;margin-top:16px}
 @media(max-width:1150px){.analytics-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.analytics-grid{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}.analytics-insights{grid-template-columns:1fr}.analytics-insight{align-items:center}}
 @media(max-width:650px){.analytics-heading{align-items:flex-start}.analytics-refresh{padding:10px;font-size:11px}.analytics-grid{grid-template-columns:1fr}.analytics-kpis{gap:10px}.analytics-kpi{padding:16px;border-radius:16px}.analytics-value{font-size:27px}.analytics-kpi-top{font-size:11px}.analytics-symbol{width:26px;height:26px}.analytics-panel{padding:20px}.analytics-bars{gap:9px;height:190px}.analytics-bar-label{font-size:10px}.analytics-heading .page-title{font-size:25px}}
+
+.analytics-clickable{font-family:inherit;text-align:left;color:inherit;cursor:pointer;width:100%;transition:border-color .18s,box-shadow .18s,transform .18s}
+.analytics-clickable:hover{border-color:#F6B17A;box-shadow:0 10px 26px -18px #F27A1A66;transform:translateY(-2px)}
+.analytics-clickable:focus-visible{outline:3px solid #F7B279;outline-offset:3px}.analytics-kpi.analytics-clickable{display:block}.analytics-legend-row.analytics-clickable{padding:8px;border:1px solid transparent;border-radius:9px;background:transparent}.analytics-bar-column.analytics-clickable{border:0;padding:0;background:transparent;display:flex}.analytics-kpi.featured{color:#fff}
+.analytics-detail{width:min(1000px,calc(100% - 32px));max-height:85vh;margin:auto;border:1px solid #E4E8EF;border-radius:22px;padding:0;color:var(--text);background:#fff;box-shadow:0 32px 100px #10182740}
+.analytics-detail::backdrop{background:#121A2B88;backdrop-filter:blur(4px)}
+.analytics-detail-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:24px 24px 18px;border-bottom:1px solid var(--border)}
+.analytics-detail-header h2{font-size:21px;margin:0 0 8px;letter-spacing:-.4px}.analytics-detail-header p{font-size:12px;color:var(--muted);line-height:1.6;margin:0}
+.analytics-detail-close{border:1px solid var(--border);border-radius:10px;background:#F8FAFC;color:var(--text);width:36px;height:36px;font-size:20px;cursor:pointer;flex:0 0 36px}.analytics-detail-close:focus-visible{outline:3px solid #F7B279;outline-offset:2px}
+.analytics-detail-summary{margin:18px 24px;padding:12px 16px;border-radius:12px;background:#FFF5EA;color:#A54D0B;font-size:13px;font-weight:600;line-height:1.6}
+.analytics-detail-table{overflow:auto;padding:0 24px 24px}.analytics-detail table{width:100%;border-collapse:collapse}.analytics-detail th{white-space:nowrap}.analytics-detail td{font-size:12px;white-space:nowrap}.analytics-detail td:first-child{font-weight:600}.analytics-detail-empty{text-align:center!important;padding:28px!important;color:var(--muted)}
+@media(max-width:650px){.analytics-detail-header{padding:20px 16px}.analytics-detail-summary{margin:16px}.analytics-detail-table{padding:0 16px 16px}}
 </style>
 </head>
 <body>
@@ -1785,23 +1797,23 @@ tr:hover td{background:#FCF8F4}
     <!-- İstatistikler Sayfası -->
     <div id="page-istatistikler" style="display:none">
       <div class="analytics-heading">
-        <div><div class="analytics-eyebrow">GENEL BAKIŞ</div><div class="page-title">İstatistikler</div><div class="page-sub">Üyelik, büyüme ve kullanım bir arada.</div><div class="analytics-update" id="ist-guncelleme" aria-live="polite">Veriler yükleniyor...</div></div>
+        <div><div class="analytics-eyebrow">GENEL BAKIŞ</div><div class="page-title">İstatistikler</div><div class="page-sub">Üyelik, büyüme ve kullanım bir arada. Detaylar için kartlara tıklayın.</div><div class="analytics-update" id="ist-guncelleme" aria-live="polite">Veriler yükleniyor...</div></div>
         <button class="analytics-refresh" onclick="yukleCullanicilari()" type="button">↻ Verileri yenile</button>
       </div>
       <div class="analytics-kpis">
-        <div class="analytics-kpi featured"><div class="analytics-kpi-top">Tahmini üyelik tutarı<span class="analytics-symbol" aria-hidden="true">₺</span></div><div class="analytics-value" id="ist-gelir">—</div><div class="analytics-kpi-note">Premium üye sayısı × ₺1.500</div></div>
-        <div class="analytics-kpi"><div class="analytics-kpi-top">Toplam üye<span class="analytics-symbol" aria-hidden="true">♙</span></div><div class="analytics-value" id="ist-toplam">—</div><div class="analytics-kpi-note">Kayıtlı tüm hesaplar</div></div>
-        <div class="analytics-kpi"><div class="analytics-kpi-top">Premium üye<span class="analytics-symbol" aria-hidden="true">◇</span></div><div class="analytics-value" id="ist-premium">—</div><div class="analytics-kpi-note">Güncel premium hesaplar</div></div>
-        <div class="analytics-kpi"><div class="analytics-kpi-top">Premium oranı<span class="analytics-symbol" aria-hidden="true">↗</span></div><div class="analytics-value" id="ist-oran">—</div><div class="analytics-kpi-note">Toplam üyeler içindeki payı</div></div>
+        <button type="button" class="analytics-kpi featured analytics-clickable" data-stats-detail="gelir" aria-haspopup="dialog"><div class="analytics-kpi-top">Tahmini üyelik tutarı<span class="analytics-symbol" aria-hidden="true">₺</span></div><div class="analytics-value" id="ist-gelir">—</div><div class="analytics-kpi-note">Premium üye sayısı × ₺1.500</div></button>
+        <button type="button" class="analytics-kpi analytics-clickable" data-stats-detail="hepsi" aria-haspopup="dialog"><div class="analytics-kpi-top">Toplam üye<span class="analytics-symbol" aria-hidden="true">♙</span></div><div class="analytics-value" id="ist-toplam">—</div><div class="analytics-kpi-note">Kayıtlı tüm hesaplar</div></button>
+        <button type="button" class="analytics-kpi analytics-clickable" data-stats-detail="premium" aria-haspopup="dialog"><div class="analytics-kpi-top">Premium üye<span class="analytics-symbol" aria-hidden="true">◇</span></div><div class="analytics-value" id="ist-premium">—</div><div class="analytics-kpi-note">Güncel premium hesaplar</div></button>
+        <button type="button" class="analytics-kpi analytics-clickable" data-stats-detail="oran" aria-haspopup="dialog"><div class="analytics-kpi-top">Premium oranı<span class="analytics-symbol" aria-hidden="true">↗</span></div><div class="analytics-value" id="ist-oran">—</div><div class="analytics-kpi-note">Toplam üyeler içindeki payı</div></button>
       </div>
       <div class="analytics-grid">
-        <section class="analytics-panel" aria-labelledby="ist-buyume-baslik"><div class="analytics-panel-title"><h2 id="ist-buyume-baslik">Üye büyümesi</h2><span class="analytics-tag">SON 6 AY</span></div><p class="analytics-caption">Aylara göre yeni kayıt sayısı</p><div class="analytics-bars" id="ist-kayit-grafik" role="list" aria-label="Aylık yeni kayıtlar"></div><div class="analytics-empty" id="ist-kayit-notu"></div></section>
+        <section class="analytics-panel" aria-labelledby="ist-buyume-baslik"><div class="analytics-panel-title"><h2 id="ist-buyume-baslik">Üye büyümesi</h2><span class="analytics-tag">SON 6 AY</span></div><p class="analytics-caption">Aylara göre yeni kayıt sayısı</p><div class="analytics-bars" id="ist-kayit-grafik" role="group" aria-label="Aylık yeni kayıtlar"></div><div class="analytics-empty" id="ist-kayit-notu"></div></section>
         <section class="analytics-panel" aria-labelledby="ist-dagilim-baslik"><div class="analytics-panel-title"><h2 id="ist-dagilim-baslik">Üyelik dağılımı</h2><span class="analytics-tag">GÜNCEL</span></div><p class="analytics-caption">Hesapların üyelik durumları</p><div class="analytics-donut-wrap"><div class="analytics-donut" id="ist-donut" role="img" aria-label="Üyelik dağılımı"><div class="analytics-donut-hole"><strong id="ist-dagilim-toplam">—</strong><span>toplam üye</span></div></div></div><div class="analytics-legend" id="ist-dagilim-liste"></div></section>
       </div>
       <div class="analytics-insights">
-        <div class="analytics-insight"><span class="analytics-symbol" aria-hidden="true">↪</span><div><strong id="ist-giris">—</strong><p>Toplam başarılı giriş</p><small>Sayaç devreye alındıktan sonraki girişler.</small></div></div>
-        <div class="analytics-insight"><span class="analytics-symbol" aria-hidden="true">＋</span><div><strong id="ist-bu-ay">—</strong><p>Bu ay yeni premium</p><small>Ödeme tarihi bu ay olan premium üyeler.</small></div></div>
-        <div class="analytics-insight"><span class="analytics-symbol" aria-hidden="true">◷</span><div><strong id="ist-bitiyor">—</strong><p>Yakında sona eriyor</p><small>Önümüzdeki bir ayda süresi dolacak premium üyeler.</small></div></div>
+        <button type="button" class="analytics-insight analytics-clickable" data-stats-detail="giris" aria-haspopup="dialog"><span class="analytics-symbol" aria-hidden="true">↪</span><div><strong id="ist-giris">—</strong><p>Toplam başarılı giriş</p><small>Sayaç devreye alındıktan sonraki girişler.</small></div></button>
+        <button type="button" class="analytics-insight analytics-clickable" data-stats-detail="buay" aria-haspopup="dialog"><span class="analytics-symbol" aria-hidden="true">＋</span><div><strong id="ist-bu-ay">—</strong><p>Bu ay yeni premium</p><small>Ödeme tarihi bu ay olan premium üyeler.</small></div></button>
+        <button type="button" class="analytics-insight analytics-clickable" data-stats-detail="bitiyor" aria-haspopup="dialog"><span class="analytics-symbol" aria-hidden="true">◷</span><div><strong id="ist-bitiyor">—</strong><p>Yakında sona eriyor</p><small>Önümüzdeki bir ayda süresi dolacak premium üyeler.</small></div></button>
       </div>
       <p class="analytics-footnote">Tahmini üyelik tutarı tahsilat raporu değildir; iade, indirim veya manuel tanımlanan üyelikleri ayırmaz. Grafikler mevcut kayıtlı hesaplara dayanır.</p>
     </div>
@@ -1854,6 +1866,12 @@ tr:hover td{background:#FCF8F4}
   </div>
 </div>
 
+
+<dialog class="analytics-detail" id="ist-detay-modal" aria-labelledby="ist-detay-baslik" aria-describedby="ist-detay-aciklama">
+  <div class="analytics-detail-header"><div><h2 id="ist-detay-baslik">İstatistik detayı</h2><p id="ist-detay-aciklama"></p></div><button type="button" class="analytics-detail-close" aria-label="Detayı kapat" onclick="document.getElementById('ist-detay-modal').close()">×</button></div>
+  <div class="analytics-detail-summary" id="ist-detay-ozet" aria-live="polite"></div>
+  <div class="analytics-detail-table"><table><thead><tr><th>Kullanıcı</th><th>E-posta</th><th>Kayıt tarihi</th><th>Giriş sayısı</th><th>Üyelik</th><th>Üyelik bitiş</th></tr></thead><tbody id="ist-detay-satirlar"></tbody></table></div>
+</dialog>
 <!-- FATURA DETAY MODAL -->
 <div id="fatura-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;align-items:center;justify-content:center;padding:1rem">
   <div style="background:linear-gradient(162deg,#221A13,#15110D);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:2rem;width:100%;max-width:480px;box-shadow:0 44px 96px -44px rgba(0,0,0,.9)">
@@ -2000,10 +2018,10 @@ function hesaplaIstatistikler(){
     const baslangic=new Date(bugun.getFullYear(),bugun.getMonth()-5+i,1);
     const bitis=new Date(baslangic.getFullYear(),baslangic.getMonth()+1,1);
     const sayi=tumKullanicilar.filter(u=>{const d=new Date(u.kayitTarihi);return u.kayitTarihi&&d>=baslangic&&d<bitis&&d<=bugun;}).length;
-    return {etiket:baslangic.toLocaleDateString('tr-TR',{month:'short'}),yil:baslangic.getFullYear(),sayi};
+    return {ay:baslangic.getFullYear()+'-'+baslangic.getMonth(),etiket:baslangic.toLocaleDateString('tr-TR',{month:'short'}),yil:baslangic.getFullYear(),sayi};
   });
   const enYuksek=Math.max(1,...aylar.map(a=>a.sayi));
-  document.getElementById('ist-kayit-grafik').innerHTML=aylar.map(a=>'<div class="analytics-bar-column" role="listitem" aria-label="'+a.etiket+' '+a.yil+': '+a.sayi+' yeni kayıt"><div class="analytics-bar-track"><span class="analytics-bar-value">'+fmt(a.sayi)+'</span><div class="analytics-bar" style="height:'+(a.sayi/enYuksek*138)+'px" aria-hidden="true"></div></div><span class="analytics-bar-label">'+a.etiket+' '+String(a.yil).slice(-2)+'</span></div>').join('');
+  document.getElementById('ist-kayit-grafik').innerHTML=aylar.map(a=>'<button type="button" class="analytics-bar-column analytics-clickable" data-stats-detail="ay" data-stats-month="'+a.ay+'" aria-haspopup="dialog" aria-label="'+a.etiket+' '+a.yil+': '+a.sayi+' yeni kayıt"><div class="analytics-bar-track"><span class="analytics-bar-value">'+fmt(a.sayi)+'</span><div class="analytics-bar" style="height:'+(a.sayi/enYuksek*138)+'px" aria-hidden="true"></div></div><span class="analytics-bar-label">'+a.etiket+' '+String(a.yil).slice(-2)+'</span></button>').join('');
   const donemToplam=aylar.reduce((t,a)=>t+a.sayi,0);
   document.getElementById('ist-kayit-notu').textContent=donemToplam?'Bu dönemde toplam '+fmt(donemToplam)+' yeni kayıt.':'Son 6 ayda kayıt bulunmuyor.';
   const toplam=tumKullanicilar.length;
@@ -2013,9 +2031,64 @@ function hesaplaIstatistikler(){
   const donut=document.getElementById('ist-donut');
   donut.style.background=toplam?'conic-gradient(#F27A1A 0% '+premiumYuzde+'%,#8360D6 '+premiumYuzde+'% '+(premiumYuzde+denemeYuzde)+'%,#CBD3DF '+(premiumYuzde+denemeYuzde)+'% 100%)':'#EEF1F6';
   donut.setAttribute('aria-label','Üyelik dağılımı: '+premium+' premium, '+deneme+' denemede, '+ucretsiz+' ücretsiz');
-  document.getElementById('ist-dagilim-liste').innerHTML=[['Premium',premium,'#F27A1A'],['Denemede',deneme,'#8360D6'],['Ücretsiz',ucretsiz,'#CBD3DF']].map(a=>'<div class="analytics-legend-row"><span class="analytics-dot" style="background:'+a[2]+'" aria-hidden="true"></span><span>'+a[0]+'</span><strong>'+fmt(a[1])+'</strong><small>%'+(toplam?Math.round(a[1]/toplam*100):0)+'</small></div>').join('');
+  document.getElementById('ist-dagilim-liste').innerHTML=[['Premium',premium,'#F27A1A'],['Denemede',deneme,'#8360D6'],['Ücretsiz',ucretsiz,'#CBD3DF']].map((a,i)=>'<button type="button" class="analytics-legend-row analytics-clickable" data-stats-detail="'+(['premium','deneme','ucretsiz'][i])+'" aria-haspopup="dialog"><span class="analytics-dot" style="background:'+a[2]+'" aria-hidden="true"></span><span>'+a[0]+'</span><strong>'+fmt(a[1])+'</strong><small>%'+(toplam?Math.round(a[1]/toplam*100):0)+'</small></button>').join('');
 
 }
+
+
+function istatistikDetayVerisi(tip,ay){
+  const simdi=new Date();
+  const ayBasi=new Date(simdi.getFullYear(),simdi.getMonth(),1);
+  const gelecekAy=new Date(simdi);gelecekAy.setMonth(gelecekAy.getMonth()+1);
+  const giris=u=>Number.isSafeInteger(u.loginCount)&&u.loginCount>=0?u.loginCount:0;
+  const basliklar={gelir:'Tahmini üyelik tutarı',hepsi:'Tüm üyeler',premium:'Premium üyeler',oran:'Premium oranı',giris:'Başarılı girişler',buay:'Bu ay yeni premium',bitiyor:'Yakında sona eren üyelikler',deneme:'Denemedeki üyeler',ucretsiz:'Ücretsiz üyeler',ay:'Aylık yeni kayıtlar'};
+  let baslik=basliklar[tip]||'Üyeler';
+  let ayBaslangic,ayBitis;
+  if(tip==='ay'){
+    const parcalar=String(ay).split('-').map(Number);
+    ayBaslangic=new Date(parcalar[0],parcalar[1],1);ayBitis=new Date(parcalar[0],parcalar[1]+1,1);
+    baslik=ayBaslangic.toLocaleDateString('tr-TR',{month:'long',year:'numeric'})+' kayıtları';
+  }
+  const liste=tumKullanicilar.filter(u=>{
+    if(['gelir','premium','oran'].includes(tip))return !!u.premium;
+    if(tip==='deneme')return !u.premium&&!!u.trialAktif;
+    if(tip==='ucretsiz')return !u.premium&&!u.trialAktif;
+    if(tip==='giris')return giris(u)>0;
+    if(tip==='buay')return u.premium&&u.odemeTarihi&&new Date(u.odemeTarihi)>=ayBasi&&new Date(u.odemeTarihi)<=simdi;
+    if(tip==='bitiyor')return u.premium&&u.uyelikBitis&&new Date(u.uyelikBitis)>simdi&&new Date(u.uyelikBitis)<gelecekAy;
+    if(tip==='ay')return u.kayitTarihi&&new Date(u.kayitTarihi)>=ayBaslangic&&new Date(u.kayitTarihi)<ayBitis&&new Date(u.kayitTarihi)<=simdi;
+    return true;
+  }).sort((a,b)=>tip==='giris'?giris(b)-giris(a):new Date(b.kayitTarihi||0)-new Date(a.kayitTarihi||0));
+  let ozet=liste.length.toLocaleString('tr-TR')+' kullanıcı';
+  let aciklama='Seçtiğiniz istatistiğe dahil olan kullanıcılar.';
+  if(tip==='gelir'){ozet=liste.length+' premium üye × ₺1.500 = ₺'+(liste.length*1500).toLocaleString('tr-TR');aciklama='Tahmini tutardır; tahsilat, indirim veya iade raporu değildir. Manuel tanımlanan premium üyeler de dahildir.';}
+  if(tip==='oran')ozet=liste.length+' / '+tumKullanicilar.length+' üye · %'+(tumKullanicilar.length?Math.round(liste.length/tumKullanicilar.length*100):0)+' premium';
+  if(tip==='giris'){ozet=liste.reduce((t,u)=>t+giris(u),0).toLocaleString('tr-TR')+' başarılı giriş · '+liste.length+' kullanıcı';aciklama='Sayaç devreye alındıktan sonra en az bir kez giriş yapan hesaplar. En çok giriş yapan kullanıcı en üsttedir.';}
+  if(tip==='buay')aciklama='Ödeme tarihi içinde bulunduğumuz ay olan mevcut premium üyeler.';
+  if(tip==='bitiyor')aciklama='Önümüzdeki bir ayda üyelik süresi dolacak premium hesaplar.';
+  return {baslik,aciklama,ozet,liste};
+}
+
+function istatistikDetayAc(tip,ay){
+  const detay=istatistikDetayVerisi(tip,ay);
+  document.getElementById('ist-detay-baslik').textContent=detay.baslik;
+  document.getElementById('ist-detay-aciklama').textContent=detay.aciklama;
+  document.getElementById('ist-detay-ozet').textContent=detay.ozet;
+  const satirlar=document.getElementById('ist-detay-satirlar');satirlar.replaceChildren();
+  const tarih=d=>d&&!Number.isNaN(new Date(d).getTime())?new Date(d).toLocaleDateString('tr-TR'):'—';
+  detay.liste.forEach(u=>{
+    const tr=document.createElement('tr');
+    const degerler=[u.ad||'İsimsiz kullanıcı',u.email||'—',tarih(u.kayitTarihi),Number.isSafeInteger(u.loginCount)&&u.loginCount>=0?u.loginCount:0,u.premium?'Premium':u.trialAktif?'Denemede':'Ücretsiz',tarih(u.uyelikBitis)];
+    degerler.forEach(deger=>{const td=document.createElement('td');td.textContent=deger;tr.appendChild(td);});satirlar.appendChild(tr);
+  });
+  if(!detay.liste.length){const tr=document.createElement('tr');const td=document.createElement('td');td.colSpan=6;td.className='analytics-detail-empty';td.textContent='Bu istatistiğe dahil kullanıcı bulunmuyor.';tr.appendChild(td);satirlar.appendChild(tr);}
+  const modal=document.getElementById('ist-detay-modal');if(!modal.open)modal.showModal();
+}
+
+document.getElementById('page-istatistikler').addEventListener('click',e=>{
+  const kart=e.target.closest('[data-stats-detail]');if(kart)istatistikDetayAc(kart.dataset.statsDetail,kart.dataset.statsMonth);
+});
+document.getElementById('ist-detay-modal').addEventListener('click',e=>{if(e.target===e.currentTarget){const r=e.currentTarget.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)e.currentTarget.close();}});
 
 function renderTablo(){
   const arama=document.getElementById('search-input').value.toLowerCase();
