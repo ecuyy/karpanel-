@@ -61,6 +61,30 @@ test('frontend restores the selected page after reload and does not override a l
  assert.equal(els['admin-panel'].style.display,'flex');assert.equal(els['login-section'].style.display,'none');assert.equal(selected,'istatistikler');assert.equal(loaded,1);
  context.fetch=()=>new Promise(r=>finish=r);const pending=context.adminOturumunuYukle();context.adminOturumSurumu++;finish({ok:true,json:async()=>({ok:true})});await pending;assert.equal(loaded,1);
 });
+test('member management validates expiry and password, and preserves the payment date on extensions',async()=>{
+ const a=await app();const payment=new Date('2026-01-01T00:00:00Z');await a.db.collection('users').insertOne({email:'member@example.com',premium:true,odemeTarihi:payment});
+ const login=await a.request('/api/admin/giris',{sifre:'test-admin'});const headers={cookie:login.headers['Set-Cookie'].split(';')[0]};
+ for(const bitisTarihi of ['invalid','2000-01-01'])assert.equal((await a.request('/api/admin/premium',{email:'member@example.com',aktif:true,bitisTarihi},headers)).status,400);
+ const bitisTarihi=new Date(Date.now()+90*86400000).toISOString();assert.equal((await a.request('/api/admin/premium',{email:'member@example.com',aktif:true,bitisTarihi},headers)).status,200);
+ assert.equal(a.db.stores.users[0].uyelikBitis.toISOString(),bitisTarihi);assert.equal(a.db.stores.users[0].odemeTarihi,payment);
+ assert.equal((await a.request('/api/admin/premium',{email:'missing@example.com',aktif:true},headers)).status,404);
+ assert.equal((await a.request('/api/admin/sifre-sifirla',{email:'member@example.com',yeniSifre:'short'},headers)).status,400);
+ assert.equal((await a.request('/api/admin/sifre-sifirla',{email:'member@example.com',yeniSifre:'test-only-new'},headers)).status,200);assert.equal(a.db.stores.users[0].sifre,'test-only-new');
+ assert.equal((await a.request('/api/admin/premium',{email:'member@example.com',aktif:false},headers)).status,200);assert.equal(a.db.stores.users[0].premium,false);assert.equal(a.db.stores.users[0].uyelikBitis,null);
+});
+test('member cards filter, search and sort safely; pagination resets on filtering',async()=>{
+ const a=await app(),html=(await a.request('/admin')).body;
+ const code=html.slice(html.indexOf('function kullaniciTarih('),html.indexOf('function uyelikTarihAlani('));
+ const els={};function el(){return {children:[],attrs:{},value:'',style:{},classList:{toggle(){}},setAttribute(k,v){this.attrs[k]=v;},appendChild(x){this.children.push(x);},append(...xs){this.children.push(...xs);},replaceChildren(){this.children=[];},addEventListener(){}};}
+ const get=id=>els[id]||(els[id]=el());get('users-sort').value='yeni';
+ const now=new Date(),near=new Date(Date.now()+86400000);const members=Array.from({length:25},(_,i)=>({ad:i===0?'İBRAHİM <img onerror=x>':'Üye '+i,email:'user'+i+'@example.com',loginCount:i,kayitTarihi:now,premium:i===0,trialAktif:i===1,uyelikBitis:i<3?near:null}));
+ const context={document:{getElementById:get,createElement:el},tumKullanicilar:members,kullaniciSayfa:1,aktifFiltre:'hepsi'};vm.createContext(context);vm.runInContext(code,context);context.renderTablo();
+ assert.equal(els['users-tbody'].children.length,20);assert.equal(els['users-next'].disabled,false);context.kullaniciSayfaDegistir(1);assert.equal(els['users-tbody'].children.length,5);
+ context.filtrele('bitiyor');assert.equal(context.kullaniciSayfa,1);assert.equal(els['users-tbody'].children.length,1);assert.equal(els['sf-bitiyor'].attrs['aria-pressed'],'true');assert.equal(els['sf-hepsi'].attrs['aria-pressed'],'false');
+ assert.equal(context.kullaniciListesi('','premium','yeni').length,1);assert.equal(context.kullaniciListesi('','deneme','yeni').length,1);assert.equal(context.kullaniciListesi('','ucretsiz','yeni').length,23);assert.equal(context.kullaniciListesi('ibrahim','hepsi','yeni').length,1);assert.equal(context.kullaniciListesi('','hepsi','giris')[0].loginCount,24);
+ context.filtrele('hepsi');const name=els['users-tbody'].children[0].children[0].children[0].children[1].children[0];assert.equal(name.textContent,members[0].ad);assert(!name.innerHTML);
+ get('search-input').value='no-match';context.aramaYap();assert.equal(els['users-tbody'].children[0].children[0].colSpan,8);context.kullaniciFiltreTemizle();assert.equal(context.aktifFiltre,'hepsi');assert.equal(els['gosterilen-sayi'].textContent,25);
+});
 function res(){return {headers:{},setHeader(k,v){this.headers[k]=v;},writeHead(status,headers){this.status=status;Object.assign(this.headers,headers);},end(body){this.body=body;this.done?.();}};}
 async function app(sharedDb){
  const db=sharedDb||memory(),notices=[];let handler;let payment={status:'success',paymentStatus:'SUCCESS',paymentId:'p-1'};
