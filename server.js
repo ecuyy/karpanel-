@@ -1630,6 +1630,35 @@ tr:hover td{background:#FCF8F4}
   .nav-item{font-size:12px;gap:6px}.nav-item .icon{display:none}
   #fatura-modal>div{padding:1.25rem!important}#fatura-modal>div>div:nth-child(2){grid-template-columns:1fr!important}
 }
+
+/* Statistics dashboard */
+#page-istatistikler{--analytics-orange:#F27A1A;--analytics-purple:#8360D6;--analytics-teal:#15947B}
+.analytics-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}
+.analytics-eyebrow{font-size:10px;font-weight:800;letter-spacing:.16em;color:var(--or2);margin-bottom:8px}
+.analytics-update{font-size:11px;color:var(--muted);margin-top:8px}
+.analytics-refresh{border:1px solid #DDE2EA;background:#fff;padding:11px 16px;border-radius:12px;font-family:inherit;font-size:12px;font-weight:600;color:var(--text);cursor:pointer;white-space:nowrap}
+.analytics-refresh:hover{border-color:var(--or);background:#FFF8F2}.analytics-refresh:focus-visible{outline:3px solid #FFC890;outline-offset:3px}
+.analytics-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:22px}
+.analytics-kpi{position:relative;background:#fff;border:1px solid var(--border);border-radius:20px;padding:22px;overflow:hidden;box-shadow:0 9px 24px -22px #18202f66}
+.analytics-kpi.featured{background:linear-gradient(130deg,#202938,#131A26);color:#fff;border-color:#202938}
+.analytics-kpi.featured:after{content:'';position:absolute;width:140px;height:140px;border:24px solid #ffffff06;border-radius:50%;right:-60px;top:-55px;pointer-events:none}
+.analytics-kpi-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--muted)}
+.featured .analytics-kpi-top{color:#CBD3DF}.analytics-symbol{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:#FFF1E4;color:#CA600D;font-size:15px}.featured .analytics-symbol{background:#ffffff13;color:#FFAF6D}
+.analytics-value{font-family:'Plus Jakarta Sans','Inter',sans-serif;font-weight:800;font-size:32px;letter-spacing:-1px;margin:16px 0 8px;line-height:1.15;font-variant-numeric:tabular-nums}
+.analytics-kpi-note{font-size:11px;color:var(--muted);line-height:1.5}.featured .analytics-kpi-note{color:#B6C1D0}
+.analytics-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px;margin-bottom:20px}
+.analytics-panel{min-width:0;background:#fff;border:1px solid var(--border);border-radius:20px;padding:24px;box-shadow:0 9px 24px -22px #18202f44}
+.analytics-panel-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}.analytics-panel h2{font-size:15px;letter-spacing:-.2px;margin:0}.analytics-caption{font-size:12px;color:var(--muted);line-height:1.6;margin:0}.analytics-tag{font-size:10px;font-weight:700;padding:6px 9px;border-radius:8px;background:#F4F6F9;color:#687386;white-space:nowrap}
+.analytics-bars{height:210px;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px;margin-top:22px}
+.analytics-bar-column{display:flex;flex-direction:column;align-items:center;min-width:0}.analytics-bar-track{width:100%;flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;border-bottom:1px solid #E5EAF1;background:repeating-linear-gradient(to top,transparent 0,transparent 43px,#F2F4F8 44px,#F2F4F8 45px)}
+.analytics-bar-value{font-size:12px;font-weight:700;color:#526075;margin-bottom:8px}.analytics-bar{width:68%;max-width:48px;background:linear-gradient(180deg,#FFC38C,#F27A1A);border-radius:8px 8px 0 0;min-height:0}.analytics-bar-column:last-child .analytics-bar{background:linear-gradient(180deg,#FC994C,#E9680D)}
+.analytics-bar-label{font-size:11px;color:var(--muted);padding-top:12px;white-space:nowrap}.analytics-bar-column:last-child .analytics-bar-label{color:var(--or2);font-weight:700}
+.analytics-empty{font-size:12px;color:var(--muted);padding-top:12px;min-height:28px}
+.analytics-donut-wrap{display:flex;align-items:center;justify-content:center;margin:24px 0}.analytics-donut{width:160px;height:160px;border-radius:50%;display:grid;place-items:center;background:#EEF1F6}.analytics-donut-hole{width:126px;height:126px;border-radius:50%;background:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center}.analytics-donut-hole strong{font-size:28px;letter-spacing:-1px}.analytics-donut-hole span{font-size:11px;color:var(--muted);margin-top:4px}
+.analytics-legend{display:grid;gap:12px}.analytics-legend-row{display:flex;align-items:center;gap:9px;font-size:12px;color:#526075}.analytics-dot{height:8px;width:8px;border-radius:50%;flex:0 0 8px}.analytics-legend-row strong{margin-left:auto;color:var(--text);font-variant-numeric:tabular-nums}.analytics-legend-row small{width:36px;text-align:right;color:var(--muted)}
+.analytics-insights{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.analytics-insight{border:1px solid var(--border);border-radius:16px;padding:20px;background:#fff;display:flex;align-items:flex-start;gap:12px}.analytics-insight strong{font-size:23px;display:block;margin:0 0 5px;letter-spacing:-.5px}.analytics-insight p{font-size:12px;margin:0 0 5px;font-weight:600}.analytics-insight small{font-size:11px;color:var(--muted);line-height:1.5;display:block}.analytics-footnote{font-size:11px;color:var(--muted);line-height:1.7;margin-top:16px}
+@media(max-width:1150px){.analytics-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.analytics-grid{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}.analytics-insights{grid-template-columns:1fr}.analytics-insight{align-items:center}}
+@media(max-width:650px){.analytics-heading{align-items:flex-start}.analytics-refresh{padding:10px;font-size:11px}.analytics-grid{grid-template-columns:1fr}.analytics-kpis{gap:10px}.analytics-kpi{padding:16px;border-radius:16px}.analytics-value{font-size:27px}.analytics-kpi-top{font-size:11px}.analytics-symbol{width:26px;height:26px}.analytics-panel{padding:20px}.analytics-bars{gap:9px;height:190px}.analytics-bar-label{font-size:10px}.analytics-heading .page-title{font-size:25px}}
 </style>
 </head>
 <body>
@@ -1755,30 +1784,26 @@ tr:hover td{background:#FCF8F4}
 
     <!-- İstatistikler Sayfası -->
     <div id="page-istatistikler" style="display:none">
-      <div class="page-header">
-        <div class="page-title">İstatistikler</div>
-        <div class="page-sub">Gelir ve büyüme verileri</div>
+      <div class="analytics-heading">
+        <div><div class="analytics-eyebrow">GENEL BAKIŞ</div><div class="page-title">İstatistikler</div><div class="page-sub">Üyelik, büyüme ve kullanım bir arada.</div><div class="analytics-update" id="ist-guncelleme" aria-live="polite">Veriler yükleniyor...</div></div>
+        <button class="analytics-refresh" onclick="yukleCullanicilari()" type="button">↻ Verileri yenile</button>
       </div>
-      <div class="stats" style="grid-template-columns:repeat(3,1fr)">
-        <div class="stat">
-          <div class="stat-icon">💰</div>
-          <div class="stat-val" id="ist-gelir">₺0</div>
-          <div class="stat-label">Toplam Gelir (Tahmini)</div>
-        </div>
-        <div class="stat">
-          <div class="stat-icon">📅</div>
-          <div class="stat-val" id="ist-bu-ay">0</div>
-          <div class="stat-label">Bu Ay Yeni Premium</div>
-        </div>
-        <div class="stat">
-          <div class="stat-icon">📈</div>
-          <div class="stat-val" id="ist-oran">%0</div>
-          <div class="stat-label">Premium Dönüşüm Oranı</div>
-        </div>
+      <div class="analytics-kpis">
+        <div class="analytics-kpi featured"><div class="analytics-kpi-top">Tahmini üyelik tutarı<span class="analytics-symbol" aria-hidden="true">₺</span></div><div class="analytics-value" id="ist-gelir">—</div><div class="analytics-kpi-note">Premium üye sayısı × ₺1.500</div></div>
+        <div class="analytics-kpi"><div class="analytics-kpi-top">Toplam üye<span class="analytics-symbol" aria-hidden="true">♙</span></div><div class="analytics-value" id="ist-toplam">—</div><div class="analytics-kpi-note">Kayıtlı tüm hesaplar</div></div>
+        <div class="analytics-kpi"><div class="analytics-kpi-top">Premium üye<span class="analytics-symbol" aria-hidden="true">◇</span></div><div class="analytics-value" id="ist-premium">—</div><div class="analytics-kpi-note">Güncel premium hesaplar</div></div>
+        <div class="analytics-kpi"><div class="analytics-kpi-top">Premium oranı<span class="analytics-symbol" aria-hidden="true">↗</span></div><div class="analytics-value" id="ist-oran">—</div><div class="analytics-kpi-note">Toplam üyeler içindeki payı</div></div>
       </div>
-      <div class="table-wrap" style="padding:1.5rem">
-        <p style="color:var(--muted);font-size:14px;text-align:center;padding:2rem">Daha fazla analitik yakında eklenecek 🚀</p>
+      <div class="analytics-grid">
+        <section class="analytics-panel" aria-labelledby="ist-buyume-baslik"><div class="analytics-panel-title"><h2 id="ist-buyume-baslik">Üye büyümesi</h2><span class="analytics-tag">SON 6 AY</span></div><p class="analytics-caption">Aylara göre yeni kayıt sayısı</p><div class="analytics-bars" id="ist-kayit-grafik" role="list" aria-label="Aylık yeni kayıtlar"></div><div class="analytics-empty" id="ist-kayit-notu"></div></section>
+        <section class="analytics-panel" aria-labelledby="ist-dagilim-baslik"><div class="analytics-panel-title"><h2 id="ist-dagilim-baslik">Üyelik dağılımı</h2><span class="analytics-tag">GÜNCEL</span></div><p class="analytics-caption">Hesapların üyelik durumları</p><div class="analytics-donut-wrap"><div class="analytics-donut" id="ist-donut" role="img" aria-label="Üyelik dağılımı"><div class="analytics-donut-hole"><strong id="ist-dagilim-toplam">—</strong><span>toplam üye</span></div></div></div><div class="analytics-legend" id="ist-dagilim-liste"></div></section>
       </div>
+      <div class="analytics-insights">
+        <div class="analytics-insight"><span class="analytics-symbol" aria-hidden="true">↪</span><div><strong id="ist-giris">—</strong><p>Toplam başarılı giriş</p><small>Sayaç devreye alındıktan sonraki girişler.</small></div></div>
+        <div class="analytics-insight"><span class="analytics-symbol" aria-hidden="true">＋</span><div><strong id="ist-bu-ay">—</strong><p>Bu ay yeni premium</p><small>Ödeme tarihi bu ay olan premium üyeler.</small></div></div>
+        <div class="analytics-insight"><span class="analytics-symbol" aria-hidden="true">◷</span><div><strong id="ist-bitiyor">—</strong><p>Yakında sona eriyor</p><small>Önümüzdeki bir ayda süresi dolacak premium üyeler.</small></div></div>
+      </div>
+      <p class="analytics-footnote">Tahmini üyelik tutarı tahsilat raporu değildir; iade, indirim veya manuel tanımlanan üyelikleri ayırmaz. Grafikler mevcut kayıtlı hesaplara dayanır.</p>
     </div>
 
     <!-- Blog Sayfası -->
@@ -1950,7 +1975,7 @@ function hesaplaIstatistikler(){
   let premium=0,ucretsiz=0,bitiyor=0,buAyPremium=0,deneme=0;
   tumKullanicilar.forEach(u=>{
     if(u.premium){ premium++;
-      if(u.odemeTarihi&&new Date(u.odemeTarihi)>=buAyBaslangic) buAyPremium++;
+      if(u.odemeTarihi&&new Date(u.odemeTarihi)>=buAyBaslangic&&new Date(u.odemeTarihi)<=bugun) buAyPremium++;
       if(u.uyelikBitis){const b=new Date(u.uyelikBitis);if(b<birAySonra&&b>bugun)bitiyor++;}
     } else if(u.trialAktif){ deneme++; }
     else { ucretsiz++; }
@@ -1964,6 +1989,32 @@ function hesaplaIstatistikler(){
   document.getElementById('ist-bu-ay').textContent=buAyPremium;
   const oran=tumKullanicilar.length>0?Math.round(premium/tumKullanicilar.length*100):0;
   document.getElementById('ist-oran').textContent='%'+oran;
+  const fmt=n=>n.toLocaleString('tr-TR');
+  document.getElementById('ist-toplam').textContent=fmt(tumKullanicilar.length);
+  document.getElementById('ist-premium').textContent=fmt(premium);
+  document.getElementById('ist-bitiyor').textContent=fmt(bitiyor);
+  const giris=tumKullanicilar.reduce((t,u)=>t+(Number.isSafeInteger(u.loginCount)&&u.loginCount>=0?u.loginCount:0),0);
+  document.getElementById('ist-giris').textContent=fmt(giris);
+  document.getElementById('ist-guncelleme').textContent='Son güncelleme: '+bugun.toLocaleString('tr-TR',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'});
+  const aylar=Array.from({length:6},(_,i)=>{
+    const baslangic=new Date(bugun.getFullYear(),bugun.getMonth()-5+i,1);
+    const bitis=new Date(baslangic.getFullYear(),baslangic.getMonth()+1,1);
+    const sayi=tumKullanicilar.filter(u=>{const d=new Date(u.kayitTarihi);return u.kayitTarihi&&d>=baslangic&&d<bitis&&d<=bugun;}).length;
+    return {etiket:baslangic.toLocaleDateString('tr-TR',{month:'short'}),yil:baslangic.getFullYear(),sayi};
+  });
+  const enYuksek=Math.max(1,...aylar.map(a=>a.sayi));
+  document.getElementById('ist-kayit-grafik').innerHTML=aylar.map(a=>'<div class="analytics-bar-column" role="listitem" aria-label="'+a.etiket+' '+a.yil+': '+a.sayi+' yeni kayıt"><div class="analytics-bar-track"><span class="analytics-bar-value">'+fmt(a.sayi)+'</span><div class="analytics-bar" style="height:'+(a.sayi/enYuksek*138)+'px" aria-hidden="true"></div></div><span class="analytics-bar-label">'+a.etiket+' '+String(a.yil).slice(-2)+'</span></div>').join('');
+  const donemToplam=aylar.reduce((t,a)=>t+a.sayi,0);
+  document.getElementById('ist-kayit-notu').textContent=donemToplam?'Bu dönemde toplam '+fmt(donemToplam)+' yeni kayıt.':'Son 6 ayda kayıt bulunmuyor.';
+  const toplam=tumKullanicilar.length;
+  const premiumYuzde=toplam?premium/toplam*100:0;
+  const denemeYuzde=toplam?deneme/toplam*100:0;
+  document.getElementById('ist-dagilim-toplam').textContent=fmt(toplam);
+  const donut=document.getElementById('ist-donut');
+  donut.style.background=toplam?'conic-gradient(#F27A1A 0% '+premiumYuzde+'%,#8360D6 '+premiumYuzde+'% '+(premiumYuzde+denemeYuzde)+'%,#CBD3DF '+(premiumYuzde+denemeYuzde)+'% 100%)':'#EEF1F6';
+  donut.setAttribute('aria-label','Üyelik dağılımı: '+premium+' premium, '+deneme+' denemede, '+ucretsiz+' ücretsiz');
+  document.getElementById('ist-dagilim-liste').innerHTML=[['Premium',premium,'#F27A1A'],['Denemede',deneme,'#8360D6'],['Ücretsiz',ucretsiz,'#CBD3DF']].map(a=>'<div class="analytics-legend-row"><span class="analytics-dot" style="background:'+a[2]+'" aria-hidden="true"></span><span>'+a[0]+'</span><strong>'+fmt(a[1])+'</strong><small>%'+(toplam?Math.round(a[1]/toplam*100):0)+'</small></div>').join('');
+
 }
 
 function renderTablo(){
