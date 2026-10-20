@@ -3419,29 +3419,34 @@ body.app-mode #blog{display:none!important}
 @media(max-width:850px){.kh-faq-layout{grid-template-columns:minmax(0,.8fr) minmax(0,1.5fr);gap:40px}.kh-faq-intro h2{font-size:34px;letter-spacing:-1px}}
 @media(max-width:650px){#kh-faq .khm-faq{padding:60px 24px}.kh-faq-layout{grid-template-columns:1fr;gap:30px}.kh-faq-intro h2{font-size:33px}.kh-faq-intro h2 br{display:none}.kh-faq-intro>p{max-width:340px}.kh-faq-kicker{margin-bottom:12px}.kh-faq-contact{margin-top:20px}.kh-faq-contact>span{display:inline;margin-right:12px}#kh-faq .kh-faq-list summary{font-size:13px;padding:21px 0;min-height:64px;gap:18px}#kh-faq .kh-faq-list .ans{font-size:12.5px;padding-right:18px;padding-bottom:22px}.kh-faq-resources{margin-top:38px;padding-top:25px}.kh-faq-resources ul{grid-template-columns:1fr;gap:20px}}
 @media(prefers-reduced-motion:reduce){#kh-faq .faq-plus::before,#kh-faq .faq-plus::after{transition:none}}
-/* Footer: one trial action, balanced navigation and readable legal information. */
-footer.khm.kft.kh-footer{background:#1B1510;color:#ECE4DB;padding:0 32px;position:relative}
-footer.kh-footer::before{background:#FFFFFF0C}
+/* Light editorial footer: typography and fine rules, with a single trial action. */
+footer.khm.kft.kh-footer{background:#F2EEE7;color:#28241F;padding:0 32px;border-top:1px solid #E4DDD3;position:relative}
+footer.kh-footer::before{display:none}
 .kh-footer-inner{max-width:1116px;margin:0 auto}
-.kh-footer-trial{display:flex;align-items:center;justify-content:space-between;gap:40px;padding:51px 0 43px;border-bottom:1px solid #FFFFFF12}
-.kh-footer-eyebrow{display:block;color:#D5935E;font-size:10px;font-weight:600;letter-spacing:.08em;margin-bottom:15px}
-.kh-footer-trial h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:31px;line-height:1.25;letter-spacing:-.9px;font-weight:600;color:#F4EBE1;margin:0}
-.kh-footer-trial-copy>p{font-size:12px;line-height:1.85;color:#A49282;margin:16px 0 0;max-width:430px}
-.kh-footer-trial-action{display:flex;flex-direction:column;align-items:center;gap:13px;flex:0 0 auto}
-.kh-footer-start{font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:25px;min-width:243px;padding:16px 23px;background:linear-gradient(135deg,#F68A2F,#E86A11);border:1px solid #F4954C;border-radius:11px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;box-shadow:0 8px 24px -12px #F27A1A88;transition:background .2s,box-shadow .2s}
-.kh-footer-start:hover{background:#FA8C35;box-shadow:0 10px 27px -12px #F27A1ACC}.kh-footer-trial-action>span{font-size:9px;color:#927F6C;line-height:1.6}
-.kh-footer-grid{display:grid;grid-template-columns:minmax(0,1.8fr) repeat(3,minmax(0,1fr));gap:44px;padding:43px 0 44px}
-.kh-footer-wordmark{font-family:'Plus Jakarta Sans',sans-serif;display:inline-block;font-size:24px;font-weight:800;letter-spacing:-1px;color:#F6EEE6;text-decoration:none}.kh-footer-wordmark span{color:#F18B39}.kh-footer-brand>p{font-size:12px;line-height:1.9;color:#A49282;margin:16px 0 14px}
-.kh-footer-email{display:inline-block;font-size:11px;color:#C5B19F;text-decoration:none;border-bottom:1px solid #FFFFFF24;padding-bottom:4px}.kh-footer-email:hover{color:#F5AA71;border-color:#F5AA71}
-.kh-footer-social{display:flex;align-items:center;gap:8px;width:max-content;color:#9E8B79;text-decoration:none;font-size:10px;margin-top:18px}.kh-footer-social:hover{color:#E5C8AF}.kh-footer-social>span{font-size:12px}
-.kh-footer-links{display:flex;flex-direction:column;align-items:flex-start;gap:13px;min-width:0}.kh-footer-links h3{font-family:inherit;font-size:12px;line-height:1.5;font-weight:600;letter-spacing:0;color:#E2D4C7;margin:0 0 6px}
-.kh-footer-links a,.kh-footer-links button{font-family:inherit;font-size:11px;line-height:1.7;color:#AC9784;text-decoration:none;border:0;background:none;box-shadow:none;margin:0;padding:0;text-align:left;cursor:pointer;transition:color .18s;overflow-wrap:anywhere}.kh-footer-links a:hover,.kh-footer-links button:hover{color:#F4B482;text-decoration:underline;text-underline-offset:4px}
-.kh-footer a:focus-visible,.kh-footer button:focus-visible{outline:2px solid #EBA66D;outline-offset:5px;border-radius:2px}
-.kh-footer-bottom{display:flex;align-items:center;justify-content:space-between;gap:25px;padding:23px 0 27px;border-top:1px solid #FFFFFF10}.kh-footer-copyright p{font-size:10px;color:#A48E7A;line-height:1.7;margin:0 0 5px}.kh-footer-copyright>span{font-size:9px;line-height:1.7;color:#7E6D5D;display:block}
-.kh-footer-payment{display:flex;align-items:center;gap:12px;flex:0 0 auto}.kh-footer-payment>span{font-size:9px;color:#9F8B77}.kh-footer-payment>div{display:flex;align-items:center;background:#FFFCF8;padding:7px 10px;border-radius:6px}.kh-footer-payment img{display:block;width:219px;max-width:100%;height:auto;opacity:1}
-@media(max-width:900px){.kh-footer-grid{grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr));gap:26px}.kh-footer-trial{gap:25px}.kh-footer-trial h2{font-size:28px}.kh-footer-start{min-width:220px}.kh-footer-bottom{flex-wrap:wrap}}
-@media(max-width:650px){footer.khm.kft.kh-footer{padding:0 24px}.kh-footer-trial{display:block;padding:38px 0 33px}.kh-footer-trial h2{font-size:28px}.kh-footer-trial-action{align-items:flex-start;margin-top:24px}.kh-footer-start{min-width:250px}.kh-footer-grid{grid-template-columns:repeat(3,minmax(0,1fr));column-gap:18px;row-gap:30px;padding:32px 0}.kh-footer-brand{grid-column:1/-1}.kh-footer-brand>p br{display:none}.kh-footer-brand>p{max-width:280px}.kh-footer-links h3{font-size:11px}.kh-footer-links a,.kh-footer-links button{font-size:10px}.kh-footer-payment{flex-wrap:wrap;gap:10px}.kh-footer-payment img{width:200px}.kh-footer-bottom{gap:20px;padding-top:22px}}
-@media(max-width:380px){footer.khm.kft.kh-footer{padding:0 19px}.kh-footer-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.kh-footer-trial h2{font-size:26px}.kh-footer-start{width:100%;min-width:0}.kh-footer-trial-action{align-items:stretch}.kh-footer-trial-action>span{text-align:center}}
+.kh-footer-trial{display:flex;align-items:center;justify-content:space-between;gap:60px;padding:66px 0 53px;border-bottom:1px solid #D7CFC3}
+.kh-footer-trial h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:46px;line-height:1.13;letter-spacing:-2px;font-weight:500;color:#28241F;margin:0}
+.kh-footer-trial-copy>p{font-size:13px;line-height:1.8;color:#8B7E70;margin:22px 0 0;max-width:420px}
+.kh-footer-trial-action{display:flex;flex-direction:column;align-items:flex-start;gap:14px;flex:0 0 auto}
+.kh-footer-start{font-family:inherit;display:inline-flex;align-items:center;justify-content:space-between;gap:32px;min-width:238px;padding:18px 22px;background:#29241E;border:1px solid #29241E;border-radius:6px;font-size:13px;font-weight:600;color:#F9F5EF;cursor:pointer;box-shadow:none;transition:background .2s,border-color .2s}
+.kh-footer-start:hover{background:#47372A;border-color:#47372A;box-shadow:none}.kh-footer-start svg{width:17px;height:17px;opacity:.8}.kh-footer-trial-action>span{font-size:10px;color:#948675;line-height:1.7}
+.kh-footer-grid{display:grid;grid-template-columns:300px minmax(0,1fr);column-gap:80px;row-gap:0;padding:43px 0 37px}
+.kh-footer-brand{grid-column:1;grid-row:1 / 4;padding:14px 0}
+.kh-footer .kh-footer-wordmark{font-family:'Plus Jakarta Sans',sans-serif;display:inline-block;font-size:28px;font-weight:700;letter-spacing:-1.2px;color:#2E2821;text-decoration:none}.kh-footer .kh-footer-wordmark span{color:#C76E29}
+.kh-footer-brand>p{font-size:12px;line-height:1.9;color:#948574;margin:17px 0 17px}
+.kh-footer .kh-footer-email{display:inline-block;font-size:12px;color:#574B3F;text-decoration:none;border-bottom:1px solid #BFB0A0;padding-bottom:4px}.kh-footer .kh-footer-email:hover{color:#A85619;border-color:#A85619}
+.kh-footer .kh-footer-social{display:flex;align-items:center;gap:8px;width:max-content;color:#8B7966;text-decoration:none;font-size:11px;margin-top:20px}.kh-footer .kh-footer-social:hover{color:#5B4431}.kh-footer-social>span{font-size:12px}
+.kh-footer-links{display:flex;flex-direction:row;align-items:center;flex-wrap:wrap;gap:13px 25px;min-width:0;padding:21px 0;border-bottom:1px solid #DDD5C9}
+.kh-footer-links:last-child{border-bottom:0}
+.kh-footer-links h3{font-family:inherit;flex:0 0 68px;font-size:10px;line-height:1.6;font-weight:500;letter-spacing:.02em;color:#A18E79;margin:0}
+.kh-footer .kh-footer-links a,.kh-footer .kh-footer-links button{font-family:inherit;font-size:12px;line-height:1.8;color:#5B4F42;text-decoration:none;border:0;background:none;box-shadow:none;margin:0;padding:0;text-align:left;cursor:pointer;transition:color .18s;overflow-wrap:anywhere;font-weight:500}
+.kh-footer .kh-footer-links a:hover,.kh-footer .kh-footer-links button:hover{color:#AE5B1B;text-decoration:underline;text-underline-offset:5px}
+.kh-footer a:focus-visible,.kh-footer button:focus-visible{outline:2px solid #BD7A47;outline-offset:5px;border-radius:2px}
+.kh-footer-bottom{display:flex;align-items:center;justify-content:space-between;gap:25px;padding:23px 0 28px;border-top:1px solid #DDD5C9}
+.kh-footer-copyright p{font-size:10px;color:#8E7F6F;line-height:1.7;margin:0 0 5px}.kh-footer-copyright>span{font-size:9px;line-height:1.7;color:#A08F7C;display:block}
+.kh-footer-payment{display:flex;align-items:center;gap:12px;flex:0 0 auto}.kh-footer-payment>span{font-size:9px;color:#9C8974}.kh-footer-payment>div{display:flex;align-items:center;background:transparent;padding:0;border-radius:0}.kh-footer-payment img{display:block;width:208px;max-width:100%;height:auto;opacity:.75;filter:saturate(.65)}
+@media(max-width:1000px){.kh-footer-grid{grid-template-columns:260px minmax(0,1fr);column-gap:35px}.kh-footer-links{gap:10px 20px;padding:18px 0}.kh-footer-links h3{flex-basis:100%;margin-bottom:3px}.kh-footer-trial h2{font-size:39px;letter-spacing:-1.6px}.kh-footer-trial{gap:30px}.kh-footer-bottom{flex-wrap:wrap}}
+@media(max-width:650px){footer.khm.kft.kh-footer{padding:0 25px}.kh-footer-trial{display:block;padding:43px 0 34px}.kh-footer-trial h2{font-size:36px;letter-spacing:-1.4px}.kh-footer-trial-copy>p{font-size:12px;margin-top:18px}.kh-footer-trial-action{margin-top:25px;gap:12px}.kh-footer-start{min-width:242px;padding:17px 20px}.kh-footer-trial-action>span{font-size:9px}.kh-footer-grid{grid-template-columns:1fr;padding:28px 0 22px;gap:0}.kh-footer-brand{grid-column:auto;grid-row:auto;padding:0 0 30px}.kh-footer-brand>p br{display:none}.kh-footer-brand>p{max-width:300px;margin:13px 0}.kh-footer .kh-footer-wordmark{font-size:27px}.kh-footer-links{padding:19px 0;gap:10px 23px}.kh-footer-links h3{flex:0 0 100%;font-size:10px}.kh-footer .kh-footer-links a,.kh-footer .kh-footer-links button{font-size:12px}.kh-footer-bottom{gap:20px;padding:20px 0 25px}.kh-footer-payment{gap:10px;flex-wrap:wrap}.kh-footer-payment img{width:200px}}
+@media(max-width:380px){.kh-footer-start{width:100%;min-width:0}.kh-footer-trial-action{align-items:stretch}.kh-footer-trial h2{font-size:32px}.kh-footer-trial-action>span{text-align:center}}
 @media(prefers-reduced-motion:reduce){.kh-footer-start,.kh-footer-links a,.kh-footer-links button{transition:none}}
 
 </style>
@@ -4586,7 +4591,7 @@ footer.kh-footer::before{background:#FFFFFF0C}
 <footer class="khm kft kh-footer" id="kh-footer">
   <div class="kh-footer-inner">
     <section class="kh-footer-trial" aria-labelledby="kh-footer-trial-title">
-      <div class="kh-footer-trial-copy"><span class="kh-footer-eyebrow">3 GÜN ÜCRETSİZ DENEME</span><h2 id="kh-footer-trial-title">Karar vermeden önce,<br>kendi ürünlerinle dene.</h2><p>Trendyol Excel’ini yükle, maliyetlerini gir ve ürünlerinin kârlılığını incele.</p></div>
+      <div class="kh-footer-trial-copy"><h2 id="kh-footer-trial-title">3 gün boyunca,<br>kendi ürünlerinle çalış.</h2><p>Excel’ini yükle. Ürünlerinin kârını ve zararını gör.</p></div>
       <div class="kh-footer-trial-action"><button type="button" class="kh-footer-start" onclick="trackCta('footer_trial');openAuth('kayit')">3 Gün Ücretsiz Dene <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button><span>Kredi kartı gerekmez · Otomatik ödeme yok.</span></div>
     </section>
     <div class="kh-footer-grid">
