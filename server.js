@@ -241,7 +241,7 @@ function blogEsc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/
 
 function blogInlineRender(s){
   const metin = String(s == null ? '' : s);
-  const linkRe = /\[([^\]\n]+)\]\(((?:https?:\/\/|\/)[^\s)]+)\)/g;
+  const linkRe = /\[([^\]\n]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]*)\)/g;
   let sonuc = '', son = 0, eslesme;
   while ((eslesme = linkRe.exec(metin))) {
     sonuc += blogEsc(metin.slice(son, eslesme.index));

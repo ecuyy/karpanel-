@@ -99,7 +99,7 @@ test('blog editor filters and preview escape markup while keeping supported link
  const a=await app(),html=(await a.request('/admin')).body;const fn=html.slice(html.indexOf('function blogEsc('),html.indexOf('function blogFiltrele('));const context={};vm.createContext(context);vm.runInContext(fn,context);
  assert.equal(context.blogListeSec([{baslik:'Kupon rehberi',yayinda:true},{baslik:'İade rehberi',yayinda:false}],'taslak','iade').length,1);
  assert.equal(context.blogListeSec([{baslik:'Kupon',yayinda:true}],'yayinda','eksik').length,0);
- const rendered=context.blogIcerikRender('## Örnek\n\n<script>alert(1)</script>\n\n[Hesapla](/trendyol-komisyon-hesaplama)\n\n- Bir\n- İki');assert(!rendered.includes('<script>'));assert.match(rendered,/&lt;script&gt;/);assert.match(rendered,/<h2>Örnek<\/h2>/);assert.match(rendered,/href="\/trendyol-komisyon-hesaplama"/);assert.match(rendered,/<ul>/);
+ const rendered=context.blogIcerikRender('## Örnek\n\n<script>alert(1)</script>\n\n[Hesapla](/trendyol-komisyon-hesaplama)\n\n[Ana sayfa](/)\n\n- Bir\n- İki');assert(!rendered.includes('<script>'));assert.match(rendered,/&lt;script&gt;/);assert.match(rendered,/<h2>Örnek<\/h2>/);assert.match(rendered,/href="\/trendyol-komisyon-hesaplama"/);assert.match(rendered,/<a href="\/">Ana sayfa<\/a>/);assert.match(rendered,/<ul>/);
 });
 test('editor word counter and SEO preview use the actual form content',async()=>{
  const a=await app(),html=(await a.request('/admin')).body;const code=html.slice(html.indexOf('function blogEsc('),html.indexOf("document.getElementById('blog-editor-form').addEventListener"));
