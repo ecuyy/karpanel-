@@ -3351,6 +3351,28 @@ input,textarea,select{max-width:100%}
 }
 /* giriş yapınca (app-mode) blog bölümü görünmesin */
 body.app-mode #blog{display:none!important}
+
+/* Hero free-trial CTA: a moving neon border, without changing calculations. */
+@property --kh-trial-angle{syntax:"<angle>";initial-value:0deg;inherits:false}
+.hero.khm .khm-trial-neon{
+  position:relative;isolation:isolate;overflow:visible;
+  background:linear-gradient(135deg,#FA8B28,#EA6710);
+  box-shadow:0 0 0 1px rgba(255,190,117,.55),0 0 20px rgba(242,122,26,.32),0 14px 34px rgba(242,122,26,.34);
+}
+.hero.khm .khm-trial-neon::before{
+  content:"";position:absolute;inset:-4px;border-radius:18px;padding:2px;pointer-events:none;
+  background:conic-gradient(from var(--kh-trial-angle),rgba(255,140,48,.15) 0deg,rgba(255,140,48,.15) 235deg,#FF9B42 280deg,#FFF0CB 315deg,#FFAA54 340deg,rgba(255,140,48,.15) 360deg);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;
+  filter:drop-shadow(0 0 5px rgba(255,166,75,.8));
+  animation:kh-trial-orbit 3.2s linear infinite;
+}
+.hero.khm .khm-trial-neon:hover{
+  box-shadow:0 0 0 1px rgba(255,214,161,.85),0 0 30px rgba(242,122,26,.5),0 18px 42px rgba(242,122,26,.42);
+}
+.hero.khm .khm-trial-neon:focus-visible{outline:3px solid #FFE6BE;outline-offset:7px}
+@keyframes kh-trial-orbit{to{--kh-trial-angle:360deg}}
+@media(prefers-reduced-motion:reduce){.hero.khm .khm-trial-neon::before{animation:none;--kh-trial-angle:45deg}}
 </style>
 </head>
 <body>
@@ -3407,8 +3429,7 @@ body.app-mode #blog{display:none!important}
         </div>
 
         <div class="khm-cta-row">
-          <button class="khm-btn-or" onclick="trackCta('hero_trial');openAuth('kayit')">Kendi Excel'inle 3 Gün Ücretsiz Dene <span style="font-size:15px">→</span></button>
-          <button class="khm-btn-gh" onclick="trackCta('hero_demo');demoVeGo()">Örnek Demo'yu Gör</button>
+          <button type="button" class="khm-btn-or khm-trial-neon" onclick="trackCta('hero_trial');openAuth('kayit')">Kendi Excel'inle 3 Gün Ücretsiz Dene <span style="font-size:15px">→</span></button>
         </div>
 
         <div class="khm-note">
