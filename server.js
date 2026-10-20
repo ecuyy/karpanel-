@@ -477,7 +477,7 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Bu e-posta zaten kayıtlı' })); return;
     }
-    const user = { ad, email, sifre, premium: false, kayitTarihi: new Date(), odemeTarihi: null, uyelikBitis: null, trialBaslangic: new Date() };
+    const user = { ad, email, sifre, premium: false, kayitTarihi: new Date(), odemeTarihi: null, uyelikBitis: null, trialBaslangic: new Date(), loginCount: 0 };
     await db.collection('users').insertOne(user);
     const trial = trialDurumuHesapla(user);
     res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -495,6 +495,10 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(401, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'E-posta veya şifre hatalı' })); return;
     }
+    // Yalnızca doğru e-posta ve parolayla tamamlanan girişleri say.
+    try {
+      await db.collection('users').updateOne({ _id: user._id }, { $inc: { loginCount: 1 } });
+    } catch { console.error('Giriş sayacı güncellenemedi.'); }
     // Premium süresi dolduysa otomatik düşür
     let effPremium = user.premium;
     if (effPremium && user.uyelikBitis && new Date(user.uyelikBitis) < new Date()) {
@@ -1727,6 +1731,7 @@ tr:hover td{background:#FCF8F4}
       <div class="table-wrap">
         <div class="table-info">
           <span>Gösterilen: <strong id="gosterilen-sayi">0</strong> kullanıcı</span>
+          <span style="font-size:12px">Giriş sayısı güncellemeden sonraki başarılı girişleri gösterir.</span>
           <span id="aktif-filtre" style="color:var(--or);font-weight:600;font-size:12px"></span>
         </div>
         <table>
@@ -1735,13 +1740,14 @@ tr:hover td{background:#FCF8F4}
               <th>Kullanıcı</th>
               <th>E-posta</th>
               <th>Kayıt</th>
+              <th>Giriş sayısı</th>
               <th>Durum</th>
               <th>Üyelik Bitiş</th>
               <th>Fatura</th>
               <th>İşlemler</th>
             </tr>
           </thead>
-          <tbody id="users-tbody"><tr><td colspan="7" class="loading">⏳ Yükleniyor...</td></tr></tbody>
+          <tbody id="users-tbody"><tr><td colspan="8" class="loading">⏳ Yükleniyor...</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -1927,7 +1933,7 @@ function sayfaGoster(sayfa){
 }
 
 async function yukleCullanicilari(){
-  document.getElementById('users-tbody').innerHTML='<tr><td colspan="7" class="loading">⏳ Yükleniyor...</td></tr>';
+  document.getElementById('users-tbody').innerHTML='<tr><td colspan="8" class="loading">⏳ Yükleniyor...</td></tr>';
   try{
     const r=await fetch('/api/admin/users?token='+adminToken);
     tumKullanicilar=await r.json();
@@ -1980,7 +1986,7 @@ function renderTablo(){
   const filtreLabelMap={'hepsi':'Tümü','premium':'Premium','deneme':'Denemede','ucretsiz':'Ücretsiz','bitiyor':'Bu Ay Bitiyor'};
   document.getElementById('aktif-filtre').textContent=filtreLabelMap[aktifFiltre]||'';
   if(!liste.length){
-    document.getElementById('users-tbody').innerHTML='<tr><td colspan="7" class="empty">🔍 Kullanıcı bulunamadı</td></tr>';
+    document.getElementById('users-tbody').innerHTML='<tr><td colspan="8" class="empty">🔍 Kullanıcı bulunamadı</td></tr>';
     return;
   }
   const tbody=document.getElementById('users-tbody');
@@ -1990,6 +1996,7 @@ function renderTablo(){
     const bitis=u.uyelikBitis?new Date(u.uyelikBitis).toLocaleDateString('tr-TR'):'—';
     const bitisDate=u.uyelikBitis?new Date(u.uyelikBitis):null;
     const bitis30=bitisDate&&bitisDate<birAySonra&&bitisDate>bugun;
+    const girisSayisi=Number.isSafeInteger(u.loginCount)&&u.loginCount>=0?u.loginCount:0;
     const av=isim.charAt(0).toUpperCase();
     let badge;
     if(u.premium&&bitis30) badge='<span class="badge badge-yellow">⚠️ Bitiyor</span>';
@@ -2001,6 +2008,7 @@ function renderTablo(){
       <td><div class="user-cell"><div class="user-avatar">\${av}</div><span style="font-weight:600">\${isim}</span></div></td>
       <td style="color:var(--muted)">\${u.email}</td>
       <td style="color:var(--muted)">\${kayit}</td>
+      <td style="font-weight:700">\${girisSayisi}</td>
       <td>\${badge}</td>
       <td style="\${bitisStyle}">\${bitis}</td>
       <td style="font-size:12px">\${u.fatura ? '✓' : '—'}</td>
