@@ -3373,6 +3373,22 @@ body.app-mode #blog{display:none!important}
 .hero.khm .khm-trial-neon:focus-visible{outline:3px solid #FFE6BE;outline-offset:7px}
 @keyframes kh-trial-orbit{to{--kh-trial-angle:360deg}}
 @media(prefers-reduced-motion:reduce){.hero.khm .khm-trial-neon::before{animation:none;--kh-trial-angle:45deg}}
+/* Three-day trial section; presentation and signup CTA only. */
+.how-section.khm.khm-trial-section{padding:20px 32px 70px;background:#FBFAF8}
+.kh-trial-card{position:relative;max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:52px;padding:54px;border:1px solid #ECE2D6;border-radius:30px;background:radial-gradient(ellipse at 5% 0,rgba(255,171,96,.13),transparent 48%),linear-gradient(135deg,#FFFCF8,#FFF9F2);box-shadow:0 24px 70px -42px rgba(79,48,17,.22);scroll-margin-top:105px;overflow:hidden}
+.kh-trial-copy{position:relative;min-width:0;align-self:center}.kh-trial-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:10px;letter-spacing:.09em;font-weight:800;color:#A85312;padding:8px 11px;border:1px solid #F3D7BB;background:#FFF3E5;border-radius:999px;margin-bottom:20px}.kh-trial-eyebrow>span{width:6px;height:6px;background:#F27A1A;border-radius:50%;box-shadow:0 0 0 4px #F27A1A16}
+.kh-trial-card h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(29px,3.05vw,42px);font-weight:800;letter-spacing:-1.6px;line-height:1.16;color:#211A14;margin:0}.kh-trial-card h2 em{font-style:normal;color:#DA650F}.kh-trial-description{font-size:15px;line-height:1.85;color:#746453;margin:20px 0 25px;max-width:520px}
+.kh-trial-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin:0 0 28px}.kh-trial-steps>div{border-top:1px solid #EBDCCC;padding-top:14px;min-width:0}.kh-trial-steps span{font-family:'Plus Jakarta Sans',sans-serif;display:block;color:#C58F5B;font-size:11px;font-weight:800;margin-bottom:8px}.kh-trial-steps strong{display:block;color:#3B3025;font-size:12px;font-weight:800}.kh-trial-steps small{display:block;color:#8A7968;font-size:10px;line-height:1.6;margin-top:5px}
+.kh-trial-start{font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:14px;padding:16px 23px;border:1px solid #E96C12;border-radius:13px;background:linear-gradient(135deg,#FA8B28,#EC6C13);color:#fff;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 12px 28px -12px #E96C1266,inset 0 1px 0 #FFFFFF44;transition:transform .2s,box-shadow .2s}.kh-trial-start:hover{transform:translateY(-2px);box-shadow:0 15px 32px -12px #E96C1299}.kh-trial-start svg{flex:0 0 20px;transition:transform .2s}.kh-trial-start:hover svg{transform:translateX(3px)}.kh-trial-start:focus-visible{outline:3px solid #BD540A;outline-offset:4px}
+.kh-trial-assurances{display:flex;flex-wrap:wrap;gap:9px 16px;margin-top:18px}.kh-trial-assurances>span{font-size:10px;color:#82715E;display:inline-flex;align-items:center;gap:5px}.kh-trial-assurances i{font-style:normal;color:#A76127;font-weight:800}
+.kh-trial-pass{position:relative;align-self:center;min-width:0;padding:28px;border:1px solid #443224;border-radius:23px;background:radial-gradient(ellipse at 100% 0,rgba(242,122,26,.22),transparent 62%),linear-gradient(150deg,#291E15,#17120E);box-shadow:0 28px 48px -24px #37231366;color:#fff;overflow:hidden}.kh-trial-pass::after{content:'';position:absolute;width:200px;height:200px;border:1px solid #FFC89210;border-radius:50%;right:-95px;top:65px;box-shadow:0 0 0 20px #FFC89205,0 0 0 40px #FFC89204;pointer-events:none}.kh-trial-pass-top{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#D5C4B4;font-size:9px;font-weight:800;letter-spacing:.09em}.kh-trial-access{color:#FFB779;border:1px solid #F27A1A44;background:#F27A1A14;border-radius:7px;padding:6px 8px;font-size:8px;white-space:nowrap}
+.kh-trial-duration{display:flex;gap:18px;align-items:center;margin:22px 0 24px;position:relative;z-index:1}.kh-trial-number{font-family:'Plus Jakarta Sans',sans-serif;font-size:106px;line-height:1;font-weight:800;letter-spacing:-8px;background:linear-gradient(145deg,#FFE2BD,#F89640 68%,#D86710);-webkit-background-clip:text;background-clip:text;color:transparent}.kh-trial-duration>div>strong{font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;letter-spacing:-.5px;display:block;font-weight:700}.kh-trial-duration>div>span{font-size:11px;line-height:1.7;color:#BBA897;display:block;margin-top:7px}.kh-trial-pass-divider{height:1px;background:linear-gradient(90deg,#B78A594D,#B78A5910);margin-bottom:22px}.kh-trial-pass h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;line-height:1.35;letter-spacing:-.5px;font-weight:700;margin:0 0 20px;color:#FAF2E9}
+.kh-trial-features{list-style:none;padding:0;margin:0;display:grid;gap:13px}.kh-trial-features li{display:flex;align-items:center;gap:9px;color:#D3C4B6;font-size:11px;line-height:1.55}.kh-trial-features li>span{display:grid;place-items:center;width:17px;height:17px;flex:0 0 17px;border-radius:50%;color:#FFB97C;background:#F27A1A16;font-size:9px}.kh-trial-pass-note{font-size:9px;color:#A48F7D;line-height:1.6;display:flex;align-items:center;gap:8px;margin-top:23px;padding-top:17px;border-top:1px solid #FFFFFF0D}.kh-trial-pass-note svg{flex:0 0 17px}
+@media(max-width:1000px){.kh-trial-card{gap:30px;padding:36px;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}.kh-trial-pass{padding:24px}.kh-trial-number{font-size:90px}.kh-trial-steps{gap:10px}}
+@media(max-width:760px){.how-section.khm.khm-trial-section{padding:10px 20px 45px}.kh-trial-card{grid-template-columns:1fr;padding:28px;gap:30px;border-radius:24px}.kh-trial-card h2{font-size:34px;letter-spacing:-1.2px}.kh-trial-description{max-width:none}.kh-trial-pass{max-width:none}.kh-trial-duration{margin:18px 0}.kh-trial-pass h3 br{display:none}.kh-trial-number{font-size:94px}}
+@media(max-width:420px){.how-section.khm.khm-trial-section{padding-left:14px;padding-right:14px}.kh-trial-card{padding:23px 19px}.kh-trial-card h2{font-size:29px;letter-spacing:-1px}.kh-trial-description{font-size:14px}.kh-trial-start{width:100%;font-size:12px;padding:16px 13px;gap:10px}.kh-trial-assurances{gap:8px 12px}.kh-trial-assurances>span{font-size:9px}.kh-trial-steps strong{font-size:11px}.kh-trial-steps small{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.kh-trial-start,.kh-trial-start svg{transition:none}.kh-trial-start:hover,.kh-trial-start:hover svg{transform:none}}
+
 </style>
 </head>
 <body>
@@ -3673,38 +3689,32 @@ body.app-mode #blog{display:none!important}
   </section>
 </div>
 
-<!-- DEMO BANT -->
-<div class="how-section khm khm-demo">
-  <div class="khm-demo-in" id="demo">
-    <div class="khm-ribbon">DEMO</div>
-    <div class="khm-ghost">DEMO</div>
-
-    <div style="position:relative;max-width:540px">
-      <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:100px;background:rgba(242,122,26,.16);border:1px solid rgba(242,122,26,.35);color:#F9A15A;font-size:12px;font-weight:800;letter-spacing:.04em;margin-bottom:16px"><svg width="12" height="12" viewBox="0 0 24 24" fill="#F9A15A"><path d="M8 5v14l11-7z"/></svg>ÜCRETSİZ DEMO · DENEME MODU</div>
-      <h2 style="font-size:clamp(26px,3.4vw,38px);font-weight:800;color:#fff;letter-spacing:-1px;line-height:1.1">Satın almadan önce deneyin</h2>
-      <p style="font-size:16px;color:rgba(255,255,255,.55);line-height:1.6;margin:14px 0 18px">Gerçek ürün örnekleriyle komisyonhesap'ı keşfedin. Alış fiyatı girin, komisyon + KDV + stopaj dâhil net karı anında görün.</p>
-      <div style="display:flex;align-items:flex-start;gap:11px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:13px;padding:12px 15px;margin-bottom:22px;max-width:470px">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#F9A15A" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.01" stroke-linecap="round"/></svg>
-        <span style="font-size:12.5px;color:rgba(255,255,255,.6);line-height:1.55">Bu bir <strong style="color:#fff">önizlemedir</strong> — örnek verilerle sistemi test edersin, hiçbir veri kaydedilmez.</span>
+<!-- ÜÇ GÜNLÜK ÜCRETSİZ DENEME -->
+<div class="how-section khm khm-demo khm-trial-section">
+  <section class="kh-trial-card" id="demo" aria-labelledby="kh-trial-title">
+    <div class="kh-trial-copy">
+      <div class="kh-trial-eyebrow"><span aria-hidden="true"></span>3 GÜN ÜCRETSİZ · TAM ERİŞİM</div>
+      <h2 id="kh-trial-title">Önce kendi ürünlerinle dene.<br><em>Kazancını gör, sonra karar ver.</em></h2>
+      <p class="kh-trial-description">Örnek ürünlerle değil, kendi Trendyol ürünlerinle başla. Excel dosyanı yükle, alış ve kargo maliyetlerini gir; kârlı ve zararlı ürünlerini tek ekranda incele.</p>
+      <div class="kh-trial-steps" aria-label="Ücretsiz denemeye başlama adımları">
+        <div><span>01</span><strong>Üye ol</strong><small>Hesabını oluştur.</small></div>
+        <div><span>02</span><strong>Excel’ini yükle</strong><small>Kendi ürünlerinle çalış.</small></div>
+        <div><span>03</span><strong>Kârını incele</strong><small>Maliyetlerini gir, sonucu gör.</small></div>
       </div>
-      <div style="display:flex;flex-wrap:wrap;gap:16px">
-        <span style="display:flex;align-items:center;gap:6px;font-size:13.5px;color:rgba(255,255,255,.6);font-weight:600"><span style="color:#34D399">✓</span> Kayıt gerekmez</span>
-        <span style="display:flex;align-items:center;gap:6px;font-size:13.5px;color:rgba(255,255,255,.6);font-weight:600"><span style="color:#34D399">✓</span> Anında başla</span>
-        <span style="display:flex;align-items:center;gap:6px;font-size:13.5px;color:rgba(255,255,255,.6);font-weight:600"><span style="color:#34D399">✓</span> Tüm özellikler açık</span>
-      </div>
+      <button type="button" class="kh-trial-start" onclick="trackCta('trial_section');openAuth('kayit')">3 Gün Ücretsiz Denemeye Başla <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      <div class="kh-trial-assurances"><span><i aria-hidden="true">✓</i>Kredi kartı gerekmez</span><span><i aria-hidden="true">✓</i>Otomatik ödeme yok</span><span><i aria-hidden="true">✓</i>Kurulum gerekmez</span></div>
     </div>
-
-    <div style="position:relative;display:flex;flex-direction:column;gap:14px;align-items:stretch;min-width:250px">
-      <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:14px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><span style="font-size:10px;color:rgba(255,255,255,.4);font-weight:800;text-transform:uppercase;letter-spacing:.06em">Örnek Analiz</span><span style="font-size:9px;font-weight:800;color:#F9A15A;background:rgba(242,122,26,.16);border:1px solid rgba(242,122,26,.3);padding:2px 7px;border-radius:100px;letter-spacing:.04em">ÖRNEK VERİ</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 11px;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.2);border-radius:10px;margin-bottom:6px"><span style="font-size:13px;color:rgba(255,255,255,.85)">Kulaklık</span><span style="font-size:14px;font-weight:800;color:#34D399">+₺312</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 11px;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.2);border-radius:10px"><span style="font-size:13px;color:rgba(255,255,255,.85)">Çanta</span><span style="font-size:14px;font-weight:800;color:#F87171">−₺47</span></div>
-      </div>
-      <button class="neonbtn" onclick="demoVeGo()" style="background:#F27A1A;color:#fff;padding:16px;border-radius:13px;font-size:15px;font-weight:800;text-align:center">Demo Başlat →</button>
-      <div style="font-size:11px;color:rgba(255,255,255,.35);text-align:center">Kredi kartı gerekmez</div>
-    </div>
-  </div>
+    <aside class="kh-trial-pass" aria-label="Üç günlük deneme kapsamı">
+      <div class="kh-trial-pass-top"><span>KOMİSYONHESAP</span><span class="kh-trial-access">TAM ERİŞİM</span></div>
+      <div class="kh-trial-duration"><span class="kh-trial-number">03</span><div><strong>gün</strong><span>kendi ürünlerinle<br>ücretsiz keşfet</span></div></div>
+      <div class="kh-trial-pass-divider"></div>
+      <h3>Gerçek verilerinle,<br>daha net kararlar.</h3>
+      <ul class="kh-trial-features"><li><span aria-hidden="true">✓</span>Excel ile toplu ürün analizi</li><li><span aria-hidden="true">✓</span>Komisyon, KDV ve kargo dökümü</li><li><span aria-hidden="true">✓</span>Kârlı ve zararlı ürünleri karşılaştırma</li></ul>
+      <div class="kh-trial-pass-note"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Deneme için ödeme bilgisi istenmez.</div>
+    </aside>
+  </section>
 </div>
+
 
 <!-- FİYATLANDIRMA -->
 <div class="pricing-section khm">
