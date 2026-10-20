@@ -3419,35 +3419,34 @@ body.app-mode #blog{display:none!important}
 @media(max-width:850px){.kh-faq-layout{grid-template-columns:minmax(0,.8fr) minmax(0,1.5fr);gap:40px}.kh-faq-intro h2{font-size:34px;letter-spacing:-1px}}
 @media(max-width:650px){#kh-faq .khm-faq{padding:60px 24px}.kh-faq-layout{grid-template-columns:1fr;gap:30px}.kh-faq-intro h2{font-size:33px}.kh-faq-intro h2 br{display:none}.kh-faq-intro>p{max-width:340px}.kh-faq-kicker{margin-bottom:12px}.kh-faq-contact{margin-top:20px}.kh-faq-contact>span{display:inline;margin-right:12px}#kh-faq .kh-faq-list summary{font-size:13px;padding:21px 0;min-height:64px;gap:18px}#kh-faq .kh-faq-list .ans{font-size:12.5px;padding-right:18px;padding-bottom:22px}.kh-faq-resources{margin-top:38px;padding-top:25px}.kh-faq-resources ul{grid-template-columns:1fr;gap:20px}}
 @media(prefers-reduced-motion:reduce){#kh-faq .faq-plus::before,#kh-faq .faq-plus::after{transition:none}}
-/* Light editorial footer: typography and fine rules, with a single trial action. */
-footer.khm.kft.kh-footer{background:#F2EEE7;color:#28241F;padding:0 32px;border-top:1px solid #E4DDD3;position:relative}
+/* Separate trial invitation from the dark site footer. */
+.how-section.khm.kh-footer-trial-band{padding:0 32px;background:#F2EEE7;border-top:1px solid #E5DDD2}
+footer.khm.kft.kh-footer{background:#121110;color:#EAE4DC;padding:0 32px;border-top:1px solid #28241F;position:relative}
 footer.kh-footer::before{display:none}
 .kh-footer-inner{max-width:1116px;margin:0 auto}
-.kh-footer-trial{display:flex;align-items:center;justify-content:space-between;gap:60px;padding:66px 0 53px;border-bottom:1px solid #D7CFC3}
+.kh-footer-trial{max-width:1116px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:60px;padding:59px 0 61px;border:0}
 .kh-footer-trial h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:46px;line-height:1.13;letter-spacing:-2px;font-weight:500;color:#28241F;margin:0}
 .kh-footer-trial-copy>p{font-size:13px;line-height:1.8;color:#8B7E70;margin:22px 0 0;max-width:420px}
-.kh-footer-trial-action{display:flex;flex-direction:column;align-items:flex-start;gap:14px;flex:0 0 auto}
-.kh-footer-start{font-family:inherit;display:inline-flex;align-items:center;justify-content:space-between;gap:32px;min-width:238px;padding:18px 22px;background:#29241E;border:1px solid #29241E;border-radius:6px;font-size:13px;font-weight:600;color:#F9F5EF;cursor:pointer;box-shadow:none;transition:background .2s,border-color .2s}
-.kh-footer-start:hover{background:#47372A;border-color:#47372A;box-shadow:none}.kh-footer-start svg{width:17px;height:17px;opacity:.8}.kh-footer-trial-action>span{font-size:10px;color:#948675;line-height:1.7}
-.kh-footer-grid{display:grid;grid-template-columns:300px minmax(0,1fr);column-gap:80px;row-gap:0;padding:43px 0 37px}
+.kh-footer-trial-action{display:flex;flex-direction:column;align-items:flex-start;gap:17px;flex:0 0 auto}
+.kh-footer-start{position:relative;isolation:isolate;overflow:visible;font-family:inherit;display:inline-flex;align-items:center;justify-content:space-between;gap:32px;min-width:252px;padding:18px 24px;background:linear-gradient(135deg,#FA8B28,#EA6912);border:1px solid #E57A26;border-radius:10px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;box-shadow:0 0 18px #F27A1A24,0 12px 26px -14px #E9752666;transition:box-shadow .2s,background .2s}
+.kh-footer-start::before{content:'';position:absolute;inset:-4px;border-radius:14px;padding:2px;pointer-events:none;background:conic-gradient(from var(--kh-trial-angle),rgba(242,122,26,.15) 0deg,rgba(242,122,26,.15) 235deg,#FF9B42 280deg,#FFEAC2 315deg,#FFAA54 340deg,rgba(242,122,26,.15) 360deg);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;filter:drop-shadow(0 0 4px #F49A4A99);animation:kh-trial-orbit 3.2s linear infinite}
+.kh-footer-start:hover{background:#FA8C35;box-shadow:0 0 24px #F27A1A38,0 12px 26px -12px #E9752677}.kh-footer-start svg{width:18px;height:18px;opacity:1}.kh-footer-start:focus-visible{outline:2px solid #BC671F;outline-offset:8px}.kh-footer-trial-action>span{font-size:10px;color:#92816F;line-height:1.7}
+.kh-footer-grid{display:grid;grid-template-columns:300px minmax(0,1fr);column-gap:80px;row-gap:0;padding:48px 0 40px}
 .kh-footer-brand{grid-column:1;grid-row:1 / 4;padding:14px 0}
-.kh-footer .kh-footer-wordmark{font-family:'Plus Jakarta Sans',sans-serif;display:inline-block;font-size:28px;font-weight:700;letter-spacing:-1.2px;color:#2E2821;text-decoration:none}.kh-footer .kh-footer-wordmark span{color:#C76E29}
-.kh-footer-brand>p{font-size:12px;line-height:1.9;color:#948574;margin:17px 0 17px}
-.kh-footer .kh-footer-email{display:inline-block;font-size:12px;color:#574B3F;text-decoration:none;border-bottom:1px solid #BFB0A0;padding-bottom:4px}.kh-footer .kh-footer-email:hover{color:#A85619;border-color:#A85619}
-.kh-footer .kh-footer-social{display:flex;align-items:center;gap:8px;width:max-content;color:#8B7966;text-decoration:none;font-size:11px;margin-top:20px}.kh-footer .kh-footer-social:hover{color:#5B4431}.kh-footer-social>span{font-size:12px}
-.kh-footer-links{display:flex;flex-direction:row;align-items:center;flex-wrap:wrap;gap:13px 25px;min-width:0;padding:21px 0;border-bottom:1px solid #DDD5C9}
-.kh-footer-links:last-child{border-bottom:0}
-.kh-footer-links h3{font-family:inherit;flex:0 0 68px;font-size:10px;line-height:1.6;font-weight:500;letter-spacing:.02em;color:#A18E79;margin:0}
-.kh-footer .kh-footer-links a,.kh-footer .kh-footer-links button{font-family:inherit;font-size:12px;line-height:1.8;color:#5B4F42;text-decoration:none;border:0;background:none;box-shadow:none;margin:0;padding:0;text-align:left;cursor:pointer;transition:color .18s;overflow-wrap:anywhere;font-weight:500}
-.kh-footer .kh-footer-links a:hover,.kh-footer .kh-footer-links button:hover{color:#AE5B1B;text-decoration:underline;text-underline-offset:5px}
-.kh-footer a:focus-visible,.kh-footer button:focus-visible{outline:2px solid #BD7A47;outline-offset:5px;border-radius:2px}
-.kh-footer-bottom{display:flex;align-items:center;justify-content:space-between;gap:25px;padding:23px 0 28px;border-top:1px solid #DDD5C9}
-.kh-footer-copyright p{font-size:10px;color:#8E7F6F;line-height:1.7;margin:0 0 5px}.kh-footer-copyright>span{font-size:9px;line-height:1.7;color:#A08F7C;display:block}
-.kh-footer-payment{display:flex;align-items:center;gap:12px;flex:0 0 auto}.kh-footer-payment>span{font-size:9px;color:#9C8974}.kh-footer-payment>div{display:flex;align-items:center;background:transparent;padding:0;border-radius:0}.kh-footer-payment img{display:block;width:208px;max-width:100%;height:auto;opacity:.75;filter:saturate(.65)}
-@media(max-width:1000px){.kh-footer-grid{grid-template-columns:260px minmax(0,1fr);column-gap:35px}.kh-footer-links{gap:10px 20px;padding:18px 0}.kh-footer-links h3{flex-basis:100%;margin-bottom:3px}.kh-footer-trial h2{font-size:39px;letter-spacing:-1.6px}.kh-footer-trial{gap:30px}.kh-footer-bottom{flex-wrap:wrap}}
-@media(max-width:650px){footer.khm.kft.kh-footer{padding:0 25px}.kh-footer-trial{display:block;padding:43px 0 34px}.kh-footer-trial h2{font-size:36px;letter-spacing:-1.4px}.kh-footer-trial-copy>p{font-size:12px;margin-top:18px}.kh-footer-trial-action{margin-top:25px;gap:12px}.kh-footer-start{min-width:242px;padding:17px 20px}.kh-footer-trial-action>span{font-size:9px}.kh-footer-grid{grid-template-columns:1fr;padding:28px 0 22px;gap:0}.kh-footer-brand{grid-column:auto;grid-row:auto;padding:0 0 30px}.kh-footer-brand>p br{display:none}.kh-footer-brand>p{max-width:300px;margin:13px 0}.kh-footer .kh-footer-wordmark{font-size:27px}.kh-footer-links{padding:19px 0;gap:10px 23px}.kh-footer-links h3{flex:0 0 100%;font-size:10px}.kh-footer .kh-footer-links a,.kh-footer .kh-footer-links button{font-size:12px}.kh-footer-bottom{gap:20px;padding:20px 0 25px}.kh-footer-payment{gap:10px;flex-wrap:wrap}.kh-footer-payment img{width:200px}}
+.kh-footer .kh-footer-wordmark{font-family:'Plus Jakarta Sans',sans-serif;display:inline-block;font-size:28px;font-weight:700;letter-spacing:-1.2px;color:#F2EEE7;text-decoration:none}.kh-footer .kh-footer-wordmark span{color:#F3954C}
+.kh-footer-brand>p{font-size:12px;line-height:1.9;color:#B2A394;margin:17px 0 17px}
+.kh-footer .kh-footer-email{display:inline-block;font-size:12px;color:#D7C9BA;text-decoration:none;border-bottom:1px solid #77624D;padding-bottom:5px}.kh-footer .kh-footer-email:hover{color:#F4AE76;border-color:#F4AE76}
+.kh-footer .kh-footer-social{display:flex;align-items:center;gap:8px;width:max-content;color:#A99582;text-decoration:none;font-size:11px;margin-top:20px}.kh-footer .kh-footer-social:hover{color:#F0D5BD}.kh-footer-social>span{font-size:12px}
+.kh-footer-links{display:flex;flex-direction:row;align-items:center;flex-wrap:wrap;gap:14px 25px;min-width:0;padding:23px 0;border-bottom:1px solid #FFFFFF12}.kh-footer-links:last-child{border-bottom:0}
+.kh-footer-links h3{font-family:inherit;flex:0 0 68px;font-size:11px;line-height:1.6;font-weight:600;letter-spacing:.02em;color:#D49868;margin:0}
+.kh-footer .kh-footer-links a,.kh-footer .kh-footer-links button{font-family:inherit;font-size:13px;line-height:1.8;color:#D3C5B6;text-decoration:none;border:0;background:none;box-shadow:none;margin:0;padding:0;text-align:left;cursor:pointer;transition:color .18s;overflow-wrap:anywhere;font-weight:500}
+.kh-footer .kh-footer-links a:hover,.kh-footer .kh-footer-links button:hover{color:#F8BC8C;text-decoration:underline;text-underline-offset:5px}.kh-footer a:focus-visible,.kh-footer button:focus-visible{outline:2px solid #E5A16B;outline-offset:5px;border-radius:2px}
+.kh-footer-bottom{display:flex;align-items:center;justify-content:space-between;gap:25px;padding:24px 0 29px;border-top:1px solid #FFFFFF16}.kh-footer-copyright p{font-size:11px;color:#B09E8A;line-height:1.7;margin:0 0 5px}.kh-footer-copyright>span{font-size:10px;line-height:1.7;color:#8F7C68;display:block}
+.kh-footer-payment{display:flex;align-items:center;gap:12px;flex:0 0 auto}.kh-footer-payment>span{font-size:10px;color:#A18C75}.kh-footer-payment>div{display:flex;align-items:center;background:#FBF8F3;padding:7px 10px;border-radius:6px}.kh-footer-payment img{display:block;width:208px;max-width:100%;height:auto;opacity:1;filter:none}
+@media(max-width:1000px){.kh-footer-grid{grid-template-columns:260px minmax(0,1fr);column-gap:35px}.kh-footer-links{gap:11px 20px;padding:19px 0}.kh-footer-links h3{flex-basis:100%;margin-bottom:3px}.kh-footer-trial h2{font-size:39px;letter-spacing:-1.6px}.kh-footer-trial{gap:30px}.kh-footer-bottom{flex-wrap:wrap}}
+@media(max-width:650px){footer.khm.kft.kh-footer,.how-section.khm.kh-footer-trial-band{padding:0 25px}.kh-footer-trial{display:block;padding:43px 0 40px}.kh-footer-trial h2{font-size:36px;letter-spacing:-1.4px}.kh-footer-trial-copy>p{font-size:12px;margin-top:18px}.kh-footer-trial-action{margin-top:28px;gap:15px}.kh-footer-start{min-width:252px;padding:17px 22px}.kh-footer-trial-action>span{font-size:9px}.kh-footer-grid{grid-template-columns:1fr;padding:34px 0 22px;gap:0}.kh-footer-brand{grid-column:auto;grid-row:auto;padding:0 0 30px}.kh-footer-brand>p br{display:none}.kh-footer-brand>p{max-width:300px;margin:13px 0}.kh-footer .kh-footer-wordmark{font-size:27px}.kh-footer-links{padding:21px 0;gap:11px 23px}.kh-footer-links h3{flex:0 0 100%;font-size:11px}.kh-footer .kh-footer-links a,.kh-footer .kh-footer-links button{font-size:12px}.kh-footer-bottom{gap:22px;padding:22px 0 25px}.kh-footer-payment{gap:10px;flex-wrap:wrap}.kh-footer-payment img{width:200px}}
 @media(max-width:380px){.kh-footer-start{width:100%;min-width:0}.kh-footer-trial-action{align-items:stretch}.kh-footer-trial h2{font-size:32px}.kh-footer-trial-action>span{text-align:center}}
-@media(prefers-reduced-motion:reduce){.kh-footer-start,.kh-footer-links a,.kh-footer-links button{transition:none}}
+@media(prefers-reduced-motion:reduce){.kh-footer-start,.kh-footer-links a,.kh-footer-links button{transition:none}.kh-footer-start::before{animation:none;--kh-trial-angle:45deg}}
 
 </style>
 </head>
@@ -4587,13 +4586,17 @@ footer.kh-footer::before{display:none}
   </section>
 </div>
 
-<!-- FOOTER -->
-<footer class="khm kft kh-footer" id="kh-footer">
-  <div class="kh-footer-inner">
+<!-- ÜCRETSİZ DENEME ÇAĞRISI -->
+<div class="how-section khm kh-footer-trial-band">
     <section class="kh-footer-trial" aria-labelledby="kh-footer-trial-title">
       <div class="kh-footer-trial-copy"><h2 id="kh-footer-trial-title">3 gün boyunca,<br>kendi ürünlerinle çalış.</h2><p>Excel’ini yükle. Ürünlerinin kârını ve zararını gör.</p></div>
       <div class="kh-footer-trial-action"><button type="button" class="kh-footer-start" onclick="trackCta('footer_trial');openAuth('kayit')">3 Gün Ücretsiz Dene <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button><span>Kredi kartı gerekmez · Otomatik ödeme yok.</span></div>
     </section>
+</div>
+
+<!-- FOOTER -->
+<footer class="khm kft kh-footer" id="kh-footer">
+  <div class="kh-footer-inner">
     <div class="kh-footer-grid">
       <div class="kh-footer-brand"><a class="kh-footer-wordmark" href="/" aria-label="KomisyonHesap ana sayfa">komisyon<span>hesap</span></a><p>Trendyol satıcıları için bağımsız<br>ürün kârlılığı analiz aracı.</p><a class="kh-footer-email" href="mailto:info@komisyonhesap.com">info@komisyonhesap.com</a><a class="kh-footer-social" href="https://www.instagram.com/komisyonhesap/" target="_blank" rel="noopener noreferrer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg>Instagram <span aria-hidden="true">↗</span></a></div>
       <nav class="kh-footer-links" aria-labelledby="kh-footer-product"><h3 id="kh-footer-product">Ürün</h3><a href="#nasil">Nasıl çalışır?</a><a href="#fiyat">Fiyatlandırma</a><a href="#auth-form-kayit" onclick="openAuth('kayit');return false;">Ücretsiz deneme</a><a href="#auth-form-giris" onclick="openAuth('giris');return false;">Giriş yap</a></nav>
