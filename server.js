@@ -339,6 +339,27 @@ a{color:#E0640C;text-decoration:none}a:hover{text-decoration:underline}
 const BLOG_FOOT = `<footer class="bfoot">© ${new Date().getFullYear()} komisyonhesap · <a href="/">Ana Sayfa</a> · <a href="/trendyol-komisyon-hesaplama">Trendyol Komisyon Hesaplama</a> · <a href="/trendyol-maliyet-hesaplama">Trendyol Maliyet Hesaplama</a> · <a href="/blog">Blog</a> · <a href="https://www.instagram.com/komisyonhesap/" target="_blank" rel="noopener">Instagram</a></footer></body></html>`;
 
 
+
+const ADMIN_SESSION_COOKIE='__Host-kh_admin';
+const ADMIN_SESSION_MS=12*60*60*1000;
+const adminSessionKeyVersion=crypto.createHash('sha256').update(ADMIN_SIFRE).digest('hex');
+function adminSessionId(req){
+  const cookie=(req.headers.cookie||'').split(';').map(v=>v.trim()).find(v=>v.startsWith(ADMIN_SESSION_COOKIE+'='));
+  const token=cookie?cookie.slice(ADMIN_SESSION_COOKIE.length+1):'';
+  return /^[a-f0-9]{64}$/.test(token)?crypto.createHash('sha256').update(token).digest('hex'):null;
+}
+function adminSessionCookie(token,maxAge){return ADMIN_SESSION_COOKIE+'='+token+'; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age='+maxAge;}
+async function adminOturumGecerli(req){
+  const id=adminSessionId(req);if(!id||!db)return false;
+  try{return !!(await db.collection('adminSessions').findOne({_id:id,keyVersion:adminSessionKeyVersion,expiresAt:{$gt:new Date()}}));}
+  catch(e){console.error('Admin oturum doğrulama hatası');return false;}
+}
+function adminOriginGecerli(req){
+  if(req.headers['sec-fetch-site']==='cross-site')return false;
+  if(!req.headers.origin)return true;
+  try{return new URL(req.headers.origin).host===req.headers.host;}catch(e){return false;}
+}
+
 const server = http.createServer(async (req, res) => {
   corsHeaders(res);
 
@@ -939,6 +960,23 @@ async function sifirla(){
 
   // ── ADMİN API ──
 
+  if(parsed.pathname.startsWith('/api/admin/')){
+    res.setHeader('Cache-Control','no-store');
+    if(req.method!=='GET'&&!adminOriginGecerli(req)){
+      res.writeHead(403,{'Content-Type':'application/json'});res.end(JSON.stringify({error:'Geçersiz istek kaynağı'}));return;
+    }
+  }
+  if(parsed.pathname==='/api/admin/oturum'&&req.method==='GET'){
+    const ok=await adminOturumGecerli(req);
+    res.writeHead(ok?200:401,{'Content-Type':'application/json'});res.end(JSON.stringify({ok}));return;
+  }
+  if(parsed.pathname==='/api/admin/cikis'&&req.method==='POST'){
+    const id=adminSessionId(req);
+    try{if(id&&db)await db.collection('adminSessions').deleteOne({_id:id});}
+    catch(e){res.writeHead(503,{'Content-Type':'application/json'});res.end(JSON.stringify({error:'Çıkış yapılamadı; tekrar deneyin'}));return;}
+    res.writeHead(200,{'Content-Type':'application/json','Set-Cookie':adminSessionCookie('',0)});res.end(JSON.stringify({ok:true}));return;
+  }
+
   // Admin giriş
   if (parsed.pathname === '/api/admin/giris' && req.method === 'POST') {
     const body = await getBody(req);
@@ -946,14 +984,24 @@ async function sifirla(){
       res.writeHead(401, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: 'Hatalı admin şifresi' })); return;
     }
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true, token: ADMIN_SIFRE }));
+    await waitForDb();
+    if(!db){res.writeHead(503,{'Content-Type':'application/json'});res.end(JSON.stringify({error:'Oturum şu anda açılamıyor'}));return;}
+    try{
+      const sessions=db.collection('adminSessions');
+      await sessions.createIndex({expiresAt:1},{expireAfterSeconds:0});
+      const token=crypto.randomBytes(32).toString('hex');
+      const id=crypto.createHash('sha256').update(token).digest('hex');
+      await sessions.insertOne({_id:id,keyVersion:adminSessionKeyVersion,expiresAt:new Date(Date.now()+ADMIN_SESSION_MS)});
+      const onceki=adminSessionId(req);if(onceki)await sessions.deleteOne({_id:onceki});
+      res.writeHead(200,{'Content-Type':'application/json','Set-Cookie':adminSessionCookie(token,ADMIN_SESSION_MS/1000)});
+      res.end(JSON.stringify({ok:true}));
+    }catch(e){console.error('Admin oturum oluşturma hatası');res.writeHead(503,{'Content-Type':'application/json'});res.end(JSON.stringify({error:'Oturum açılamadı; tekrar deneyin'}));}
     return;
   }
 
   // Admin - tüm kullanıcılar
   if (parsed.pathname === '/api/admin/users' && req.method === 'GET') {
-    if (parsed.query.token !== ADMIN_SIFRE) {
+    if (!(await adminOturumGecerli(req))) {
       res.writeHead(401); res.end(JSON.stringify({ error: 'Yetkisiz' })); return;
     }
     if (!db) { res.writeHead(500); res.end(JSON.stringify({ error: 'DB yok' })); return; }
@@ -973,7 +1021,7 @@ async function sifirla(){
   // Admin - premium ver/al
   if (parsed.pathname === '/api/admin/premium' && req.method === 'POST') {
     const body = await getBody(req);
-    if (body.token !== ADMIN_SIFRE) {
+    if (!(await adminOturumGecerli(req))) {
       res.writeHead(401); res.end(JSON.stringify({ error: 'Yetkisiz' })); return;
     }
     const { email, aktif } = body;
@@ -987,7 +1035,7 @@ async function sifirla(){
   // Admin - şifre sıfırla
   if (parsed.pathname === '/api/admin/sifre-sifirla' && req.method === 'POST') {
     const body = await getBody(req);
-    if (body.token !== ADMIN_SIFRE) {
+    if (!(await adminOturumGecerli(req))) {
       res.writeHead(401); res.end(JSON.stringify({ error: 'Yetkisiz' })); return;
     }
     const { email, yeniSifre } = body;
@@ -1000,7 +1048,7 @@ async function sifirla(){
   // Admin - kullanıcı sil
   if (parsed.pathname === '/api/admin/sil' && req.method === 'POST') {
     const body = await getBody(req);
-    if (body.token !== ADMIN_SIFRE) {
+    if (!(await adminOturumGecerli(req))) {
       res.writeHead(401); res.end(JSON.stringify({ error: 'Yetkisiz' })); return;
     }
     await db.collection('users').deleteOne({ email: body.email });
@@ -1156,7 +1204,7 @@ async function sifirla(){
 
   // Admin: tüm yazılar (taslak dahil)
   if (parsed.pathname === '/api/admin/blog' && req.method === 'GET') {
-    if (parsed.query.token !== ADMIN_SIFRE) { res.writeHead(401); res.end(JSON.stringify({ error: 'Yetkisiz' })); return; }
+    if (!(await adminOturumGecerli(req))) { res.writeHead(401); res.end(JSON.stringify({ error: 'Yetkisiz' })); return; }
     if (!db) { res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify([])); return; }
     const yazilar = await db.collection('blog').find({}).sort({ tarih: -1 }).toArray();
     res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -1167,7 +1215,7 @@ async function sifirla(){
   // Admin: yazı ekle / güncelle
   if (parsed.pathname === '/api/admin/blog' && req.method === 'POST') {
     const body = await getBody(req);
-    if (body.token !== ADMIN_SIFRE) { res.writeHead(401); res.end(JSON.stringify({ error: 'Yetkisiz' })); return; }
+    if (!(await adminOturumGecerli(req))) { res.writeHead(401); res.end(JSON.stringify({ error: 'Yetkisiz' })); return; }
     if (!db) { res.writeHead(500); res.end(JSON.stringify({ error: 'DB yok' })); return; }
     const baslik = (body.baslik || '').trim();
     if (!baslik || !(body.icerik || '').trim()) { res.writeHead(400); res.end(JSON.stringify({ error: 'Başlık ve içerik zorunlu' })); return; }
@@ -1193,7 +1241,7 @@ async function sifirla(){
   // Admin: yazı sil
   if (parsed.pathname === '/api/admin/blog/sil' && req.method === 'POST') {
     const body = await getBody(req);
-    if (body.token !== ADMIN_SIFRE) { res.writeHead(401); res.end(JSON.stringify({ error: 'Yetkisiz' })); return; }
+    if (!(await adminOturumGecerli(req))) { res.writeHead(401); res.end(JSON.stringify({ error: 'Yetkisiz' })); return; }
     const { ObjectId } = require('mongodb');
     await db.collection('blog').deleteOne({ _id: new ObjectId(body.id) });
     res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ ok: true })); return;
@@ -1927,7 +1975,7 @@ tr:hover td{background:#FCF8F4}
 <div class="toast-wrap" id="toast-wrap"></div>
 
 <script>
-let adminToken='';
+let adminOturumSurumu=0;
 let tumKullanicilar=[];
 let aktifFiltre='hepsi';
 
@@ -1941,6 +1989,7 @@ function toast(msg,type='info'){
 }
 
 async function adminGiris(){
+  adminOturumSurumu++;
   const sifre=document.getElementById('admin-sifre').value;
   const btn=document.querySelector('.btn-login');
   btn.disabled=true; btn.textContent='Giriş yapılıyor...';
@@ -1948,7 +1997,7 @@ async function adminGiris(){
     const r=await fetch('/api/admin/giris',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sifre})});
     const d=await r.json();
     if(d.ok){
-      adminToken=sifre;
+      document.getElementById('admin-sifre').value='';
       document.getElementById('login-section').style.display='none';
       document.getElementById('admin-panel').style.display='flex';
       yukleCullanicilari();
@@ -1959,15 +2008,45 @@ async function adminGiris(){
   btn.disabled=false; btn.textContent='Giriş Yap';
 }
 
-function adminCikis(){
-  adminToken='';
+function adminOturumuKapat(){
   document.getElementById('login-section').style.display='flex';
   document.getElementById('admin-panel').style.display='none';
   document.getElementById('admin-sifre').value='';
   document.getElementById('admin-err').textContent='';
+  const detay=document.getElementById('ist-detay-modal');if(detay.open)detay.close();
+  document.getElementById('fatura-modal').style.display='none';
+  tumKullanicilar=[];
+}
+async function adminCikis(){
+  adminOturumSurumu++;
+  try{
+    const r=await fetch('/api/admin/cikis',{method:'POST',credentials:'same-origin'});
+    if(!r.ok)throw new Error('Çıkış yapılamadı');
+    adminOturumuKapat();
+    try{sessionStorage.removeItem('khAdminSayfa');}catch(e){}
+  }catch(e){toast('Çıkış yapılamadı; tekrar deneyin','error');}
+}
+async function adminFetch(adres,ayarlar){
+  const r=await fetch(adres,Object.assign({},ayarlar,{credentials:'same-origin'}));
+  if(r.status===401){adminOturumSurumu++;adminOturumuKapat();document.getElementById('admin-err').textContent='Oturum süreniz doldu. Lütfen tekrar giriş yapın.';throw new Error('Oturum sona erdi');}
+  return r;
+}
+async function adminOturumunuYukle(){
+  const surum=adminOturumSurumu;
+  try{
+    const r=await fetch('/api/admin/oturum',{credentials:'same-origin',cache:'no-store'});
+    if(surum!==adminOturumSurumu||!r.ok)return;
+    const d=await r.json();if(surum!==adminOturumSurumu||!d.ok)return;
+    document.getElementById('login-section').style.display='none';
+    document.getElementById('admin-panel').style.display='flex';
+    let sayfa='kullanicilar';try{sayfa=sessionStorage.getItem('khAdminSayfa')||sayfa;}catch(e){}
+    sayfaGoster(['kullanicilar','istatistikler','blog'].includes(sayfa)?sayfa:'kullanicilar');
+    await yukleCullanicilari();
+  }catch(e){/* Bağlantı yoksa giriş ekranı açık kalır. */}
 }
 
 function sayfaGoster(sayfa){
+  try{sessionStorage.setItem('khAdminSayfa',sayfa);}catch(e){}
   document.getElementById('page-kullanicilar').style.display=sayfa==='kullanicilar'?'block':'none';
   document.getElementById('page-istatistikler').style.display=sayfa==='istatistikler'?'block':'none';
   document.getElementById('page-blog').style.display=sayfa==='blog'?'block':'none';
@@ -1979,7 +2058,7 @@ function sayfaGoster(sayfa){
 async function yukleCullanicilari(){
   document.getElementById('users-tbody').innerHTML='<tr><td colspan="8" class="loading">⏳ Yükleniyor...</td></tr>';
   try{
-    const r=await fetch('/api/admin/users?token='+adminToken);
+    const r=await adminFetch('/api/admin/users');
     tumKullanicilar=await r.json();
     hesaplaIstatistikler();
     renderTablo();
@@ -2161,7 +2240,7 @@ function aramaYap(){ renderTablo(); }
 
 async function premiumDegistir(email,aktif){
   if(!confirm(aktif?email+' kullanıcısına premium ver?':email+' kullanıcısının premiumunu al?')) return;
-  await fetch('/api/admin/premium',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:adminToken,email,aktif})});
+  await adminFetch('/api/admin/premium',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,aktif})});
   toast(aktif?'Premium verildi ✓':'Premium alındı','success');
   yukleCullanicilari();
 }
@@ -2170,7 +2249,7 @@ async function sifreSifirla(email){
   const yeni=prompt(email+' için yeni şifre girin (min 6 karakter):');
   if(!yeni||yeni.length<6){if(yeni!==null)alert('Şifre en az 6 karakter olmalı');return;}
   try{
-    const r=await fetch('/api/admin/sifre-sifirla',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:adminToken,email,yeniSifre:yeni})});
+    const r=await adminFetch('/api/admin/sifre-sifirla',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,yeniSifre:yeni})});
     const d=await r.json();
     if(!r.ok||d.error){toast(d.error||'Şifre güncellenemedi','error');return;}
     toast('Yeni şifre kaydedildi ✓','success');
@@ -2201,7 +2280,7 @@ function faturaGoster(email) {
 
 async function kullaniciSil(email,ad){
   if(!confirm(ad+' ('+email+') silinsin mi? Bu işlem geri alınamaz!')) return;
-  await fetch('/api/admin/sil',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:adminToken,email})});
+  await adminFetch('/api/admin/sil',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
   toast('Kullanıcı silindi','info');
   yukleCullanicilari();
 }
@@ -2213,7 +2292,7 @@ async function yukleBloglar(){
   var box=document.getElementById('blog-liste');
   box.innerHTML='<div class="loading">⏳ Yükleniyor...</div>';
   try{
-    var r=await fetch('/api/admin/blog?token='+adminToken);
+    var r=await adminFetch('/api/admin/blog');
     blogState=await r.json();
     document.getElementById('blog-sayi').textContent=blogState.length;
     if(!blogState.length){box.innerHTML='<div class="empty">Henüz yazı yok. Soldaki formdan ilk yazını ekle ✍️</div>';return;}
@@ -2238,12 +2317,12 @@ async function blogKaydet(){
   var baslik=document.getElementById('blog-baslik').value.trim();
   var icerik=document.getElementById('blog-icerik').value.trim();
   if(!baslik||!icerik){alert('Başlık ve içerik zorunlu');return;}
-  var payload={token:adminToken,id:document.getElementById('blog-id').value||undefined,
+  var payload={id:document.getElementById('blog-id').value||undefined,
     baslik:baslik,ozet:document.getElementById('blog-ozet').value.trim(),
     kapak:document.getElementById('blog-kapak').value.trim(),icerik:icerik,
     yayinda:document.getElementById('blog-yayinda').checked};
   try{
-    var r=await fetch('/api/admin/blog',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    var r=await adminFetch('/api/admin/blog',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     var d=await r.json();
     if(d.error){alert(d.error);return;}
     toast(payload.id?'Yazı güncellendi ✓':'Yazı yayınlandı ✓','success');
@@ -2263,7 +2342,7 @@ function blogDuzenle(id){
 }
 async function blogSil(id){
   if(!confirm('Bu yazı silinsin mi? Geri alınamaz!'))return;
-  await fetch('/api/admin/blog/sil',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:adminToken,id:id})});
+  await adminFetch('/api/admin/blog/sil',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id})});
   toast('Yazı silindi','info'); yukleBloglar();
 }
 function blogTemizle(){
@@ -2272,10 +2351,11 @@ function blogTemizle(){
   document.getElementById('blog-yayinda').checked=true;
   document.getElementById('blog-form-baslik').textContent='✍️ Yeni Yazı';
 }
+adminOturumunuYukle();
 </script>
 </body>
 </html>`;
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' });
     res.end(adminHtml);
     return;
   }
