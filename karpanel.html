@@ -147,7 +147,7 @@
       "name": "Verilerim güvende mi?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Evet. Yüklediğiniz Excel dosyası ve girdiğiniz bilgiler yalnızca tarayıcınızda işlenir. Hiçbir ürün verisi veya fiyat bilgisi sunucularımıza gönderilmez veya saklanmaz."
+        "text": "Evet. Excel hesaplamaları tarayıcınızda yapılır. Ürün ve maliyet bilgileriniz hesabınızdan tekrar erişebilmeniz için sunucuda kaydedilir. Kart bilgileriniz tarafımızca saklanmaz."
       }
     },
     {
@@ -3858,7 +3858,7 @@ footer.kh-footer::before{display:none}
         <span class="kpr-trust-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.5 3v5.6c0 4.4-3.1 8.2-7.5 9.4-4.4-1.2-7.5-5-7.5-9.4V6z"/><path d="M9 12.2l2.1 2.1L15.4 10"/></svg></span>
         <div>
           <div class="kpr-trust-t">Verileriniz tarayıcınızda işlenir</div>
-          <div class="kpr-trust-s">Ürün ve fiyat bilgileri sunucularımızda saklanmaz</div>
+          <div class="kpr-trust-s">Ürün ve maliyet bilgileriniz hesabınıza bağlı olarak kaydedilir</div>
         </div>
       </div>
       <div class="kpr-trust-item">
@@ -4580,7 +4580,7 @@ footer.kh-footer::before{display:none}
         <details name="komisyonhesap-faq"><summary>komisyonhesap ücretsiz mi?<span class="faq-plus" aria-hidden="true"></span></summary><div class="ans">Kayıt olan kullanıcılar 3 gün boyunca kendi Trendyol Excel dosyalarıyla tüm premium özellikleri ücretsiz deneyebilir. Kredi kartı gerekmez ve otomatik ödeme yoktur. Deneme sonrası yıllık premium üyelik ₺1.500 KDV dahildir.</div></details>
         <details name="komisyonhesap-faq"><summary>Ürünlerimi nasıl yüklerim?<span class="faq-plus" aria-hidden="true"></span></summary><div class="ans">Trendyol Partner Panel → Ürünler → <strong>Dışa Aktar</strong> butonuna basın. Excel formatında indirin. komisyonhesap'de "Excel Yükle" butonuyla dosyayı seçin. Satış fiyatı, komisyon ve görseller otomatik gelir.</div></details>
         <details name="komisyonhesap-faq"><summary>Hesaplama doğru mu?<span class="faq-plus" aria-hidden="true"></span></summary><div class="ans">komisyonhesap; komisyon, KDV, e-ticaret stopajı ve Trendyol hizmet bedelini birlikte dikkate alır. E-ticaret kapsamındaki stopaj oranı %1 olarak uygulanır ve matrah KDV hariç satış bedelidir.</div></details>
-        <details name="komisyonhesap-faq"><summary>Verilerim güvende mi?<span class="faq-plus" aria-hidden="true"></span></summary><div class="ans">Evet. Yüklediğiniz Excel dosyası ve girdiğiniz bilgiler yalnızca tarayıcınızda işlenir. Hiçbir ürün verisi veya fiyat bilgisi sunucularımıza gönderilmez veya saklanmaz.</div></details>
+        <details name="komisyonhesap-faq"><summary>Verilerim güvende mi?<span class="faq-plus" aria-hidden="true"></span></summary><div class="ans">Evet. Excel hesaplamaları tarayıcınızda yapılır. Ürün ve maliyet bilgileriniz hesabınızdan tekrar erişebilmeniz için sunucuda kaydedilir. Kart bilgileriniz tarafımızca saklanmaz.</div></details>
         <details name="komisyonhesap-faq"><summary>Neden komisyonhesap'ı seçmeliyim?<span class="faq-plus" aria-hidden="true"></span></summary><div class="ans">Çoğu Trendyol satıcısı komisyon oranını biliyor ama KDV, stopaj ve Trendyol hizmet bedelini hesaba katmıyor. Bu üç kalem birlikte ciddi bir maliyet oluşturuyor. komisyonhesap bunların hepsini otomatik hesaplayarak gerçek net karınızı gösterir. Üstelik yıllık tek ödeme — aylık sürpriz fatura yok.</div></details>
       </div>
     </div>
@@ -4846,7 +4846,7 @@ const DEMO=[
   {id:'D3',title:"Pamuklu Basic T-Shirt 3'lü Set",categoryName:'Moda - Erkek',commissionRate:21.36,salePrice:399,alis:0,kargo:15,image:''},
 ];
 
-const PREMIUM_EMAILS=['info@ecuyy.com'];
+let userSessionVersion=0;
 // Premium 1 yıl sonra otomatik biter. uyelikBitis yoksa odemeTarihi+1yıl baz alınır.
 function premiumBitis(u){
   if(!u) return null;
@@ -4856,7 +4856,6 @@ function premiumBitis(u){
 }
 function premiumAktif(u){
   if(!u) return false;
-  if(PREMIUM_EMAILS.includes(u.email)) return true;   // site sahibi daima aktif
   var b=premiumBitis(u);
   if(!b) return true;                                  // tarih bilgisi yoksa aktif say
   return Date.now() < b.getTime();
@@ -4871,7 +4870,9 @@ function xlsxHazirla(){
   if(xlsxLoader) return xlsxLoader;
   xlsxLoader=new Promise(function(resolve,reject){
     const script=document.createElement('script');
-    script.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+    script.src='https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js';
+    script.integrity='sha384-EnyY0/GSHQGSxSgMwaIPzSESbqoOLSexfnSMN2AP+39Ckmn92stwABZynq1JyzdT';
+    script.crossOrigin='anonymous';
     script.async=true;
     script.onload=function(){
       if(window.XLSX) resolve(window.XLSX);
@@ -4954,34 +4955,30 @@ function showAppTab(name,el){
 }
 
 // ── USER ──
-function loadUser(){
-  const u=localStorage.getItem('kp_user')||sessionStorage.getItem('kp_user');
-  if(u){
-    currentUser=JSON.parse(u);
-    // Deneme süresi bu oturumda (sunucuya gitmeden) dolduysa kilitle
-    if(currentUser.trialAktif && currentUser.trialBitis && new Date(currentUser.trialBitis).getTime()<Date.now()){
-      currentUser.premium=false; currentUser.trialAktif=false; currentUser.trialBitti=true;
-      try{ if(localStorage.getItem('kp_user')) localStorage.setItem('kp_user',JSON.stringify(currentUser));
-           if(sessionStorage.getItem('kp_user')) sessionStorage.setItem('kp_user',JSON.stringify(currentUser)); }catch(e){}
+async function loadUser(){
+  const version=++userSessionVersion;
+  try{
+    const r=await fetch(PROXY+'/api/oturum',{credentials:'same-origin',cache:'no-store'});
+    if(version!==userSessionVersion) return;
+    if(!r.ok){
+      if(r.status===401){ localStorage.removeItem('kp_user'); sessionStorage.removeItem('kp_user'); }
+      currentUser=null;showGuestUI();return;
     }
-    if(currentUser.trialBitti){ applyUserTrialBitti(); return; }
-    // Üyelik süresi dolduysa otomatik premium'u kaldır
-    if(currentUser.premium && !premiumAktif(currentUser)){
-      currentUser.premium=false;
-      try{ if(localStorage.getItem('kp_user')) localStorage.setItem('kp_user',JSON.stringify(currentUser));
-           if(sessionStorage.getItem('kp_user')) sessionStorage.setItem('kp_user',JSON.stringify(currentUser)); }catch(e){}
-    }
+    const d=await r.json();if(version!==userSessionVersion) return;
+    if(!d.ok||!d.user){currentUser=null;showGuestUI();return;}
+    currentUser={...d.user,trialBitis:d.user.trialBitisTarihi};
+    const store=localStorage.getItem('kp_user')?localStorage:sessionStorage;
+    store.setItem('kp_user',JSON.stringify(currentUser));
+    if(currentUser.trialBitti){applyUserTrialBitti();return;}
     applyUser();
-    if(currentUser && !currentUser.premium){
+    if(!currentUser.premium){
       setTimeout(function(){var o=document.getElementById('pay-overlay');if(o)o.classList.add('open');},500);
-    } else if(currentUser && localStorage.getItem('kp_inapp')==='1'){
-      // Sayfa yenilendiğinde uygulama görünümünü ve son sekmeyi geri yükle
+    } else if(localStorage.getItem('kp_inapp')==='1'){
       goApp();
-      var _lv=localStorage.getItem('kp_lastview')||'panel';
-      if(typeof kdGo==='function'){ try{ kdGo(_lv); }catch(e){} }
+      var lastView=localStorage.getItem('kp_lastview')||'panel';
+      if(typeof kdGo==='function'){try{kdGo(lastView);}catch(e){}}
     }
-  }
-  else{showGuestUI();}
+  }catch(e){if(version===userSessionVersion){currentUser=null;showGuestUI();}}
 }
 function applyUser(){
   document.getElementById('auth-btns').style.display='none';
@@ -5126,7 +5123,13 @@ async function sifreDegistir(){
   if(document.getElementById('hm-eski-sifre')) document.getElementById('hm-eski-sifre').value='';
   toast('Şifre güncellendi! ✓','success','✅');
 }
-function logout(){
+async function logout(){
+  try{
+    const r=await fetch(PROXY+'/api/cikis',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:'{}'});
+    if(!r.ok&&r.status!==401) throw new Error('Çıkış yapılamadı');
+  }catch(e){toast('Çıkış yapılamadı. Lütfen tekrar deneyin.','error','❌');return;}
+  ++userSessionVersion;
+  clearTimeout(window._saveTimer);
   try{ localStorage.setItem('kp_inapp','0'); localStorage.removeItem('kp_lastview'); }catch(e){}
   localStorage.removeItem('kp_user');
   sessionStorage.removeItem('kp_user');   // 'Beni hatirla' isaretsizken oturum burada tutuluyor
@@ -5186,10 +5189,11 @@ async function girisYap(){
   if(!email||!sifre){showAuthError('E-posta ve şifre gerekli');return;}
   showAuthError('');
   try{
-    const r=await fetchWithRetry(PROXY+'/api/giris',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,sifre})});
+    const r=await fetchWithRetry(PROXY+'/api/giris',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,sifre,hatirla:!!document.getElementById('beni-hatirla')?.checked})});
     const d=await r.json();
     if(!r.ok){showAuthError(d.error||'Giriş başarısız');return;}
-    const isPremium=PREMIUM_EMAILS.includes(email)||((d.user.premium||false)&&premiumAktif(d.user));
+    ++userSessionVersion;
+    const isPremium=d.user.premium===true;
     currentUser={ad:d.user.ad,email:d.user.email,premium:isPremium,odemeTarihi:d.user.odemeTarihi,uyelikBitis:d.user.uyelikBitis,fatura:d.user.fatura||null,trialAktif:d.user.trialAktif||false,trialBitti:d.user.trialBitti||false,trialBitis:d.user.trialBitisTarihi||null,trialKalanGun:d.user.trialKalanGun||0};
     const hatirla=document.getElementById('beni-hatirla');
     if(hatirla&&hatirla.checked){
@@ -5222,7 +5226,8 @@ async function kayitOl(){
     const r=await fetchWithRetry(PROXY+'/api/kayit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ad,email,sifre})});
     const d=await r.json();
     if(!r.ok){showAuthError(d.error||'Kayıt başarısız');return;}
-    const isPremium=PREMIUM_EMAILS.includes(email)||(d.user.trialAktif||false);
+    ++userSessionVersion;
+    const isPremium=d.user.premium===true||d.user.trialAktif===true;
     currentUser={ad,email,premium:isPremium,trialAktif:d.user.trialAktif||false,trialBitti:d.user.trialBitti||false,trialBitis:d.user.trialBitisTarihi||null,trialKalanGun:d.user.trialKalanGun||0};
     localStorage.setItem('kp_user',JSON.stringify(currentUser));
     trackSignup();
@@ -5601,8 +5606,8 @@ function eaRender(){
         <div style="display:flex;gap:10px;align-items:flex-start">
           ${imgHtml}
           <div style="min-width:0">
-            <div style="font-weight:700;color:var(--dark);font-size:13px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;max-width:190px" title="${u.urunIsmi}">${u.urunIsmi}</div>
-            <div style="font-size:11px;color:var(--t3);margin-top:4px">Model Kodu: <strong>${u.modelKodu}</strong></div>
+            <div style="font-weight:700;color:var(--dark);font-size:13px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;max-width:190px" title="${eaEsc(u.urunIsmi)}">${eaEsc(u.urunIsmi)}</div>
+            <div style="font-size:11px;color:var(--t3);margin-top:4px">Model Kodu: <strong>${eaEsc(u.modelKodu)}</strong></div>
             ${eslesmeRozeti}
           </div>
         </div>
@@ -5891,8 +5896,8 @@ function renderUrunler(page){
   const isDemo=urunler.length>0&&String(urunler[0].id).startsWith('D');
   tbody.innerHTML=pageList.map(p=>{
     const{komisyon,net,marj,hasAlis}=calcKar(p);
-    const imgHtml=p.image?`<img class="prod-img" src="${p.image}" alt="${p.title} ürün görseli" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextSibling.style.display='flex'">`:'' ;
-    const phHtml=`<div class="prod-img-ph" style="${p.image?'display:none':''}">${p.title.charAt(0).toUpperCase()}</div>`;
+    const imgHtml=p.image?`<img class="prod-img" src="${eaEsc(p.image)}" alt="${eaEsc(p.title)} ürün görseli" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextSibling.style.display='flex'">`:'' ;
+    const phHtml=`<div class="prod-img-ph" style="${p.image?'display:none':''}">${eaEsc(p.title.charAt(0).toUpperCase())}</div>`;
     const karBadge=!hasAlis?'<span class="kar-badge kb-neutral">Girin</span>':net>=0?`<span class="kar-badge kb-good"><span class="kb-tag">KÂR</span><span class="kb-amt">+${fmt(net)}</span></span>`:`<span class="kar-badge kb-bad"><span class="kb-tag">ZARAR</span><span class="kb-amt">-${fmt(Math.abs(net))}</span></span>`;
     const marjStr=hasAlis&&marj!==null?'%'+marj.toFixed(1):'—';
     const marjColor=!hasAlis?'var(--t3)':marj>=15?'var(--green)':marj>=0?'var(--yellow)':'var(--red)';
@@ -5901,10 +5906,10 @@ function renderUrunler(page){
     const rowTintStyle=!hasAlis?'':`--w:${tintA.toFixed(1)}%`;
     const satisInput=isDemo
       ?`<input class="tinput" type="text" style="width:108px;opacity:.55;cursor:not-allowed" value="${fmtSP(p.salePrice)}" readonly title="Demo modda düzenlenemez">`
-      :`<input class="tinput" type="text" style="width:108px" value="${fmtSP(p.salePrice)}" onfocus="this.value=p.salePrice||''" onblur="this.value=fmtSP(this.value)" onchange="updUrun('${p.id}','salePrice',parseTR(this.value))" title="Satış fiyatını düzenleyebilirsiniz">`;
+      :`<input class="tinput" type="text" style="width:108px" value="${fmtSP(p.salePrice)}" onfocus="this.value=p.salePrice||''" onblur="this.value=fmtSP(this.value)" onchange="updUrun(${eaEsc(JSON.stringify(String(p.id)))},'salePrice',parseTR(this.value))" title="Satış fiyatını düzenleyebilirsiniz">`;
     const komInput=isDemo
       ?`<input class="tinput" type="number" style="width:74px;opacity:.55;cursor:not-allowed" value="${(p.commissionRate||0).toFixed(2)}" readonly title="Demo modda düzenlenemez">`
-      :`<input class="tinput" type="number" style="width:74px" min="0" max="100" step="0.01" value="${(p.commissionRate||0).toFixed(2)}" onchange="updUrun('${p.id}','commissionRate',this.value)" title="Komisyon oranını düzenleyebilirsiniz">`;
+      :`<input class="tinput" type="number" style="width:74px" min="0" max="100" step="0.01" value="${(p.commissionRate||0).toFixed(2)}" onchange="updUrun(${eaEsc(JSON.stringify(String(p.id)))},'commissionRate',this.value)" title="Komisyon oranını düzenleyebilirsiniz">`;
     const marjBadge = !hasAlis
       ? '<span style="color:#9CA3AF;font-size:12px">—</span>'
       : marj>=15
@@ -5913,13 +5918,13 @@ function renderUrunler(page){
           ? `<span style="display:inline-flex;align-items:center;padding:4px 10px;background:rgba(245,158,11,.08);color:#D97706;border-radius:50px;font-size:12px;font-weight:800;border:1px solid rgba(245,158,11,.2)">${marjStr}</span>`
           : `<span style="display:inline-flex;align-items:center;padding:4px 10px;background:rgba(239,68,68,.08);color:#DC2626;border-radius:50px;font-size:12px;font-weight:800;border:1px solid rgba(239,68,68,.15)">${marjStr}</span>`;
     return`<tr class="pt-row ${rowTintCls}" style="${rowTintStyle}">
-      <td class="pt-cb"><input type="checkbox" class="row-cb" data-id="${p.id}" onchange="satirSec(this)"></td>
+      <td class="pt-cb"><input type="checkbox" class="row-cb" data-id="${eaEsc(p.id)}" onchange="satirSec(this)"></td>
       <td class="pt-prod-cell">
         <div class="pt-prod">
           <span class="pt-img">${imgHtml}${phHtml}</span>
           <span class="pt-info">
-            <span class="prod-name" title="${p.title}">${p.title}</span>
-            <span class="pt-code" title="Model kodu">${p.modelCode||p.barcode||'\u2014'}</span>
+            <span class="prod-name" title="${eaEsc(p.title)}">${eaEsc(p.title)}</span>
+            <span class="pt-code" title="Model kodu">${eaEsc(p.modelCode||p.barcode||'\u2014')}</span>
           </span>
         </div>
       </td>
@@ -5927,12 +5932,12 @@ function renderUrunler(page){
       <td class="pt-c">
         <span class="pt-kom">${komInput}<span class="pt-kom-tl">${fmt(komisyon)}</span></span>
       </td>
-      <td class="pt-c"><input class="tinput tinput-key" type="number" placeholder="Girin" min="0" step="0.01" value="${p.alis||''}" onchange="updUrun('${p.id}','alis',this.value)"></td>
-      <td class="pt-c"><input class="tinput" type="number" placeholder="Girin" min="0" step="0.01" value="${p.kargo||''}" onchange="updUrun('${p.id}','kargo',this.value)"></td>
+      <td class="pt-c"><input class="tinput tinput-key" type="number" placeholder="Girin" min="0" step="0.01" value="${eaEsc(p.alis||'')}" onchange="updUrun(${eaEsc(JSON.stringify(String(p.id)))},'alis',this.value)"></td>
+      <td class="pt-c"><input class="tinput" type="number" placeholder="Girin" min="0" step="0.01" value="${eaEsc(p.kargo||'')}" onchange="updUrun(${eaEsc(JSON.stringify(String(p.id)))},'kargo',this.value)"></td>
       <td class="pt-c">${karBadge}</td>
       <td class="pt-c">${marjBadge}</td>
       <td class="pt-c pt-act">
-        <button class="detay-btn" onclick="openModal('${p.id}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>Ayr\u0131nt\u0131</button>
+        <button class="detay-btn" onclick="openModal(${eaEsc(JSON.stringify(String(p.id)))})"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M12 20V4M19 20v-7"/></svg>Ayr\u0131nt\u0131</button>
       </td>
     </tr>`;
   }).join('');
@@ -6279,7 +6284,7 @@ const POLICY_CONTENT = {
   gizlilik: '<h2 style="font-size:20px;font-weight:800;margin-bottom:1rem">🔒 Gizlilik Politikası</h2><p style="color:#666;font-size:13px">Son güncelleme: Haziran 2026</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">1. Toplanan Bilgiler</h3><p style="font-size:14px;line-height:1.7;color:#444">komisyonhesap olarak yalnızca hizmetimizi sunmak için gerekli bilgileri topluyoruz: ad, e-posta, şifrelenmiş parola ve yüklediğiniz ürün verileri. Ödeme bilgileri iyzico tarafından işlenir, tarafımızca saklanmaz.</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">2. Bilgilerin Kullanımı</h3><p style="font-size:14px;line-height:1.7;color:#444">Verileriniz yalnızca hesabınızı yönetmek, hizmeti sunmak ve premium üyeliği aktif etmek için kullanılır.</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">3. Veri Güvenliği</h3><p style="font-size:14px;line-height:1.7;color:#444">Verileriniz MongoDB Atlas altyapısında şifreli saklanmaktadır. Ödeme işlemleri iyzico PCI-DSS sertifikalı altyapısı üzerinden yapılır.</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">4. İletişim</h3><p style="font-size:14px;color:#444">info@komisyonhesap.com</p>',
   teslimat: '<h2 style="font-size:20px;font-weight:800;margin-bottom:1rem">📦 Teslimat ve İade</h2><p style="color:#666;font-size:13px">Son güncelleme: Haziran 2026</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">Hizmet Türü</h3><p style="font-size:14px;line-height:1.7;color:#444">komisyonhesap dijital bir SaaS hizmetidir. Fiziksel teslimat yapılmamaktadır.</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">Aktivasyon</h3><p style="font-size:14px;line-height:1.7;color:#444">Ödeme onaylandıktan sonra Premium üyelik <strong>anında aktif</strong> olur. Hizmet 365 gün sürelidir.</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">İptal ve İade</h3><p style="font-size:14px;line-height:1.7;color:#444">Ödeme tarihinden itibaren <strong>14 gün içinde</strong> iade talep edebilirsiniz. İade 5 iş günü içinde ödeme yönteminize yapılır. 14 günden sonra iade yapılmamaktadır.</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">İletişim</h3><p style="font-size:14px;color:#444">info@komisyonhesap.com</p>',
   mesafeli: '<h2 style="font-size:20px;font-weight:800;margin-bottom:1rem">📄 Mesafeli Satış Sözleşmesi</h2><p style="color:#666;font-size:13px">Son güncelleme: Haziran 2026</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">1. Taraflar</h3><p style="font-size:14px;line-height:1.7;color:#444"><strong>Satıcı:</strong> komisyonhesap — komisyonhesap.com — info@komisyonhesap.com<br><strong>Alıcı:</strong> Ödeme yapan kullanıcı</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">2. Konu</h3><p style="font-size:14px;line-height:1.7;color:#444">Bu sözleşme, komisyonhesap Premium Üyelik hizmetinin satışını düzenlemektedir. Hizmet tamamen dijitaldir.</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">3. Bedel</h3><p style="font-size:14px;line-height:1.7;color:#444">₺1.500 / yıl (KDV dahil). Ödeme iyzico altyapısı üzerinden alınır. Visa ve Mastercard kabul edilir.</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">4. İfa</h3><p style="font-size:14px;line-height:1.7;color:#444">Ödeme onaylandıktan sonra hizmet anında aktif olur. Süre 365 gündür.</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">5. Cayma Hakkı</h3><p style="font-size:14px;line-height:1.7;color:#444">Ödeme tarihinden itibaren 14 gün içinde cayma hakkı kullanılabilir. İade talebi için info@komisyonhesap.com adresine e-posta gönderin.</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">6. Uyuşmazlık</h3><p style="font-size:14px;color:#444">Türkiye Cumhuriyeti mahkemeleri yetkilidir.</p>',
-  kvkk: '<h2 style="font-size:20px;font-weight:800;margin-bottom:1rem">🛡️ KVKK Aydınlatma Metni</h2><p style="color:#666;font-size:13px">Son güncelleme: Haziran 2026</p><p style="font-size:14px;line-height:1.7;color:#444">6698 sayılı KVKK kapsamında aydınlatma yükümlülüğümüzü yerine getiriyoruz.</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">Veri Sorumlusu</h3><p style="font-size:14px;color:#444">komisyonhesap — komisyonhesap.com — info@komisyonhesap.com</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">İşlenen Veriler</h3><p style="font-size:14px;line-height:1.7;color:#444">Ad soyad, e-posta, şifrelenmiş parola. Ödeme bilgileri iyzico tarafından işlenir, tarafımızca saklanmaz.</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">İşleme Amaçları</h3><p style="font-size:14px;line-height:1.7;color:#444">Üyelik yönetimi, hizmet sunumu, ödeme işlemleri, yasal yükümlülükler.</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">Aktarım</h3><p style="font-size:14px;line-height:1.7;color:#444">MongoDB Atlas, iyzico ve Render ile yalnızca hizmet sunumu amacıyla paylaşılır.</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">Haklarınız</h3><p style="font-size:14px;color:#444">KVKK Madde 11 kapsamında bilgi, düzeltme ve silme haklarınız için: info@komisyonhesap.com</p>'
+  kvkk: '<h2 style="font-size:20px;font-weight:800;margin-bottom:1rem">🛡️ KVKK Aydınlatma Metni</h2><p style="color:#666;font-size:13px">Son güncelleme: Haziran 2026</p><p style="font-size:14px;line-height:1.7;color:#444">6698 sayılı KVKK kapsamında aydınlatma yükümlülüğümüzü yerine getiriyoruz.</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">Veri Sorumlusu</h3><p style="font-size:14px;color:#444">komisyonhesap — komisyonhesap.com — info@komisyonhesap.com</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">İşlenen Veriler</h3><p style="font-size:14px;line-height:1.7;color:#444">Ad soyad, e-posta, parola özeti, ürün ve maliyet bilgileri, fatura bilgileri. Ödeme bilgileri iyzico tarafından işlenir, tarafımızca saklanmaz.</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">İşleme Amaçları</h3><p style="font-size:14px;line-height:1.7;color:#444">Üyelik yönetimi, hizmet sunumu, ödeme işlemleri, yasal yükümlülükler.</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">Aktarım</h3><p style="font-size:14px;line-height:1.7;color:#444">MongoDB Atlas, iyzico ve Render ile yalnızca hizmet sunumu amacıyla paylaşılır.</p><h3 style="margin:1.2rem 0 .5rem;font-size:15px">Haklarınız</h3><p style="font-size:14px;color:#444">KVKK Madde 11 kapsamında bilgi, düzeltme ve silme haklarınız için: info@komisyonhesap.com</p>'
 };
 
 function openPolicy(tip){
@@ -6328,13 +6333,16 @@ function saveUrunler(aninda){
   window._saveTimer=setTimeout(gonder,2000);
 }
 async function loadSavedUrunler(){
-  if(!currentUser) return false;
+  if(!currentUser||!currentUser.premium) return false;
+  const sessionVersion=userSessionVersion;
   // Eğer ekranda zaten ürün varsa (yeni yüklenmiş olabilir), MongoDB'den boş/eski veri gelirse onu ezmeyelim
   const oncekiUrunSayisi = urunler.length;
   try{
     // Önce MongoDB'den çek
     const r=await fetch(PROXY+'/api/urunler/yukle?email='+encodeURIComponent(currentUser.email));
+    if(!r.ok) return false;
     const d=await r.json();
+    if(sessionVersion!==userSessionVersion) return false;
     if(d.urunler&&d.urunler.length>0){
       urunler=d.urunler;
       // localStorage'ı da güncelle
@@ -6348,6 +6356,7 @@ async function loadSavedUrunler(){
       return true;
     }
   }catch(e){
+    if(sessionVersion!==userSessionVersion) return false;
     // MongoDB'ye ulaşılamazsa localStorage'dan yükle
     const saved=localStorage.getItem('kp_urunler_'+currentUser.email);
     if(saved){
@@ -6385,39 +6394,26 @@ function populateKatDropdown(){
 document.querySelector('.logo').addEventListener('click',e=>{e.preventDefault();goHome();window.scrollTo({top:0,behavior:'smooth'});});
 
 populateKatDropdown();
-loadUser();
+const userSessionReady=loadUser();
 
-// iyzico callback'ten dondukten sonra premium'u aktif et
-(function(){
-  const params = new URLSearchParams(window.location.search);
-  const odeme = params.get('odeme');
-  const email = params.get('email');
-  if(odeme === 'basarili' && email){
-    trackPurchaseConversion();
-    const stored = localStorage.getItem('kp_user') || sessionStorage.getItem('kp_user');
-    if(stored){
-      try{
-        const u = JSON.parse(stored);
-        if(u.email === email){
-          u.premium = true;
-          u.trialBitti = false;
-          u.trialAktif = false;
-          localStorage.setItem('kp_user', JSON.stringify(u));
-          currentUser = u;
-          applyUser();
-          goApp();
-          toast('Odeme basarili! Premium uyeliginiz aktif.','success','🎉');
-        }
-      } catch(e){}
-    }
-    window.history.replaceState({}, '', window.location.pathname);
-  } else if(odeme === 'basarisiz'){
-    toast('Odeme basarisiz. Lutfen tekrar deneyin.','error','❌');
-    window.history.replaceState({}, '', window.location.pathname);
-  } else if(odeme === 'hata'){
-    toast('Odeme sirasinda hata olustu.','error','❌');
-    window.history.replaceState({}, '', window.location.pathname);
+// Ödeme URL'si üyelik yetkisi vermez; üyelik sunucudan tekrar doğrulanır.
+(async function(){
+  const params=new URLSearchParams(window.location.search);
+  const odeme=params.get('odeme');
+  if(!odeme)return;
+  await userSessionReady;
+  if(odeme==='basarili'){
+    await loadUser();
+    if(currentUser&&currentUser.premium&&!currentUser.trialAktif){
+      trackPurchaseConversion();applyUser();goApp();
+      toast('Ödeme başarılı! Premium üyeliğiniz aktif.','success','🎉');
+    } else {toast('Üyelik durumu doğrulanamadı. Lütfen giriş yapın.','info','ℹ️');}
+  } else if(odeme==='basarisiz'){
+    toast('Ödeme başarısız. Lütfen tekrar deneyin.','error','❌');
+  } else if(odeme==='hata'){
+    toast('Ödeme sırasında hata oluştu. Lütfen tekrar deneyin.','error','❌');
   }
+  window.history.replaceState({},'',window.location.pathname);
 })();
 
 async function iletisimGonder(){
