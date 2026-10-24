@@ -2,7 +2,7 @@ const {test}=require('node:test');const assert=require('node:assert/strict');
 const vm=require('node:vm'),fs=require('node:fs'),path=require('node:path'),{Readable}=require('node:stream');
 
 function memory(){
- const stores={};const match=(r,q)=>Object.entries(q).every(([k,v])=>k==='$or'?v.some(x=>match(r,x)):k==='_id'?String(r[k])===String(v):v&&typeof v==='object'&&!(v instanceof Date)?Object.entries(v).every(([op,n])=>op==='$ne'?r[k]!==n:op==='$gt'?r[k]>n:op==='$lt'?r[k]<n:op==='$lte'?r[k]<=n:false):r[k]===v);
+ const stores={};const match=(r,q)=>Object.entries(q).every(([k,v])=>k==='$or'?v.some(x=>match(r,x)):k==='_id'?String(r[k])===String(v):v&&typeof v==='object'&&!(v instanceof Date)?Object.entries(v).every(([op,n])=>op==='$type'?typeof r[k]===n:op==='$ne'?r[k]!==n:op==='$gt'?r[k]>n:op==='$lt'?r[k]<n:op==='$lte'?r[k]<=n:false):r[k]===v);
  return {stores,collection(name){const rows=stores[name]||(stores[name]=[]);const apply=(r,u,fresh)=>{if(fresh)Object.assign(r,u.$setOnInsert);Object.assign(r,u.$set||{});for(const [k,n]of Object.entries(u.$inc||{}))r[k]=(r[k]||0)+n;};return {
   async createIndex(){},
   async deleteOne(q){const i=rows.findIndex(r=>match(r,q));if(i>=0)rows.splice(i,1);return{};},
@@ -10,7 +10,7 @@ function memory(){
   async findOne(q){return rows.find(r=>match(r,q))||null;},
   async updateOne(q,u,opt={}){let r=rows.find(x=>match(x,q));const fresh=!r;if(!r){if(!opt.upsert)return {};r={_id:(rows.length+1).toString(16).padStart(24,'0'),...q};rows.push(r);}apply(r,u,fresh);return{};},
   async findOneAndUpdate(q,u){const r=rows.find(x=>match(x,q));if(!r)return null;apply(r,u,false);return {...r};},
-  find(q={}){const c={sort(){return c;},project(){return c;},limit(){return c;},async toArray(){return rows.filter(r=>match(r,q));}};return c;}
+  find(q={}){const c={async *[Symbol.asyncIterator](){for(const r of rows.filter(r=>match(r,q)))yield {...r};},sort(){return c;},project(){return c;},limit(){return c;},async toArray(){return rows.filter(r=>match(r,q));}};return c;}
  };}};
 }
 test('session survives page reload and server restart; logout revokes the cookie',async()=>{
@@ -69,7 +69,7 @@ test('member management validates expiry and password, and preserves the payment
  assert.equal(a.db.stores.users[0].uyelikBitis.toISOString(),bitisTarihi);assert.equal(a.db.stores.users[0].odemeTarihi,payment);
  assert.equal((await a.request('/api/admin/premium',{email:'missing@example.com',aktif:true},headers)).status,404);
  assert.equal((await a.request('/api/admin/sifre-sifirla',{email:'member@example.com',yeniSifre:'short'},headers)).status,400);
- assert.equal((await a.request('/api/admin/sifre-sifirla',{email:'member@example.com',yeniSifre:'test-only-new'},headers)).status,200);assert.equal(a.db.stores.users[0].sifre,'test-only-new');
+ assert.equal((await a.request('/api/admin/sifre-sifirla',{email:'member@example.com',yeniSifre:'test-only-new'},headers)).status,200);assert.match(a.db.stores.users[0].sifre,/^scrypt\$/);assert(await require('./security').verifyPassword('test-only-new',a.db.stores.users[0].sifre));
  assert.equal((await a.request('/api/admin/premium',{email:'member@example.com',aktif:false},headers)).status,200);assert.equal(a.db.stores.users[0].premium,false);assert.equal(a.db.stores.users[0].uyelikBitis,null);
 });
 test('member cards filter, search and sort safely; pagination resets on filtering',async()=>{
@@ -109,7 +109,7 @@ test('editor word counter and SEO preview use the actual form content',async()=>
 });
 function res(){return {headers:{},setHeader(k,v){this.headers[k]=v;},writeHead(status,headers){this.status=status;Object.assign(this.headers,headers);},end(body){this.body=body;this.done?.();}};}
 async function app(sharedDb){
- const db=sharedDb||memory(),notices=[];let handler;let payment={status:'success',paymentStatus:'SUCCESS',paymentId:'p-1'};
+ const db=sharedDb||memory(),notices=[];let handler;let payment={status:'success',paymentStatus:'SUCCESS',paymentId:'p-1',fraudStatus:1};
  const context={__dirname,console:{log(){},error(){}},Buffer,URL,URLSearchParams,fetch:()=>{throw Error('No external mail in tests');},process:{env:{MONGO_URI:'test',ADMIN_SIFRE:'test-admin',IYZICO_API_KEY:'test',IYZICO_SECRET:'test'}},setTimeout,clearTimeout,setInterval:()=>({unref(){}}),require(name){
   if(name==='http')return {createServer(h){handler=h;return {listen(){}};}};
   if(name==='mongodb')return {ObjectId:class {constructor(v){this.v=v;}toString(){return this.v;}static isValid(v){return /^[a-f0-9]{24}$/.test(v);}},MongoClient:{connect:async()=>({db:()=>db})}};
