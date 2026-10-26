@@ -3472,7 +3472,9 @@ footer.kh-footer::before{display:none}
 #etiket-analiz-gorunum .ea-kom-edit .ea-edit-label{font-size:12px;margin-top:14px}
 #etiket-analiz-gorunum .ea-kom-edit .ea-edit-input{width:104px;min-height:42px;font-size:16px}
 #etiket-analiz-gorunum .ea-kom-edit .ea-edit-unit{font-size:14px}
-#etiket-analiz-gorunum .ea-net .ea-kar-badge{font-size:22px;font-weight:800;line-height:1.35;padding:8px 12px}\n#etiket-analiz-gorunum .ea-analysis-table td:first-child>div>:first-child{width:76px!important;height:76px!important;flex-shrink:0;border-radius:10px!important}\n#etiket-analiz-gorunum .ea-analysis-table td:first-child img{object-fit:contain!important;background:#fff}
+#etiket-analiz-gorunum .ea-net .ea-kar-badge{font-size:22px;font-weight:800;line-height:1.35;padding:8px 12px}
+#etiket-analiz-gorunum .ea-analysis-table td:first-child>div>:first-child{width:96px!important;height:96px!important;flex-shrink:0;border-radius:10px!important}
+#etiket-analiz-gorunum .ea-analysis-table td:first-child img{object-fit:contain!important;background:#fff}
 
 </style>
 </head>
@@ -5651,7 +5653,7 @@ function eaRender(){
     const indis=indisler.get(u);
     const komStr = (u.komOran||0).toFixed(1);
     const imgHtml = u.image
-      ? '<img src="'+eaEsc(u.image)+'" alt="'+eaEsc(u.urunIsmi||'Ürün görseli')+'" style="width:52px;height:52px;border-radius:8px;object-fit:cover;border:1px solid var(--border);flex-shrink:0">'
+      ? '<img src="'+eaEsc(u.image)+'" alt="'+eaEsc(u.urunIsmi||'Ürün görseli')+'" style="width:96px;height:96px;border-radius:10px;object-fit:contain;border:1px solid var(--border);flex-shrink:0">'
       : '<div style="width:52px;height:52px;border-radius:8px;background:var(--dark);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0">'+(u.urunIsmi.charAt(0)||'?')+'</div>';
     const alisAlani = `<label class="ea-edit-label" for="ea-alis-${indis}">Alış fiyatı</label>
       <div class="ea-edit-wrap"><input id="ea-alis-${indis}" class="ea-edit-input" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" value="${u.alis>0?u.alis:''}" aria-label="${eaEsc(u.modelKodu)} alış fiyatı (TL)" oninput="eaDegerGir(${indis},'alis',this,false)" onchange="eaDegerGir(${indis},'alis',this,true)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}"><span class="ea-edit-unit">₺</span></div>`;
