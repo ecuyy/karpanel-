@@ -3458,6 +3458,22 @@ footer.kh-footer::before{display:none}
 @media(max-width:380px){.kh-footer-start{width:100%;min-width:0}.kh-footer-trial-action{align-items:stretch}.kh-footer-trial h2{font-size:32px}.kh-footer-trial-action>span{text-align:center}}
 @media(prefers-reduced-motion:reduce){.kh-footer-start,.kh-footer-links a,.kh-footer-links button{transition:none}.kh-footer-start::before{animation:none;--kh-trial-angle:45deg}}
 
+
+/* Avantaj seviyelerine daha geniş ve okunaklı karşılaştırma alanı */
+#etiket-analiz-gorunum .ea-analysis-table{table-layout:fixed}
+#etiket-analiz-gorunum .ea-analysis-table th{min-width:0!important}
+#etiket-analiz-gorunum .ea-analysis-table th:nth-child(2),
+#etiket-analiz-gorunum .ea-analysis-table td:nth-child(2){text-align:left;padding-left:8px!important;padding-right:8px!important}
+#etiket-analiz-gorunum .ea-analysis-table td:first-child{padding-left:10px!important;padding-right:8px!important}
+#etiket-analiz-gorunum .ea-analysis-table th:nth-child(n+3) span:nth-child(2){font-size:13px!important}
+#etiket-analiz-gorunum .ea-analysis-table td:nth-child(n+3){padding:16px 8px!important}
+#etiket-analiz-gorunum .ea-analysis-table td:nth-child(n+3)>div{padding:18px 12px!important;margin:0!important;min-height:174px;box-sizing:border-box}
+#etiket-analiz-gorunum .ea-analysis-table td:nth-child(n+3)>div>div:first-child{font-size:22px!important;line-height:1.3}
+#etiket-analiz-gorunum .ea-kom-edit .ea-edit-label{font-size:12px;margin-top:14px}
+#etiket-analiz-gorunum .ea-kom-edit .ea-edit-input{width:104px;min-height:42px;font-size:16px}
+#etiket-analiz-gorunum .ea-kom-edit .ea-edit-unit{font-size:14px}
+#etiket-analiz-gorunum .ea-net .ea-kar-badge{font-size:15px;padding:5px 10px}
+
 </style>
 </head>
 <body>
@@ -4309,7 +4325,8 @@ footer.kh-footer::before{display:none}
           </div>
           <p class="ea-edit-hint" style="margin:0 0 10px;font-size:12px">Alış fiyatını ve her seviyenin komisyonunu düzenleyin; kâr/zarar anında güncellenir. Değişiklikler yalnızca bu analizde, bu tarayıcıda kaydedilir.</p>
           <div style="overflow-x:auto;border-radius:16px;border:1px solid #E5E7EB;box-shadow:0 2px 12px rgba(0,0,0,.05)">
-            <table class="ptable" style="min-width:1080px;border-radius:16px;overflow:hidden">
+            <table class="ptable ea-analysis-table" style="min-width:1080px;border-radius:16px;overflow:hidden">
+              <colgroup><col style="width:248px"><col style="width:140px"><col><col><col></colgroup>
               <thead>
                 <tr>
                   <th style="text-align:left;min-width:240px;background:#F9FAFB;border-bottom:2px solid #E5E7EB;font-size:11px;color:#6B7280;padding:14px 16px">ÜRÜN BİLGİLERİ</th>
