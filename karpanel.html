@@ -919,6 +919,15 @@ input[type=number]{-moz-appearance:textfield}
 .ea-kar-badge{display:inline-block;padding:3px 8px;border-radius:6px;font-weight:700;font-size:12px}
 .ea-kar-ok{background:rgba(16,185,129,.1);color:#059669}
 .ea-kar-bad{background:rgba(239,68,68,.08);color:#DC2626}
+.ea-edit-label{display:block;font-size:11px;font-weight:600;color:var(--t2);margin-top:10px}
+.ea-edit-wrap{display:flex;align-items:center;gap:6px;margin-top:5px}
+.ea-edit-input{box-sizing:border-box;width:112px;max-width:100%;min-height:36px;border:1px solid var(--border);border-radius:8px;background:#fff;padding:7px 9px;color:var(--dark);font-family:inherit;font-size:13px;font-weight:600;transition:border-color .15s,box-shadow .15s}
+.ea-edit-input:focus{outline:none;border-color:var(--or);box-shadow:0 0 0 3px rgba(242,122,26,.13)}
+.ea-edit-input[aria-invalid="true"]{border-color:var(--red)}
+.ea-edit-unit{font-size:12px;font-weight:700;color:var(--t3)}
+.ea-edit-hint{font-size:10px;color:var(--t3);line-height:1.5;margin-top:5px}
+.ea-kom-edit .ea-edit-wrap{justify-content:center}
+.ea-kom-edit .ea-edit-input{width:84px;text-align:center}
 .ea-kom-badge{font-size:10px;color:var(--or);font-weight:700;background:rgba(242,122,26,.08);padding:2px 6px;border-radius:4px}
 
 /* ══════════════════════════════════════════════════════════
@@ -4298,6 +4307,7 @@ footer.kh-footer::before{display:none}
               </div>
             </div>
           </div>
+          <p class="ea-edit-hint" style="margin:0 0 10px;font-size:12px">Alış fiyatını ve her seviyenin komisyonunu düzenleyin; kâr/zarar anında güncellenir. Değişiklikler yalnızca bu analizde, bu tarayıcıda kaydedilir.</p>
           <div style="overflow-x:auto;border-radius:16px;border:1px solid #E5E7EB;box-shadow:0 2px 12px rgba(0,0,0,.05)">
             <table class="ptable" style="min-width:1080px;border-radius:16px;overflow:hidden">
               <thead>
@@ -5286,16 +5296,14 @@ function eaTazele(){
       return uid===modelUp||ubc===modelUp||umc===modelUp||(uid&&uid.includes(modelUp))||(modelUp&&uid&&modelUp.includes(uid))||(ttl&&ttl.includes(modelUp));
     });
     if(urun){
-      u.alis = urun.alis||0;
+      if(!u._alisManuel) u.alis = urun.alis||0;
       // Kargo: kullanıcı etiket sayfasında manuel barem uyguladıysa onu koru, yoksa sistemden al
       if(!u._kargoManuel) u.kargo = urun.kargo||0;
       u.komOran = urun.commissionRate||0;
       u.image = urun.image||'';
       u.eslesme = true;
     }
-    u.net1 = u.alis>0 ? eaHesapla(u.f1Alt,u.alis,u.kargo,u.komOran) : null;
-    u.net2 = u.alis>0 ? eaHesapla(u.f2Alt,u.alis,u.kargo,u.komOran) : null;
-    u.net3 = u.alis>0 ? eaHesapla(u.f3Ust,u.alis,u.kargo,u.komOran) : null;
+    eaSonuclariHesapla(u);
   });
 }
 
@@ -5395,9 +5403,7 @@ function eaKbUygula(){
   eaTumVeri.forEach(u=>{
     const kb = eaKbGetKargo(u.f1Alt||u.mevcut||0);
     if(kb>0){ u.kargo = kb; u._kargoManuel = true; }
-    u.net1 = u.alis>0 ? eaHesapla(u.f1Alt,u.alis,u.kargo,u.komOran) : null;
-    u.net2 = u.alis>0 ? eaHesapla(u.f2Alt,u.alis,u.kargo,u.komOran) : null;
-    u.net3 = u.alis>0 ? eaHesapla(u.f3Ust,u.alis,u.kargo,u.komOran) : null;
+    eaSonuclariHesapla(u);
   });
   eaIstatistik(); eaRender();
   eaVeriyiKaydet();
@@ -5429,6 +5435,63 @@ function eaHesapla(satFiyat, alis, kargo, komOran){
   const kdvKom=komisyon-komisyon/kf, kdvHiz=hizmet-hizmet/kf;
   const odKdv=Math.max(0,kdvS-kdvA-kdvK-kdvKom-kdvHiz);
   return satFiyat-komisyon-alis-kargo-hizmet-stopaj-odKdv;
+}
+
+// Etiket düzenlemeleri yalnızca bu analize aittir; ana ürün listesi değiştirilmez.
+function eaKomisyon(u, seviye){
+  const deger=u['kom'+seviye];
+  return typeof deger==='number' && Number.isFinite(deger) && deger>=0 && deger<=100
+    ? deger : (u.komOran||0);
+}
+function eaSonuclariHesapla(u){
+  u.net1=u.alis>0 ? eaHesapla(u.f1Alt,u.alis,u.kargo,eaKomisyon(u,1)) : null;
+  u.net2=u.alis>0 ? eaHesapla(u.f2Alt,u.alis,u.kargo,eaKomisyon(u,2)) : null;
+  u.net3=u.alis>0 ? eaHesapla(u.f3Ust,u.alis,u.kargo,eaKomisyon(u,3)) : null;
+}
+function eaGirdiSayisi(deger){
+  let metin=String(deger).trim().replace(/\s/g,'');
+  if(metin.includes(',')) metin=metin.replace(/\./g,'').replace(',','.');
+  if(!/^(?:\d+(?:\.\d*)?|\.\d+)$/.test(metin)) return NaN;
+  const sayi=Number(metin);
+  return Number.isFinite(sayi) ? sayi : NaN;
+}
+function eaKarSonucu(net){
+  return net===null
+    ? '<div style="margin-top:8px;padding-top:8px;border-top:1px solid #E5E7EB;font-size:10px;color:#9CA3AF">Maliyet girilmemiş</div>'
+    : '<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08)">'+eaFmtKar(net)+'</div>';
+}
+function eaDegerGir(indis, alan, input, tamam){
+  const u=eaTumVeri[indis];
+  if(!u || !['alis','kom1','kom2','kom3'].includes(alan)) return;
+  const bos=input.value.trim()==='';
+  const sayi=bos ? 0 : eaGirdiSayisi(input.value);
+  const komisyon=alan!=='alis';
+  if(!Number.isFinite(sayi) || sayi<0 || (komisyon && sayi>100)){
+    input.setAttribute('aria-invalid','true');
+    if(tamam){
+      toast(komisyon ? 'Komisyon 0 ile 100 arasında olmalı.' : 'Geçerli, sıfır veya pozitif bir alış fiyatı girin.','error','!');
+      input.value=komisyon ? eaKomisyon(u,Number(alan.slice(-1))) : (u.alis||'');
+      input.removeAttribute('aria-invalid');
+    }
+    return;
+  }
+  input.removeAttribute('aria-invalid');
+  if(komisyon){ if(bos) delete u[alan]; else u[alan]=sayi; }
+  else{ u.alis=sayi; u._alisManuel=true; }
+  eaSonuclariHesapla(u);
+  // Satırı yeniden oluşturmadan sonuçları güncelle; yazarken odak kaybolmasın.
+  [1,2,3].forEach(seviye=>{
+    const kutu=document.getElementById('ea-kutu-'+indis+'-'+seviye);
+    if(!kutu) return;
+    const net=u['net'+seviye];
+    kutu.style.background=net===null?'rgba(14,124,123,.04)':net>0?'rgba(16,185,129,.08)':'rgba(239,68,68,.06)';
+    kutu.style.borderColor=net===null?'transparent':net>0?'rgba(16,185,129,.25)':'rgba(239,68,68,.2)';
+    const sonuc=kutu.querySelector('.ea-net');
+    if(sonuc) sonuc.innerHTML=eaKarSonucu(net);
+  });
+  if(tamam && komisyon && bos) input.value=eaKomisyon(u,Number(alan.slice(-1)));
+  eaIstatistik();
+  eaVeriyiKaydet();
 }
 
 function eaExcelYukle(input){
@@ -5566,33 +5629,31 @@ function eaRender(){
     return;
   }
 
+  const indisler=new Map(eaTumVeri.map((u,i)=>[u,i]));
   document.getElementById('ea-tbody').innerHTML = liste.map(u=>{
-    const komStr = u.komOran>0 ? (u.komOran.toFixed(1)+'%') : '—';
+    const indis=indisler.get(u);
+    const komStr = (u.komOran||0).toFixed(1);
     const imgHtml = u.image
       ? '<img src="'+eaEsc(u.image)+'" alt="'+eaEsc(u.urunIsmi||'Ürün görseli')+'" style="width:52px;height:52px;border-radius:8px;object-fit:cover;border:1px solid var(--border);flex-shrink:0">'
       : '<div style="width:52px;height:52px;border-radius:8px;background:var(--dark);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0">'+(u.urunIsmi.charAt(0)||'?')+'</div>';
-    const eslesmeRozeti = u.alis>0
-      ? '<span style="display:inline-flex;align-items:center;gap:3px;font-size:10px;color:#059669;font-weight:700;background:rgba(16,185,129,.1);padding:2px 7px;border-radius:10px;margin-top:4px">✓ Maliyet sistemden geldi</span>'
-      : '<span style="display:inline-flex;align-items:center;gap:3px;font-size:10px;color:#F59E0B;font-weight:700;background:rgba(245,158,11,.1);padding:2px 7px;border-radius:10px;margin-top:4px">⚠ Alış maliyeti girilmemiş</span>';
+    const alisAlani = `<label class="ea-edit-label" for="ea-alis-${indis}">Alış fiyatı</label>
+      <div class="ea-edit-wrap"><input id="ea-alis-${indis}" class="ea-edit-input" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" value="${u.alis>0?u.alis:''}" aria-label="${eaEsc(u.modelKodu)} alış fiyatı (TL)" oninput="eaDegerGir(${indis},'alis',this,false)" onchange="eaDegerGir(${indis},'alis',this,true)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}"><span class="ea-edit-unit">₺</span></div>`;
 
     // Trendyol tarzı yıldız fiyat kutusu: fiyat / "ve altı" / komisyon, altında bizim kar-zarar rozeti
     // Kutu arka planı: kar varsa yeşilimsi, zarar varsa kırmızımsı, bilinmiyorsa nötr
-    const yildizKutu = (fiyat, net) => {
+    const yildizKutu = (fiyat, net, seviye) => {
       let kutuRengi = 'rgba(14,124,123,.04)'; // varsayılan (maliyet yok)
       let kenarRengi = 'transparent';
       if(net!==null){
         if(net>0){ kutuRengi='rgba(16,185,129,.08)'; kenarRengi='rgba(16,185,129,.25)'; }
         else { kutuRengi='rgba(239,68,68,.06)'; kenarRengi='rgba(239,68,68,.2)'; }
       }
-      const karRozeti = net===null
-        ? '<div style="margin-top:8px;padding-top:8px;border-top:1px solid #E5E7EB;font-size:10px;color:#9CA3AF">Maliyet girilmemiş</div>'
-        : `<div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(0,0,0,.08)">${eaFmtKar(net)}</div>`;
       return `
-      <div style="text-align:center;background:${kutuRengi};border:1px solid ${kenarRengi};border-radius:10px;padding:10px 8px;margin:-4px">
+      <div id="ea-kutu-${indis}-${seviye}" style="text-align:center;background:${kutuRengi};border:1px solid ${kenarRengi};border-radius:10px;padding:10px 8px;margin:-4px">
         <div style="font-size:17px;font-weight:800;color:var(--dark)">${eaFmtTL(fiyat)}</div>
         <div style="font-size:11px;color:var(--t3);margin:2px 0 8px">ve altı</div>
-        <div style="font-size:12px;color:var(--t2)">Komisyon<br><span style="font-weight:700;color:var(--or)">%${komStr}</span></div>
-        ${karRozeti}
+        <div class="ea-kom-edit"><label class="ea-edit-label" for="ea-kom${seviye}-${indis}">Komisyon</label><div class="ea-edit-wrap"><input id="ea-kom${seviye}-${indis}" class="ea-edit-input" type="text" inputmode="decimal" autocomplete="off" value="${eaKomisyon(u,seviye)}" aria-label="${eaEsc(u.modelKodu)} ${['','Avantajlı','Çok Avantajlı','Süper Avantajlı'][seviye]} komisyonu (%)" oninput="eaDegerGir(${indis},'kom${seviye}',this,false)" onchange="eaDegerGir(${indis},'kom${seviye}',this,true)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}"><span class="ea-edit-unit">%</span></div></div>
+        <div class="ea-net" aria-live="polite">${eaKarSonucu(net)}</div>
       </div>`;
     };
 
@@ -5601,9 +5662,9 @@ function eaRender(){
         <div style="display:flex;gap:10px;align-items:flex-start">
           ${imgHtml}
           <div style="min-width:0">
-            <div style="font-weight:700;color:var(--dark);font-size:13px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;max-width:190px" title="${u.urunIsmi}">${u.urunIsmi}</div>
-            <div style="font-size:11px;color:var(--t3);margin-top:4px">Model Kodu: <strong>${u.modelKodu}</strong></div>
-            ${eslesmeRozeti}
+            <div style="font-weight:700;color:var(--dark);font-size:13px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;max-width:190px" title="${eaEsc(u.urunIsmi)}">${eaEsc(u.urunIsmi)}</div>
+            <div style="font-size:11px;color:var(--t3);margin-top:4px">Model Kodu: <strong>${eaEsc(u.modelKodu)}</strong></div>
+            ${alisAlani}
           </div>
         </div>
       </td>
@@ -5614,9 +5675,9 @@ function eaRender(){
         <div style="font-size:14px;font-weight:700;color:var(--dark)">${eaFmtTL(u.mevcut)}</div>
         <div style="font-size:11px;color:var(--t3);margin-top:6px">Güncel Komisyon: <span style="color:var(--or);font-weight:700">%${komStr}</span></div>
       </td>
-      <td style="vertical-align:top;padding:14px 10px">${yildizKutu(u.f1Alt,u.net1)}</td>
-      <td style="vertical-align:top;padding:14px 10px">${yildizKutu(u.f2Alt,u.net2)}</td>
-      <td style="vertical-align:top;padding:14px 10px">${yildizKutu(u.f3Ust,u.net3)}</td>
+      <td style="vertical-align:top;padding:14px 10px">${yildizKutu(u.f1Alt,u.net1,1)}</td>
+      <td style="vertical-align:top;padding:14px 10px">${yildizKutu(u.f2Alt,u.net2,2)}</td>
+      <td style="vertical-align:top;padding:14px 10px">${yildizKutu(u.f3Ust,u.net3,3)}</td>
     </tr>`;
   }).join('');
 }
@@ -6878,3 +6939,4 @@ function maliyetSayacGuncelle(){
 
 </body>
 </html>
+
