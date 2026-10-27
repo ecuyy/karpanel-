@@ -118,7 +118,7 @@ async function app(sharedDb){
   return require(name.startsWith('./')?path.join(__dirname,name):name);
  }};
  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'server.js'),'utf8'),context);await new Promise(setImmediate);
- return {db,notices,setPayment(p){payment=p;},async request(url,body,headers={}){const req=Readable.from(body===undefined?[]:[typeof body==='string'?body:JSON.stringify(body)]);Object.assign(req,{url,method:body===undefined?'GET':'POST',headers,socket:{remoteAddress:'test'}});const r=res(),ended=new Promise(resolve=>r.done=resolve);await handler(req,r);await ended;await new Promise(setImmediate);return r;}};
+ return {db,notices,setPayment(p){payment=p;},async request(url,body,headers={},method=body===undefined?'GET':'POST'){const req=Readable.from(body===undefined?[]:[typeof body==='string'?body:JSON.stringify(body)]);Object.assign(req,{url,method,headers,socket:{remoteAddress:'test'}});const r=res(),ended=new Promise(resolve=>r.done=resolve);await handler(req,r);await ended;await new Promise(setImmediate);return r;}};
 }
 
 
@@ -130,4 +130,14 @@ test('consolidated articles redirect and stay absent from sitemap even if old DB
   assert(!(await a.request('/sitemap.xml')).body.includes(slug));
   assert(!(await a.request('/blog')).body.includes('/blog/'+slug));
  }
+});
+test('public blog HEAD requests preserve GET status, cache and visibility without returning a body',async()=>{
+ const a=await app();
+ const routes=['/blog','/blog/','/blog/trendyol-kupon-maliyeti-hesaplama','/blog/does-not-exist','/blog/trendyol-komisyon-hesaplama-gercek-krinizi-dakikalar-icinde-ogrenin'];
+ for(const route of routes){
+  const get=await a.request(route),head=await a.request(route,undefined,{},'HEAD');
+  assert.equal(head.status,get.status,route);assert.equal(head.headers['Cache-Control'],get.headers['Cache-Control'],route);assert.equal(head.headers.Location,get.headers.Location,route);assert.equal(head.body,undefined,route);
+ }
+ const post=a.db.stores.blog.find(y=>y.slug==='trendyol-kupon-maliyeti-hesaplama');post.yayinda=false;
+ assert.equal((await a.request('/blog/'+post.slug,undefined,{},'HEAD')).status,404);
 });

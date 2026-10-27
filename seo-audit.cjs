@@ -6,8 +6,8 @@ const errors = [];
 const titles = new Map();
 const results = [];
 const decode = value => value.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
-async function get(url) {
-  const response = await fetch(url, { redirect: 'manual', signal: AbortSignal.timeout(30000) });
+async function get(url, method = 'GET') {
+  const response = await fetch(url, { method, redirect: 'manual', signal: AbortSignal.timeout(30000) });
   return { response, html: await response.text() };
 }
 async function check(url) {
@@ -15,6 +15,9 @@ async function check(url) {
   try {
     const { response, html } = await get(url);
     if (response.status !== 200) issues.push('HTTP ' + response.status);
+    const head = await get(url, 'HEAD');
+    if (head.response.status !== response.status) issues.push('HEAD / GET durum kodu eşleşmiyor: ' + head.response.status);
+    if (head.html.length) issues.push('HEAD yanıtında gövde var');
     const title = (html.match(/<title>([\s\S]*?)<\/title>/i) || [])[1]?.trim();
     if (!title) issues.push('Başlık eksik');
     else if (titles.has(title)) issues.push('Aynı başlık: ' + titles.get(title));

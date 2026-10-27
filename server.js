@@ -1111,13 +1111,13 @@ async function sifirla(){
   }
 
   // Public: blog liste sayfası (SEO)
-  if (parsed.pathname === '/blog/' && req.method === 'GET') {
+  if (parsed.pathname === '/blog/' && (req.method === 'GET' || req.method === 'HEAD')) {
     res.writeHead(301, { Location: '/blog' });
     res.end();
     return;
   }
 
-  if (parsed.pathname === '/blog' && req.method === 'GET') {
+  if (parsed.pathname === '/blog' && (req.method === 'GET' || req.method === 'HEAD')) {
     let yazilar = [];
     await waitForDb();
     if (db) yazilar = await db.collection('blog').find({}).project({ icerik: 0 }).sort({ tarih: -1 }).toArray();
@@ -1172,12 +1172,12 @@ async function sifirla(){
       'Content-Type': 'text/html; charset=utf-8',
       'Cache-Control': 'public, max-age=300, stale-while-revalidate=600'
     });
-    res.end(html);
+    res.end(req.method === 'HEAD' ? undefined : html);
     return;
   }
 
   // Public: tekil blog yazısı sayfası (SEO)
-  if (parsed.pathname.startsWith('/blog/') && req.method === 'GET') {
+  if (parsed.pathname.startsWith('/blog/') && (req.method === 'GET' || req.method === 'HEAD')) {
     const slug = decodeURIComponent(parsed.pathname.slice(6)).replace(/\/+$/, '');
     const retiredPost = RETIRED_EDITORIAL_POSTS.find(post => post.slug === slug);
     if (retiredPost) {
@@ -1194,7 +1194,7 @@ async function sifirla(){
     if (!y) {
       res.setHeader('X-Robots-Tag', 'noindex, follow');
       res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
-      res.end(BLOG_HEAD('Yazı bulunamadı · komisyonhesap', 'Aradığınız yazı bulunamadı.', 'https://komisyonhesap.com/blog')
+      res.end(req.method === 'HEAD' ? undefined : BLOG_HEAD('Yazı bulunamadı · komisyonhesap', 'Aradığınız yazı bulunamadı.', 'https://komisyonhesap.com/blog')
         + '<div class="bwrap" style="text-align:center"><h1 style="font-family:Plus Jakarta Sans,sans-serif">Yazı bulunamadı</h1><p style="margin-top:12px"><a href="/blog">← Tüm yazılar</a></p></div>' + BLOG_FOOT);
       return;
     }
@@ -1247,7 +1247,7 @@ async function sifirla(){
       'Content-Type': 'text/html; charset=utf-8',
       'Cache-Control': 'public, max-age=300, stale-while-revalidate=600'
     });
-    res.end(html);
+    res.end(req.method === 'HEAD' ? undefined : html);
     return;
   }
 
