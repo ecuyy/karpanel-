@@ -22,7 +22,8 @@ test('styles, executable scripts and images preserve their exact content', () =>
   assert.equal(urls.length, scripts.length);
   urls.forEach((url, i) => { const js = request(url).body.toString(); assert.equal(js, scripts[i]); new vm.Script(js); });
   const images = [...original.matchAll(/data:image\/(png|jpeg|webp|svg\+xml);base64,([A-Za-z0-9+/=]+)/g)];
-  const assetImages = [...html.matchAll(/\/assets\/kh-[a-f0-9]+\.(?:png|jpg|svg|webp)/g)].map(m => m[0]);
+  const markupWithoutPreload=html.replace(/<link[^>]+rel="preload"[^>]*>/g,'');
+  const assetImages = [...markupWithoutPreload.matchAll(/\/assets\/kh-[a-f0-9]+\.(?:png|jpg|svg|webp)/g)].map(m => m[0]);
   assert.equal(images.length, assetImages.length);
   images.forEach((image, i) => assert.deepEqual(request(assetImages[i]).body, Buffer.from(image[2], 'base64')));
   assert(home.body.length < Buffer.byteLength(original) * 0.35);
@@ -51,3 +52,4 @@ test('private routes, APIs, unknown assets and writes never enter the public cac
   }
 });
 console.log(JSON.stringify({ htmlBefore: Buffer.byteLength(original), htmlAfter: home.body.length, brotliHTML: request('/', { 'accept-encoding': 'br' }).body.length }));
+

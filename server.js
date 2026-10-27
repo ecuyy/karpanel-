@@ -140,6 +140,8 @@ const EDITORIAL_POSTS = [
 
 // Kısa süre yayında kalan çakışan editoryal URL'leri eski, kapsamlı yazıya yönlendir.
 const RETIRED_EDITORIAL_POSTS = [
+  {slug:'trendyol-komisyon-hesaplama-gercek-krinizi-dakikalar-icinde-ogrenin',redirect:'/trendyol-komisyon-hesaplama'},
+  {slug:'trendyol-komisyon-hesaplama-gercek-krinizi-ogrenmenin-en-kolay-yolu',redirect:'/trendyol-komisyon-hesaplama'},
   {
     slug: 'trendyol-kargo-ucreti-2026',
     redirect: '/blog/trendyol-kargo-ucreti-2026-desi-hesaplama-ve-kargo-maliyeti-nasil-hesaplanir'
@@ -180,7 +182,7 @@ function editorialListItems() {
 function mergeEditorialList(yazilar) {
   const birlesik = new Map(editorialListItems().map(post => [post.slug, post]));
   (yazilar || []).forEach(post => birlesik.set(post.slug, post));
-  return Array.from(birlesik.values()).filter(post=>post.yayinda&&!post.deleted).sort((a, b) => new Date(b.tarih) - new Date(a.tarih));
+  return Array.from(birlesik.values()).filter(post=>post.yayinda&&!post.deleted&&!RETIRED_EDITORIAL_POSTS.some(retired=>retired.slug===post.slug)).sort((a, b) => new Date(b.tarih) - new Date(a.tarih));
 }
 
 // iyzico yapılandırması (resmi npm paketi)
@@ -304,6 +306,29 @@ function guvenliJsonLd(veri){
 }
 
 const BLOG_HEAD = (title, desc, canonical, extra='', ogType='article') => `<!DOCTYPE html><html lang="tr"><head>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-16989542935');
+  gtag('config', 'G-2YV09HMHWK', {page_location:location.origin+location.pathname,page_referrer:document.referrer.split('?')[0].split('#')[0]});
+  (function(){
+    function loadGoogleTag(){
+      if(document.querySelector('script[data-kp-google-tag]')) return;
+      var script=document.createElement('script');
+      script.async=true;
+      script.src='https://www.googletagmanager.com/gtag/js?id=AW-16989542935';
+      script.setAttribute('data-kp-google-tag','1');
+      document.head.appendChild(script);
+    }
+    function scheduleGoogleTag(){
+      if('requestIdleCallback' in window) requestIdleCallback(loadGoogleTag,{timeout:2000});
+      else setTimeout(loadGoogleTag,500);
+    }
+    if(document.readyState==='complete') scheduleGoogleTag();
+    else window.addEventListener('load',scheduleGoogleTag,{once:true});
+  })();
+</script>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${blogEsc(title)}</title>
 <meta name="description" content="${blogEsc(desc)}">
@@ -445,7 +470,6 @@ const server = http.createServer(async (req, res) => {
 
   // sitemap.xml
   if (parsed.pathname === '/sitemap.xml') {
-    const bugun = new Date().toISOString().split('T')[0];
     let yazilar = editorialListItems();
     try {
       await waitForDb();
@@ -455,7 +479,7 @@ const server = http.createServer(async (req, res) => {
       }
     } catch (e) {}
     const blogUrls = yazilar.map(y => `<url><loc>https://komisyonhesap.com/blog/${blogEsc(y.slug)}</loc><lastmod>${new Date(y.guncelleme || y.tarih).toISOString().split('T')[0]}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`).join('');
-    const sitemap = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://komisyonhesap.com/</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url><url><loc>https://komisyonhesap.com/trendyol-komisyon-hesaplama</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url><url><loc>https://komisyonhesap.com/trendyol-maliyet-hesaplama</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>0.95</priority></url><url><loc>https://komisyonhesap.com/trendyol-net-kar-hesaplama</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url><url><loc>https://komisyonhesap.com/trendyol-stopaj-hesaplama</loc><lastmod>${bugun}</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url><url><loc>https://komisyonhesap.com/trendyolda-zarar-eden-urun-nasil-bulunur</loc><lastmod>${bugun}</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url><url><loc>https://komisyonhesap.com/blog</loc><lastmod>${bugun}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>${blogUrls}</urlset>`;
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://komisyonhesap.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url><url><loc>https://komisyonhesap.com/trendyol-komisyon-hesaplama</loc><changefreq>weekly</changefreq><priority>0.95</priority></url><url><loc>https://komisyonhesap.com/trendyol-maliyet-hesaplama</loc><changefreq>weekly</changefreq><priority>0.95</priority></url><url><loc>https://komisyonhesap.com/trendyol-net-kar-hesaplama</loc><changefreq>weekly</changefreq><priority>0.9</priority></url><url><loc>https://komisyonhesap.com/trendyol-stopaj-hesaplama</loc><changefreq>monthly</changefreq><priority>0.85</priority></url><url><loc>https://komisyonhesap.com/trendyolda-zarar-eden-urun-nasil-bulunur</loc><changefreq>monthly</changefreq><priority>0.85</priority></url><url><loc>https://komisyonhesap.com/blog</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>${blogUrls}</urlset>`;
     res.writeHead(200, { 'Content-Type': 'application/xml' });
     res.end(sitemap);
     return;
@@ -1128,7 +1152,7 @@ async function sifirla(){
       'Trendyol satıcıları için komisyon, KDV, stopaj, kâr hesaplama ve e-ticaret rehberleri. Güncel oranlar ve pratik ipuçları.',
       listeCanonical, listeJsonLd, 'website')
       + `<div class="bwrap">
-        <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:36px;font-weight:800;color:#2A211A;margin-bottom:10px">Blog</h1>
+        <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:36px;font-weight:800;color:#2A211A;margin-bottom:10px">Trendyol Satıcı Rehberleri</h1>
         <p style="color:#6B5E50;font-size:16px;margin-bottom:36px">Trendyol satıcıları için komisyon, kâr ve e-ticaret rehberleri.</p>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px">${kartlar}</div>
         <section style="margin-top:48px;color:#6B5E50;font-size:15px;line-height:1.75" aria-labelledby="blog-rehber-baslik">
@@ -1198,6 +1222,13 @@ async function sifirla(){
         <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(28px,5vw,42px);font-weight:800;color:#221A12;line-height:1.2;margin-bottom:24px">${blogEsc(y.baslik)}</h1>
         ${y.kapak ? `<img src="${blogEsc(y.kapak)}" alt="${blogEsc(y.baslik)}" style="width:100%;border-radius:16px;margin-bottom:28px">` : ''}
         <div class="bbody" style="font-size:17px;color:#3A2E24">${blogIcerikRender(y.icerik)}</div>
+        <nav aria-label="İlgili hesaplama araçları" style="margin-top:28px;padding:20px;border:1px solid #E8E2DA;border-radius:12px;line-height:1.9">
+          <strong>Bu rehberi kendi rakamlarınızla uygulayın</strong><br>
+          <a href="/trendyol-komisyon-hesaplama">Trendyol komisyon ve net kâr hesaplama</a> ·
+          <a href="/trendyol-maliyet-hesaplama">Başabaş satış fiyatını bulma</a> ·
+          <a href="/trendyol-stopaj-hesaplama">Stopaj hesaplama</a> ·
+          <a href="/trendyolda-zarar-eden-urun-nasil-bulunur">Excel ile zarar eden ürünleri bulma</a>
+        </nav>
         <div style="margin-top:44px;padding:28px;background:linear-gradient(135deg,#FFF3E6,#FFE8D0);border-radius:18px;text-align:center">
           <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:#221A12;margin-bottom:8px">Önce tek ürünü ücretsiz hesapla, sonra tüm Excel'ini analiz et</div>
           <div style="color:#6B5E50;margin-bottom:18px">Komisyon, KDV, %1 stopaj, kargo ve hizmet bedeli sonrası net kârını gör. Kendi Excel'inle 3 günlük tam erişim denemesi de mevcut.</div>
@@ -2439,3 +2470,4 @@ server.listen(PORT, () => {
     console.log('🔄 Self-ping aktif (her 14 dk)');
   }
 });
+

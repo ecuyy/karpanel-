@@ -41,6 +41,8 @@ function createPublicAssets(root) {
     const extension = subtype === 'svg+xml' ? 'svg' : subtype === 'jpeg' ? 'jpg' : subtype;
     return add(Buffer.from(bytes, 'base64'), extension, 'image/' + subtype);
   });
+  const logo=html.match(/<img[^>]+fetchpriority="high"[^>]+src="([^"]+)"/);
+  if(logo) preload.push('<link rel="preload" as="image" href="'+logo[1]+'" fetchpriority="high">');
   html = html.replace('</head>', preload.join('\n') + '\n</head>');
   const home = resource(html, 'text/html; charset=utf-8', 'public, max-age=60, stale-while-revalidate=300');
   const pages = new Map([['/', home], ['/index.html', home]]);
@@ -78,3 +80,4 @@ function createPublicAssets(root) {
   };
 }
 module.exports = { createPublicAssets };
+

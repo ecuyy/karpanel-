@@ -120,3 +120,14 @@ async function app(sharedDb){
  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'server.js'),'utf8'),context);await new Promise(setImmediate);
  return {db,notices,setPayment(p){payment=p;},async request(url,body,headers={}){const req=Readable.from(body===undefined?[]:[typeof body==='string'?body:JSON.stringify(body)]);Object.assign(req,{url,method:body===undefined?'GET':'POST',headers,socket:{remoteAddress:'test'}});const r=res(),ended=new Promise(resolve=>r.done=resolve);await handler(req,r);await ended;await new Promise(setImmediate);return r;}};
 }
+
+
+test('consolidated articles redirect and stay absent from sitemap even if old DB entries are published',async()=>{
+ const a=await app();
+ for(const slug of ['trendyol-komisyon-hesaplama-gercek-krinizi-dakikalar-icinde-ogrenin','trendyol-komisyon-hesaplama-gercek-krinizi-ogrenmenin-en-kolay-yolu']){
+  await a.db.collection('blog').updateOne({slug},{$set:{slug,baslik:'Eski yazı',yayinda:true}},{upsert:true});
+  const r=await a.request('/blog/'+slug);assert.equal(r.status,301);assert.equal(r.headers.Location,'/trendyol-komisyon-hesaplama');
+  assert(!(await a.request('/sitemap.xml')).body.includes(slug));
+  assert(!(await a.request('/blog')).body.includes('/blog/'+slug));
+ }
+});

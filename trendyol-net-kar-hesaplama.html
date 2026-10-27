@@ -1,4 +1,27 @@
-<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!DOCTYPE html><html lang="tr"><head>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-16989542935');
+  gtag('config', 'G-2YV09HMHWK', {page_location:location.origin+location.pathname,page_referrer:document.referrer.split('?')[0].split('#')[0]});
+  (function(){
+    function loadGoogleTag(){
+      if(document.querySelector('script[data-kp-google-tag]')) return;
+      var script=document.createElement('script');
+      script.async=true;
+      script.src='https://www.googletagmanager.com/gtag/js?id=AW-16989542935';
+      script.setAttribute('data-kp-google-tag','1');
+      document.head.appendChild(script);
+    }
+    function scheduleGoogleTag(){
+      if('requestIdleCallback' in window) requestIdleCallback(loadGoogleTag,{timeout:2000});
+      else setTimeout(loadGoogleTag,500);
+    }
+    if(document.readyState==='complete') scheduleGoogleTag();
+    else window.addEventListener('load',scheduleGoogleTag,{once:true});
+  })();
+</script><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Trendyol Net Kâr Hesaplama | Ürün Kârlılığı Rehberi</title><meta name="description" content="Trendyol net kâr hesaplama rehberi: ürün kârını, kâr marjını ve satış giderlerini karşılaştırın. Excel ile kârlı ve zarar eden ürünlerinizi bulun."><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
 <link rel="canonical" href="https://komisyonhesap.com/trendyol-net-kar-hesaplama">
 <meta property="og:type" content="website"><meta property="og:title" content="Trendyol Net Kâr Hesaplama | Ürün Kârlılığı Rehberi"><meta property="og:description" content="Ürün kârını, kâr marjını ve satış giderlerini karşılaştırın. Excel ile toplu kâr analizini keşfedin."><meta property="og:url" content="https://komisyonhesap.com/trendyol-net-kar-hesaplama"><meta property="og:image" content="https://komisyonhesap.com/og-image.png"><meta property="og:locale" content="tr_TR"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://komisyonhesap.com/trendyol-net-kar-hesaplama","url":"https://komisyonhesap.com/trendyol-net-kar-hesaplama","name":"Trendyol Net Kâr Hesaplama | Ürün Kârlılığı Rehberi","inLanguage":"tr-TR"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Ana Sayfa","item":"https://komisyonhesap.com/"},{"@type":"ListItem","position":2,"name":"Trendyol Net Kâr Hesaplama","item":"https://komisyonhesap.com/trendyol-net-kar-hesaplama"}]}]}</script><style>table{width:100%;border-collapse:collapse;font-size:15px}caption{text-align:left;font-weight:700;margin-bottom:12px}th,td{padding:12px;text-align:left;vertical-align:top;border-bottom:1px solid #eee4da}li{margin-bottom:10px}a{color:#ac4600}header{margin-top:30px}.nav{gap:16px;flex-wrap:wrap}*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#fbf8f4;color:#241d17;line-height:1.7}.w{max-width:900px;margin:auto;padding:24px}.nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:40px}.logo{font-weight:900;font-size:22px;text-decoration:none;color:#241d17}.logo span{color:#f27a1a}.cta{background:#f27a1a;color:white;text-decoration:none;padding:11px 16px;border-radius:10px;font-weight:800}h1{font-size:clamp(36px,6vw,58px);line-height:1.05;letter-spacing:-2px;margin:0 0 18px}h2{font-size:26px;margin-top:32px}.lead{font-size:19px;color:#6b5e50}.card{background:#fff;border:1px solid #eee4da;border-radius:18px;padding:28px;margin:28px 0}.box{background:linear-gradient(135deg,#fff3e6,#ffe8d0);border:1px solid #ffd5af;border-radius:18px;padding:28px;text-align:center;margin:34px 0}.box a{display:inline-block;background:#f27a1a;color:white;text-decoration:none;padding:13px 20px;border-radius:11px;font-weight:800}.foot{padding:30px 0 50px;color:#7f7062;font-size:14px}.links a{color:#d95f00}</style></head><body><div class="w">
@@ -30,4 +53,16 @@
 </main>
 <div class="links"><a href="/trendyol-komisyon-hesaplama">Trendyol Komisyon Hesaplama</a> · <a href="/trendyol-maliyet-hesaplama">Trendyol Maliyet Hesaplama</a> · <a href="/blog">Blog</a> · <a href="/">Ana Sayfa</a></div>
 <footer class="foot">© 2026 komisyonhesap · Trendyol satıcıları için bağımsız kârlılık analiz aracı.</footer>
-</div></body></html>
+</div><script>
+(function(){
+  var sent=false;
+  document.addEventListener('input',function(e){
+    var input=e.target;
+    if(sent||!input||!input.closest('main,.grid,.card,.calculator,.content')||input.type!=='number'||!(Number(input.value)>0))return;
+    sent=true;
+    try{gtag('event','calculator_use',{calculator:location.pathname});}catch(err){}
+  });
+})();
+</script>
+</body></html>
+

@@ -1,6 +1,29 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-16989542935');
+  gtag('config', 'G-2YV09HMHWK', {page_location:location.origin+location.pathname,page_referrer:document.referrer.split('?')[0].split('#')[0]});
+  (function(){
+    function loadGoogleTag(){
+      if(document.querySelector('script[data-kp-google-tag]')) return;
+      var script=document.createElement('script');
+      script.async=true;
+      script.src='https://www.googletagmanager.com/gtag/js?id=AW-16989542935';
+      script.setAttribute('data-kp-google-tag','1');
+      document.head.appendChild(script);
+    }
+    function scheduleGoogleTag(){
+      if('requestIdleCallback' in window) requestIdleCallback(loadGoogleTag,{timeout:2000});
+      else setTimeout(loadGoogleTag,500);
+    }
+    if(document.readyState==='complete') scheduleGoogleTag();
+    else window.addEventListener('load',scheduleGoogleTag,{once:true});
+  })();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Trendyol Komisyon Hesaplama 2026 | Net Kâr Hesapla</title>
@@ -104,6 +127,21 @@
     <p>En az ürün maliyeti, pazaryeri komisyonu, kargo, hizmet bedeli, e-ticaret stopajı ve KDV etkisi dikkate alınmalıdır. Reklam, paketleme, iade, personel ve sabit işletme giderleri de işletme bazındaki gerçek kârlılık analizinde ayrıca değerlendirilmelidir.</p>
   </article>
 
+  <article class="content" aria-labelledby="komisyon-formulu">
+    <h2 id="komisyon-formulu">Trendyol komisyonu nasıl hesaplanır?</h2>
+    <p>Komisyon tutarı = komisyona esas satış fiyatı × komisyon oranı ÷ 100. Örneğin 1.000 TL satışta %15 oran, 150 TL komisyon demektir. Kalan 850 TL net kâr değildir; ürün maliyeti ve diğer kesintiler henüz düşülmemiştir.</p>
+    <p>Bu araçta komisyon oranı, satış fiyatı üzerinden kesilecek toplam oran olarak kullanılır. Panelinizdeki oranla faturadaki komisyon KDV’sinin nasıl gösterildiğini kontrol edin; aynı KDV’yi ikinci kez eklemeyin. Size özel komisyonu <a href="https://akademi.trendyol.com/satici-bilgi-merkezi/detay/komisyon-tutari-hesaplama" target="_blank" rel="noopener">Trendyol Satıcı Bilgi Merkezi</a> ve kendi satıcı panelinizden doğrulayın.</p>
+    <h2>1.000 TL satışta komisyon değişirse ne kadar kâr kalır?</h2>
+    <p>Aşağıdaki örnek mevcut hesaplayıcının sonucudur. Alış 500 TL, kargo 60 TL, hizmet bedeli 13,19 TL ve KDV %20 kabul edilmiştir. Tutarlar KDV dahil girilmiştir; reklam, paketleme ve iade giderleri bu örneğe dahil değildir. Bunlar sizin tarifeniz veya kesin kazancınız değildir.</p>
+    <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;text-align:left;min-width:420px"><caption style="text-align:left;margin-bottom:10px">Aynı üründe üç örnek komisyon senaryosu</caption><thead><tr><th scope="col">Komisyon oranı</th><th scope="col">Komisyon tutarı</th><th scope="col">Hesaplanan net sonuç</th></tr></thead><tbody><tr><td>%15</td><td>150,00 TL</td><td>222,34 TL</td></tr><tr><td>%20</td><td>200,00 TL</td><td>180,67 TL</td></tr><tr><td>%25</td><td>250,00 TL</td><td>139,01 TL</td></tr></tbody></table></div>
+    <p>Örneği tekrarlamak için yukarıdaki kutulara kendi satış fiyatınızı, alış maliyetinizi, komisyonunuzu ve kargonuzu yazın. Sonuç her değişiklikte yenilenir. Komisyon ve KDV etkisi birlikte değiştiği için iki senaryonun net kâr farkı yalnızca komisyon tutarlarının farkına eşit olmayabilir.</p>
+    <h2>Hesaplamadan önce kontrol etmeniz gerekenler</h2>
+    <ol><li><strong>Gerçek satış fiyatı:</strong> Liste fiyatı yerine satıcı indirimleri sonrası komisyona esas tutarı kontrol edin.</li><li><strong>Size özel komisyon:</strong> Genel kategori tabloları yerine ürününüz için geçerli oranı kullanın.</li><li><strong>Aynı KDV temeli:</strong> Bu araçtaki satış, alış, kargo ve hizmet bedeli girişleri KDV dahil tutarlar içindir. Ürün ve giderlerin KDV oranları farklıysa muhasebe kaydınızı ayrıca değerlendirin.</li><li><strong>Nakit kesintisi ve vergi:</strong> Stopajın hakedişi azaltması ile nihai gelir vergisi yükünü aynı şey olarak değerlendirmeyin.</li><li><strong>Ek işletme giderleri:</strong> Reklam, iade, paketleme ve sabit giderleri ayrıca karşılaştırın.</li></ol>
+    <h2>Hangi araç hangi sorunu çözüyor?</h2>
+    <ul><li><a href="/trendyol-maliyet-hesaplama">Trendyol maliyet hesaplama:</a> Alış maliyetine göre başabaş ve hedef satış fiyatını inceleyin.</li><li><a href="/trendyol-stopaj-hesaplama">Trendyol stopaj hesaplama:</a> Stopajın hakediş üzerindeki etkisini ayrı görün.</li><li><a href="/trendyol-net-kar-hesaplama">Trendyol net kâr hesaplama:</a> Giderleri net sonuç açısından değerlendirin.</li><li><a href="/trendyolda-zarar-eden-urun-nasil-bulunur">Zarar eden ürünleri bulma:</a> Çok sayıda üründe Excel ile analiz akışını öğrenin.</li></ul>
+    <p>Senaryonuz indirim içeriyorsa <a href="/blog/trendyol-kupon-maliyeti-hesaplama">kupon sonrası kâr rehberini</a>, reklam harcıyorsanız <a href="/blog/trendyol-reklam-butcesi-ve-roas-hesaplama-ne-kadar-harcanir">reklam bütçesi ve ROAS rehberini</a> okuyun. <a href="/blog">Tüm satıcı rehberlerini inceleyin.</a></p>
+    <p><small>İçerik kontrolü: 27 Ekim 2026. Hesaplayıcı ticari karar desteğidir; kesin muhasebe veya vergi hesabının yerine geçmez.</small></p>
+  </article>
   <section class="content">
     <h2>Sık Sorulan Sorular</h2>
     <h3>Trendyol stopajı %5 mi?</h3><p>Hayır. Elektronik ticaret kapsamındaki tevkifat oranı 1 Ocak 2025'ten itibaren %1 olarak belirlenmiştir.</p>
@@ -145,5 +183,17 @@ function calc(){
 }
 ids.forEach(id=>document.getElementById(id).addEventListener('input',calc));calc();
 </script>
+<script>
+(function(){
+  var sent=false;
+  document.addEventListener('input',function(e){
+    var input=e.target;
+    if(sent||!input||!input.closest('main,.grid,.card,.calculator,.content')||input.type!=='number'||!(Number(input.value)>0))return;
+    sent=true;
+    try{gtag('event','calculator_use',{calculator:location.pathname});}catch(err){}
+  });
+})();
+</script>
 </body>
 </html>
+

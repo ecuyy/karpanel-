@@ -1,6 +1,29 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-16989542935');
+  gtag('config', 'G-2YV09HMHWK', {page_location:location.origin+location.pathname,page_referrer:document.referrer.split('?')[0].split('#')[0]});
+  (function(){
+    function loadGoogleTag(){
+      if(document.querySelector('script[data-kp-google-tag]')) return;
+      var script=document.createElement('script');
+      script.async=true;
+      script.src='https://www.googletagmanager.com/gtag/js?id=AW-16989542935';
+      script.setAttribute('data-kp-google-tag','1');
+      document.head.appendChild(script);
+    }
+    function scheduleGoogleTag(){
+      if('requestIdleCallback' in window) requestIdleCallback(loadGoogleTag,{timeout:2000});
+      else setTimeout(loadGoogleTag,500);
+    }
+    if(document.readyState==='complete') scheduleGoogleTag();
+    else window.addEventListener('load',scheduleGoogleTag,{once:true});
+  })();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Trendyol Maliyet Hesaplama 2026 | Satış Fiyatı Bul</title>
@@ -228,5 +251,17 @@ function calculate(){
 inputIds.forEach(id=>document.getElementById(id).addEventListener('input',calculate));
 calculate();
 </script>
+<script>
+(function(){
+  var sent=false;
+  document.addEventListener('input',function(e){
+    var input=e.target;
+    if(sent||!input||!input.closest('main,.grid,.card,.calculator,.content')||input.type!=='number'||!(Number(input.value)>0))return;
+    sent=true;
+    try{gtag('event','calculator_use',{calculator:location.pathname});}catch(err){}
+  });
+})();
+</script>
 </body>
 </html>
+
