@@ -23,9 +23,13 @@ function createPublicAssets(root) {
     return name;
   }
   let html = fs.readFileSync(path.join(root, 'karpanel.html'), 'utf8');
+  const preloadHeaders = [];
   // Retain the exact CSS bytes, including responsive rules and animations.
-  html = html.replace(/<style>([\s\S]*?)<\/style>/g, (_, css) =>
-    '<link rel="stylesheet" href="' + add(css, 'css', 'text/css; charset=utf-8') + '">');
+  html = html.replace(/<style>([\s\S]*?)<\/style>/g, (_, css) => {
+    const href = add(css, 'css', 'text/css; charset=utf-8');
+    preloadHeaders.push('<' + href + '>; rel=preload; as=style');
+    return '<link rel="stylesheet" href="' + href + '">';
+  });
   const bodyStart = html.indexOf('<body');
   const preload = [];
   // Classic defer scripts execute in document order, before DOMContentLoaded.
@@ -33,7 +37,6 @@ function createPublicAssets(root) {
   html = html.replace(/<script>([\s\S]*?)<\/script>/g, (tag, js, offset) => {
     if (offset < bodyStart) return tag;
     const src = add(js, 'js', 'application/javascript; charset=utf-8');
-    if (Buffer.byteLength(js) > 10000) preload.push('<link rel="preload" as="script" href="' + src + '">');
     return '<script defer src="' + src + '"></script>';
   });
   // Decode only markup assets, after executable scripts have been removed.
@@ -42,9 +45,15 @@ function createPublicAssets(root) {
     return add(Buffer.from(bytes, 'base64'), extension, 'image/' + subtype);
   });
   const logo=html.match(/<img[^>]+fetchpriority="high"[^>]+src="([^"]+)"/);
-  if(logo) preload.push('<link rel="preload" as="image" href="'+logo[1]+'" fetchpriority="high">');
+  if(logo) {
+    preload.push('<link rel="preload" as="image" href="'+logo[1]+'" fetchpriority="high">');
+    preloadHeaders.push('<'+logo[1]+'>; rel=preload; as=image; fetchpriority=high');
+  }
   html = html.replace('</head>', preload.join('\n') + '\n</head>');
   const home = resource(html, 'text/html; charset=utf-8', 'public, max-age=60, stale-while-revalidate=300');
+  // Discover rendering assets with response headers, before parsing the HTML.
+  // Deferred application scripts use normal discovery instead of competing via preload.
+  home.link = preloadHeaders.join(', ');
   const pages = new Map([['/', home], ['/index.html', home]]);
   for (const slug of ['trendyol-komisyon-hesaplama', 'trendyol-maliyet-hesaplama', 'trendyol-net-kar-hesaplama', 'trendyol-stopaj-hesaplama', 'trendyolda-zarar-eden-urun-nasil-bulunur']) {
     const page = resource(fs.readFileSync(path.join(root, slug + '.html')), 'text/html; charset=utf-8', 'public, max-age=300');
@@ -68,6 +77,7 @@ function createPublicAssets(root) {
       'Content-Type': item.type, 'Cache-Control': item.cache,
       ETag: item.etag, Vary: 'Accept-Encoding', 'X-Content-Type-Options': 'nosniff'
     };
+    if (item.link) headers.Link = item.link;
     if (encoding) headers['Content-Encoding'] = encoding;
     const matches = (req.headers['if-none-match'] || '').split(',').map(tag => tag.trim().replace(/^W\//, ''));
     if (matches.includes('*') || matches.includes(item.etag.replace(/^W\//, ''))) {

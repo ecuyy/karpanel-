@@ -51,5 +51,14 @@ test('private routes, APIs, unknown assets and writes never enter the public cac
     assert.equal(request('/' + slug + '/').status, 200);
   }
 });
+test('rendering assets are preloaded through HTML response headers without preloading application code', () => {
+  assert.match(home.headers.Link, /<\/assets\/kh-[a-f0-9]+\.css>; rel=preload; as=style/);
+  assert.match(home.headers.Link, /as=image; fetchpriority=high/);
+  assert.doesNotMatch(home.headers.Link, /as=script/);
+  assert.doesNotMatch(html, /rel="preload" as="script"/);
+  assert.equal(request('/', {}, 'HEAD').headers.Link, home.headers.Link);
+  const cssURL = html.match(/href="(\/assets\/[^\"]+\.css)"/)[1];
+  assert.equal(request(cssURL).headers.Link, undefined);
+});
 console.log(JSON.stringify({ htmlBefore: Buffer.byteLength(original), htmlAfter: home.body.length, brotliHTML: request('/', { 'accept-encoding': 'br' }).body.length }));
 
