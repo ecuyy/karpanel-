@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const zlib = require('node:zlib');
+const { criticalStyles } = require('./critical-styles');
 
 function createPublicAssets(root) {
   const assets = new Map();
@@ -29,9 +30,22 @@ function createPublicAssets(root) {
   }
   let html = fs.readFileSync(path.join(root, 'karpanel.html'), 'utf8');
   const preloadHeaders = [];
-  // Deliver the existing stylesheet in the compressed HTML. This eliminates
-  // the render-blocking CSS round trip on a first mobile visit. Keep every
-  // CSS byte and responsive rule intact; the compressed page stays below 64KB.
+  // First-time visitors paint the public page without downloading panel CSS.
+  // Keep the full stylesheet byte-for-byte in an immutable asset. Returning
+  // members wait for it before rendering; guests fetch it without blocking.
+  html = html.replace(/<style>([\s\S]*?)<\/style>/g, (tag,css) => {
+    try {
+      const critical = criticalStyles(html,css);
+      const href = add(css,'css','text/css; charset=utf-8');
+      return '<style data-kh-critical>'+critical+'</style>'
+        +'<link id="kh-full-styles" rel="stylesheet" href="'+href+'" media="print" fetchpriority="low" onload="this.media=\'all\'">'
+        +'<script>(function(){try{if(localStorage.getItem(\'kp_user\')||sessionStorage.getItem(\'kp_user\')){var s=document.getElementById(\'kh-full-styles\');s.media=\'all\';s.setAttribute(\'fetchpriority\',\'high\');}}catch(e){}})();</script>'
+        +'<noscript><link rel="stylesheet" href="'+href+'"></noscript>';
+    } catch (e) {
+      console.error('Critical style fallback:',e.message);
+      return tag;
+    }
+  });
   const bodyStart = html.indexOf('<body');
   const preload = [];
   // Classic defer scripts execute in document order, before DOMContentLoaded.

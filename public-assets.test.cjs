@@ -15,7 +15,10 @@ const home = request('/');
 const html = home.body.toString();
 test('styles, executable scripts and images preserve their exact content', () => {
   const css = original.match(/<style>([\s\S]*?)<\/style>/)[1];
-  assert.equal(html.match(/<style>([\s\S]*?)<\/style>/)[1], css);
+  const cssURL=html.match(/id="kh-full-styles"[^>]+href="([^"]+)"/)[1];
+  assert.equal(request(cssURL).body.toString(),css);
+  const critical=html.match(/<style data-kh-critical>([\s\S]*?)<\/style>/)[1];
+  assert(critical.length<css.length*0.5);
   const scripts = [...original.matchAll(/<script>([\s\S]*?)<\/script>/g)].slice(1).map(m => m[1]);
   const urls = [...html.matchAll(/<script defer src="([^\"]+)"><\/script>/g)].map(m => m[1]);
   assert.equal(urls.length, scripts.length);
@@ -51,14 +54,21 @@ test('private routes, APIs, unknown assets and writes never enter the public cac
     assert.equal(request('/' + slug + '/').status, 200);
   }
 });
-test('the page paints without an external application stylesheet and only preloads the logo', () => {
-  assert.doesNotMatch(html, /<link[^>]+href="\/assets\/[^\"]+\.css"/);
+test('the public page paints before panel CSS and returning members load the complete stylesheet', () => {
+  assert.match(html, /id="kh-full-styles"[^>]+media="print"[^>]+onload="this.media='all'"/);
+  assert.match(html, /<noscript><link rel="stylesheet" href="\/assets\//);
   assert.match(home.headers.Link, /as=image; fetchpriority=high/);
   assert.doesNotMatch(home.headers.Link, /as=script/);
   assert.doesNotMatch(html, /rel="preload" as="script"/);
   assert.equal(request('/', {}, 'HEAD').headers.Link, home.headers.Link);
   const scriptURL = html.match(/<script defer src="([^\"]+)"/)[1];
   assert.equal(request(scriptURL).headers.Link, undefined);
+  const bootstrap=html.match(/<script>(\(function\(\)\{try\{if\(localStorage[\s\S]*?)<\/script>/)[1];
+  for(const member of [false,true]){
+    const style={media:'print',setAttribute(){}};
+    vm.runInNewContext(bootstrap,{localStorage:{getItem:()=>member?'existing-user':null},sessionStorage:{getItem:()=>null},document:{getElementById:()=>style}});
+    assert.equal(style.media,member?'all':'print');
+  }
 });
 test('previously cached pages can still load the old stylesheet and logo after deployment', () => {
   for (const pathname of ['/assets/kh-34814eb935daf02eba7f.css', '/assets/kh-2f53188b97306773f485.png']) {
