@@ -76,5 +76,14 @@ test('previously cached pages can still load the old stylesheet and logo after d
     assert.match(r.headers['Cache-Control'], /immutable/);
   }
 });
+test('font loading uses compact variable faces with Turkish coverage and never preloads the provider CSS', () => {
+  const href=html.match(/<link rel="stylesheet" href="(https:\/\/fonts.googleapis.com\/[^\"]+)"/)[1];
+  const font=new URL(href);
+  assert.deepEqual(font.searchParams.getAll('family'),['Inter:wght@400..900','Plus Jakarta Sans:wght@500..800','Manrope:wght@400..800']);
+  assert.equal(font.searchParams.get('display'),'optional');
+  for(const char of 'ÇçĞğİıÖöŞşÜü₺')assert(font.searchParams.get('text').includes(char));
+  assert.doesNotMatch(html,/<link rel="preload" as="style" href="https:\/\/fonts.googleapis.com/);
+  assert.match(html,/media="print" fetchpriority="low"/);
+});
 console.log(JSON.stringify({ htmlBefore: Buffer.byteLength(original), htmlAfter: home.body.length, brotliHTML: request('/', { 'accept-encoding': 'br' }).body.length }));
 
