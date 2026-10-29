@@ -22,14 +22,16 @@ function createPublicAssets(root) {
     if (!assets.has(name)) assets.set(name, resource(data, type, 'public, max-age=31536000, immutable'));
     return name;
   }
+  // Old cached HTML can still reference the previous stylesheet and PNG logo.
+  // Retain those immutable URLs across the delivery/format migration.
+  for (const item of JSON.parse(fs.readFileSync(path.join(root, 'public-asset-compat.json'), 'utf8'))) {
+    add(Buffer.from(item.content, item.encoding), item.extension, item.type);
+  }
   let html = fs.readFileSync(path.join(root, 'karpanel.html'), 'utf8');
   const preloadHeaders = [];
-  // Retain the exact CSS bytes, including responsive rules and animations.
-  html = html.replace(/<style>([\s\S]*?)<\/style>/g, (_, css) => {
-    const href = add(css, 'css', 'text/css; charset=utf-8');
-    preloadHeaders.push('<' + href + '>; rel=preload; as=style');
-    return '<link rel="stylesheet" href="' + href + '">';
-  });
+  // Deliver the existing stylesheet in the compressed HTML. This eliminates
+  // the render-blocking CSS round trip on a first mobile visit. Keep every
+  // CSS byte and responsive rule intact; the compressed page stays below 64KB.
   const bodyStart = html.indexOf('<body');
   const preload = [];
   // Classic defer scripts execute in document order, before DOMContentLoaded.

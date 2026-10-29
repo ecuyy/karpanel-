@@ -15,8 +15,7 @@ const home = request('/');
 const html = home.body.toString();
 test('styles, executable scripts and images preserve their exact content', () => {
   const css = original.match(/<style>([\s\S]*?)<\/style>/)[1];
-  const cssURL = html.match(/href="(\/assets\/[^\"]+\.css)"/)[1];
-  assert.equal(request(cssURL).body.toString(), css);
+  assert.equal(html.match(/<style>([\s\S]*?)<\/style>/)[1], css);
   const scripts = [...original.matchAll(/<script>([\s\S]*?)<\/script>/g)].slice(1).map(m => m[1]);
   const urls = [...html.matchAll(/<script defer src="([^\"]+)"><\/script>/g)].map(m => m[1]);
   assert.equal(urls.length, scripts.length);
@@ -26,7 +25,8 @@ test('styles, executable scripts and images preserve their exact content', () =>
   const assetImages = [...markupWithoutPreload.matchAll(/\/assets\/kh-[a-f0-9]+\.(?:png|jpg|svg|webp)/g)].map(m => m[0]);
   assert.equal(images.length, assetImages.length);
   images.forEach((image, i) => assert.deepEqual(request(assetImages[i]).body, Buffer.from(image[2], 'base64')));
-  assert(home.body.length < Buffer.byteLength(original) * 0.35);
+  assert(home.body.length < Buffer.byteLength(original) * 0.65);
+  assert(request('/', { 'accept-encoding': 'br' }).body.length < 65536);
 });
 test('compressed representations roundtrip, respect q=0, and support conditional GET/HEAD', () => {
   for (const [encoding, decode] of [['br', zlib.brotliDecompressSync], ['gzip', zlib.gunzipSync]]) {
@@ -40,7 +40,7 @@ test('compressed representations roundtrip, respect q=0, and support conditional
   assert.equal(request('/', { 'accept-encoding': 'br;q=0.5,gzip;q=1' }).headers['Content-Encoding'], 'gzip');
   assert.equal(request('/', { 'if-none-match': '"other", ' + home.headers.ETag }).status, 304);
   assert.equal(request('/', {}, 'HEAD').body.length, 0);
-  const url = html.match(/href="(\/assets\/[^\"]+\.css)"/)[1];
+  const url = html.match(/<script defer src="([^\"]+)"/)[1];
   assert.match(request(url).headers['Cache-Control'], /max-age=31536000, immutable/);
 });
 test('private routes, APIs, unknown assets and writes never enter the public cache', () => {
@@ -51,14 +51,20 @@ test('private routes, APIs, unknown assets and writes never enter the public cac
     assert.equal(request('/' + slug + '/').status, 200);
   }
 });
-test('rendering assets are preloaded through HTML response headers without preloading application code', () => {
-  assert.match(home.headers.Link, /<\/assets\/kh-[a-f0-9]+\.css>; rel=preload; as=style/);
+test('the page paints without an external application stylesheet and only preloads the logo', () => {
+  assert.doesNotMatch(html, /<link[^>]+href="\/assets\/[^\"]+\.css"/);
   assert.match(home.headers.Link, /as=image; fetchpriority=high/);
   assert.doesNotMatch(home.headers.Link, /as=script/);
   assert.doesNotMatch(html, /rel="preload" as="script"/);
   assert.equal(request('/', {}, 'HEAD').headers.Link, home.headers.Link);
-  const cssURL = html.match(/href="(\/assets\/[^\"]+\.css)"/)[1];
-  assert.equal(request(cssURL).headers.Link, undefined);
+  const scriptURL = html.match(/<script defer src="([^\"]+)"/)[1];
+  assert.equal(request(scriptURL).headers.Link, undefined);
+});
+test('previously cached pages can still load the old stylesheet and logo after deployment', () => {
+  for (const pathname of ['/assets/kh-34814eb935daf02eba7f.css', '/assets/kh-2f53188b97306773f485.png']) {
+    const r=request(pathname);assert.equal(r.status,200);assert(r.body.length>0);
+    assert.match(r.headers['Cache-Control'], /immutable/);
+  }
 });
 console.log(JSON.stringify({ htmlBefore: Buffer.byteLength(original), htmlAfter: home.body.length, brotliHTML: request('/', { 'accept-encoding': 'br' }).body.length }));
 
