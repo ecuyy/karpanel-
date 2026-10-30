@@ -3533,6 +3533,50 @@ body.app-mode .kdash-side .kd-item.on .kd-i{color:#E0AD76}
 body.app-mode .kdash-side .kd-side-foot{padding-top:12px;margin-top:4px;border-top:1px solid #393631}
 body.app-mode .kdash-side .kd-side-foot .kd-mini{background:transparent;border:1px solid #49443D;border-radius:8px;color:#BEB6AA;font-weight:500;box-shadow:none}
 @media(max-width:980px){body.app-mode .kdash-side .kd-hero{width:100%;box-sizing:border-box}body.app-mode .kdash-side .kd-item{min-height:42px}}
+/* Üyelik sayfası: kompakt plan özeti ve gerektiğinde açılan fatura formu. */
+body.app-mode #kd-uyelik .ku-grid{grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);gap:20px;align-items:start}
+body.app-mode #kd-uyelik .kd-card{background:#fff;border:1px solid #E4DFD7;border-radius:14px;padding:22px;box-shadow:0 2px 4px rgba(35,29,22,.025)}
+body.app-mode #kd-uyelik .ku-main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);align-items:center;gap:18px 24px}
+body.app-mode #kd-uyelik .ku-top{margin:0;gap:12px}
+body.app-mode #kd-uyelik .ku-av{width:44px;height:44px;border-radius:10px;background:#F0E5D6;color:#775333;box-shadow:none;font-size:18px}
+body.app-mode #kd-uyelik .ku-name{font-family:inherit;font-size:18px;font-weight:650;letter-spacing:-.3px}
+body.app-mode #kd-uyelik .ku-mail{font-size:12px;line-height:1.5}
+body.app-mode #kd-uyelik .ku-durum{padding:5px 9px;font-size:11px;font-weight:600;border-radius:6px;box-shadow:none}
+body.app-mode #kd-uyelik .ku-dates{grid-template-columns:repeat(3,minmax(0,1fr));gap:0;background:#F8F6F2;border:1px solid #EAE5DC;border-radius:10px}
+body.app-mode #kd-uyelik .ku-d{background:transparent;padding:13px 12px;gap:7px}
+body.app-mode #kd-uyelik .ku-d+.ku-d{border-left:1px solid #EAE5DC}
+body.app-mode #kd-uyelik .ku-d span{font-size:10px;font-weight:500;text-transform:none;letter-spacing:0;color:#82786B}
+body.app-mode #kd-uyelik .ku-d b{font-family:inherit;font-size:14px;font-weight:650;letter-spacing:-.2px;overflow-wrap:anywhere}
+body.app-mode #kd-uyelik .ku-bar{grid-column:1/-1;height:3px;margin:0;background:#ECE7DE}
+body.app-mode #kd-uyelik .kd-card-h{gap:11px;margin-bottom:18px}
+body.app-mode #kd-uyelik .kd-card-ic{width:34px;height:34px;border-radius:8px;background:#F5EEE4;color:#947044;box-shadow:none}
+body.app-mode #kd-uyelik .kd-card-t{font-family:inherit;font-size:16px;font-weight:650;letter-spacing:-.25px}
+body.app-mode #kd-uyelik .kd-card-s{font-size:12px;line-height:1.6;color:#887D6E}
+body.app-mode #kd-uyelik .kd-plan-box{display:block;background:transparent;border:1px solid #EAE5DC;border-radius:10px;overflow:hidden}
+body.app-mode #kd-uyelik .kd-plan-row{background:#FAF9F6;padding:11px 12px;font-size:12px;gap:12px;line-height:1.5}
+body.app-mode #kd-uyelik .kd-plan-row+.kd-plan-row{border-top:1px solid #EAE5DC}
+body.app-mode #kd-uyelik .kd-plan-row b{font-weight:600;word-break:normal}
+body.app-mode #kd-uyelik .ku-fat-form{margin-top:16px;padding-top:0;border-top:0}
+body.app-mode #kd-uyelik .ku-billing-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;list-style:none;padding:12px 0 0;border-top:1px solid #EBE6DE;cursor:pointer;font-size:12px;font-weight:600;color:#805A32}
+body.app-mode #kd-uyelik .ku-billing-toggle::-webkit-details-marker{display:none}
+body.app-mode #kd-uyelik .ku-billing-toggle svg{flex-shrink:0;transition:transform .18s}
+body.app-mode #kd-uyelik .ku-billing-details[open]>.ku-billing-toggle svg{transform:rotate(180deg)}
+body.app-mode #kd-uyelik .ku-billing-toggle:focus-visible{outline:2px solid #C58A4B;outline-offset:5px;border-radius:3px}
+body.app-mode #kd-uyelik .ku-billing-fields{padding-top:20px}
+body.app-mode #kd-uyelik .kd-form{grid-template-columns:minmax(0,1fr);gap:14px}
+body.app-mode #kd-uyelik .kd-f2{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+body.app-mode #kd-uyelik .kd-f{gap:6px}
+body.app-mode #kd-uyelik .kd-lbl{font-size:11px;font-weight:500;text-transform:none;letter-spacing:0;color:#73695E}
+body.app-mode #kd-uyelik .kd-inp{box-sizing:border-box;min-height:42px;border:1px solid #DCD5CB;border-radius:8px;background:#FDFCFB;padding:10px 12px;font-size:13px}
+body.app-mode #kd-uyelik .kd-inp:focus{background:#fff;border-color:#B77B3E;box-shadow:0 0 0 3px rgba(183,123,62,.1)}
+body.app-mode #kd-uyelik .kd-form-foot{margin-top:20px;padding-top:16px;gap:12px}
+body.app-mode #kd-uyelik .kd-hint{font-size:11px;line-height:1.6;color:#8C8070}
+body.app-mode #kd-uyelik .kd-btn{min-height:40px;padding:10px 14px;border-radius:8px;background:#292621;box-shadow:none;font-size:12px;font-weight:600;justify-content:center}
+body.app-mode #kd-uyelik .kd-btn:hover{background:#443A2E;transform:none;box-shadow:none}
+body.app-mode #kd-uyelik .ku-grid>.kd-card:last-child .kd-form-foot{flex-direction:column;align-items:stretch}
+@media(max-width:1200px){body.app-mode #kd-uyelik .ku-main{grid-template-columns:1fr}body.app-mode #kd-uyelik .ku-grid{grid-template-columns:minmax(0,1.25fr) minmax(260px,1fr)}}
+@media(max-width:900px){body.app-mode #kd-uyelik .ku-grid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:520px){body.app-mode #kd-uyelik .kd-card{padding:18px}body.app-mode #kd-uyelik .kd-f2{grid-template-columns:minmax(0,1fr)}body.app-mode #kd-uyelik .ku-d{padding:12px 8px}body.app-mode #kd-uyelik .ku-d b{font-size:12px}body.app-mode #kd-uyelik .kd-form-foot .kd-btn{width:100%}}
 </style>
 </head>
 <body>
@@ -4588,8 +4632,9 @@ body.app-mode .kdash-side .kd-side-foot .kd-mini{background:transparent;border:1
             <div class="kd-plan-row"><span>Yenileme tarihi</span><b id="ku-fat-bitis">—</b></div>
           </div>
 
-          <div class="ku-fat-form">
-            <div class="ku-fat-head">Fatura bilgileriniz</div>
+          <details class="ku-fat-form ku-billing-details">
+            <summary class="ku-billing-toggle"><span>Fatura bilgilerini düzenle</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="ku-billing-fields">
             <div class="kd-form">
               <div class="kd-f"><label class="kd-lbl" for="fat-unvan">Fatura ünvanı / Ad Soyad</label><input class="kd-inp" id="fat-unvan" placeholder="Ör. Ecuyy Ticaret Ltd. Şti."></div>
               <div class="kd-f2">
@@ -4610,7 +4655,8 @@ body.app-mode .kdash-side .kd-side-foot .kd-mini{background:transparent;border:1
               <span class="kd-hint" id="fat-durum">Bilgileriniz cihazınızda güvenle saklanır.</span>
               <button class="kd-btn" onclick="faturaKaydet()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l4.5 4.5L19.5 6.5"/></svg> Fatura Bilgilerini Kaydet</button>
             </div>
-          </div>
+            </div>
+          </details>
         </div>
 
         <div class="kd-card">
