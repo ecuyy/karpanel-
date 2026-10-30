@@ -3486,8 +3486,23 @@ footer.kh-footer::before{display:none}
 #etiket-analiz-gorunum .ea-fiyat-edit .ea-edit-label{display:block;width:100%;font-size:13px;margin-top:0;text-align:center}
 #etiket-analiz-gorunum .ea-fiyat-edit .ea-edit-unit{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none}
 #etiket-analiz-gorunum .ea-net .ea-kar-badge{font-size:22px;font-weight:800;line-height:1.35;padding:8px 12px}
-#etiket-analiz-gorunum .ea-analysis-table td:first-child>div>:first-child{width:96px!important;height:96px!important;flex-shrink:0;border-radius:10px!important}
-#etiket-analiz-gorunum .ea-analysis-table td:first-child img{object-fit:contain!important;background:#fff}
+#etiket-analiz-gorunum .ea-product-card{padding:12px;background:#fff;border:1px solid var(--border);border-radius:14px;text-align:left}
+#etiket-analiz-gorunum .ea-product-media{height:144px;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:10px;background:#FAF9F6;border:1px solid #EEEAE4}
+#etiket-analiz-gorunum .ea-product-image{display:block;width:100%;height:144px;object-fit:contain}
+#etiket-analiz-gorunum .ea-product-placeholder{font-size:32px;font-weight:800;color:var(--t3)}
+#etiket-analiz-gorunum .ea-product-title{margin-top:10px;font-size:13px;font-weight:700;line-height:1.4;color:var(--dark);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+#etiket-analiz-gorunum .ea-product-model{margin-top:4px;font-size:10px;line-height:1.5;color:var(--t3);overflow-wrap:anywhere}
+#etiket-analiz-gorunum .ea-cost-field{margin-top:10px;padding-top:10px;border-top:1px solid #EEEAE4}
+#etiket-analiz-gorunum .ea-cost-field .ea-edit-label{margin:0;font-size:11px}
+#etiket-analiz-gorunum .ea-cost-field .ea-edit-wrap{position:relative;display:block;margin-top:5px}
+#etiket-analiz-gorunum .ea-cost-field .ea-edit-input{width:100%;min-height:44px;padding:9px 30px 9px 12px;font-size:18px;font-weight:700}
+#etiket-analiz-gorunum .ea-cost-field .ea-edit-unit{position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none}
+#etiket-analiz-gorunum .ea-current-prices{display:flex;flex-direction:column;gap:10px;padding:0}
+#etiket-analiz-gorunum .ea-current-price{padding:15px 10px;background:#fff;border:1px solid var(--border);border-radius:12px}
+#etiket-analiz-gorunum .ea-current-price span{display:block;font-size:11px;color:var(--t3);line-height:1.5}
+#etiket-analiz-gorunum .ea-current-price strong{display:block;margin-top:6px;font-size:20px;line-height:1.3;font-weight:800;color:var(--dark);overflow-wrap:anywhere}
+#etiket-analiz-gorunum .ea-current-commission{background:#FFF6ED;border-color:#F5DFC8}
+#etiket-analiz-gorunum .ea-current-commission strong{color:var(--or);font-size:22px}
 
 </style>
 </head>
@@ -5691,8 +5706,8 @@ function eaRender(){
     const indis=indisler.get(u);
     const komStr = (u.komOran||0).toFixed(1);
     const imgHtml = u.image
-      ? '<img src="'+eaEsc(u.image)+'" alt="'+eaEsc(u.urunIsmi||'Ürün görseli')+'" style="width:96px;height:96px;border-radius:10px;object-fit:contain;border:1px solid var(--border);flex-shrink:0">'
-      : '<div style="width:52px;height:52px;border-radius:8px;background:var(--dark);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0">'+(u.urunIsmi.charAt(0)||'?')+'</div>';
+      ? '<img class="ea-product-image" src="'+eaEsc(u.image)+'" alt="'+eaEsc(u.urunIsmi||'Ürün görseli')+'">'
+      : '<span class="ea-product-placeholder" aria-hidden="true">'+eaEsc((u.urunIsmi||'?').charAt(0))+'</span>';
     const alisAlani = `<label class="ea-edit-label" for="ea-alis-${indis}">Alış fiyatı</label>
       <div class="ea-edit-wrap"><input id="ea-alis-${indis}" class="ea-edit-input" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" value="${u.alis>0?u.alis:''}" aria-label="${eaEsc(u.modelKodu)} alış fiyatı (TL)" oninput="eaDegerGir(${indis},'alis',this,false)" onchange="eaDegerGir(${indis},'alis',this,true)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}"><span class="ea-edit-unit">₺</span></div>`;
 
@@ -5716,21 +5731,19 @@ function eaRender(){
 
     return `<tr>
       <td style="text-align:left;vertical-align:top;padding:14px 12px">
-        <div style="display:flex;gap:10px;align-items:flex-start">
-          ${imgHtml}
-          <div style="min-width:0">
-            <div style="font-weight:700;color:var(--dark);font-size:13px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;max-width:190px" title="${eaEsc(u.urunIsmi)}">${eaEsc(u.urunIsmi)}</div>
-            <div style="font-size:11px;color:var(--t3);margin-top:4px">Model Kodu: <strong>${eaEsc(u.modelKodu)}</strong></div>
-            ${alisAlani}
-          </div>
+        <div class="ea-product-card">
+          <div class="ea-product-media">${imgHtml}</div>
+          <div class="ea-product-title" title="${eaEsc(u.urunIsmi)}">${eaEsc(u.urunIsmi)}</div>
+          <div class="ea-product-model">Model Kodu: <strong>${eaEsc(u.modelKodu)}</strong></div>
+          <div class="ea-cost-field">${alisAlani}</div>
         </div>
       </td>
       <td style="vertical-align:top;padding:14px 10px">
-        <div style="font-size:11px;color:var(--t3)">Trendyol Satış Fiyatı</div>
-        <div style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:6px">${eaFmtTL(u.mevcut)}</div>
-        <div style="font-size:11px;color:var(--t3)">Müşterinin Gördüğü Fiyat</div>
-        <div style="font-size:14px;font-weight:700;color:var(--dark)">${eaFmtTL(u.mevcut)}</div>
-        <div style="font-size:11px;color:var(--t3);margin-top:6px">Güncel Komisyon: <span style="color:var(--or);font-weight:700">%${komStr}</span></div>
+        <div class="ea-current-prices">
+          <div class="ea-current-price"><span>Trendyol Satış Fiyatı</span><strong>${eaFmtTL(u.mevcut)}</strong></div>
+          <div class="ea-current-price"><span>Müşterinin Gördüğü Fiyat</span><strong>${eaFmtTL(u.mevcut)}</strong></div>
+          <div class="ea-current-price ea-current-commission"><span>Güncel Komisyon</span><strong>%${komStr}</strong></div>
+        </div>
       </td>
       <td style="vertical-align:top;padding:14px 10px">${yildizKutu(u.f1Alt,u.net1,1)}</td>
       <td style="vertical-align:top;padding:14px 10px">${yildizKutu(u.f2Alt,u.net2,2)}</td>
