@@ -6619,6 +6619,18 @@ function kdMeta(v){
   return M[v]||M.urunler;
 }
 function kdShow(id,on){var x=document.getElementById(id); if(x) x.style.display=on?'block':'none';}
+function kdUyelikOzeti(u, simdi=Date.now()){
+  if(!u || !u.premium) return u?'Premium değil':'Demo modu';
+  const deneme=!!u.trialAktif;
+  const bitis=deneme ? (u.trialBitis ? new Date(u.trialBitis) : null) : premiumBitis(u);
+  if(bitis && Number.isFinite(bitis.getTime())){
+    const kalan=Math.max(0,Math.ceil((bitis.getTime()-simdi)/86400000));
+    if(!kalan) return deneme?'Deneme süresi doldu':'Üyelik bitiş tarihi geçti';
+    return deneme ? 'Deneme süreniz · '+kalan+' gün kaldı' : 'Üyeliğiniz aktif · '+kalan+' gün kaldı';
+  }
+  if(deneme && Number.isFinite(u.trialKalanGun)) return 'Deneme süreniz · '+Math.max(0,u.trialKalanGun)+' gün kaldı';
+  return 'Üyeliğiniz aktif · Bitiş tarihi belirtilmemiş';
+}
 function kdSyncUser(){
   var av=document.getElementById('kd-av'),nm=document.getElementById('kd-name'),pl=document.getElementById('kd-plan');
   var prem=!!(currentUser&&currentUser.premium);
@@ -6636,15 +6648,10 @@ function kdSyncUser(){
   var ml=document.getElementById('kd-mail');
   if(ml) ml.textContent=currentUser?currentUser.email:'Giri\u015f yap\u0131lmad\u0131';
   var hf=document.getElementById('kd-hero-fill'), hn=document.getElementById('kd-hero-note');
-  var kal=document.getElementById('hm-kalan');
   if(hf&&hn){
     if(prem){ var pw=document.getElementById('hm-progress');
       hf.style.width=pw&&pw.style.width?pw.style.width:'100%';
-      if(currentUser&&currentUser.trialAktif){
-        hn.textContent='Deneme s\u00fcreniz '+currentUser.trialKalanGun+' g\u00fcn sonra bitiyor';
-      } else {
-        hn.textContent=kal&&kal.textContent&&kal.textContent!=='\u2014'?kal.textContent:'\u00dcyeli\u011finiz aktif';
-      }
+      hn.textContent=kdUyelikOzeti(currentUser);
     } else { hf.style.width='0%'; hn.textContent=currentUser?'Premium de\u011fil':'Demo modu'; }
   }
   var sa=document.getElementById('sup-ad'),se=document.getElementById('sup-email');
