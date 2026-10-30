@@ -51,6 +51,38 @@ test('Turkish decimals, invalid ranges, empty costs and commission reset are han
 test('filtered rows edit the original index and render accessible, escaped inputs',()=>{
  const {context:c,element}=setup();c.setData([product(),product({modelKodu:'ECY-2',urunIsmi:'<img onerror=bad>'})]);c.eaAra('ECY-2');
  const markup=element('ea-tbody').innerHTML;assert(markup.includes('ea-alis-1'));assert(markup.includes("eaDegerGir(1,'kom2'"));assert(!markup.includes('ea-alis-0'));
- assert(markup.includes('&lt;img onerror=bad&gt;'));assert(!markup.includes('<img onerror=bad>'));assert(!markup.includes('Maliyet sistemden geldi'));assert.equal((markup.match(/inputmode="decimal"/g)||[]).length,4);
+ assert(markup.includes('&lt;img onerror=bad&gt;'));assert(!markup.includes('<img onerror=bad>'));assert(!markup.includes('Maliyet sistemden geldi'));assert.equal((markup.match(/inputmode="decimal"/g)||[]).length,7);
+ for(const [seviye,alan] of [[1,'f1Alt'],[2,'f2Alt'],[3,'f3Ust']]){
+  assert(markup.includes(`id="ea-fiyat${seviye}-1"`));assert(markup.includes(`eaDegerGir(1,'${alan}'`));
+ }
  c.eaDegerGir(1,'alis',c.input('125'),true);assert.equal(c.data()[0].alis,200);assert.equal(c.data()[1].alis,125);
 });
+
+test('each label price independently recalculates with its edited commission and survives reload',()=>{
+ const {context:c,storage,element}=setup();const u=product({kom1:11,kom2:12,kom3:13});c.setData([u]);
+ c.urunler=[{id:'ECY-1',alis:200,kargo:40,commissionRate:20,price:600}];c.eaTazele();
+ for(const [seviye,alan,val] of [[1,'f1Alt','1.234,56'],[2,'f2Alt','399,90'],[3,'f3Ust','0,01']]){
+  const before=[u.net1,u.net2,u.net3];const price=c.eaGirdiSayisi(val);c.eaDegerGir(0,alan,c.input(val),true);
+  assert.equal(u[alan],price);assert.equal(u['net'+seviye],c.eaHesapla(price,200,40,u['kom'+seviye]));
+  for(const other of [1,2,3].filter(n=>n!==seviye))assert.equal(u['net'+other],before[other-1]);
+ }
+ assert.equal(u.mevcut,600);assert.equal(c.urunler[0].price,600);
+ const saved=JSON.parse(storage.get('kp_etiket_test@example.invalid')).veri[0];assert.equal(saved.f1Alt,1234.56);
+ c.setData([]);c.eaKayitliVeriyiYukle();c.eaTazele();const restored=c.data()[0];
+ assert.equal(restored.f1Alt,1234.56);assert.equal(restored.f2Alt,399.9);assert.equal(restored.f3Ust,0.01);
+ element('ea-kb-manuel').value='75';c.eaKbUygula();
+ assert.equal(restored.net2,c.eaHesapla(399.9,200,75,12));
+});
+test('invalid label prices keep the last valid value and do not save invalid edits',()=>{
+ const {context:c,storage}=setup();const u=product();c.setData([u]);c.eaSonuclariHesapla(u);c.eaVeriyiKaydet();
+ const before=storage.get('kp_etiket_test@example.invalid');const net=u.net1;
+ for(const value of ['','0','-1','abc','Infinity','1,2,3']){
+  const input=c.input(value);c.eaDegerGir(0,'f1Alt',input,false);
+  assert.equal(input.attrs['aria-invalid'],'true');assert.equal(u.f1Alt,550);assert.equal(u.net1,net);
+  c.eaDegerGir(0,'f1Alt',input,true);assert.equal(input.value,550);assert.equal(input.attrs['aria-invalid'],undefined);
+  assert.equal(storage.get('kp_etiket_test@example.invalid'),before);
+ }
+ const input=c.input('500,');c.eaDegerGir(0,'f1Alt',input,false);assert.equal(u.f1Alt,500);
+ c.eaDegerGir(0,'mevcut',c.input('100'),true);assert.equal(u.mevcut,600);
+});
+

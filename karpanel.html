@@ -4335,7 +4335,7 @@ footer.kh-footer::before{display:none}
               </div>
             </div>
           </div>
-          <p class="ea-edit-hint" style="margin:0 0 10px;font-size:12px">Alış fiyatını ve her seviyenin komisyonunu düzenleyin; kâr/zarar anında güncellenir. Değişiklikler yalnızca bu analizde, bu tarayıcıda kaydedilir.</p>
+          <p class="ea-edit-hint" style="margin:0 0 10px;font-size:12px">Alış fiyatını, her seviyenin etiket fiyatını ve komisyonunu düzenleyin; kâr/zarar anında güncellenir. Değişiklikler yalnızca bu analizde, bu tarayıcıda kaydedilir; Trendyol'daki fiyatları değiştirmez.</p>
           <div style="overflow-x:auto;border-radius:16px;border:1px solid #E5E7EB;box-shadow:0 2px 12px rgba(0,0,0,.05)">
             <table class="ptable ea-analysis-table" style="min-width:1080px;border-radius:16px;overflow:hidden">
               <colgroup><col style="width:248px"><col style="width:140px"><col><col><col></colgroup>
@@ -5511,15 +5511,16 @@ function eaKarSonucu(net){
 }
 function eaDegerGir(indis, alan, input, tamam){
   const u=eaTumVeri[indis];
-  if(!u || !['alis','kom1','kom2','kom3'].includes(alan)) return;
+  if(!u || !['alis','kom1','kom2','kom3','f1Alt','f2Alt','f3Ust'].includes(alan)) return;
   const bos=input.value.trim()==='';
   const sayi=bos ? 0 : eaGirdiSayisi(input.value);
-  const komisyon=alan!=='alis';
-  if(!Number.isFinite(sayi) || sayi<0 || (komisyon && sayi>100)){
+  const komisyon=alan.startsWith('kom');
+  const fiyat=['f1Alt','f2Alt','f3Ust'].includes(alan);
+  if(!Number.isFinite(sayi) || sayi<0 || (komisyon && sayi>100) || (fiyat && sayi<=0)){
     input.setAttribute('aria-invalid','true');
     if(tamam){
-      toast(komisyon ? 'Komisyon 0 ile 100 arasında olmalı.' : 'Geçerli, sıfır veya pozitif bir alış fiyatı girin.','error','!');
-      input.value=komisyon ? eaKomisyon(u,Number(alan.slice(-1))) : (u.alis||'');
+      toast(komisyon ? 'Komisyon 0 ile 100 arasında olmalı.' : fiyat ? 'Etiket fiyatı sıfırdan büyük olmalı.' : 'Geçerli, sıfır veya pozitif bir alış fiyatı girin.','error','!');
+      input.value=komisyon ? eaKomisyon(u,Number(alan.slice(-1))) : fiyat ? (u[alan]||'') : (u.alis||'');
       input.removeAttribute('aria-invalid');
     }
     return;
@@ -5700,7 +5701,7 @@ function eaRender(){
       }
       return `
       <div id="ea-kutu-${indis}-${seviye}" style="text-align:center;background:${kutuRengi};border:1px solid ${kenarRengi};border-radius:10px;padding:10px 8px;margin:-4px">
-        <div style="font-size:17px;font-weight:800;color:var(--dark)">${eaFmtTL(fiyat)}</div>
+        <div class="ea-fiyat-edit"><label class="ea-edit-label" for="ea-fiyat${seviye}-${indis}">Etiket fiyatı</label><div class="ea-edit-wrap"><input id="ea-fiyat${seviye}-${indis}" class="ea-edit-input" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" value="${Number.isFinite(fiyat)&&fiyat>0?fiyat:''}" aria-label="${eaEsc(u.modelKodu)} ${['','Avantajlı','Çok Avantajlı','Süper Avantajlı'][seviye]} etiket fiyatı (TL)" oninput="eaDegerGir(${indis},'${['','f1Alt','f2Alt','f3Ust'][seviye]}',this,false)" onchange="eaDegerGir(${indis},'${['','f1Alt','f2Alt','f3Ust'][seviye]}',this,true)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}"><span class="ea-edit-unit">₺</span></div></div>
         <div style="font-size:11px;color:var(--t3);margin:2px 0 8px">ve altı</div>
         <div class="ea-kom-edit"><label class="ea-edit-label" for="ea-kom${seviye}-${indis}">Komisyon</label><div class="ea-edit-wrap"><input id="ea-kom${seviye}-${indis}" class="ea-edit-input" type="text" inputmode="decimal" autocomplete="off" value="${eaKomisyon(u,seviye)}" aria-label="${eaEsc(u.modelKodu)} ${['','Avantajlı','Çok Avantajlı','Süper Avantajlı'][seviye]} komisyonu (%)" oninput="eaDegerGir(${indis},'kom${seviye}',this,false)" onchange="eaDegerGir(${indis},'kom${seviye}',this,true)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}"><span class="ea-edit-unit">%</span></div></div>
         <div class="ea-net" aria-live="polite">${eaKarSonucu(net)}</div>
@@ -6993,3 +6994,8 @@ function maliyetSayacGuncelle(){
 </html>
 
 
+#etiket-analiz-gorunum .ea-fiyat-edit .ea-edit-wrap{justify-content:center}
+#etiket-analiz-gorunum .ea-fiyat-edit .ea-edit-input{width:132px;min-height:44px;font-size:18px;font-weight:800;text-align:center}
+#etiket-analiz-gorunum .ea-fiyat-edit .ea-edit-label{font-size:12px;margin-top:0}
+#etiket-analiz-gorunum .ea-fiyat-edit .ea-edit-unit{font-size:16px}
+  else if(fiyat){ u[alan]=sayi; }
