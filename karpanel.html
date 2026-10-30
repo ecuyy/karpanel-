@@ -3504,6 +3504,35 @@ footer.kh-footer::before{display:none}
 #etiket-analiz-gorunum .ea-current-commission{background:#FFF6ED;border-color:#F5DFC8}
 #etiket-analiz-gorunum .ea-current-commission strong{color:var(--or);font-size:22px}
 
+/* Hesap kenar çubuğu: sade yüzeyler ve okunaklı profil bilgileri. */
+body.app-mode .kdash-side{background:#201F1D;border:1px solid #363430;border-radius:18px;box-shadow:0 8px 24px rgba(20,17,14,.12);padding:14px 12px;gap:12px}
+body.app-mode .kdash-side::before,body.app-mode .kdash-side .kd-hero::after{content:none}
+body.app-mode .kdash-side .kd-hero{background:#2B2926;border:1px solid #454039;border-radius:12px;box-shadow:none;padding:18px 16px 16px;margin-bottom:2px}
+body.app-mode .kdash-side .kd-hero-sheen{display:none;animation:none}
+body.app-mode .kdash-side .kd-hero-top{margin-bottom:18px;gap:8px;flex-wrap:wrap}
+body.app-mode .kdash-side .kd-av-ring{padding:0;background:none;border-radius:10px;box-shadow:none}
+body.app-mode .kdash-side .kd-hero .kd-av{width:44px;height:44px;border-radius:10px;background:#EEDCC5;color:#63442A;font-size:20px;font-weight:700;box-shadow:none;text-shadow:none}
+body.app-mode .kdash-side .kd-pro{font-family:inherit;font-size:10px;font-weight:600;letter-spacing:.02em;text-transform:none;padding:5px 8px;border-radius:6px;background:#393129;border:1px solid #5C4937;color:#EBC49A;box-shadow:none}
+body.app-mode .kdash-side .kd-pro::before{width:4px;height:4px;background:#D9AC78;box-shadow:none}
+body.app-mode .kdash-side .kd-pro.free{background:#34332F;border-color:#55514A;color:#CBC6BE}
+body.app-mode .kdash-side .kd-pro.free::before{background:#ABA69E}
+body.app-mode .kdash-side .kd-hero .kd-uname{font-family:inherit;font-size:18px;font-weight:650;line-height:1.35;letter-spacing:-.35px;color:#F7F3EC;white-space:normal;overflow-wrap:anywhere}
+body.app-mode .kdash-side .kd-umail{font-size:11px;line-height:1.6;color:#BDB5A9;margin-top:5px;letter-spacing:0;white-space:normal;overflow-wrap:anywhere}
+body.app-mode .kdash-side .kd-hero-line{margin:17px 0 12px;background:#48433D}
+body.app-mode .kdash-side .kd-hero-meta{align-items:flex-start;flex-direction:column;gap:5px;margin-bottom:11px}
+body.app-mode .kdash-side .kd-hero-lbl{font-size:10px;font-weight:500;letter-spacing:.03em;text-transform:none;color:#B0A79B}
+body.app-mode .kdash-side .kd-hero-note{font-size:12px;line-height:1.5;font-weight:500;letter-spacing:0;color:#EBD9C2;margin:0}
+body.app-mode .kdash-side .kd-hero-bar{height:3px;margin-top:0;background:#48433D;box-shadow:none}
+body.app-mode .kdash-side .kd-hero-bar i{background:#C69460;box-shadow:none;transition:none}
+body.app-mode .kdash-side .kd-group{color:#A69E92;font-size:10px;font-weight:500;letter-spacing:.06em;padding:13px 11px 7px}
+body.app-mode .kdash-side .kd-item{padding:11px;border-radius:8px;color:#CEC8BF;font-weight:500;box-shadow:none}
+body.app-mode .kdash-side .kd-item:hover{background:#302D29;color:#FFF9F0}
+body.app-mode .kdash-side .kd-item.on{background:#3C3025;color:#F5DEBD;box-shadow:inset 0 0 0 1px #65503B}
+body.app-mode .kdash-side .kd-item.on::before{background:#D59A5F;width:2px}
+body.app-mode .kdash-side .kd-item.on .kd-i{color:#E0AD76}
+body.app-mode .kdash-side .kd-side-foot{padding-top:12px;margin-top:4px;border-top:1px solid #393631}
+body.app-mode .kdash-side .kd-side-foot .kd-mini{background:transparent;border:1px solid #49443D;border-radius:8px;color:#BEB6AA;font-weight:500;box-shadow:none}
+@media(max-width:980px){body.app-mode .kdash-side .kd-hero{width:100%;box-sizing:border-box}body.app-mode .kdash-side .kd-item{min-height:42px}}
 </style>
 </head>
 <body>
