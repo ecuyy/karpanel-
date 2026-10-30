@@ -2,6 +2,13 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs'),vm=require('node:vm');
 const html=fs.readFileSync(__dirname+'/karpanel.html','utf8');
+test('price styling and update branch stay inside HTML style and script blocks',()=>{
+ assert.match(html,/<\/html>\s*$/);
+ const css=html.match(/<style>([\s\S]*?)<\/style>/)[1];
+ assert(css.includes('.ea-fiyat-edit .ea-edit-input{display:block;width:100%;min-height:58px;'));
+ const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]).join('\n');
+ assert(scripts.includes('else if(fiyat){ u[alan]=sayi; }'));
+});
 function setup(){
  const nodes={},storage=new Map(),notices=[];
  const element=id=>nodes[id]||(nodes[id]={style:{},innerHTML:'',textContent:'',classList:{add(){},remove(){}},querySelector(selector){return element(id+selector);}});

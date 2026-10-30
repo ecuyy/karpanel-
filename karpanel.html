@@ -3480,6 +3480,11 @@ footer.kh-footer::before{display:none}
 #etiket-analiz-gorunum .ea-kom-edit .ea-edit-label{font-size:12px;margin-top:14px}
 #etiket-analiz-gorunum .ea-kom-edit .ea-edit-input{width:104px;min-height:42px;font-size:16px}
 #etiket-analiz-gorunum .ea-kom-edit .ea-edit-unit{font-size:14px}
+#etiket-analiz-gorunum .ea-fiyat-edit{text-align:center}
+#etiket-analiz-gorunum .ea-fiyat-edit .ea-edit-wrap{display:block;position:relative;width:184px;max-width:100%;margin:8px auto 0}
+#etiket-analiz-gorunum .ea-fiyat-edit .ea-edit-input{display:block;width:100%;min-height:58px;padding:12px 32px;font-size:24px;font-weight:800;line-height:1.2;text-align:center;border-radius:10px}
+#etiket-analiz-gorunum .ea-fiyat-edit .ea-edit-label{display:block;width:100%;font-size:13px;margin-top:0;text-align:center}
+#etiket-analiz-gorunum .ea-fiyat-edit .ea-edit-unit{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none}
 #etiket-analiz-gorunum .ea-net .ea-kar-badge{font-size:22px;font-weight:800;line-height:1.35;padding:8px 12px}
 #etiket-analiz-gorunum .ea-analysis-table td:first-child>div>:first-child{width:96px!important;height:96px!important;flex-shrink:0;border-radius:10px!important}
 #etiket-analiz-gorunum .ea-analysis-table td:first-child img{object-fit:contain!important;background:#fff}
@@ -5527,6 +5532,7 @@ function eaDegerGir(indis, alan, input, tamam){
   }
   input.removeAttribute('aria-invalid');
   if(komisyon){ if(bos) delete u[alan]; else u[alan]=sayi; }
+  else if(fiyat){ u[alan]=sayi; }
   else{ u.alis=sayi; u._alisManuel=true; }
   eaSonuclariHesapla(u);
   // Satırı yeniden oluşturmadan sonuçları güncelle; yazarken odak kaybolmasın.
@@ -6994,9 +7000,3 @@ function maliyetSayacGuncelle(){
 </html>
 
 
-#etiket-analiz-gorunum .ea-fiyat-edit{text-align:center}
-#etiket-analiz-gorunum .ea-fiyat-edit .ea-edit-wrap{display:block;position:relative;width:184px;max-width:100%;margin:8px auto 0}
-#etiket-analiz-gorunum .ea-fiyat-edit .ea-edit-input{display:block;width:100%;min-height:58px;padding:12px 32px;font-size:24px;font-weight:800;line-height:1.2;text-align:center;border-radius:10px}
-#etiket-analiz-gorunum .ea-fiyat-edit .ea-edit-label{display:block;width:100%;font-size:13px;margin-top:0;text-align:center}
-#etiket-analiz-gorunum .ea-fiyat-edit .ea-edit-unit{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none}
-  else if(fiyat){ u[alan]=sayi; }
