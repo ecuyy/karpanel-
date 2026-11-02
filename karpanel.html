@@ -3503,6 +3503,9 @@ footer.kh-footer::before{display:none}
 #etiket-analiz-gorunum .ea-current-price strong{display:block;margin-top:6px;font-size:20px;line-height:1.3;font-weight:800;color:var(--dark);overflow-wrap:anywhere}
 #etiket-analiz-gorunum .ea-current-commission{background:#FFF6ED;border-color:#F5DFC8}
 #etiket-analiz-gorunum .ea-current-commission strong{color:var(--or);font-size:22px}
+#etiket-analiz-gorunum .ea-current-prices .ea-shipping-field{margin:0;padding:12px 10px;background:#fff;border:1px solid var(--border);border-radius:12px}
+#etiket-analiz-gorunum .ea-shipping-field .ea-edit-input{font-size:16px;padding-right:25px;padding-left:9px}
+#etiket-analiz-gorunum .ea-shipping-field .ea-edit-unit{right:9px;font-size:13px}
 
 /* Hesap kenar çubuğu: sade yüzeyler ve okunaklı profil bilgileri. */
 body.app-mode .kdash-side{background:#201F1D;border:1px solid #363430;border-radius:18px;box-shadow:0 8px 24px rgba(20,17,14,.12);padding:14px 12px;gap:12px}
@@ -4428,7 +4431,7 @@ body.app-mode #kd-uyelik .ku-grid>.kd-card:last-child .kd-form-foot{flex-directi
               </div>
             </div>
           </div>
-          <p class="ea-edit-hint" style="margin:0 0 10px;font-size:12px">Alış fiyatını, her seviyenin etiket fiyatını ve komisyonunu düzenleyin; kâr/zarar anında güncellenir. Değişiklikler yalnızca bu analizde, bu tarayıcıda kaydedilir; Trendyol'daki fiyatları değiştirmez.</p>
+          <p class="ea-edit-hint" style="margin:0 0 10px;font-size:12px">Alış fiyatını, kargo maliyetini, her seviyenin etiket fiyatını ve komisyonunu düzenleyin; kâr/zarar anında güncellenir. Değişiklikler yalnızca bu analizde, bu tarayıcıda kaydedilir; Trendyol'daki fiyatları değiştirmez.</p>
           <div style="overflow-x:auto;border-radius:16px;border:1px solid #E5E7EB;box-shadow:0 2px 12px rgba(0,0,0,.05)">
             <table class="ptable ea-analysis-table" style="min-width:1080px;border-radius:16px;overflow:hidden">
               <colgroup><col style="width:248px"><col style="width:140px"><col><col><col></colgroup>
@@ -5606,7 +5609,7 @@ function eaKarSonucu(net){
 }
 function eaDegerGir(indis, alan, input, tamam){
   const u=eaTumVeri[indis];
-  if(!u || !['alis','kom1','kom2','kom3','f1Alt','f2Alt','f3Ust'].includes(alan)) return;
+  if(!u || !['alis','kargo','kom1','kom2','kom3','f1Alt','f2Alt','f3Ust'].includes(alan)) return;
   const bos=input.value.trim()==='';
   const sayi=bos ? 0 : eaGirdiSayisi(input.value);
   const komisyon=alan.startsWith('kom');
@@ -5614,8 +5617,8 @@ function eaDegerGir(indis, alan, input, tamam){
   if(!Number.isFinite(sayi) || sayi<0 || (komisyon && sayi>100) || (fiyat && sayi<=0)){
     input.setAttribute('aria-invalid','true');
     if(tamam){
-      toast(komisyon ? 'Komisyon 0 ile 100 arasında olmalı.' : fiyat ? 'Etiket fiyatı sıfırdan büyük olmalı.' : 'Geçerli, sıfır veya pozitif bir alış fiyatı girin.','error','!');
-      input.value=komisyon ? eaKomisyon(u,Number(alan.slice(-1))) : fiyat ? (u[alan]||'') : (u.alis||'');
+      toast(komisyon ? 'Komisyon 0 ile 100 arasında olmalı.' : fiyat ? 'Etiket fiyatı sıfırdan büyük olmalı.' : alan==='kargo' ? 'Geçerli, sıfır veya pozitif bir kargo maliyeti girin.' : 'Geçerli, sıfır veya pozitif bir alış fiyatı girin.','error','!');
+      input.value=komisyon ? eaKomisyon(u,Number(alan.slice(-1))) : (u[alan]||'');
       input.removeAttribute('aria-invalid');
     }
     return;
@@ -5623,6 +5626,7 @@ function eaDegerGir(indis, alan, input, tamam){
   input.removeAttribute('aria-invalid');
   if(komisyon){ if(bos) delete u[alan]; else u[alan]=sayi; }
   else if(fiyat){ u[alan]=sayi; }
+  else if(alan==='kargo'){ u.kargo=sayi; u._kargoManuel=true; }
   else{ u.alis=sayi; u._alisManuel=true; }
   eaSonuclariHesapla(u);
   // Satırı yeniden oluşturmadan sonuçları güncelle; yazarken odak kaybolmasın.
@@ -5818,6 +5822,7 @@ function eaRender(){
           <div class="ea-current-price"><span>Trendyol Satış Fiyatı</span><strong>${eaFmtTL(u.mevcut)}</strong></div>
           <div class="ea-current-price"><span>Müşterinin Gördüğü Fiyat</span><strong>${eaFmtTL(u.mevcut)}</strong></div>
           <div class="ea-current-price ea-current-commission"><span>Güncel Komisyon</span><strong>%${komStr}</strong></div>
+          <div class="ea-cost-field ea-shipping-field"><label class="ea-edit-label" for="ea-kargo-${indis}">Kargo maliyeti</label><div class="ea-edit-wrap"><input id="ea-kargo-${indis}" class="ea-edit-input" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" value="${Number.isFinite(u.kargo)&&u.kargo>=0?u.kargo:''}" aria-label="${eaEsc(u.modelKodu)} kargo maliyeti (TL)" oninput="eaDegerGir(${indis},'kargo',this,false)" onchange="eaDegerGir(${indis},'kargo',this,true)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}"><span class="ea-edit-unit">₺</span></div></div>
         </div>
       </td>
       <td style="vertical-align:top;padding:14px 10px">${yildizKutu(u.f1Alt,u.net1,1)}</td>
