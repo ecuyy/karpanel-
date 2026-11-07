@@ -7088,7 +7088,11 @@ function maliyetSayacGuncelle(){
     if(qs.get('trial')==='1'){
       window.addEventListener('load',function(){
         setTimeout(function(){
-          try{ trackCta('calculator_to_trial'); openAuth('kayit'); }catch(e){}
+          try{
+            var from=qs.get('from');
+            trackCta(['calculator_result','advantage_guide'].includes(from)?from+'_to_trial':'calculator_to_trial');
+            openAuth('kayit');
+          }catch(e){}
         },250);
       });
     }

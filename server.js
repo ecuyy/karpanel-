@@ -1221,12 +1221,19 @@ async function sifirla(){
       }))
     })}</script>` : '';
     const jsonld = blogJsonLd + faqJsonLd;
+    const sellerNextStep = {
+      'trendyol-avantajli-etiket-kr-hesabi-2026-rehberi': ['Teklifleri kendi ürünlerinizde karşılaştırın', 'Avantajlı Etiket Excel’inizi yükleyip üç fiyat seviyesinin kârını görün.', '/?trial=1&amp;from=advantage_guide', 'Excel’imle ücretsiz dene'],
+      'trendyol-iade-kargo-ucreti-iade-maliyeti-hesaplama': ['Kargo maliyeti ürün kârını ne kadar düşürüyor?', 'Satış fiyatınızı ve kargo giderinizi girip sonucu kendi ürününüzde kontrol edin.', '/trendyol-komisyon-hesaplama', 'Ürün kârını ücretsiz hesapla'],
+      'trendyolda-1000-tl-satistan-ne-kadar-kalir-2026-net-kr-hesaplama-rehberi': ['1.000 TL satış senaryosunu deneyin', 'Komisyonu veya kargoyu değiştirerek kârın nasıl etkilendiğini görün.', '/trendyol-komisyon-hesaplama?ornek=1000', 'Hazır hesabı aç']
+    }[slug];
+    const sellerCard = Array.isArray(sellerNextStep) ? `<aside aria-label="Rehberi uygula" style="background:#fff7ed;border:1px solid #eadbc9;border-radius:12px;padding:16px;margin:0 0 24px"><strong>${sellerNextStep[0]}</strong><p style="margin:6px 0 8px">${sellerNextStep[1]}</p><a href="${sellerNextStep[2]}" style="font-weight:700">${sellerNextStep[3]} →</a></aside>` : '';
     const html = BLOG_HEAD(seoBaslik, seoAciklama, canonical, jsonld)
       + `<article class="bwrap">
         <a href="/blog" style="font-size:14px;font-weight:600">← Tüm yazılar</a>
         <div style="font-size:13px;color:#B08247;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin:22px 0 10px">${blogTarihTR(y.tarih)}</div>
         <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(28px,5vw,42px);font-weight:800;color:#221A12;line-height:1.2;margin-bottom:24px">${blogEsc(y.baslik)}</h1>
         ${y.kapak ? `<img src="${blogEsc(y.kapak)}" alt="${blogEsc(y.baslik)}" style="width:100%;border-radius:16px;margin-bottom:28px">` : ''}
+        ${sellerCard}
         <div class="bbody" style="font-size:17px;color:#3A2E24">${blogIcerikRender(y.icerik)}</div>
         <nav aria-label="İlgili hesaplama araçları" style="margin-top:28px;padding:20px;border:1px solid #E8E2DA;border-radius:12px;line-height:1.9">
           <strong>Bu rehberi kendi rakamlarınızla uygulayın</strong><br>

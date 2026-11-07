@@ -92,7 +92,7 @@
   <section class="grid" aria-label="Trendyol komisyon hesaplama aracı">
     <div class="card">
       <h2>Bilgileri Girin</h2>
-      <p style="font-size:14px;margin:0 0 10px">Örnek: 500 TL satış ve %20 komisyon, <strong>100 TL komisyon kesintisi</strong> demektir. Ürün maliyeti ve diğer giderlerden sonra kalan sonucu sağdaki hesap dökümünde görebilirsiniz.</p>
+      <p id="example-intro" style="font-size:14px;margin:0 0 10px">Örnek: 500 TL satış ve %20 komisyon, <strong>100 TL komisyon kesintisi</strong> demektir. Ürün maliyeti ve diğer giderlerden sonra kalan sonucu sağdaki hesap dökümünde görebilirsiniz.</p>
       <button type="button" id="load-example" style="margin:0 0 10px;padding:8px 12px;border:1px solid #ba773a;border-radius:8px;background:#fff7ed;color:#663410;font:inherit;cursor:pointer">Örnek hesabı yükle</button>
       <label for="sale">KDV Dahil Satış Fiyatı (₺)</label><input id="sale" type="number" value="500" min="0" step="0.01">
       <label for="cost">KDV Dahil Ürün Maliyeti (₺)</label><input id="cost" type="number" value="200" min="0" step="0.01">
@@ -111,6 +111,12 @@
       <div class="row"><span>Hizmet bedeli</span><strong id="outService">₺0,00</strong></div>
       <div class="row"><span>Hesaplanan net KDV etkisi</span><strong id="outVat">₺0,00</strong></div>
       <p class="notice">Bu araç ticari karar desteği içindir; kesin vergi yükümlülüğü işletmenizin muhasebe kayıtlarına göre farklılaşabilir.</p>
+      <div style="border-top:1px solid #e8e2da;margin-top:14px;padding-top:14px">
+        <strong>Bu hesabı tüm ürünlerinize uygulayın</strong>
+        <p style="margin:6px 0 10px;font-size:14px">Trendyol Excel’inizi yükleyin, kârlı ve zarar eden ürünleri tek tabloda görün.</p>
+        <a class="cta" href="/?trial=1&amp;from=calculator_result">Kendi Excel’imle 3 gün dene →</a>
+        <p class="notice">Kredi kartı gerekmez · Otomatik ödeme yok</p>
+      </div>
     </div>
   </section>
 
@@ -192,6 +198,11 @@ function calc(){
   document.getElementById('outShipping').textContent=money(shipping);
   document.getElementById('outService').textContent=money(service);
   document.getElementById('outVat').textContent=money(netVat);
+}
+if(new URLSearchParams(location.search).get('ornek')==='1000'){
+  const example={sale:1000,cost:500,commission:20,shipping:60,service:13.19,vat:20};
+  for(const id of ids){const input=document.getElementById(id);input.defaultValue=String(example[id]);input.value=input.defaultValue;}
+  document.getElementById('example-intro').textContent='1.000 TL satış örneği yüklendi. Değerler örnektir; kendi satış fiyatınızı ve maliyetlerinizi girerek sonucu karşılaştırabilirsiniz.';
 }
 ids.forEach(id=>document.getElementById(id).addEventListener('input',calc));calc();
 document.getElementById('load-example').addEventListener('click',()=>{ids.forEach(id=>{const input=document.getElementById(id);input.value=input.defaultValue;});calc();});
