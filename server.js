@@ -1242,6 +1242,10 @@ async function sifirla(){
     const isAdvantageGuide = slug === ADVANTAGE_SLUG;
     const seoBaslik = isAdvantageGuide ? ADVANTAGE_TITLE : blogSeoBaslik(y.baslik);
     const seoAciklama = isAdvantageGuide ? ADVANTAGE_DESCRIPTION : blogSeoAciklama(y);
+    const articleContent = isAdvantageGuide ? String(y.icerik || '').replace(
+      'komisyonhesap’ın ücretsiz demosunu kredi kartı girmeden deneyebilir, sistemin nasıl çalıştığını örnek ürünlerle görebilirsiniz. Kendi Trendyol ürünlerinizi Excel ile yükleyip sınırsız analiz etmek için Premium üyeliğe geçebilirsiniz. Hemen deneyin: https://komisyonhesap.com',
+      'Üç teklifin örnek hesabını bu sayfada inceleyebilir, kendi Trendyol ürünlerinizi Excel ile yüklemek için [3 günlük ücretsiz denemeyi](/?trial=1&from=advantage_example) başlatabilirsiniz.'
+    ) : y.icerik;
     const blogJsonLd = `<script type="application/ld+json">${guvenliJsonLd({
       '@context': 'https://schema.org', '@type': 'BlogPosting', headline: isAdvantageGuide ? ADVANTAGE_TITLE : y.baslik,
       description: seoAciklama, image: y.kapak || undefined, datePublished: y.tarih,
@@ -1276,7 +1280,7 @@ async function sifirla(){
         ${isAdvantageGuide ? '<p>Trendyol Avantajlı Ürün Etiketi, uygun fiyat aralığındaki ürünü alıcıya işaretler. Bir teklifin satış fiyatı ve komisyonu birlikte değiştiğinde, etiketi kabul etmeden önce ürün başına kalacak tutarı karşılaştırın.</p>' + advantageExample() : ''}
         ${y.kapak ? `<img src="${blogEsc(y.kapak)}" alt="${blogEsc(y.baslik)}" style="width:100%;border-radius:16px;margin-bottom:28px">` : ''}
         ${sellerCard}
-        <div class="bbody" style="font-size:17px;color:#3A2E24">${blogIcerikRender(y.icerik)}</div>
+        <div class="bbody" style="font-size:17px;color:#3A2E24">${blogIcerikRender(articleContent)}</div>
         <nav aria-label="İlgili hesaplama araçları" style="margin-top:28px;padding:20px;border:1px solid #E8E2DA;border-radius:12px;line-height:1.9">
           <strong>Bu rehberi kendi rakamlarınızla uygulayın</strong><br>
           <a href="/trendyol-komisyon-hesaplama">Trendyol komisyon ve net kâr hesaplama</a> ·
