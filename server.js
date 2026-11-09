@@ -1243,7 +1243,7 @@ async function sifirla(){
     const seoBaslik = isAdvantageGuide ? ADVANTAGE_TITLE : blogSeoBaslik(y.baslik);
     const seoAciklama = isAdvantageGuide ? ADVANTAGE_DESCRIPTION : blogSeoAciklama(y);
     const articleContent = isAdvantageGuide ? String(y.icerik || '').replace(
-      'komisyonhesap’ın ücretsiz demosunu kredi kartı girmeden deneyebilir, sistemin nasıl çalıştığını örnek ürünlerle görebilirsiniz. Kendi Trendyol ürünlerinizi Excel ile yükleyip sınırsız analiz etmek için Premium üyeliğe geçebilirsiniz. Hemen deneyin: https://komisyonhesap.com',
+      /komisyonhesap’ın ücretsiz demosunu kredi kartı girmeden deneyebilir, sistemin nasıl çalıştığını örnek ürünlerle görebilirsiniz\. Kendi Trendyol ürünlerinizi Excel ile yükleyip sınırsız analiz etmek için Premium üyeliğe geçebilirsiniz\.(?:\s+Hemen deneyin: https:\/\/komisyonhesap\.com\/?)?/,
       'Üç teklifin örnek hesabını bu sayfada inceleyebilir, kendi Trendyol ürünlerinizi Excel ile yüklemek için [3 günlük ücretsiz denemeyi](/?trial=1&from=advantage_example) başlatabilirsiniz.'
     ) : y.icerik;
     const blogJsonLd = `<script type="application/ld+json">${guvenliJsonLd({
