@@ -305,6 +305,46 @@ function guvenliJsonLd(veri){
   return JSON.stringify(veri).replace(/</g, '\\u003c');
 }
 
+const ADVANTAGE_SLUG = 'trendyol-avantajli-etiket-kr-hesabi-2026-rehberi';
+const ADVANTAGE_URL = '/blog/' + ADVANTAGE_SLUG;
+const ADVANTAGE_TITLE = 'Trendyol Avantajlı Ürün Etiketi: 3 Teklifte Kâr Hesabı';
+const ADVANTAGE_DESCRIPTION = 'Avantajlı, Çok Avantajlı ve Süper Avantajlı tekliflerde fiyat ve komisyon değişince ne kadar kazanırsınız? Üye olmadan üç örnek teklifi karşılaştırın.';
+const ADVANTAGE_REVIEWED = '2026-11-09';
+
+function advantageExample() {
+  // Illustrative outputs checked against the existing panel calculation.
+  // These are not Trendyol rates or actual seller results.
+  const offers = [
+    ['Avantajlı', '669,00', '15', '76,47', '3,53'],
+    ['Çok Avantajlı', '629,00', '12', '64,20', '15,80'],
+    ['Süper Avantajlı', '589,00', '10', '45,02', '34,98']
+  ];
+  return `<section class="adv-example" id="teklif-karsilastirma" aria-labelledby="adv-example-title">
+    <p class="adv-kicker">Örnek ürün · Üyelik gerekmez</p>
+    <h2 id="adv-example-title">Aynı ürün, üç etiket teklifi</h2>
+    <p>Örnek ürünün alış fiyatı <strong>375 TL</strong>, kargosu <strong>82 TL</strong>. Etiketsiz satışta <strong>699 TL</strong> fiyat ve <strong>%18</strong> komisyonla hesaplanan kâr <strong>80,00 TL</strong>.</p>
+    <ul class="adv-grid">${offers.map(([name, price, rate, profit, loss]) => `<li>
+      <h3>${name}</h3>
+      <dl><div><dt>Satış fiyatı</dt><dd>${price} TL</dd></div><div><dt>Komisyon</dt><dd>%${rate}</dd></div><div class="adv-profit"><dt>Ürün başına kâr</dt><dd>${profit} TL</dd></div></dl>
+      <p>Etiketsiz satışa göre ${loss} TL daha az.</p>
+    </li>`).join('')}</ul>
+    <p>Bu örnekte komisyon düştüğü hâlde fiyat indirimi daha ağır basıyor. Süper Avantajlı seçenekte aynı toplam ürün kârına ulaşmak için yaklaşık <strong>%78 daha fazla adet</strong> satmanız gerekir.</p>
+    <details><summary>Örneğin hesaplama varsayımları</summary><p>Tutarlar örnektir, güncel Trendyol tarifesi değildir. Hesapta %20 KDV varsayımı, 13,19 TL örnek hizmet bedeli ve %1 stopaj kesintisi kullanılmıştır. Reklam, iade ve paketleme giderleri örneğe dahil değildir. Kendi fiyat ve komisyonunuzu Satıcı Paneli’nden kontrol edin. Etiketin çalışma biçimi hakkında <a href="https://www.rekabet.gov.tr/Karar?kararId=9fe77862-b880-499e-9c37-a2969d6d0b98">Rekabet Kurumu kararının 227. paragrafına</a> bakabilirsiniz.</p></details>
+    <a class="adv-trial" href="/?trial=1&amp;from=advantage_example" onclick="if(typeof gtag==='function')gtag('event','advantage_trial_click')">Kendi Excel’imle 3 gün ücretsiz dene →</a>
+  </section>
+  <style>
+  .adv-example{margin:24px 0 32px;padding:clamp(14px,4vw,25px);border:1px solid #e7d9cb;border-radius:16px;background:#fff;scroll-margin-top:95px}
+  .adv-example>p{margin:9px 0;color:#56483c}.adv-example .adv-kicker{font-size:.8rem;font-weight:750;color:#82410e}
+  .adv-example h2{font-size:clamp(1.3rem,4.2vw,1.65rem);line-height:1.2}.adv-grid{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:17px 0;padding:0}
+  .adv-grid li{background:#fbf7f1;border:1px solid #eee1d3;border-radius:11px;padding:13px;min-width:0}.adv-grid h3{font-size:.94rem}.adv-grid dl{margin-top:8px}
+  .adv-grid dl div{display:flex;justify-content:space-between;flex-wrap:wrap;gap:3px 7px}.adv-grid dt,.adv-grid li p{font-size:.79rem;color:#615246}.adv-grid dd{font-size:.83rem;font-weight:700;white-space:nowrap}
+  .adv-grid .adv-profit{border-top:1px solid #e6dacf;margin-top:7px;padding-top:8px;align-items:baseline}.adv-grid .adv-profit dd{font-size:1.13rem;color:#12613e}.adv-grid li p{margin-top:6px}
+  .adv-example details{margin:12px 0;font-size:.87rem}.adv-example summary{cursor:pointer;font-weight:700}.adv-example details p{margin:7px 0}
+  .adv-trial{display:inline-flex;align-items:center;min-height:44px;background:#9b4107;color:#fff;padding:8px 14px;border-radius:8px;font-weight:750}
+  @media(max-width:660px){.adv-grid{grid-template-columns:minmax(0,1fr)}}
+  </style>`;
+}
+
 const BLOG_HEAD = (title, desc, canonical, extra='', ogType='article') => `<!DOCTYPE html><html lang="tr"><head>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -346,8 +386,8 @@ const BLOG_HEAD = (title, desc, canonical, extra='', ogType='article') => `<!DOC
 <meta property="og:title" content="${blogEsc(title)}"><meta property="og:description" content="${blogEsc(desc)}"><meta property="og:url" content="${blogEsc(canonical)}">
 <meta property="og:image" content="https://komisyonhesap.com/og-image.png"><meta property="og:image:alt" content="KomisyonHesap - Trendyol satıcı araçları">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${blogEsc(title)}"><meta name="twitter:description" content="${blogEsc(desc)}"><meta name="twitter:image" content="https://komisyonhesap.com/og-image.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+${canonical.endsWith(ADVANTAGE_URL) ? '' : `<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">`}
 ${extra}
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -484,7 +524,7 @@ const server = http.createServer(async (req, res) => {
         yazilar = mergeEditorialList(dbYazilari);
       }
     } catch (e) {}
-    const blogUrls = yazilar.map(y => `<url><loc>https://komisyonhesap.com/blog/${blogEsc(y.slug)}</loc><lastmod>${new Date(y.guncelleme || y.tarih).toISOString().split('T')[0]}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`).join('');
+    const blogUrls = yazilar.map(y => `<url><loc>https://komisyonhesap.com/blog/${blogEsc(y.slug)}</loc><lastmod>${[new Date(y.guncelleme || y.tarih).toISOString().split('T')[0], y.slug === ADVANTAGE_SLUG ? ADVANTAGE_REVIEWED : ''].sort().pop()}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`).join('');
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://komisyonhesap.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url><url><loc>https://komisyonhesap.com/trendyol-komisyon-hesaplama</loc><changefreq>weekly</changefreq><priority>0.95</priority></url><url><loc>https://komisyonhesap.com/trendyol-maliyet-hesaplama</loc><changefreq>weekly</changefreq><priority>0.95</priority></url><url><loc>https://komisyonhesap.com/trendyol-net-kar-hesaplama</loc><changefreq>weekly</changefreq><priority>0.9</priority></url><url><loc>https://komisyonhesap.com/trendyol-stopaj-hesaplama</loc><changefreq>monthly</changefreq><priority>0.85</priority></url><url><loc>https://komisyonhesap.com/trendyolda-zarar-eden-urun-nasil-bulunur</loc><changefreq>monthly</changefreq><priority>0.85</priority></url><url><loc>https://komisyonhesap.com/blog</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>${blogUrls}</urlset>`;
     res.writeHead(200, { 'Content-Type': 'application/xml' });
     res.end(sitemap);
@@ -1160,7 +1200,7 @@ async function sifirla(){
       + `<div class="bwrap">
         <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:36px;font-weight:800;color:#2A211A;margin-bottom:10px">Trendyol Satıcı Rehberleri</h1>
         <p style="color:#6B5E50;font-size:16px;margin-bottom:36px">Trendyol satıcıları için komisyon, kâr ve e-ticaret rehberleri.</p>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px">${kartlar}</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:22px">${kartlar}</div>
         <section style="margin-top:48px;color:#6B5E50;font-size:15px;line-height:1.75" aria-labelledby="blog-rehber-baslik">
           <h2 id="blog-rehber-baslik" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:25px;font-weight:800;color:#2A211A;margin-bottom:14px">Trendyol satışlarında gerçek kârı nasıl takip edebilirsiniz?</h2>
           <p style="margin-bottom:14px">Trendyol’da satış yaparken yalnızca satış fiyatı ile ürün alış maliyeti arasındaki farka bakmak gerçek kazancı göstermez. Kategoriye göre değişen komisyon oranı, komisyonun KDV’si, kargo gideri, hizmet bedeli, kampanya indirimi ve elektronik ticaret kapsamındaki yüzde 1 stopaj birlikte değerlendirilmelidir. Bu kalemlerden biri eksik bırakıldığında kârlı görünen bir ürün gerçekte zarar edebilir.</p>
@@ -1199,12 +1239,13 @@ async function sifirla(){
       return;
     }
     const canonical = 'https://komisyonhesap.com/blog/' + encodeURIComponent(String(y.slug || ''));
-    const seoBaslik = blogSeoBaslik(y.baslik);
-    const seoAciklama = blogSeoAciklama(y);
+    const isAdvantageGuide = slug === ADVANTAGE_SLUG;
+    const seoBaslik = isAdvantageGuide ? ADVANTAGE_TITLE : blogSeoBaslik(y.baslik);
+    const seoAciklama = isAdvantageGuide ? ADVANTAGE_DESCRIPTION : blogSeoAciklama(y);
     const blogJsonLd = `<script type="application/ld+json">${guvenliJsonLd({
-      '@context': 'https://schema.org', '@type': 'BlogPosting', headline: y.baslik,
+      '@context': 'https://schema.org', '@type': 'BlogPosting', headline: isAdvantageGuide ? ADVANTAGE_TITLE : y.baslik,
       description: seoAciklama, image: y.kapak || undefined, datePublished: y.tarih,
-      dateModified: y.guncelleme || y.tarih, inLanguage: 'tr-TR',
+      dateModified: isAdvantageGuide && new Date(y.guncelleme || y.tarih) < new Date(ADVANTAGE_REVIEWED) ? ADVANTAGE_REVIEWED : y.guncelleme || y.tarih, inLanguage: 'tr-TR',
       author: { '@type': 'Organization', name: 'KomisyonHesap', url: 'https://komisyonhesap.com/' },
       publisher: {
         '@type': 'Organization', name: 'KomisyonHesap', url: 'https://komisyonhesap.com/',
@@ -1222,7 +1263,7 @@ async function sifirla(){
     })}</script>` : '';
     const jsonld = blogJsonLd + faqJsonLd;
     const sellerNextStep = {
-      'trendyol-avantajli-etiket-kr-hesabi-2026-rehberi': ['Teklifleri kendi ürünlerinizde karşılaştırın', 'Avantajlı Etiket Excel’inizi yükleyip üç fiyat seviyesinin kârını görün.', '/?trial=1&amp;from=advantage_guide', 'Excel’imle ücretsiz dene'],
+      '1111de-zarar-etme-kr-et-trendyol-avantajli-etiket-rehberi': ['Etiket teklifini kabul etmeden önce kârı karşılaştırın', 'Aynı ürünün üç etiket teklifinde kaç lira kazandırdığını görün.', ADVANTAGE_URL + '#teklif-karsilastirma', 'Üç teklifin örnek hesabını gör'],
       'trendyol-iade-kargo-ucreti-iade-maliyeti-hesaplama': ['Kargo maliyeti ürün kârını ne kadar düşürüyor?', 'Satış fiyatınızı ve kargo giderinizi girip sonucu kendi ürününüzde kontrol edin.', '/trendyol-komisyon-hesaplama', 'Ürün kârını ücretsiz hesapla'],
       'trendyolda-1000-tl-satistan-ne-kadar-kalir-2026-net-kr-hesaplama-rehberi': ['1.000 TL satış senaryosunu deneyin', 'Komisyonu veya kargoyu değiştirerek kârın nasıl etkilendiğini görün.', '/trendyol-komisyon-hesaplama?ornek=1000', 'Hazır hesabı aç']
     }[slug];
@@ -1231,7 +1272,8 @@ async function sifirla(){
       + `<article class="bwrap">
         <a href="/blog" style="font-size:14px;font-weight:600">← Tüm yazılar</a>
         <div style="font-size:13px;color:#B08247;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin:22px 0 10px">${blogTarihTR(y.tarih)}</div>
-        <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(28px,5vw,42px);font-weight:800;color:#221A12;line-height:1.2;margin-bottom:24px">${blogEsc(y.baslik)}</h1>
+        <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(28px,5vw,42px);font-weight:800;color:#221A12;line-height:1.2;margin-bottom:24px">${blogEsc(isAdvantageGuide ? ADVANTAGE_TITLE : y.baslik)}</h1>
+        ${isAdvantageGuide ? '<p>Trendyol Avantajlı Ürün Etiketi, uygun fiyat aralığındaki ürünü alıcıya işaretler. Bir teklifin satış fiyatı ve komisyonu birlikte değiştiğinde, etiketi kabul etmeden önce ürün başına kalacak tutarı karşılaştırın.</p>' + advantageExample() : ''}
         ${y.kapak ? `<img src="${blogEsc(y.kapak)}" alt="${blogEsc(y.baslik)}" style="width:100%;border-radius:16px;margin-bottom:28px">` : ''}
         ${sellerCard}
         <div class="bbody" style="font-size:17px;color:#3A2E24">${blogIcerikRender(y.icerik)}</div>
@@ -1239,6 +1281,7 @@ async function sifirla(){
           <strong>Bu rehberi kendi rakamlarınızla uygulayın</strong><br>
           <a href="/trendyol-komisyon-hesaplama">Trendyol komisyon ve net kâr hesaplama</a> ·
           <a href="/trendyol-maliyet-hesaplama">Başabaş satış fiyatını bulma</a> ·
+          ${!isAdvantageGuide && /avantaj|kampanya|buybox|kupon/.test(slug) ? `<a href="${ADVANTAGE_URL}#teklif-karsilastirma">Avantajlı Etiket kâr karşılaştırması</a> ·` : ''}
           <a href="/trendyol-stopaj-hesaplama">Stopaj hesaplama</a> ·
           <a href="/trendyolda-zarar-eden-urun-nasil-bulunur">Excel ile zarar eden ürünleri bulma</a>
         </nav>
