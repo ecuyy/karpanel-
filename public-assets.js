@@ -70,14 +70,22 @@ function createPublicAssets(root) {
   // Discover rendering assets with response headers, before parsing the HTML.
   // Deferred application scripts use normal discovery instead of competing via preload.
   home.link = preloadHeaders.join(', ');
-  const pages = new Map([['/', home], ['/index.html', home]]);
+  const pages = new Map([['/', home]]);
+  const aliases = new Map([['/index.html', '/']]);
   for (const slug of ['trendyol-komisyon-hesaplama', 'trendyol-maliyet-hesaplama', 'trendyol-net-kar-hesaplama', 'trendyol-stopaj-hesaplama', 'trendyolda-zarar-eden-urun-nasil-bulunur']) {
     const page = resource(fs.readFileSync(path.join(root, slug + '.html')), 'text/html; charset=utf-8', 'public, max-age=300');
     pages.set('/' + slug, page);
-    pages.set('/' + slug + '/', page);
+    aliases.set('/' + slug + '/', '/' + slug);
   }
   return function servePublic(req, res, pathname) {
     if (req.method !== 'GET' && req.method !== 'HEAD') return false;
+    const canonicalPath = aliases.get(pathname);
+    if (canonicalPath) {
+      const query = (req.url || '').match(/\?[^#\r\n]*/)?.[0] || '';
+      res.writeHead(301, { Location: canonicalPath + query, 'Cache-Control': 'public, max-age=300' });
+      res.end();
+      return true;
+    }
     const item = assets.get(pathname) || pages.get(pathname);
     if (!item) return false;
     const qualities = new Map((req.headers['accept-encoding'] || '').toLowerCase().split(',').map(part => {

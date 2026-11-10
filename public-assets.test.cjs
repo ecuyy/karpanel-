@@ -7,7 +7,7 @@ const { createPublicAssets } = require('./public-assets');
 const serve = createPublicAssets(__dirname);
 function request(pathname, headers = {}, method = 'GET') {
   const res = { writeHead(status, fields) { this.status = status; this.headers = fields; }, end(body) { this.body = body || Buffer.alloc(0); } };
-  res.handled = serve({ method, headers }, res, pathname);
+  res.handled = serve({ method, headers, url: pathname }, res, pathname.split('?')[0]);
   return res;
 }
 const original = fs.readFileSync(__dirname + '/karpanel.html', 'utf8');
@@ -51,8 +51,20 @@ test('private routes, APIs, unknown assets and writes never enter the public cac
   assert.equal(request('/', {}, 'POST').handled, false);
   for (const slug of ['trendyol-komisyon-hesaplama', 'trendyol-maliyet-hesaplama', 'trendyol-net-kar-hesaplama', 'trendyol-stopaj-hesaplama', 'trendyolda-zarar-eden-urun-nasil-bulunur']) {
     assert.deepEqual(request('/' + slug).body, fs.readFileSync(__dirname + '/' + slug + '.html'));
-    assert.equal(request('/' + slug + '/').status, 200);
+    const alias = request('/' + slug + '/');
+    assert.equal(alias.status, 301);
+    assert.equal(alias.headers.Location, '/' + slug);
   }
+});
+test('canonical redirects retain trial and example parameters for GET and HEAD', () => {
+  const homeAlias = request('/index.html?trial=1&from=advantage_example');
+  assert.equal(homeAlias.status, 301);
+  assert.equal(homeAlias.headers.Location, '/?trial=1&from=advantage_example');
+  const exampleAlias = request('/trendyol-komisyon-hesaplama/?ornek=1000', {}, 'HEAD');
+  assert.equal(exampleAlias.status, 301);
+  assert.equal(exampleAlias.headers.Location, '/trendyol-komisyon-hesaplama?ornek=1000');
+  assert.equal(exampleAlias.body.length, 0);
+  assert.equal(request('/index.html', {}, 'POST').handled, false);
 });
 test('the public page paints before panel CSS and returning members load the complete stylesheet', () => {
   assert.match(html, /id="kh-full-styles"[^>]+media="print"[^>]+onload="this.media='all'"/);
