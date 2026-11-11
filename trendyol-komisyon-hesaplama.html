@@ -33,7 +33,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Trendyol Komisyon Hesaplama 2026 | Ücretsiz Kâr Hesabı</title>
-<meta name="description" content="Satış fiyatını ve komisyon oranını girip Trendyol komisyonunu üyelik olmadan hesaplayın. Kargo ve diğer giderleri ekleyerek ürünün net kârını görün.">
+<meta name="description" content="Trendyol komisyon oranınızı Satıcı Paneli’nde nasıl bulacağınızı görün. Satış fiyatı ve oranla kesintiyi, giderleri ekleyerek net kârı ücretsiz hesaplayın.">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
 <link rel="canonical" href="https://komisyonhesap.com/trendyol-komisyon-hesaplama">
 <link rel="alternate" hreflang="tr" href="https://komisyonhesap.com/trendyol-komisyon-hesaplama">
@@ -80,6 +80,10 @@
 *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#fbf8f4;color:#241d17;line-height:1.6}.wrap{max-width:1080px;margin:auto;padding:24px}.nav{display:flex;justify-content:space-between;align-items:center;padding:8px 0 24px}.logo{font-weight:900;font-size:22px;color:#241d17;text-decoration:none}.logo span{color:#f27a1a}.cta{background:#f27a1a;color:white;text-decoration:none;padding:11px 17px;border-radius:10px;font-weight:800}.hero{padding:48px 0 30px}.eyebrow{font-weight:800;color:#f27a1a;text-transform:uppercase;font-size:13px;letter-spacing:.08em}h1{font-size:clamp(36px,6vw,62px);line-height:1.04;letter-spacing:-2px;margin:10px 0 18px;max-width:900px}.lead{font-size:19px;color:#6b5e50;max-width:800px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:28px 0 44px}.card{background:white;border:1px solid #eee4da;border-radius:18px;padding:24px;box-shadow:0 14px 40px -30px rgba(0,0,0,.25)}label{display:block;font-weight:700;font-size:14px;margin:14px 0 6px}input{width:100%;padding:12px;border:1px solid #d8cec4;border-radius:10px;font-size:16px}.result{background:#fff4e8;border:1px solid #ffd8b0;border-radius:14px;padding:18px;margin-top:16px}.rbig{font-size:34px;font-weight:900;color:#d95f00}.row{display:flex;justify-content:space-between;border-bottom:1px dashed #eadfd5;padding:9px 0}.row:last-child{border:none}.notice{font-size:13px;color:#6b5e50;margin-top:12px}.content{background:#fff;border:1px solid #eee4da;border-radius:18px;padding:28px;margin-bottom:30px}.content h2{font-size:28px;margin:0 0 12px}.content h3{font-size:21px;margin:26px 0 8px}.content a{color:#d95f00}.footer{padding:30px 0 50px;color:#7f7062;font-size:14px}@media(max-width:780px){.grid{grid-template-columns:1fr}.hero{padding-top:24px}.nav{align-items:flex-start}.cta{font-size:13px}}
 .quick-calc{margin-bottom:14px}.quick-calc h2{margin-top:0}.quick-grid{display:grid;grid-template-columns:1fr 1fr minmax(185px,1.1fr);align-items:end;gap:14px}.quick-grid>div{min-width:0}.quick-grid input{margin-bottom:0}.quick-output{background:#fff3e5;border:1px solid #f4d2ae;border-radius:12px;padding:8px 13px;color:#582e0d}.quick-output span{display:block;font-size:13px}.quick-output output{display:block;font-weight:850;font-size:26px;line-height:1.2}.quick-calc .notice{margin:8px 0 0}.full-calc{margin-bottom:16px;scroll-margin-top:16px}.full-calc summary{padding:12px 2px;font-weight:800;cursor:pointer;color:#78380a}.full-calc summary:focus-visible{outline:2px solid #a74c11;outline-offset:4px}.full-calc .grid{margin-top:7px}.trial-next{margin-top:18px}
 @media(max-width:620px){.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.quick-output{grid-column:1/-1}.quick-grid label{font-size:13px}.quick-grid input{font-size:16px}}
+.rate-help{margin-top:14px;padding:10px 12px;border:1px solid #eadbcb;border-radius:10px;background:#fffaf3;scroll-margin-top:20px}
+.rate-help summary{color:#743b13;font-size:14px;font-weight:800;cursor:pointer;padding:4px 0}.rate-help summary:focus-visible{outline:2px solid #a74c11;outline-offset:3px}
+.rate-help ol{padding-left:23px;margin:8px 0}.rate-help p,.rate-help li{font-size:14px}.rate-help p{margin:8px 0 0}.rate-help a{color:#743b13;text-underline-offset:3px}
+.input-status{color:#9c231a;font-size:14px;font-weight:700;margin:8px 0 0}input[aria-invalid="true"]{border-color:#ac3027}
 </style>
 </head>
 <body>
@@ -94,11 +98,22 @@
   <section class="card quick-calc" aria-labelledby="quick-title">
     <h2 id="quick-title">Ürün komisyonunu hesaplayın</h2>
     <div class="quick-grid">
-      <div><label for="sale">Satış fiyatı, KDV dahil (₺)</label><input id="sale" type="number" inputmode="decimal" value="500" min="0" step="0.01"></div>
-      <div><label for="commission">Komisyon oranı (%)</label><input id="commission" type="number" inputmode="decimal" value="20" min="0" max="100" step="0.01"></div>
+      <div><label for="sale">Satış fiyatı, KDV dahil (₺)</label><input id="sale" aria-describedby="quick-input-error" type="number" inputmode="decimal" value="500" min="0" step="0.01"></div>
+      <div><label for="commission">Komisyon oranı (%)</label><input id="commission" aria-describedby="quick-input-error" type="number" inputmode="decimal" value="20" min="0" max="100" step="0.01"></div>
       <div class="quick-output"><span id="quick-output-label">Komisyon kesintisi</span><output for="sale commission" aria-labelledby="quick-output-label" id="outCommission">₺100,00</output></div>
     </div>
-    <p class="notice">500 TL satış ve %20 komisyon örneği yüklü. Kendi ürününüzün oranını Trendyol Satıcı Paneli’nden alın.</p>
+    <p class="input-status" id="quick-input-error" role="status" hidden></p>
+    <p class="notice" id="quick-example">Örnek: 500 TL satış × %20 = 100 TL komisyon. %20 yalnızca örnek orandır.</p>
+    <noscript><p>Yukarıdaki tutar örnektir. Kendi rakamlarınızla hesaplamak için tarayıcınızda JavaScript’i açın.</p></noscript>
+    <details class="rate-help" id="oranimi-nereden-bulurum">
+      <summary>Trendyol komisyon oranımı nereden bulurum?</summary>
+      <ol>
+        <li><a href="https://partner.trendyol.com/" target="_blank" rel="noopener noreferrer">Trendyol Satıcı Paneli’ni açın</a> ve ürünün barkodunu veya alt kategorisini bulun.</li>
+        <li>Hesabım → Ticari Şartlar bölümündeki komisyon ve vade tablosuna bakın. Ürüne özel fiyat veya kampanya teklifi varsa, uygulayacağınız satış fiyatına karşılık gelen oranı ürünün komisyon tarifesinde doğrulayın.</li>
+        <li>Ürününüz için geçerli yüzdeyi yukarıya yazın. Örneğin panelde %17,50 yazıyorsa komisyon alanına 17,50 girin.</li>
+      </ol>
+      <p><a href="https://akademi.trendyol.com/TrainingContent?TrainingId=24768" target="_blank" rel="noopener noreferrer">Trendyol Akademi: Fiyat ve Komisyon Hesaplama Kuralları</a> · <a href="/blog/trendyol-komisyon-oranlari-2026">Komisyon oranları rehberi</a></p>
+    </details>
   </section>
 
   <details class="full-calc" id="net-kar-detay">
@@ -108,11 +123,11 @@
       <h2>Ürün maliyeti ve diğer giderler</h2>
       <p id="example-intro" style="font-size:14px;margin:0 0 10px">Aşağıdaki örnek giderleri kendi maliyetlerinizle değiştirin. Satış fiyatı ve komisyon oranı yukarıdaki alanlardan alınır.</p>
       <button type="button" id="load-example" style="margin:0 0 10px;padding:8px 12px;border:1px solid #ba773a;border-radius:8px;background:#fff7ed;color:#663410;font:inherit;cursor:pointer">Örnek hesabı yükle</button>
-      <label for="cost">KDV Dahil Ürün Maliyeti (₺)</label><input id="cost" type="number" value="200" min="0" step="0.01">
-      <label for="shipping">Kargo (₺)</label><input id="shipping" type="number" value="70" min="0" step="0.01">
-      <label for="service">Hizmet Bedeli (₺)</label><input id="service" type="number" value="13.19" min="0" step="0.01">
-      <label for="vat">KDV Oranı (%)</label><input id="vat" type="number" value="20" min="0" max="100" step="1">
-      <div class="notice">Komisyon oranı kategoriye/kampanyaya göre değişebilir. Trendyol panelinizdeki güncel oranı girin.</div>
+      <label for="cost">KDV Dahil Ürün Maliyeti (₺)</label><input id="cost" aria-describedby="detail-input-error" type="number" value="200" min="0" step="0.01">
+      <label for="shipping">Kargo (₺)</label><input id="shipping" aria-describedby="detail-input-error" type="number" value="70" min="0" step="0.01">
+      <label for="service">Hizmet Bedeli (₺)</label><input id="service" aria-describedby="detail-input-error" type="number" value="13.19" min="0" step="0.01">
+      <label for="vat">KDV Oranı (%)</label><input id="vat" aria-describedby="detail-input-error" type="number" value="20" min="0" max="100" step="1">
+      <p class="input-status" id="detail-input-error" role="status" hidden></p>
     </div>
     <div class="card">
       <h2>Hesaplama Sonucu</h2>
@@ -151,7 +166,7 @@
   <article class="content" aria-labelledby="komisyon-formulu">
     <h2 id="komisyon-formulu">Trendyol komisyonu nasıl hesaplanır?</h2>
     <p>Komisyon tutarı = komisyona esas satış fiyatı × komisyon oranı ÷ 100. Örneğin 1.000 TL satışta %15 oran, 150 TL komisyon demektir. Kalan 850 TL net kâr değildir; ürün maliyeti ve diğer kesintiler henüz düşülmemiştir.</p>
-    <p>Bu araçta komisyon oranı, satış fiyatı üzerinden kesilecek toplam oran olarak kullanılır. Panelinizdeki oranla faturadaki komisyon KDV’sinin nasıl gösterildiğini kontrol edin; aynı KDV’yi ikinci kez eklemeyin. Size özel komisyonu <a href="https://akademi.trendyol.com/satici-bilgi-merkezi/detay/komisyon-tutari-hesaplama" target="_blank" rel="noopener">Trendyol Satıcı Bilgi Merkezi</a> ve kendi satıcı panelinizden doğrulayın.</p>
+    <p>Bu araçta komisyon oranı, satış fiyatı üzerinden kesilecek toplam oran olarak kullanılır. Panelinizdeki oranla faturadaki komisyon KDV’sinin nasıl gösterildiğini kontrol edin; aynı KDV’yi ikinci kez eklemeyin. Size özel komisyonu <a href="https://akademi.trendyol.com/TrainingContent?TrainingId=24768" target="_blank" rel="noopener">Trendyol Akademi’deki fiyat ve komisyon rehberinden</a> ve kendi satıcı panelinizden doğrulayın.</p>
     <h2>1.000 TL satışta komisyon değişirse ne kadar kâr kalır?</h2>
     <p>Aşağıdaki örnek mevcut hesaplayıcının sonucudur. Alış 500 TL, kargo 60 TL, hizmet bedeli 13,19 TL ve KDV %20 kabul edilmiştir. Tutarlar KDV dahil girilmiştir; reklam, paketleme ve iade giderleri bu örneğe dahil değildir. Bunlar sizin tarifeniz veya kesin kazancınız değildir.</p>
     <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;text-align:left;min-width:420px"><caption style="text-align:left;margin-bottom:10px">Aynı üründe üç örnek komisyon senaryosu</caption><thead><tr><th scope="col">Komisyon oranı</th><th scope="col">Komisyon tutarı</th><th scope="col">Hesaplanan net sonuç</th></tr></thead><tbody><tr><td>%15</td><td>150,00 TL</td><td>222,34 TL</td></tr><tr><td>%20</td><td>200,00 TL</td><td>180,67 TL</td></tr><tr><td>%25</td><td>250,00 TL</td><td>139,01 TL</td></tr></tbody></table></div>
@@ -179,16 +194,51 @@
 <script>
 const ids=['sale','cost','commission','shipping','service','vat'];
 function money(v){return new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY'}).format(v||0)}
+function showInputError(id,message){
+  const el=document.getElementById(id);
+  el.textContent=message;
+  el.hidden=!message;
+}
+function markInput(input,invalid){
+  if(invalid) input.setAttribute('aria-invalid','true');
+  else input.removeAttribute('aria-invalid');
+}
+function clearOutputs(ids){for(const id of ids)document.getElementById(id).textContent='—';}
 function calc(){
-  const sale=+document.getElementById('sale').value||0;
+  const saleInput=document.getElementById('sale');
+  const rateInput=document.getElementById('commission');
+  const sale=Number(saleInput.value);
+  const rate=Number(rateInput.value);
+  const invalidSale=saleInput.value===''||!Number.isFinite(sale)||sale<0;
+  const invalidRate=rateInput.value===''||!Number.isFinite(rate)||rate<0||rate>100;
+  markInput(saleInput,invalidSale);
+  markInput(rateInput,invalidRate);
+  showInputError('quick-input-error',invalidSale?'Sıfır veya daha yüksek bir satış fiyatı girin.':invalidRate?'Komisyon oranını %0 ile %100 arasında girin.':'');
+  const detailIds=['cost','shipping','service','vat'];
+  let invalidDetail=false;
+  for(const id of detailIds){
+    const input=document.getElementById(id);
+    const n=Number(input.value);
+    const invalid=Boolean(input.validity?.badInput)||!Number.isFinite(n)||n<0||(id==='vat'&&n>100);
+    markInput(input,invalid);
+    invalidDetail ||= invalid;
+  }
+  showInputError('detail-input-error',invalidSale||invalidRate?'Hesap için yukarıdaki satış fiyatı ve komisyon oranını kontrol edin.':invalidDetail?'Giderler negatif olamaz. KDV oranı %0 ile %100 arasında olmalıdır.':'');
+  const detailOutputs=['profit','margin','outCommissionDetail','outStopaj','outShipping','outService','outVat'];
+  if(invalidSale||invalidRate){
+    clearOutputs(['outCommission',...detailOutputs]);
+    return;
+  }
   const cost=+document.getElementById('cost').value||0;
-  const commissionRate=(+document.getElementById('commission').value||0)/100;
+  const commissionRate=rate/100;
   const shipping=+document.getElementById('shipping').value||0;
   const service=+document.getElementById('service').value||0;
   const vatRate=(+document.getElementById('vat').value||0)/100;
   const kf=1+vatRate;
   const saleExVat=kf>0?sale/kf:sale;
   const commission=sale*commissionRate;
+  document.getElementById('outCommission').textContent=money(commission);
+  if(invalidDetail){clearOutputs(detailOutputs);return;}
   const stopaj=saleExVat*0.01;
   const outputVat=sale-saleExVat;
   const costVat=cost-(cost/kf);
@@ -201,7 +251,6 @@ function calc(){
   document.getElementById('profit').textContent=money(profit);
   document.getElementById('profit').style.color=profit>=0?'#17823b':'#b42318';
   document.getElementById('margin').textContent='%'+margin.toFixed(1)+' marj';
-  document.getElementById('outCommission').textContent=money(commission);
   document.getElementById('outCommissionDetail').textContent=money(commission);
   document.getElementById('outStopaj').textContent=money(stopaj);
   document.getElementById('outShipping').textContent=money(shipping);
@@ -210,13 +259,14 @@ function calc(){
 }
 const calculatorParams=new URLSearchParams(location.search);
 const guideSource=calculatorParams.get('rehber');
-const calculatorEntry=['kupon','iade','avantaj'].includes(guideSource)?guideSource:'direct';
+const calculatorEntry=['kupon','iade','avantaj','oran'].includes(guideSource)?guideSource:'direct';
+if(location.hash==='#oranimi-nereden-bulurum')document.getElementById('oranimi-nereden-bulurum').open=true;
 if(location.hash==='#net-kar-detay'||calculatorEntry==='kupon'||calculatorEntry==='iade'){
   document.getElementById('net-kar-detay').open=true;
 }
 if(calculatorParams.get('ornek')==='1000'){
   document.getElementById('net-kar-detay').open=true;
-  document.querySelector('.quick-calc .notice').textContent='1.000 TL satış ve %20 komisyon örneği yüklü. Kendi ürününüz için fiyatı ve oranı değiştirebilirsiniz.';
+  document.getElementById('quick-example').textContent='Örnek: 1.000 TL satış × %20 = 200 TL komisyon. %20 yalnızca örnek orandır.';
   const example={sale:1000,cost:500,commission:20,shipping:60,service:13.19,vat:20};
   for(const id of ids){const input=document.getElementById(id);input.defaultValue=String(example[id]);input.value=input.defaultValue;}
   document.getElementById('example-intro').textContent='1.000 TL satış örneği yüklendi. Değerler örnektir; kendi satış fiyatınızı ve maliyetlerinizi girerek sonucu karşılaştırabilirsiniz.';
@@ -227,6 +277,9 @@ document.getElementById('load-example').addEventListener('click',()=>{ids.forEac
 <script>
 (function(){
   var sent=false;
+  document.getElementById('oranimi-nereden-bulurum').addEventListener('toggle',function(){
+    if(this.open){try{gtag('event','commission_rate_help_open',{calculator_entry:calculatorEntry});}catch(err){}}
+  });
   document.querySelectorAll('[data-calculator-trial]').forEach(function(link){
     link.addEventListener('click',function(){try{gtag('event','calculator_trial_click',{calculator:'trendyol_commission',calculator_entry:calculatorEntry});}catch(err){}});
   });

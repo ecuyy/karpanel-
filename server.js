@@ -1267,6 +1267,7 @@ async function sifirla(){
     })}</script>` : '';
     const jsonld = blogJsonLd + faqJsonLd;
     const sellerNextStep = {
+      'trendyol-komisyon-oranlari-2026': ['Kendi oranınızla komisyonu hesaplayın', 'Satıcı Paneli’nde gördüğünüz oranı ve satış fiyatınızı girin. Kesintiyi görmek için üyelik gerekmez.', '/trendyol-komisyon-hesaplama?rehber=oran', 'Ürün komisyonunu hesapla'],
       '1111de-zarar-etme-kr-et-trendyol-avantajli-etiket-rehberi': ['Etiket teklifini kabul etmeden önce kârı karşılaştırın', 'Aynı ürünün üç etiket teklifinde kaç lira kazandırdığını görün.', ADVANTAGE_URL + '#teklif-karsilastirma', 'Üç teklifin örnek hesabını gör'],
       'trendyol-kupon-maliyeti-hesaplama': ['Kupondan sonra ürününüz ne kadar kazandırıyor?', 'Komisyona esas satış tutarını ve kendi maliyetlerinizi girip kârınızı kontrol edin.', '/trendyol-komisyon-hesaplama?rehber=kupon#net-kar-detay', 'Kupon sonrası kârı hesapla'],
       'trendyol-iade-kargo-ucreti-iade-maliyeti-hesaplama': ['Kargo maliyeti ürün kârını ne kadar düşürüyor?', 'Ürün başına kargo maliyetinizi girip kâra etkisini görün. İade oranına göre ayırdığınız payı, rehberdeki yöntemle ayrıca hesaplayın.', '/trendyol-komisyon-hesaplama?rehber=iade#net-kar-detay', 'Kargo dahil ürün kârını hesapla'],
