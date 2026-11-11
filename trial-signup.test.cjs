@@ -27,7 +27,7 @@ test('server and network errors allow retry without reporting a completed signup
 test('validation sends no request and event parameters never contain entered details',async()=>{
  const a=setup(()=>{throw Error('must not request');});a.elements['kayit-ad'].value='';await a.context.kayitOl();assert.deepEqual(a.events,[['error','missing_fields']]);
  const track=html.slice(html.indexOf('function trackTrialStep('),html.indexOf('function trackPurchaseConversion('));
- const sent=[],ctx={gtag:(...args)=>sent.push(args)};vm.createContext(ctx);vm.runInContext(track,ctx);
+ const sent=[],ctx={gtag:(...args)=>sent.push(args),trialEntryPoint:()=> 'calculator_result'};vm.createContext(ctx);vm.runInContext(track,ctx);
  ctx.trackTrialStep('error','test@example.invalid');ctx.trackTrialStep('error','server_rejected');ctx.trackTrialStep('unknown','network');
- assert.equal(sent.length,2);assert(!JSON.stringify(sent).includes('test@example.invalid'));assert.equal(sent[1][2].reason,'server_rejected');
+ assert.equal(sent.length,2);assert(!JSON.stringify(sent).includes('test@example.invalid'));assert.equal(sent[1][2].reason,'server_rejected');assert.equal(sent[1][2].entry_point,'calculator_result');
 });

@@ -5068,7 +5068,12 @@ function trackTrialStep(step,reason){
   const events={open:'trial_signup_open',submit:'trial_signup_submit',error:'trial_signup_error'};
   const reasons=['missing_fields','short_password','server_rejected','network'];
   if(!events[step])return;
-  try{if(typeof gtag==='function')gtag('event',events[step],reason&&reasons.includes(reason)?{reason}:{method:'email'});}catch(e){}
+  try{
+    if(typeof gtag!=='function') return;
+    const fields={method:'email',entry_point:trialEntryPoint()};
+    if(reason&&reasons.includes(reason)) fields.reason=reason;
+    gtag('event',events[step],fields);
+  }catch(e){}
 }
 function trackPurchaseConversion(){
   try{

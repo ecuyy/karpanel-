@@ -1268,16 +1268,18 @@ async function sifirla(){
     const jsonld = blogJsonLd + faqJsonLd;
     const sellerNextStep = {
       '1111de-zarar-etme-kr-et-trendyol-avantajli-etiket-rehberi': ['Etiket teklifini kabul etmeden önce kârı karşılaştırın', 'Aynı ürünün üç etiket teklifinde kaç lira kazandırdığını görün.', ADVANTAGE_URL + '#teklif-karsilastirma', 'Üç teklifin örnek hesabını gör'],
-      'trendyol-iade-kargo-ucreti-iade-maliyeti-hesaplama': ['Kargo maliyeti ürün kârını ne kadar düşürüyor?', 'Satış fiyatınızı ve kargo giderinizi girip sonucu kendi ürününüzde kontrol edin.', '/trendyol-komisyon-hesaplama', 'Ürün kârını ücretsiz hesapla'],
+      'trendyol-kupon-maliyeti-hesaplama': ['Kupondan sonra ürününüz ne kadar kazandırıyor?', 'Komisyona esas satış tutarını ve kendi maliyetlerinizi girip kârınızı kontrol edin.', '/trendyol-komisyon-hesaplama?rehber=kupon#net-kar-detay', 'Kupon sonrası kârı hesapla'],
+      'trendyol-iade-kargo-ucreti-iade-maliyeti-hesaplama': ['Kargo maliyeti ürün kârını ne kadar düşürüyor?', 'Ürün başına kargo maliyetinizi girip kâra etkisini görün. İade oranına göre ayırdığınız payı, rehberdeki yöntemle ayrıca hesaplayın.', '/trendyol-komisyon-hesaplama?rehber=iade#net-kar-detay', 'Kargo dahil ürün kârını hesapla'],
       'trendyolda-1000-tl-satistan-ne-kadar-kalir-2026-net-kr-hesaplama-rehberi': ['1.000 TL satış senaryosunu deneyin', 'Komisyonu veya kargoyu değiştirerek kârın nasıl etkilendiğini görün.', '/trendyol-komisyon-hesaplama?ornek=1000', 'Hazır hesabı aç']
     }[slug];
-    const sellerCard = Array.isArray(sellerNextStep) ? `<aside aria-label="Rehberi uygula" style="background:#fff7ed;border:1px solid #eadbc9;border-radius:12px;padding:16px;margin:0 0 24px"><strong>${sellerNextStep[0]}</strong><p style="margin:6px 0 8px">${sellerNextStep[1]}</p><a href="${sellerNextStep[2]}" style="font-weight:700">${sellerNextStep[3]} →</a></aside>` : '';
+    const sellerCard = Array.isArray(sellerNextStep) ? `<aside aria-label="Rehberi uygula" style="background:#fff7ed;border:1px solid #eadbc9;border-radius:12px;padding:16px;margin:0 0 24px"><strong>${sellerNextStep[0]}</strong><p style="margin:6px 0 8px">${sellerNextStep[1]}</p><a href="${sellerNextStep[2]}" onclick="if(typeof gtag==='function')gtag('event','guide_tool_click',{guide_path:location.pathname})" style="font-weight:700">${sellerNextStep[3]} →</a></aside>` : '';
     const html = BLOG_HEAD(seoBaslik, seoAciklama, canonical, jsonld)
       + `<article class="bwrap">
         <a href="/blog" style="font-size:14px;font-weight:600">← Tüm yazılar</a>
         <div style="font-size:13px;color:#B08247;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin:22px 0 10px">${blogTarihTR(y.tarih)}</div>
         <h1 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(28px,5vw,42px);font-weight:800;color:#221A12;line-height:1.2;margin-bottom:24px">${blogEsc(isAdvantageGuide ? ADVANTAGE_TITLE : y.baslik)}</h1>
         ${isAdvantageGuide ? '<p>Trendyol Avantajlı Ürün Etiketi, uygun fiyat aralığındaki ürünü alıcıya işaretler. Bir teklifin satış fiyatı ve komisyonu birlikte değiştiğinde, etiketi kabul etmeden önce ürün başına kalacak tutarı karşılaştırın.</p>' + advantageExample() : ''}
+        ${isAdvantageGuide ? '<p style="margin:0 0 24px">Kampanyasız fiyatınızı da kontrol etmek için <a href="/trendyol-komisyon-hesaplama?rehber=avantaj">tek ürün komisyon ve kâr hesabını</a> açın.</p>' : ''}
         ${y.kapak ? `<img src="${blogEsc(y.kapak)}" alt="${blogEsc(y.baslik)}" style="width:100%;border-radius:16px;margin-bottom:28px">` : ''}
         ${sellerCard}
         <div class="bbody" style="font-size:17px;color:#3A2E24">${blogIcerikRender(articleContent)}</div>
