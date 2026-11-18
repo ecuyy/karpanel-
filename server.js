@@ -4,6 +4,8 @@ const url = require('url');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { hashPassword, checkPassword, migrateLegacyPasswords, publicMember, createMemberSecurity } = require('./member-security');
+const legal = require('./legal-content');
 const servePublicAssets = require('./public-assets').createPublicAssets(__dirname);
 const { MongoClient } = require('mongodb');
 const Iyzipay = require('iyzipay');
@@ -195,12 +197,18 @@ const iyzipay = new Iyzipay({
 
 
 let db;
+let passwordMigrationComplete = false;
+const members = createMemberSecurity(() => db);
 
 // MongoDB bağlantısı. SEO sayfaları ilk deploy isteğinde boş dönmesin diye
 // bağlantı sözünü saklıyor ve yalnızca veri gereken public rotalarda kısa süre bekliyoruz.
 const dbReady = MongoClient.connect(MONGO_URI).then(async client => {
   db = client.db('karpanel');
   console.log('✅ MongoDB bağlandı!');
+  await db.collection('memberSessions').createIndex({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+  const migrated = await migrateLegacyPasswords(db);
+  passwordMigrationComplete = true;
+  console.log('Üye parola geçişi tamamlandı:', migrated);
   try {
     await seedEditorialPosts();
     console.log('✅ Editoryal blog yazıları hazır!');
@@ -223,20 +231,34 @@ async function waitForDb(timeoutMs = 5000) {
 }
 
 function corsHeaders(res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 }
 
 function getBody(req) {
-  return new Promise((resolve) => {
-    let body = '';
-    req.on('data', chunk => body += chunk);
+  if (req.khBody) return req.khBody;
+  req.khBody = new Promise(resolve => {
+    let body = '', tooLarge = false;
+    req.on('data', chunk => { if (body.length + chunk.length > 10 * 1024 * 1024) tooLarge = true; else if (!tooLarge) body += chunk; });
     req.on('end', () => {
-      try { resolve(JSON.parse(body)); }
+      try { const parsed = JSON.parse(body); resolve(!tooLarge && parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {}); }
       catch { resolve({}); }
     });
+    req.on('error', () => resolve({}));
   });
+  return req.khBody;
+}
+function jsonResponse(res, status, value) {
+  res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+  res.end(JSON.stringify(value));
+}
+function validEmail(email) { return typeof email === 'string' && email.length < 255 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+function validPassword(value) { return typeof value === 'string' && value.length >= 8 && value.length <= 1024; }
+async function findMember(email) {
+  if (!validEmail(email)) return null;
+  return await db.collection('users').findOne({ email: email.trim() }) || db.collection('users').findOne({ email: email.trim().toLowerCase() });
 }
 
 // ══════════ BLOG YARDIMCILARI ══════════
@@ -346,35 +368,7 @@ function advantageExample() {
 }
 
 const BLOG_HEAD = (title, desc, canonical, extra='', ogType='article') => `<!DOCTYPE html><html lang="tr"><head>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'AW-16989542935');
-  gtag('config', 'G-2YV09HMHWK', {page_location:location.origin+location.pathname,page_referrer:document.referrer.split('?')[0].split('#')[0]});
-  (function(){
-    function loadGoogleTag(){
-      if(document.querySelector('script[data-kp-google-tag]')) return;
-      var script=document.createElement('script');
-      script.async=true;
-      script.src='https://www.googletagmanager.com/gtag/js?id=AW-16989542935';
-      script.setAttribute('data-kp-google-tag','1');
-      document.head.appendChild(script);
-    }
-    function scheduleGoogleTag(){
-      // Keep third-party analytics off the initial mobile rendering path.
-      // Events are queued in dataLayer until the shared Google tag is ready.
-      window.addEventListener('pointerdown',loadGoogleTag,{once:true,passive:true});
-      window.addEventListener('keydown',loadGoogleTag,{once:true});
-      setTimeout(function(){
-        if('requestIdleCallback' in window) requestIdleCallback(loadGoogleTag,{timeout:2000});
-        else loadGoogleTag();
-      },6000);
-    }
-    if(document.readyState==='complete') scheduleGoogleTag();
-    else window.addEventListener('load',scheduleGoogleTag,{once:true});
-  })();
-</script>
+<script src="/privacy.js"></script>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${blogEsc(title)}</title>
 <meta name="description" content="${blogEsc(desc)}">
@@ -443,6 +437,66 @@ const server = http.createServer(async (req, res) => {
   const privatePaths = ['/admin', '/api/', '/health', '/odeme', '/panel-giris', '/sifre-sifirla'];
   if (privatePaths.some(p => parsed.pathname === p || parsed.pathname.startsWith(p))) {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+  }
+
+  if ((parsed.pathname === '/privacy.js' || parsed.pathname === '/legal-content.js') && (req.method === 'GET' || req.method === 'HEAD')) {
+    const body = parsed.pathname === '/privacy.js' ? fs.readFileSync(path.join(__dirname, 'privacy.js')) : 'window.KH_POLICY_CONTENT=' + JSON.stringify(legal.policies) + ';';
+    res.writeHead(200, { 'Content-Type': 'application/javascript; charset=utf-8', 'Cache-Control': 'no-cache', 'X-Content-Type-Options': 'nosniff' });
+    res.end(req.method === 'HEAD' ? undefined : body); return;
+  }
+  if (parsed.pathname.startsWith('/yasal/') && (req.method === 'GET' || req.method === 'HEAD')) {
+    const body = legal.page(parsed.pathname.slice('/yasal/'.length));
+    res.writeHead(body ? 200 : 404, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache', 'X-Robots-Tag': 'noindex, follow' });
+    res.end(req.method === 'HEAD' ? undefined : body || 'Sayfa bulunamadı'); return;
+  }
+  const memberPaths = ['/api/fatura/kaydet', '/api/odeme-token', '/api/sifre-degistir', '/api/urunler/kaydet', '/api/urunler/yukle', '/api/urunler/sil', '/api/member/oturum', '/api/member/cikis', '/api/member/veri-talebi', '/api/member/odeme-onay', '/odeme'];
+  if (memberPaths.includes(parsed.pathname)) {
+    res.setHeader('Cache-Control', 'no-store');
+    if (req.method !== 'GET' && req.method !== 'HEAD' && !adminOriginGecerli(req)) { jsonResponse(res, 403, { error: 'İstek kaynağı doğrulanamadı' }); return; }
+    req.member = await members.member(req);
+    if (!req.member) {
+      if (parsed.pathname === '/odeme') { res.writeHead(302, { Location: '/?trial=1&from=payment_login' }); res.end(); }
+      else jsonResponse(res, 401, { error: 'Güvenli oturum için yeniden giriş yapın' });
+      return;
+    }
+    const suppliedEmail = parsed.query.email;
+    if (suppliedEmail !== undefined && suppliedEmail !== req.member.email) { jsonResponse(res, 403, { error: 'Bu hesaba erişim yetkiniz yok' }); return; }
+    parsed.query.email = req.member.email;
+    if (parsed.pathname === '/odeme' || parsed.pathname === '/api/odeme-token') {
+      const c = req.member.checkoutConsent;
+      if (!c || c.version !== legal.VERSION || new Date(c.acceptedAt).getTime() < Date.now() - 30 * 60000) {
+        if (parsed.pathname === '/odeme') { res.writeHead(302, { Location: '/?odeme=onaygerekli' }); res.end(); }
+        else jsonResponse(res, 400, { error: 'Ödeme öncesi güncel belgeleri inceleyip kabul edin' });
+        return;
+      }
+    }
+
+    if (req.method === 'POST') {
+      const body = await getBody(req);
+      if (body.email !== undefined && body.email !== req.member.email) { jsonResponse(res, 403, { error: 'Bu hesaba erişim yetkiniz yok' }); return; }
+      body.email = req.member.email;
+    }
+  }
+  if (parsed.pathname === '/api/member/oturum' && req.method === 'GET') { jsonResponse(res, 200, { user: publicMember(req.member) }); return; }
+  if (parsed.pathname === '/api/member/cikis' && req.method === 'POST') { await members.logout(req, res); jsonResponse(res, 200, { ok: true }); return; }
+  if (parsed.pathname === '/api/member/odeme-onay' && req.method === 'POST') {
+    const body = await getBody(req);
+    if (body.version !== legal.VERSION) { jsonResponse(res, 400, { error: 'Güncel belgeleri inceleyip kabul edin' }); return; }
+    const consent = { version: legal.VERSION, acceptedAt: new Date(), product: 'KomisyonHesap Premium 365 gün', total: 1500, currency: 'TRY' };
+    await db.collection('users').updateOne({ _id: req.member._id }, { $set: { checkoutConsent: consent } });
+    await db.collection('legalAcceptances').insertOne({ email: req.member.email, ...consent, documents: { onbilgi: legal.policies.onbilgi, mesafeli: legal.policies.mesafeli, teslimat: legal.policies.teslimat } });
+    jsonResponse(res, 200, { ok: true }); return;
+  }
+  if (parsed.pathname === '/api/member/veri-talebi' && req.method === 'POST') {
+    const body = await getBody(req);
+    if (!['silme', 'erisim', 'duzeltme'].includes(body.tip)) { jsonResponse(res, 400, { error: 'Geçerli bir talep türü seçin' }); return; }
+    const ticket = crypto.randomBytes(12).toString('hex');
+    await db.collection('privacyRequests').insertOne({ ticket, email: req.member.email, tip: body.tip, aciklama: String(body.aciklama || '').slice(0, 3000), status: 'bekliyor', createdAt: new Date() });
+    jsonResponse(res, 200, { ok: true, ticket }); return;
+  }
+  if (['/api/kayit', '/api/giris', '/api/sifre-sifirla-mail', '/api/sifre-sifirla-token'].includes(parsed.pathname) && req.method === 'POST') {
+    if (!adminOriginGecerli(req)) { jsonResponse(res, 403, { error: 'İstek kaynağı doğrulanamadı' }); return; }
+    if (!members.allow(req, parsed.pathname, parsed.pathname.includes('sifirla-mail') ? 4 : 15)) { jsonResponse(res, 429, { error: 'Çok fazla deneme yapıldı. Bir süre sonra tekrar deneyin' }); return; }
   }
 
   // Public-only immutable assets and precompressed pages; private routes stay untouched.
@@ -534,7 +588,7 @@ const server = http.createServer(async (req, res) => {
   // Health check
   if (parsed.pathname === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ status: 'ok', mongo: db ? 'connected' : 'disconnected' }));
+    res.end(JSON.stringify({ status: 'ok', mongo: db ? 'connected' : 'disconnected', securityVersion: '2026-11-18', passwordMigrationComplete }));
     return;
   }
 
@@ -558,58 +612,26 @@ const server = http.createServer(async (req, res) => {
     return { trialAktif: aktif, trialBitti: !aktif, trialBitisTarihi: bitis, trialKalanGun: kalanGun };
   }
 
-  // Kayıt ol
+  // Kayıt ol: hiçbir parola açık metin olarak kaydedilmez.
   if (parsed.pathname === '/api/kayit' && req.method === 'POST') {
     const body = await getBody(req);
-    const { ad, email, sifre } = body;
-    if (!ad || !email || !sifre) {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Tüm alanlar gerekli' })); return;
-    }
-    if (!db) { res.writeHead(500); res.end(JSON.stringify({ error: 'DB bağlantısı yok' })); return; }
-    const mevcut = await db.collection('users').findOne({ email });
-    if (mevcut) {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Bu e-posta zaten kayıtlı' })); return;
-    }
-    const user = { ad, email, sifre, premium: false, kayitTarihi: new Date(), odemeTarihi: null, uyelikBitis: null, trialBaslangic: new Date(), loginCount: 0 };
-    await db.collection('users').insertOne(user);
-    const trial = trialDurumuHesapla(user);
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true, user: { ad, email, premium: false, trialAktif: trial.trialAktif, trialBitti: trial.trialBitti, trialBitisTarihi: trial.trialBitisTarihi, trialKalanGun: trial.trialKalanGun } }));
-    return;
+    if (typeof body.ad !== 'string' || !body.ad.trim() || body.ad.length > 200 || !validEmail(body.email) || !validPassword(body.sifre)) { jsonResponse(res, 400, { error: 'Ad, geçerli e-posta ve en az 8 karakterli şifre gerekli' }); return; }
+    if (!db) { jsonResponse(res, 503, { error: 'Hizmet hazırlanıyor. Lütfen tekrar deneyin' }); return; }
+    if (await findMember(body.email)) { jsonResponse(res, 400, { error: 'Bu e-posta zaten kayıtlı' }); return; }
+    if (body.termsVersion !== '2026-11-18') { jsonResponse(res, 400, { error: 'Kullanım koşullarını okuyup kabul edin' }); return; }
+    const user = { ad: body.ad.trim(), email: body.email.trim().toLowerCase(), passwordHash: await hashPassword(body.sifre), premium: false, kayitTarihi: new Date(), odemeTarihi: null, uyelikBitis: null, trialBaslangic: new Date(), loginCount: 0, termsVersion: body.termsVersion, termsAcceptedAt: new Date(), privacyNoticeVersion: '2026-11-18' };
+    const inserted = await db.collection('users').insertOne(user); user._id = inserted.insertedId;
+    await members.issue(req, res, user, false);
+    jsonResponse(res, 200, { ok: true, user: publicMember(user) }); return;
   }
-
-  // Giriş yap
   if (parsed.pathname === '/api/giris' && req.method === 'POST') {
     const body = await getBody(req);
-    const { email, sifre } = body;
-    if (!db) { res.writeHead(500); res.end(JSON.stringify({ error: 'DB bağlantısı yok' })); return; }
-    const user = await db.collection('users').findOne({ email, sifre });
-    if (!user) {
-      res.writeHead(401, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'E-posta veya şifre hatalı' })); return;
-    }
-    // Yalnızca doğru e-posta ve parolayla tamamlanan girişleri say.
-    try {
-      await db.collection('users').updateOne({ _id: user._id }, { $inc: { loginCount: 1 } });
-    } catch { console.error('Giriş sayacı güncellenemedi.'); }
-    // Premium süresi dolduysa otomatik düşür
-    let effPremium = user.premium;
-    if (effPremium && user.uyelikBitis && new Date(user.uyelikBitis) < new Date()) {
-      effPremium = false;
-      try { await db.collection('users').updateOne({ email }, { $set: { premium: false } }); } catch (e) {}
-    }
-    // Gerçek premium değilse deneme süresini kontrol et
-    let trialAktif = false, trialBitti = false, trialKalanGun = 0, trialBitisTarihi = null;
-    if (!effPremium) {
-      const trial = trialDurumuHesapla(user);
-      trialAktif = trial.trialAktif; trialBitti = trial.trialBitti; trialKalanGun = trial.trialKalanGun; trialBitisTarihi = trial.trialBitisTarihi;
-      if (trialAktif) effPremium = true; // deneme süresince tam erişim
-    }
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true, user: { ad: user.ad, email: user.email, premium: effPremium, odemeTarihi: user.odemeTarihi, uyelikBitis: user.uyelikBitis, fatura: user.fatura || null, trialAktif, trialBitti, trialKalanGun, trialBitisTarihi } }));
-    return;
+    if (!db) { jsonResponse(res, 503, { error: 'Hizmet hazırlanıyor. Lütfen tekrar deneyin' }); return; }
+    const user = await findMember(body.email);
+    if (!(await checkPassword(db, user, body.sifre))) { jsonResponse(res, 401, { error: 'E-posta veya şifre hatalı' }); return; }
+    await db.collection('users').updateOne({ _id: user._id }, { $inc: { loginCount: 1 } });
+    await members.issue(req, res, user, body.remember === true);
+    jsonResponse(res, 200, { ok: true, user: publicMember(user) }); return;
   }
 
   // Fatura bilgilerini kaydet
@@ -635,7 +657,7 @@ const server = http.createServer(async (req, res) => {
     const reqProto = (req.headers['x-forwarded-proto'] || '').split(',')[0].trim() || 'https';
     const reqHost = req.headers.host;
     const baseUrl = (reqHost ? reqProto + '://' + reqHost : null) || process.env.BASE_URL || process.env.RENDER_EXTERNAL_URL || 'https://komisyonhesap.com';
-    const callbackUrl = baseUrl + '/api/odeme-callback?email=' + encodeURIComponent(email);
+    const callbackUrl = baseUrl + '/api/odeme-callback';
     const { faturaAd, faturaTc, faturaVkn, faturaVd, faturaTel, faturaIl, faturaIlce, faturaAdres, faturaEmail } = body;
     // Fatura bilgilerini DB'ye kaydet
     if (faturaAd && faturaTc) {
@@ -658,7 +680,7 @@ const server = http.createServer(async (req, res) => {
 
     const request = {
       locale: 'tr',
-      conversationId: 'kp_' + Date.now(),
+      conversationId: 'kp_' + crypto.randomBytes(16).toString('hex'),
       price: '1500.00',
       paidPrice: '1500.00',
       currency: 'TRY',
@@ -697,13 +719,18 @@ const server = http.createServer(async (req, res) => {
       ]
     };
 
-    iyzipay.checkoutFormInitialize.create(request, function(err, result) {
+    iyzipay.checkoutFormInitialize.create(request, async function(err, result) {
       if (err) {
         console.error('iyzico hata:', err);
         res.writeHead(500); res.end(JSON.stringify({ error: 'iyzico bağlantı hatası: ' + err.message }));
         return;
       }
-      console.log('iyzico token yanıtı:', JSON.stringify(result).substring(0, 300));
+      if (result?.status === 'success' && typeof result.token === 'string') {
+        try {
+          await db.collection('pendingPayments').updateOne({ _id: crypto.createHash('sha256').update(result.token).digest('hex') }, { $setOnInsert: { email, conversationId: request.conversationId, basketId: request.basketId, total: 1500, currency: 'TRY', legalVersion: legal.VERSION, createdAt: new Date(), processed: false } }, { upsert: true });
+        } catch (e) { jsonResponse(res, 503, { error: 'Ödeme kaydı hazırlanamadı. Lütfen yeniden deneyin.' }); return; }
+      }
+      console.log('iyzico ödeme formu durumu:', result?.status);
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(result));
     });
@@ -712,7 +739,7 @@ const server = http.createServer(async (req, res) => {
 
   // ── iyzico Callback (ödeme sonucu) ──
   if (parsed.pathname === '/api/odeme-callback') {
-    const email = parsed.query.email;
+    // The payment token, not a query-string email, identifies the buyer.
 
     // iyzico POST ile form-urlencoded token gönderir
     let rawBody = '';
@@ -720,23 +747,31 @@ const server = http.createServer(async (req, res) => {
     const params = new URLSearchParams(rawBody);
     const token = params.get('token') || parsed.query.token || '';
 
-    if (!token) {
+    if (!token || token.length > 1024 || !db) {
       res.writeHead(400); res.end(JSON.stringify({ error: 'Token yok' })); return;
     }
 
-    iyzipay.checkoutForm.retrieve({ locale: 'tr', conversationId: 'kp_cb_' + Date.now(), token }, async function(err, result) {
+    const pendingId = crypto.createHash('sha256').update(token).digest('hex');
+    const pending = await db.collection('pendingPayments').findOne({ _id: pendingId });
+    if (!pending) { jsonResponse(res, 400, { error: 'Doğrulanmış sipariş kaydı bulunamadı' }); return; }
+    const email = pending.email;
+    if (pending.processed) { res.writeHead(303, { Location: '/?odeme=basarili', 'Cache-Control': 'no-store' }); res.end(); return; }
+    iyzipay.checkoutForm.retrieve({ locale: 'tr', conversationId: pending.conversationId, token }, async function(err, result) {
       if (err) {
         console.error('iyzico callback hata:', err);
         const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><script>window.location.href='https://komisyonhesap.com?odeme=hata';<\/script></head><body></body></html>`;
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end(html); return;
       }
-      console.log('iyzico callback yaniti:', JSON.stringify(result).substring(0, 300));
-      const basarili = result.status === 'success' && result.paymentStatus === 'SUCCESS';
+      console.log('iyzico ödeme sonucu:', result?.paymentStatus);
+      const basarili = result.status === 'success' && result.paymentStatus === 'SUCCESS' && Number(result.price) === pending.total && Number(result.paidPrice) >= pending.total && result.currency === pending.currency && result.basketId === pending.basketId && typeof result.paymentId === 'string';
       if (basarili && email && db) {
-        const odemeTarihi = new Date();
-        const uyelikBitis = new Date();
-        uyelikBitis.setFullYear(uyelikBitis.getFullYear() + 1);
+        const now = new Date(), end = new Date(now); end.setFullYear(end.getFullYear() + 1);
+        await db.collection('paymentReceipts').updateOne({ _id: result.paymentId }, { $setOnInsert: { email, paidAt: now, expiresAt: end, total: pending.total, paidTotal: Number(result.paidPrice), currency: pending.currency, legalVersion: pending.legalVersion } }, { upsert: true });
+        const receipt = await db.collection('paymentReceipts').findOne({ _id: result.paymentId });
+        if (!receipt || receipt.email !== email) { jsonResponse(res, 400, { error: 'Ödeme sahipliği doğrulanamadı' }); return; }
+        const odemeTarihi = receipt.paidAt;
+        const uyelikBitis = receipt.expiresAt;
         const user = await db.collection('users').findOne({ email });
         await db.collection('users').updateOne(
           { email },
@@ -744,6 +779,7 @@ const server = http.createServer(async (req, res) => {
         );
 
         // Premium teşekkür maili gönder
+        await db.collection('pendingPayments').updateOne({ _id: pendingId }, { $set: { processed: true, processedAt: new Date(), paymentId: result.paymentId } });
         if (RESEND_API_KEY) {
           const ad = user ? user.ad : email;
           const bitisTarihi = uyelikBitis.toLocaleDateString('tr-TR');
@@ -761,7 +797,7 @@ const server = http.createServer(async (req, res) => {
                   <div style="font-size:14px;color:rgba(255,255,255,.5)">komisyonhesap.com</div>
                 </div>
                 <div style="padding:2rem;border:1px solid #eee;border-top:none;border-radius:0 0 16px 16px">
-                  <p style="font-size:15px;color:#374151;margin-bottom:1rem">Merhaba <strong>${ad}</strong>,</p>
+                  <p style="font-size:15px;color:#374151;margin-bottom:1rem">Merhaba <strong>${blogEsc(ad)}</strong>,</p>
                   <p style="font-size:14px;color:#6B7280;line-height:1.7;margin-bottom:1.5rem">
                     Premium üyeliğiniz başarıyla aktive edildi. Artık Trendyol'daki tüm ürünlerinizin gerçek net karını görebilirsiniz.
                   </p>
@@ -794,7 +830,7 @@ const server = http.createServer(async (req, res) => {
           }).catch(e => console.error('Premium mail hatası:', e.message));
         }
 
-        const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><script>window.location.href='https://komisyonhesap.com?odeme=basarili&email=${encodeURIComponent(email)}';<\/script></head><body></body></html>`;
+        const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><script>window.location.href='https://komisyonhesap.com?odeme=basarili';<\/script></head><body></body></html>`;
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end(html);
       } else {
@@ -825,6 +861,7 @@ const server = http.createServer(async (req, res) => {
   if (parsed.pathname === '/api/urunler/kaydet' && req.method === 'POST') {
     const body = await getBody(req);
     const { email, urunler } = body;
+    if (!Array.isArray(urunler) || urunler.length > 25000) { jsonResponse(res, 400, { error: 'Geçerli ürün listesi gerekli' }); return; }
     if (!email || !db) { res.writeHead(400); res.end(JSON.stringify({ error: 'Hata' })); return; }
     await db.collection('urunler').updateOne(
       { email },
@@ -879,20 +916,14 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Şifre değiştir
+  // Şifre değiştir: aktif oturum ve mevcut parola birlikte doğrulanır.
   if (parsed.pathname === '/api/sifre-degistir' && req.method === 'POST') {
-    const body = await getBody(req);
-    const { email, eskiSifre, yeniSifre } = body;
-    if (!db) { res.writeHead(500); res.end(JSON.stringify({ error: 'DB bağlantısı yok' })); return; }
-    const user = await db.collection('users').findOne({ email, sifre: eskiSifre });
-    if (!user) {
-      res.writeHead(401, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: 'Mevcut şifre hatalı' })); return;
-    }
-    await db.collection('users').updateOne({ email }, { $set: { sifre: yeniSifre } });
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ ok: true }));
-    return;
+    const body = await getBody(req), user = req.member;
+    if (!validPassword(body.yeniSifre)) { jsonResponse(res, 400, { error: 'Yeni şifre en az 8 karakter olmalı' }); return; }
+    if (!(await checkPassword(db, user, body.eskiSifre))) { jsonResponse(res, 401, { error: 'Mevcut şifre hatalı' }); return; }
+    await db.collection('users').updateOne({ _id: user._id }, { $set: { passwordHash: await hashPassword(body.yeniSifre) }, $unset: { sifre: '' } });
+    await members.revoke(user.email); await members.issue(req, res, user, false);
+    jsonResponse(res, 200, { ok: true }); return;
   }
 
   // ── Şifremi Unuttum — Mail Gönder ──
@@ -900,14 +931,12 @@ const server = http.createServer(async (req, res) => {
     const body = await getBody(req);
     const { email } = body;
     if (!db) { res.writeHead(500); res.end(JSON.stringify({ error: 'DB bağlantısı yok' })); return; }
-    const user = await db.collection('users').findOne({ email });
-    if (!user) {
-      res.writeHead(404); res.end(JSON.stringify({ error: 'Bu e-posta ile kayıtlı hesap bulunamadı.' })); return;
-    }
+    const user = await findMember(email);
+    if (!user) { jsonResponse(res, 200, { ok: true }); return; }
     // Token üret, 1 saat geçerli
     const token = crypto.randomBytes(32).toString('hex');
     const tokenExpiry = new Date(Date.now() + 60 * 60 * 1000);
-    await db.collection('users').updateOne({ email }, { $set: { resetToken: token, resetTokenExpiry: tokenExpiry } });
+    await db.collection('users').updateOne({ email }, { $set: { resetTokenHash: crypto.createHash('sha256').update(token).digest('hex'), resetTokenExpiry: tokenExpiry }, $unset: { resetToken: '' } });
 
     const baseUrl = process.env.RENDER_EXTERNAL_URL || 'https://komisyonhesap.com';
     const resetLink = baseUrl + '/sifre-sifirla?token=' + token;
@@ -922,7 +951,7 @@ const server = http.createServer(async (req, res) => {
           subject: 'Şifre Sıfırlama Talebi',
           html: '<div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;padding:24px">'
             + '<h2 style="color:#F27A1A">Şifre Sıfırlama</h2>'
-            + '<p>Merhaba <strong>' + (user.ad || '') + '</strong>,</p>'
+            + '<p>Merhaba <strong>' + blogEsc(user.ad || '') + '</strong>,</p>'
             + '<p>Şifrenizi sıfırlamak için aşağıdaki butona tıklayın. Bu link <strong>1 saat</strong> geçerlidir.</p>'
             + '<a href="' + resetLink + '" style="display:inline-block;padding:14px 28px;background:#F27A1A;color:#fff;border-radius:10px;text-decoration:none;font-weight:bold;margin:16px 0">Şifremi Sıfırla →</a>'
             + '<p style="color:#999;font-size:12px">Bu talebi siz yapmadıysanız bu e-postayı görmezden gelebilirsiniz.</p>'
@@ -940,6 +969,7 @@ const server = http.createServer(async (req, res) => {
   // ── Şifre Sıfırlama Sayfası ──
   if (parsed.pathname === '/sifre-sifirla' && req.method === 'GET') {
     const token = parsed.query.token || '';
+    if (typeof token !== 'string' || !/^[a-f0-9]{64}$/.test(token)) { res.writeHead(400); res.end('Geçersiz sıfırlama bağlantısı'); return; }
     const resetHtml = `<!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -1013,20 +1043,24 @@ async function sifirla(){
   if (parsed.pathname === '/api/sifre-sifirla-token' && req.method === 'POST') {
     const body = await getBody(req);
     const { token, yeniSifre } = body;
-    if (!db || !token || !yeniSifre || yeniSifre.length < 6) {
+    if (!db || !token || !validPassword(yeniSifre)) {
       res.writeHead(400); res.end(JSON.stringify({ error: 'Geçersiz istek' })); return;
     }
-    const user = await db.collection('users').findOne({ resetToken: token });
+    if (typeof token !== 'string' || !/^[a-f0-9]{64}$/.test(token)) { jsonResponse(res, 400, { error: 'Geçersiz bağlantı' }); return; }
+    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+    const user = await db.collection('users').findOne({ resetTokenHash: tokenHash, resetTokenExpiry: { $gt: new Date() } });
     if (!user) {
       res.writeHead(400); res.end(JSON.stringify({ error: 'Geçersiz veya süresi dolmuş link.' })); return;
     }
     if (new Date() > new Date(user.resetTokenExpiry)) {
       res.writeHead(400); res.end(JSON.stringify({ error: 'Sıfırlama linkinizin süresi dolmuş. Lütfen tekrar talep edin.' })); return;
     }
-    await db.collection('users').updateOne(
-      { resetToken: token },
-      { $set: { sifre: yeniSifre }, $unset: { resetToken: '', resetTokenExpiry: '' } }
+    const reset = await db.collection('users').findOneAndUpdate(
+      { _id: user._id, resetTokenHash: tokenHash, resetTokenExpiry: { $gt: new Date() } },
+      { $set: { passwordHash: await hashPassword(yeniSifre) }, $unset: { sifre: '', resetToken: '', resetTokenHash: '', resetTokenExpiry: '' } }
     );
+    if (!reset) { jsonResponse(res, 400, { error: 'Bağlantı daha önce kullanılmış veya süresi dolmuş' }); return; }
+    await members.revoke(user.email);
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ ok: true }));
     return;
@@ -1073,14 +1107,21 @@ async function sifirla(){
     return;
   }
 
+  if (parsed.pathname === '/admin/veri-talepleri' && req.method === 'GET') {
+    if (!(await adminOturumGecerli(req))) { res.writeHead(302, { Location: '/admin' }); res.end(); return; }
+    const requests = await db.collection('privacyRequests').find({}).sort({ createdAt: -1 }).limit(200).toArray();
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' });
+    res.end('<!doctype html><html lang="tr"><meta charset="utf-8"><title>Veri başvuruları</title><body style="font:16px/1.7 system-ui;max-width:1000px;margin:30px auto"><a href="/admin">Yönetim paneli</a><h1>Kişisel veri başvuruları</h1><p>Kimlik doğrulaması ve yasal saklama yükümlülükleri değerlendirilerek başvuruyu yanıtlayın. Kullanıcı silme işlemi bağlı ürünleri ve oturumları da kaldırır.</p>' + requests.map(r => '<article style="border:1px solid #ddd;padding:20px;margin:15px 0"><h2>' + blogEsc(r.tip) + '</h2><p>' + blogEsc(r.email) + ' · ' + blogEsc(r.ticket) + ' · ' + blogEsc(r.status) + '</p><p>' + blogEsc(r.aciklama) + '</p><time>' + blogEsc(new Date(r.createdAt).toISOString()) + '</time></article>').join('') + '</body></html>'); return;
+  }
   // Admin - tüm kullanıcılar
   if (parsed.pathname === '/api/admin/users' && req.method === 'GET') {
     if (!(await adminOturumGecerli(req))) {
       res.writeHead(401); res.end(JSON.stringify({ error: 'Yetkisiz' })); return;
     }
     if (!db) { res.writeHead(500); res.end(JSON.stringify({ error: 'DB yok' })); return; }
-    const users = await db.collection('users').find({}, { projection: { sifre: 0 } }).sort({ kayitTarihi: -1 }).toArray();
-    const usersWithTrial = users.map(u => {
+    const users = await db.collection('users').find({}, { projection: { sifre: 0, passwordHash: 0, resetToken: 0, resetTokenHash: 0, resetTokenExpiry: 0 } }).sort({ kayitTarihi: -1 }).toArray();
+    const usersWithTrial = users.map(raw => {
+      const { sifre, passwordHash, resetToken, resetTokenHash, resetTokenExpiry, ...u } = raw;
       if (!u.premium) {
         const t = trialDurumuHesapla(u);
         return Object.assign({}, u, { trialAktif: t.trialAktif, trialKalanGun: t.trialKalanGun, trialBitisTarihi: t.trialBitisTarihi });
@@ -1117,9 +1158,10 @@ async function sifirla(){
       res.writeHead(401); res.end(JSON.stringify({ error: 'Yetkisiz' })); return;
     }
     const { email, yeniSifre } = body;
-    if(typeof email!=='string'||typeof yeniSifre!=='string'||yeniSifre.length<6){res.writeHead(400,{'Content-Type':'application/json'});res.end(JSON.stringify({error:'Şifre en az 6 karakter olmalı'}));return;}
+    if(typeof email!=='string'||!validPassword(yeniSifre)){res.writeHead(400,{'Content-Type':'application/json'});res.end(JSON.stringify({error:'Şifre en az 6 karakter olmalı'}));return;}
     const mevcut=await db.collection('users').findOne({email});if(!mevcut){res.writeHead(404,{'Content-Type':'application/json'});res.end(JSON.stringify({error:'Kullanıcı bulunamadı'}));return;}
-    await db.collection('users').updateOne({ email }, { $set: { sifre: yeniSifre } });
+    await db.collection('users').updateOne({ email }, { $set: { passwordHash: await hashPassword(yeniSifre) }, $unset: { sifre: '' } });
+    await members.revoke(email);
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ ok: true }));
     return;
@@ -1131,6 +1173,9 @@ async function sifirla(){
     if (!(await adminOturumGecerli(req))) {
       res.writeHead(401); res.end(JSON.stringify({ error: 'Yetkisiz' })); return;
     }
+    if (!validEmail(body.email)) { jsonResponse(res, 400, { error: 'Geçersiz hesap' }); return; }
+    await db.collection('urunler').deleteMany({ email: body.email });
+    await members.revoke(body.email);
     await db.collection('users').deleteOne({ email: body.email });
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ ok: true }));
@@ -1416,7 +1461,7 @@ header{background:#fff;border-bottom:1px solid #E5E7EB;padding:0 2rem;height:64p
 <header>
   <a href="javascript:history.back()" class="back-btn">← Geri Dön</a>
   <a href="https://komisyonhesap.com" class="logo">komisyon<em>hesap</em></a>
-  <div class="secure-badge">🔒 256-bit SSL Güvenli</div>
+  <div class="secure-badge">🔒 HTTPS bağlantısı</div>
 </header>
 
 <div class="main">
@@ -1439,7 +1484,7 @@ header{background:#fff;border-bottom:1px solid #E5E7EB;padding:0 2rem;height:64p
       </div>
     </div>
     <div class="trust-card">
-      <div class="trust-item"><span class="trust-icon">🔒</span> 256-bit SSL şifreleme ile güvende</div>
+      <div class="trust-item"><span class="trust-icon">🔒</span> HTTPS üzerinden şifreli bağlantı</div>
       <div class="trust-item"><span class="trust-icon">🛡️</span> iyzico lisanslı ödeme altyapısı</div>
       <div class="trust-item"><span class="trust-icon">⚡</span> Ödeme onaylanır onaylanmaz aktif</div>
       <div class="trust-item"><span class="trust-icon">📧</span> Destek: info@komisyonhesap.com</div>
@@ -1510,7 +1555,7 @@ async function odemeSayfasiYukle(){
 window.iyziEventSubscribe = function(e){
   if(e && e.status === 'success'){
     localStorage.removeItem('kp_fatura');
-    window.location.href = 'https://komisyonhesap.com?odeme=basarili&email=' + encodeURIComponent(email);
+    window.location.href = 'https://komisyonhesap.com?odeme=basarili';
   } else if(e && e.status === 'failure'){
     window.location.href = 'https://komisyonhesap.com?odeme=basarisiz';
   }
@@ -1904,7 +1949,7 @@ tr:hover td{background:#FCF8F4}
       </button>
     </nav>
     <div class="sidebar-footer">
-      <button class="btn-logout" onclick="adminCikis()">🚪 Çıkış Yap</button>
+      <a href="/admin/veri-talepleri" style="color:inherit;margin-right:16px">Veri başvuruları</a><button class="btn-logout" onclick="adminCikis()">🚪 Çıkış Yap</button>
     </div>
   </div>
 

@@ -1,18 +1,7 @@
 const {test}=require('node:test');const assert=require('node:assert/strict');
 const vm=require('node:vm'),fs=require('node:fs'),path=require('node:path'),{Readable}=require('node:stream');
 
-function memory(){
- const stores={};const match=(r,q)=>Object.entries(q).every(([k,v])=>k==='$or'?v.some(x=>match(r,x)):k==='_id'?String(r[k])===String(v):v&&typeof v==='object'&&!(v instanceof Date)?Object.entries(v).every(([op,n])=>op==='$ne'?r[k]!==n:op==='$gt'?r[k]>n:op==='$lt'?r[k]<n:op==='$lte'?r[k]<=n:false):r[k]===v);
- return {stores,collection(name){const rows=stores[name]||(stores[name]=[]);const apply=(r,u,fresh)=>{if(fresh)Object.assign(r,u.$setOnInsert);Object.assign(r,u.$set||{});for(const [k,n]of Object.entries(u.$inc||{}))r[k]=(r[k]||0)+n;};return {
-  async createIndex(){},
-  async deleteOne(q){const i=rows.findIndex(r=>match(r,q));if(i>=0)rows.splice(i,1);return{};},
-  async insertOne(r){const d={_id:'user-'+rows.length,...r};rows.push(d);return {insertedId:d._id};},
-  async findOne(q){return rows.find(r=>match(r,q))||null;},
-  async updateOne(q,u,opt={}){let r=rows.find(x=>match(x,q));const fresh=!r;if(!r){if(!opt.upsert)return {};r={_id:(rows.length+1).toString(16).padStart(24,'0'),...q};rows.push(r);}apply(r,u,fresh);return{};},
-  async findOneAndUpdate(q,u){const r=rows.find(x=>match(x,q));if(!r)return null;apply(r,u,false);return {...r};},
-  find(q={}){const c={sort(){return c;},project(){return c;},limit(){return c;},async toArray(){return rows.filter(r=>match(r,q));}};return c;}
- };}};
-}
+const {memory,app}=require('./test-server.cjs');
 test('session survives page reload and server restart; logout revokes the cookie',async()=>{
  const a=await app();
  assert.equal((await a.request('/api/admin/oturum')).status,401);
@@ -69,7 +58,7 @@ test('member management validates expiry and password, and preserves the payment
  assert.equal(a.db.stores.users[0].uyelikBitis.toISOString(),bitisTarihi);assert.equal(a.db.stores.users[0].odemeTarihi,payment);
  assert.equal((await a.request('/api/admin/premium',{email:'missing@example.com',aktif:true},headers)).status,404);
  assert.equal((await a.request('/api/admin/sifre-sifirla',{email:'member@example.com',yeniSifre:'short'},headers)).status,400);
- assert.equal((await a.request('/api/admin/sifre-sifirla',{email:'member@example.com',yeniSifre:'test-only-new'},headers)).status,200);assert.equal(a.db.stores.users[0].sifre,'test-only-new');
+ assert.equal((await a.request('/api/admin/sifre-sifirla',{email:'member@example.com',yeniSifre:'test-only-new'},headers)).status,200);assert.equal(a.db.stores.users[0].sifre,undefined);assert(await require('./member-security').verifyPassword('test-only-new',a.db.stores.users[0].passwordHash));
  assert.equal((await a.request('/api/admin/premium',{email:'member@example.com',aktif:false},headers)).status,200);assert.equal(a.db.stores.users[0].premium,false);assert.equal(a.db.stores.users[0].uyelikBitis,null);
 });
 test('member cards filter, search and sort safely; pagination resets on filtering',async()=>{
@@ -107,19 +96,7 @@ test('editor word counter and SEO preview use the actual form content',async()=>
  const ctx={document:{getElementById:get}};vm.createContext(ctx);vm.runInContext(code,ctx);ctx.blogYaziBilgisi();assert.match(els['blog-wordcount'].textContent,/3 kelime/);assert.match(els['blog-seo-url'].textContent,/kupon-maliyeti/);assert.match(els['blog-seo-title'].textContent,/KomisyonHesap/);assert.equal(els['blog-save'].textContent,'Yayınla');
  get('blog-yayinda').checked=false;ctx.blogYaziBilgisi();assert.equal(els['blog-save'].textContent,'Taslağı kaydet');
 });
-function res(){return {headers:{},setHeader(k,v){this.headers[k]=v;},writeHead(status,headers){this.status=status;Object.assign(this.headers,headers);},end(body){this.body=body;this.done?.();}};}
-async function app(sharedDb){
- const db=sharedDb||memory(),notices=[];let handler;let payment={status:'success',paymentStatus:'SUCCESS',paymentId:'p-1'};
- const context={__dirname,console:{log(){},error(){}},Buffer,URL,URLSearchParams,fetch:()=>{throw Error('No external mail in tests');},process:{env:{MONGO_URI:'test',ADMIN_SIFRE:'test-admin',IYZICO_API_KEY:'test',IYZICO_SECRET:'test'}},setTimeout,clearTimeout,setInterval:()=>({unref(){}}),require(name){
-  if(name==='http')return {createServer(h){handler=h;return {listen(){}};}};
-  if(name==='mongodb')return {ObjectId:class {constructor(v){this.v=v;}toString(){return this.v;}static isValid(v){return /^[a-f0-9]{24}$/.test(v);}},MongoClient:{connect:async()=>({db:()=>db})}};
-  if(name==='iyzipay')return function(){this.checkoutForm={retrieve(_p,cb){cb(null,payment);}};};
-  if(name==='./member-notifications')return {createMemberNotifications:()=>({flush:async()=>{},enqueue:async(...args)=>notices.push(args)})};
-  return require(name.startsWith('./')?path.join(__dirname,name):name);
- }};
- vm.runInNewContext(fs.readFileSync(path.join(__dirname,'server.js'),'utf8'),context);await new Promise(setImmediate);
- return {db,notices,setPayment(p){payment=p;},async request(url,body,headers={},method=body===undefined?'GET':'POST'){const req=Readable.from(body===undefined?[]:[typeof body==='string'?body:JSON.stringify(body)]);Object.assign(req,{url,method,headers,socket:{remoteAddress:'test'}});const r=res(),ended=new Promise(resolve=>r.done=resolve);await handler(req,r);await ended;await new Promise(setImmediate);return r;}};
-}
+
 
 
 test('consolidated articles redirect and stay absent from sitemap even if old DB entries are published',async()=>{

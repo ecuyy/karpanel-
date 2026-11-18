@@ -6,7 +6,7 @@ const code=html.slice(html.indexOf('let kayitIslemSuruyor=false;'),html.indexOf(
 function setup(fetch){
  const button={innerHTML:'Üye Ol',textContent:'',disabled:false};
  const form={attrs:{},querySelector:()=>button,setAttribute(k,v){this.attrs[k]=v;}};
- const elements={'auth-form-kayit':form,'kayit-ad':{value:'Test User'},'kayit-email':{value:'test@example.invalid'},'kayit-sifre':{value:'test-password'}};
+ const elements={'auth-form-kayit':form,'kayit-kosul':{checked:true},'kayit-ad':{value:'Test User'},'kayit-email':{value:'test@example.invalid'},'kayit-sifre':{value:'test-password'}};
  const events=[],errors=[],stored=[];let signups=0;
  const context={document:{getElementById:id=>elements[id]||{textContent:'',classList:{add(){}}}},PREMIUM_EMAILS:[],PROXY:'',fetchWithRetry:fetch,trackTrialStep:(...args)=>events.push(args),showAuthError:x=>errors.push(x),localStorage:{setItem:(...args)=>stored.push(args)},trackSignup(){signups++;},closeAuth(){},applyUser(){},setTimeout(){},toast(){},goApp(){}};
  vm.createContext(context);vm.runInContext(code,context);

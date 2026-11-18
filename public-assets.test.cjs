@@ -19,7 +19,7 @@ test('styles, executable scripts and images preserve their exact content', () =>
   assert.equal(request(cssURL).body.toString(),css);
   const critical=html.match(/<style data-kh-critical>([\s\S]*?)<\/style>/)[1];
   assert(critical.length<css.length*0.5);
-  const scripts = [...original.matchAll(/<script>([\s\S]*?)<\/script>/g)].slice(1).map(m => m[1]);
+  const scripts = [...original.matchAll(/<script>([\s\S]*?)<\/script>/g)].filter(m => m.index > original.indexOf('<body')).map(m => m[1]);
   const urls = [...html.matchAll(/<script defer src="([^\"]+)"><\/script>/g)].map(m => m[1]);
   assert.equal(urls.length, scripts.length);
   urls.forEach((url, i) => { const js = request(url).body.toString(); assert.equal(js, scripts[i]); new vm.Script(js); });
