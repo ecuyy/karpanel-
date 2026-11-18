@@ -369,6 +369,7 @@ function advantageExample() {
 
 const BLOG_HEAD = (title, desc, canonical, extra='', ogType='article') => `<!DOCTYPE html><html lang="tr"><head>
 <script src="/privacy.js"></script>
+<script defer src="/seller-sharing.js"></script>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${blogEsc(title)}</title>
 <meta name="description" content="${blogEsc(desc)}">
@@ -439,9 +440,14 @@ const server = http.createServer(async (req, res) => {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
   }
 
-  if ((parsed.pathname === '/privacy.js' || parsed.pathname === '/legal-content.js') && (req.method === 'GET' || req.method === 'HEAD')) {
-    const body = parsed.pathname === '/privacy.js' ? fs.readFileSync(path.join(__dirname, 'privacy.js')) : 'window.KH_POLICY_CONTENT=' + JSON.stringify(legal.policies) + ';';
+  if ((parsed.pathname === '/privacy.js' || parsed.pathname === '/seller-sharing.js' || parsed.pathname === '/legal-content.js') && (req.method === 'GET' || req.method === 'HEAD')) {
+    const body = parsed.pathname === '/legal-content.js' ? 'window.KH_POLICY_CONTENT=' + JSON.stringify(legal.policies) + ';' : fs.readFileSync(path.join(__dirname, parsed.pathname.slice(1)));
     res.writeHead(200, { 'Content-Type': 'application/javascript; charset=utf-8', 'Cache-Control': 'no-cache', 'X-Content-Type-Options': 'nosniff' });
+    res.end(req.method === 'HEAD' ? undefined : body); return;
+  }
+  if (parsed.pathname === '/downloads/trendyol-kar-hesaplama-ornek.xlsx' && (req.method === 'GET' || req.method === 'HEAD')) {
+    const body = fs.readFileSync(path.join(__dirname, 'downloads/trendyol-kar-hesaplama-ornek.xlsx'));
+    res.writeHead(200, { 'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'Content-Disposition': 'attachment; filename="trendyol-kar-hesaplama-ornek.xlsx"', 'Content-Length': body.length, 'Cache-Control': 'public, max-age=3600', 'X-Content-Type-Options': 'nosniff', 'X-Robots-Tag': 'noindex, follow' });
     res.end(req.method === 'HEAD' ? undefined : body); return;
   }
   if (parsed.pathname.startsWith('/yasal/') && (req.method === 'GET' || req.method === 'HEAD')) {
@@ -1336,11 +1342,14 @@ async function sifirla(){
           ${!isAdvantageGuide && /avantaj|kampanya|buybox|kupon/.test(slug) ? `<a href="${ADVANTAGE_URL}#teklif-karsilastirma">Avantajlı Etiket kâr karşılaştırması</a> ·` : ''}
           <a href="/trendyol-stopaj-hesaplama">Stopaj hesaplama</a> ·
           <a href="/trendyolda-zarar-eden-urun-nasil-bulunur">Excel ile zarar eden ürünleri bulma</a>
+          <p style="margin-top:12px"><a data-kh-excel href="/downloads/trendyol-kar-hesaplama-ornek.xlsx" download>Ücretsiz tek ürün kâr hesaplama Excel örneğini indir</a>. Formülleri açık dosyada kendi satış ve maliyetlerinizi deneyin.</p>
+          <div data-kh-sharing></div>
         </nav>
         <div style="margin-top:44px;padding:28px;background:linear-gradient(135deg,#FFF3E6,#FFE8D0);border-radius:18px;text-align:center">
           <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;color:#221A12;margin-bottom:8px">Önce tek ürünü ücretsiz hesapla, sonra tüm Excel'ini analiz et</div>
           <div style="color:#6B5E50;margin-bottom:18px">Komisyon, KDV, %1 stopaj, kargo ve hizmet bedeli sonrası net kârını gör. Kendi Excel'inle 3 günlük tam erişim denemesi de mevcut.</div>
-          <a href="/trendyol-komisyon-hesaplama" style="display:inline-block;padding:13px 28px;border-radius:12px;background:linear-gradient(180deg,#FF9A42,#F27A1A);color:#fff!important;font-weight:800;text-decoration:none!important">Ücretsiz Hesapla →</a>
+          <a href="/?trial=1&amp;from=blog_guide" style="display:inline-block;padding:13px 28px;border-radius:12px;background:linear-gradient(180deg,#FF9A42,#F27A1A);color:#fff!important;font-weight:800;text-decoration:none!important">Kendi Excel’inle 3 Gün Ücretsiz Dene →</a>
+          <p style="font-size:13px;margin-top:12px;color:#6B5E50">Kredi kartı gerekmez · Otomatik ödeme yok · Deneme sonrası yıllık 1.500 TL KDV dahil</p>
         </div>
       </article>
       <style>.bbody h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:#221A12;margin:34px 0 14px}.bbody h3{font-family:'Plus Jakarta Sans',sans-serif;font-size:20px;font-weight:700;color:#221A12;margin:26px 0 10px}.bbody p{margin:0 0 18px}.bbody ul{margin:0 0 18px;padding-left:24px}.bbody li{margin-bottom:8px}</style>`

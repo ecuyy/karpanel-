@@ -1,14 +1,14 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs'), vm = require('node:vm');
-function setup(saved) {
+function setup(saved, search = '') {
   const nodes = {}, added = [], storage = new Map(), cookies = new Map([['_ga_old', 'old']]); let reloads = 0;
   if (saved) storage.set('kh_privacy_v1', JSON.stringify({ version: '2026-11-18', at: Date.now(), ...saved }));
   const node = id => nodes[id] || (nodes[id] = { id, hidden: false, checked: false, events: {}, setAttribute(k, v) { this[k] = v; }, addEventListener(name, fn) { this.events[name] = fn; }, focus() {} });
   const document = { readyState: 'complete', referrer: '', head: { appendChild(n) { added.push(n); } }, body: { appendChild(n) { nodes[n.id] = n; } }, createElement: tag => ({ tag, setAttribute() {}, addEventListener(name, fn) { this.events = this.events || {}; this.events[name] = fn; } }), getElementById: node };
   Object.defineProperty(document, 'cookie', { get: () => [...cookies].map(([k, v]) => k + '=' + v).join(';'), set: text => { const name = text.split('=')[0]; if (text.includes('Max-Age=0')) cookies.delete(name); } });
-  const window = {}, location = { origin: 'https://komisyonhesap.com', pathname: '/', hostname: 'komisyonhesap.com', reload() { reloads++; } };
-  vm.runInNewContext(fs.readFileSync(__dirname + '/privacy.js', 'utf8'), { window, document, location, localStorage: { getItem: key => storage.get(key), setItem: (k, v) => storage.set(k, v) }, Date });
+  const window = {}, location = { origin: 'https://komisyonhesap.com', pathname: '/', search, hostname: 'komisyonhesap.com', reload() { reloads++; } };
+  vm.runInNewContext(fs.readFileSync(__dirname + '/privacy.js', 'utf8'), { window, document, location, URLSearchParams, localStorage: { getItem: key => storage.get(key), setItem: (k, v) => storage.set(k, v) }, Date });
   return { window, nodes, added, storage, cookies, get reloads() { return reloads; }, scripts: () => added.filter(n => n.tag === 'script'), click: id => node(id).events.click() };
 }
 test('before a choice and after rejection no Google code or queued event is created', () => {
@@ -18,6 +18,15 @@ test('before a choice and after rejection no Google code or queued event is crea
   a.click('kh-cookie-reject'); assert.equal(a.scripts().length, 0);
   assert.equal(a.cookies.size, 0); assert.equal(JSON.parse(a.storage.get('kh_privacy_v1')).analytics, false);
   assert.equal(setup({ analytics: false, marketing: false }).scripts().length, 0);
+});
+test('campaign attribution is consent-gated and excludes arbitrary query data', () => {
+  const search='?utm_source=ecuy_facebook&utm_medium=private-email&utm_campaign=secret&email=private@example.com&sale=1000&token=secret';
+  const no=setup(undefined,search);assert.equal(no.scripts().length,0);assert.equal(no.window.dataLayer.length,0);
+  const yes=setup({analytics:true,marketing:false},search);
+  const page=yes.window.dataLayer.find(row=>row[0]==='config')[2].page_location;
+  assert.equal(page,'https://komisyonhesap.com/?utm_source=ecuy_facebook&utm_medium=organic_social&utm_campaign=satici_araclari');
+  assert.equal(setup({analytics:true},'?utm_source=private@example.com').window.dataLayer.find(row=>row[0]==='config')[2].page_location,'https://komisyonhesap.com/');
+  assert(setup({analytics:true},'?from=excel_template').window.dataLayer.find(row=>row[0]==='config')[2].page_location.includes('utm_source=ucretsiz_excel'));
 });
 test('analytics and marketing are separate opt-ins and events follow the selected purpose', () => {
   const a = setup(); a.window.khOpenCookiePreferences();

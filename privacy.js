@@ -17,7 +17,19 @@
     raw('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
     raw('consent', 'update', { analytics_storage: prefs.analytics ? 'granted' : 'denied', ad_storage: prefs.marketing ? 'granted' : 'denied', ad_user_data: prefs.marketing ? 'granted' : 'denied', ad_personalization: prefs.marketing ? 'granted' : 'denied' });
     raw('js', new Date());
-    if (prefs.analytics) raw('config', 'G-2YV09HMHWK', { page_location: location.origin + location.pathname, page_referrer: document.referrer.split('?')[0].split('#')[0] });
+    if (prefs.analytics) {
+      // Keep only our public campaign names. Never send arbitrary query values,
+      // payment tokens, emails, or calculator inputs to analytics.
+      var page = location.origin + location.pathname;
+      try {
+        var query = new URLSearchParams(location.search);
+        var source = query.get('utm_source');
+        var sources = { ecuy_facebook: 'organic_social', whatsapp: 'referral', paylasim: 'referral' };
+        if (Object.prototype.hasOwnProperty.call(sources, source)) page += '?utm_source=' + source + '&utm_medium=' + sources[source] + '&utm_campaign=satici_araclari';
+        else if (query.get('from') === 'excel_template') page += '?utm_source=ucretsiz_excel&utm_medium=referral&utm_campaign=satici_araclari';
+      } catch (_) {}
+      raw('config', 'G-2YV09HMHWK', { page_location: page, page_referrer: document.referrer.split('?')[0].split('#')[0] });
+    }
     if (prefs.marketing) raw('config', 'AW-16989542935');
     var script = document.createElement('script'); script.async = true;
     script.src = 'https://www.googletagmanager.com/gtag/js?id=' + (prefs.analytics ? 'G-2YV09HMHWK' : 'AW-16989542935');

@@ -20,7 +20,7 @@ test('styles, executable scripts and images preserve their exact content', () =>
   const critical=html.match(/<style data-kh-critical>([\s\S]*?)<\/style>/)[1];
   assert(critical.length<css.length*0.5);
   const scripts = [...original.matchAll(/<script>([\s\S]*?)<\/script>/g)].filter(m => m.index > original.indexOf('<body')).map(m => m[1]);
-  const urls = [...html.matchAll(/<script defer src="([^\"]+)"><\/script>/g)].map(m => m[1]);
+  const urls = [...html.matchAll(/<script defer src="([^\"]+)"><\/script>/g)].map(m => m[1]).filter(url => url.startsWith('/assets/'));
   assert.equal(urls.length, scripts.length);
   urls.forEach((url, i) => { const js = request(url).body.toString(); assert.equal(js, scripts[i]); new vm.Script(js); });
   const images = [...original.matchAll(/data:image\/(png|jpeg|webp|svg\+xml);base64,([A-Za-z0-9+/=]+)/g)];
@@ -43,7 +43,7 @@ test('compressed representations roundtrip, respect q=0, and support conditional
   assert.equal(request('/', { 'accept-encoding': 'br;q=0.5,gzip;q=1' }).headers['Content-Encoding'], 'gzip');
   assert.equal(request('/', { 'if-none-match': '"other", ' + home.headers.ETag }).status, 304);
   assert.equal(request('/', {}, 'HEAD').body.length, 0);
-  const url = html.match(/<script defer src="([^\"]+)"/)[1];
+  const url = html.match(/<script defer src="(\/assets\/[^\"]+)"/)[1];
   assert.match(request(url).headers['Cache-Control'], /max-age=31536000, immutable/);
 });
 test('private routes, APIs, unknown assets and writes never enter the public cache', () => {
@@ -73,7 +73,7 @@ test('the public page paints before panel CSS and returning members load the com
   assert.doesNotMatch(home.headers.Link, /as=script/);
   assert.doesNotMatch(html, /rel="preload" as="script"/);
   assert.equal(request('/', {}, 'HEAD').headers.Link, home.headers.Link);
-  const scriptURL = html.match(/<script defer src="([^\"]+)"/)[1];
+  const scriptURL = html.match(/<script defer src="(\/assets\/[^\"]+)"/)[1];
   assert.equal(request(scriptURL).headers.Link, undefined);
   const bootstrap=html.match(/<script>(\(function\(\)\{try\{if\(localStorage[\s\S]*?)<\/script>/)[1];
   for(const member of [false,true]){
