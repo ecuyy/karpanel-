@@ -6,6 +6,7 @@
 
 - [Ana sayfa ve toplu kârlılık analizi](https://komisyonhesap.com/): Excel yükleme, toplu ürün analizi ve ürün bazında maliyet hesaplama.
 - [Trendyol komisyon hesaplama](https://komisyonhesap.com/trendyol-komisyon-hesaplama): Komisyon, KDV, stopaj, kargo ve hizmet bedeliyle net kâr hesaplama rehberi.
+- [Ücretsiz tek ürün Excel şablonu](https://komisyonhesap.com/downloads/trendyol-kar-hesaplama-ornek.xlsx): Üyelik veya e-posta vermeden indirilen, formülleri açık örnek kâr hesaplama dosyası.
 - [Trendyol maliyet hesaplama](https://komisyonhesap.com/trendyol-maliyet-hesaplama): Ürün maliyeti, başabaş satış fiyatı ve hedef kâr için gereken fiyatı hesaplayan ücretsiz araç.
 - [Trendyol net kâr hesaplama](https://komisyonhesap.com/trendyol-net-kar-hesaplama): Gerçek kazancı oluşturan maliyet kalemlerini açıklayan rehber.
 - [Trendyol stopaj hesaplama](https://komisyonhesap.com/trendyol-stopaj-hesaplama): Yüzde 1 e-ticaret stopajının matrahını ve kârlılığa etkisini açıklayan rehber.
@@ -21,13 +22,15 @@
 - Komisyon, komisyon KDV'si, yüzde 1 stopaj, hizmet bedeli, kargo ve ürün maliyetini birlikte hesaplar.
 - Kârlı ve zarar eden ürünleri ürün bazında gösterir.
 - Avantajlı Etiket için hedef fiyat ve kâr etkisi analizi sunar.
-- Yüklenen ürün dosyaları tarayıcıda işlenir; sunucuya ürün dosyası yüklenmez.
-- Ücretsiz demo ve yıllık ücretli Premium planı vardır.
+- Yüklenen Excel dosyaları tarayıcıda işlenir. Hesapta kaydedilen ürün ve maliyet kayıtları sunucuda tutulabilir.
+- Ücretsiz tek ürün hesaplayıcısı ve Excel şablonu üyelik istemez. Kendi ürün listesiyle toplu analiz için 3 günlük ücretsiz deneme vardır; denemede kart veya otomatik ödeme yoktur.
+- Premium üyelik 365 gün için KDV dahil 1.500 TL'dir. Ödeme kullanıcı onayıyla başlatılır.
 
 ## Güvenilirlik ve kapsam
 
 - KomisyonHesap bağımsız bir hizmettir; Trendyol ile resmî bağlantısı veya ortaklığı yoktur.
 - Komisyon oranları kategoriye ve satıcıya göre değişebilir. Kesin oran Trendyol Partner Panel'den doğrulanmalıdır.
+- Ücretsiz komisyon hesaplayıcısı ve örnek Excel, uygulamadaki ürün analiziyle aynı hesaplama yaklaşımını kullanır. Bu örneklerde KDV yüzde 20, hizmet bedeli 13,19 TL ve stopaj KDV hariç satış üzerinden yüzde 1 alınır. Gerçek satıcı kesintileri kontrol edilmelidir; sonuç kesin hakediş veya fatura değildir.
 - Vergi ve stopaj hesapları bilgilendirme amaçlıdır; mali müşavir görüşünün yerine geçmez.
 
 ## İletişim

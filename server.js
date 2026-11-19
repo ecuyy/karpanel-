@@ -455,7 +455,7 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(body ? 200 : 404, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache', 'X-Robots-Tag': 'noindex, follow' });
     res.end(req.method === 'HEAD' ? undefined : body || 'Sayfa bulunamadı'); return;
   }
-  const memberPaths = ['/api/fatura/kaydet', '/api/odeme-token', '/api/sifre-degistir', '/api/urunler/kaydet', '/api/urunler/yukle', '/api/urunler/sil', '/api/member/oturum', '/api/member/cikis', '/api/member/veri-talebi', '/api/member/odeme-onay', '/odeme'];
+  const memberPaths = ['/api/fatura/kaydet', '/api/odeme-token', '/api/sifre-degistir', '/api/urunler/kaydet', '/api/urunler/yukle', '/api/urunler/sil', '/api/member/oturum', '/api/member/satin-alma-olcumu', '/api/member/cikis', '/api/member/veri-talebi', '/api/member/odeme-onay', '/odeme'];
   if (memberPaths.includes(parsed.pathname)) {
     res.setHeader('Cache-Control', 'no-store');
     if (req.method !== 'GET' && req.method !== 'HEAD' && !adminOriginGecerli(req)) { jsonResponse(res, 403, { error: 'İstek kaynağı doğrulanamadı' }); return; }
@@ -484,6 +484,19 @@ const server = http.createServer(async (req, res) => {
     }
   }
   if (parsed.pathname === '/api/member/oturum' && req.method === 'GET') { jsonResponse(res, 200, { user: publicMember(req.member) }); return; }
+  if (parsed.pathname === '/api/member/satin-alma-olcumu' && req.method === 'GET') {
+    // Only the provider-verified, account-owned receipt can produce a purchase event.
+    const receipt = req.member.iyzicoPaymentId && await db.collection('paymentReceipts').findOne({ _id: req.member.iyzicoPaymentId, email: req.member.email });
+    const total = Number(receipt && receipt.total), paidTotal = Number(receipt && receipt.paidTotal);
+    const age = Date.now() - new Date(receipt && receipt.paidAt).getTime();
+    if (!receipt || receipt.currency !== 'TRY' || !Number.isFinite(total) || total <= 0 || !Number.isFinite(paidTotal) || paidTotal < total || !Number.isFinite(age) || age < 0 || age > 48 * 3600000) {
+      jsonResponse(res, 200, { purchase: null }); return;
+    }
+    // Annual software subscription: advertised gross price includes 20% VAT.
+    const value = Math.round(total / 1.2 * 100) / 100;
+    const transactionId = 'kh_' + crypto.createHash('sha256').update('KomisyonHesap analytics receipt:' + String(receipt._id)).digest('hex').slice(0, 32);
+    jsonResponse(res, 200, { purchase: { transactionId, currency: 'TRY', value, tax: Math.round((total - value) * 100) / 100, total } }); return;
+  }
   if (parsed.pathname === '/api/member/cikis' && req.method === 'POST') { await members.logout(req, res); jsonResponse(res, 200, { ok: true }); return; }
   if (parsed.pathname === '/api/member/odeme-onay' && req.method === 'POST') {
     const body = await getBody(req);

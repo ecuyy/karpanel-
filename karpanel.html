@@ -5068,15 +5068,20 @@ function trackTrialStep(step,reason){
   }catch(e){}
 }
 function trackPurchaseConversion(){
-  try{
-    if(typeof gtag!=='function') return;
-    gtag('event','purchase',{entry_point:trialEntryPoint(),currency:'TRY',value:1500,items:[{item_name:'Premium yıllık üyelik',price:1500,quantity:1}]});
-    gtag('event','conversion',{
-      send_to:'AW-16989542935/PrD7CNm-zbUaEJe0n6U_',
-      value:1500,
-      currency:'TRY'
-    });
-  }catch(e){}
+  return (async()=>{
+    try{
+      if(typeof gtag!=='function') return;
+      const response=await fetch(PROXY+'/api/member/satin-alma-olcumu',{credentials:'same-origin',cache:'no-store'});
+      if(!response.ok)return;
+      const {purchase:p}=await response.json();
+      if(!p||!/^kh_[a-f0-9]{32}$/.test(p.transactionId)||p.currency!=='TRY'||!Number.isFinite(p.value)||p.value<=0||!Number.isFinite(p.total)||p.total<p.value||!Number.isFinite(p.tax)||p.tax<0)return;
+      const sent=trackPurchaseConversion.sent||(trackPurchaseConversion.sent=new Set());
+      if(sent.has(p.transactionId))return;
+      sent.add(p.transactionId);
+      gtag('event','purchase',{transaction_id:p.transactionId,entry_point:trialEntryPoint(),currency:p.currency,value:p.value,tax:p.tax,items:[{item_id:'premium_yearly',item_name:'Premium yıllık üyelik',price:p.value,quantity:1}]});
+      gtag('event','conversion',{send_to:'AW-16989542935/PrD7CNm-zbUaEJe0n6U_',transaction_id:p.transactionId,value:p.total,currency:p.currency});
+    }catch(e){}
+  })();
 }
 
 // ── NAVIGATION ──
@@ -5845,6 +5850,7 @@ function uyeOlVeyaOde(){
 async function odemeYap(){
   if(!currentUser){openAuth('giris');return;}
   document.getElementById('checkout-legal-overlay').classList.add('open');
+  try{if(typeof gtag==='function')gtag('event','begin_checkout',{entry_point:trialEntryPoint(),currency:'TRY',value:1250,items:[{item_id:'premium_yearly',item_name:'Premium yıllık üyelik',price:1250,quantity:1}]});}catch(e){}
 }
 async function odemeOnayla(){
   if(!document.getElementById('checkout-legal-accept').checked){toast('Ön bilgilendirmeyi ve satış sözleşmesini okuyup kabul edin.','error');return;}
